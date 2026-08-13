@@ -30,6 +30,8 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
   const t = useT();
   const widgetsRef = useRef<TossPaymentsWidgets | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [hasAgreedRequiredTerms, setHasAgreedRequiredTerms] = useState(true);
   const [paymentNotice, setPaymentNotice] = useState<PaymentNotice | null>(null);
 
   useEffect(() => {
@@ -59,6 +61,10 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
         return;
       }
 
+      agreementWidget.on('agreementStatusChange', (status) => {
+        setHasAgreedRequiredTerms(status.agreedRequiredTerms);
+      });
+
       widgetsRef.current = widgets;
       setIsReady(true);
     }
@@ -74,11 +80,18 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
 
   async function handlePayClick() {
     const widgets = widgetsRef.current;
-    if (!widgets) {
+    if (!widgets || isRequesting) {
       return;
     }
 
     setPaymentNotice(null);
+
+    if (!hasAgreedRequiredTerms) {
+      setPaymentNotice({ kind: 'error', message: t.checkout.needAgreement });
+      return;
+    }
+
+    setIsRequesting(true);
     try {
       await widgets.requestPayment({
         orderId,
@@ -87,12 +100,37 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
         failUrl: `${window.location.origin}/checkout/${orderId}/fail`,
       });
     } catch (error) {
-      if (getTossErrorCode(error) === TOSS_ERROR_CODES.USER_CANCEL) {
+      const code = getTossErrorCode(error);
+
+      if (code === TOSS_ERROR_CODES.USER_CANCEL) {
         setPaymentNotice({ kind: 'cancelled', message: t.checkout.payCancelled });
         return;
       }
 
-      setPaymentNotice({ kind: 'error', message: t.checkout.payError });
+      const knownErrorMessages: Record<string, string> = {
+        [TOSS_ERROR_CODES.NOT_SELECTED_PAYMENT_METHOD]:
+          t.checkout.paymentErrors.notSelectedPaymentMethod,
+        [TOSS_ERROR_CODES.NEED_AGREEMENT_WITH_REQUIRED_TERMS]: t.checkout.needAgreement,
+        [TOSS_ERROR_CODES.NEED_CARD_PAYMENT_DETAIL]: t.checkout.paymentErrors.needCardPaymentDetail,
+        [TOSS_ERROR_CODES.NEED_REFUND_ACCOUNT_DETAIL]:
+          t.checkout.paymentErrors.needRefundAccountDetail,
+        [TOSS_ERROR_CODES.EXCEED_DEPOSIT_AMOUNT_LIMIT]:
+          t.checkout.paymentErrors.exceedDepositAmountLimit,
+        [TOSS_ERROR_CODES.PROVIDER_STATUS_UNHEALTHY]:
+          t.checkout.paymentErrors.providerStatusUnhealthy,
+        [TOSS_ERROR_CODES.UNSUPPORTED_TEST_PHASE_PAYMENT_METHOD]:
+          t.checkout.paymentErrors.unsupportedTestPhasePaymentMethod,
+        [TOSS_ERROR_CODES.NETWORK_ERROR]: t.checkout.paymentErrors.networkError,
+        [TOSS_ERROR_CODES.INVALID_METHOD_TRANSACTION]:
+          t.checkout.paymentErrors.invalidMethodTransaction,
+      };
+
+      setPaymentNotice({
+        kind: 'error',
+        message: (code && knownErrorMessages[code]) || t.checkout.payError,
+      });
+    } finally {
+      setIsRequesting(false);
     }
   }
 
@@ -111,7 +149,7 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
           {paymentNotice.message}
         </p>
       ) : null}
-      <Button onClick={handlePayClick} disabled={!isReady} className="w-full">
+      <Button onClick={handlePayClick} disabled={!isReady || isRequesting} className="w-full">
         {t.checkout.payButton}
       </Button>
     </div>

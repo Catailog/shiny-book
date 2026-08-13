@@ -20,8 +20,25 @@ export const ko = {
     payButton: '결제하기',
     payError: '결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.',
     payCancelled: '결제를 취소하셨습니다.',
+    needAgreement: '필수 약관에 동의해주세요.',
     alreadyProcessed: '이미 결제가 진행된 주문입니다.',
     orderIdLabel: '주문 번호',
+    paymentErrors: {
+      notSelectedPaymentMethod: '결제수단을 선택해주세요.',
+      needCardPaymentDetail: '카드 결제 정보를 선택해주세요.',
+      needRefundAccountDetail: '환불 계좌 정보를 입력해주세요.',
+      exceedDepositAmountLimit:
+        '가상계좌 입금 제한 금액을 초과했습니다. 다른 결제수단을 이용해주세요.',
+      providerStatusUnhealthy:
+        '결제 기관에 일시적인 오류가 발생했습니다. 다른 결제수단을 선택해주세요.',
+      unsupportedTestPhasePaymentMethod: '테스트 환경에서는 지원하지 않는 결제수단입니다.',
+      networkError: '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      invalidMethodTransaction: '이미 처리 중인 요청이 있습니다. 잠시 후 다시 시도해주세요.',
+    },
+    testNotice: {
+      title: '테스트 결제 환경입니다',
+      body: '테스트 API 키로 연동돼 있어 실제 결제나 청구는 절대 발생하지 않습니다. 다만 결제 진행 과정 자체는 실제 결제와 완전히 동일하게 동작합니다. 아래 결제창에 뜨는 "테스트 환경이에요" 안내는 본 사이트가 아니라 토스페이먼츠가 직접 표시하는 문구이며, 인증 단계에서 주소창에 나타나는 payment-gateway-sandbox.tosspayments.com 같은 sandbox 도메인으로도 테스트 여부를 직접 확인하실 수 있습니다.',
+    },
     confirm: {
       confirmed: {
         title: '결제가 완료됐습니다',
@@ -52,6 +69,10 @@ export const ko = {
       title: '결제에 실패했습니다',
       cancelledTitle: '결제를 취소하셨습니다',
       cancelledDescription: '결제 진행이 중단됐습니다. 다시 시도해주세요.',
+      abortedTitle: '결제 승인에 실패했습니다',
+      abortedDescription: '결제 진행 중 승인에 실패했어요. 다시 시도해주세요.',
+      rejectedTitle: '결제가 거절됐습니다',
+      rejectedDescription: '카드사에서 결제를 거절했어요. 카드 정보나 한도를 확인해주세요.',
       codeLabel: '오류 코드',
       messageLabel: '오류 메시지',
     },

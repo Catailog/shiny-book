@@ -20,8 +20,25 @@ export const en = {
     payButton: 'Pay now',
     payError: 'Something went wrong while requesting payment. Please try again.',
     payCancelled: 'You cancelled the payment.',
+    needAgreement: 'Please agree to the required terms.',
     alreadyProcessed: 'This order has already been processed.',
     orderIdLabel: 'Order ID',
+    paymentErrors: {
+      notSelectedPaymentMethod: 'Please select a payment method.',
+      needCardPaymentDetail: 'Please select your card details.',
+      needRefundAccountDetail: 'Please enter your refund account details.',
+      exceedDepositAmountLimit:
+        'This exceeds the virtual account deposit limit. Please use another payment method.',
+      providerStatusUnhealthy:
+        'The payment provider is temporarily unavailable. Please select another payment method.',
+      unsupportedTestPhasePaymentMethod: 'This payment method is not supported in test mode.',
+      networkError: 'A network error occurred. Please try again shortly.',
+      invalidMethodTransaction: 'A request is already in progress. Please try again shortly.',
+    },
+    testNotice: {
+      title: 'This is a test payment environment',
+      body: 'This integration uses a test API key, so no real charge will ever occur. That said, the payment flow itself works exactly like a real payment. The "test environment" banner below is shown by Toss Payments itself, not by this site, and during authentication you can also check the browser address bar for a sandbox domain such as payment-gateway-sandbox.tosspayments.com to verify it\'s a test.',
+    },
     confirm: {
       confirmed: {
         title: 'Payment complete',
@@ -52,6 +69,11 @@ export const en = {
       title: 'Payment failed',
       cancelledTitle: 'Payment cancelled',
       cancelledDescription: 'The payment was cancelled. Please try again.',
+      abortedTitle: 'Payment confirmation failed',
+      abortedDescription: 'The payment was aborted during confirmation. Please try again.',
+      rejectedTitle: 'Payment rejected',
+      rejectedDescription:
+        'Your card issuer rejected this payment. Please check your card details or limit.',
       codeLabel: 'Error code',
       messageLabel: 'Error message',
     },

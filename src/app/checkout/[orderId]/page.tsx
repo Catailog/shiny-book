@@ -39,6 +39,10 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
           <span>{order.amount.toLocaleString()}</span>
         </div>
       </div>
+      <div className="flex flex-col gap-1 rounded-lg bg-muted p-4 text-sm">
+        <p className="font-medium text-foreground">{t.checkout.testNotice.title}</p>
+        <p className="text-muted-foreground">{t.checkout.testNotice.body}</p>
+      </div>
       <CheckoutWidget orderId={order.id} orderName={order.title} amount={order.amount} />
     </main>
   );

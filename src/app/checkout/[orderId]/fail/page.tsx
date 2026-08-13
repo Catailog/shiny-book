@@ -7,15 +7,31 @@ export default async function CheckoutFailPage(props: PageProps<'/checkout/[orde
 
   const code = firstParam(searchParams.code);
   const message = firstParam(searchParams.message);
-  const isCancelled = code === TOSS_ERROR_CODES.PAY_PROCESS_CANCELED;
+
+  const knownFailures: Record<string, { title: string; description: string }> = {
+    [TOSS_ERROR_CODES.PAY_PROCESS_CANCELED]: {
+      title: t.checkout.fail.cancelledTitle,
+      description: t.checkout.fail.cancelledDescription,
+    },
+    [TOSS_ERROR_CODES.PAY_PROCESS_ABORTED]: {
+      title: t.checkout.fail.abortedTitle,
+      description: t.checkout.fail.abortedDescription,
+    },
+    [TOSS_ERROR_CODES.REJECT_CARD_COMPANY]: {
+      title: t.checkout.fail.rejectedTitle,
+      description: t.checkout.fail.rejectedDescription,
+    },
+  };
+
+  const knownFailure = knownFailures[code];
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-12">
       <h1 className="text-2xl font-semibold text-foreground">
-        {isCancelled ? t.checkout.fail.cancelledTitle : t.checkout.fail.title}
+        {knownFailure?.title ?? t.checkout.fail.title}
       </h1>
-      {isCancelled ? (
-        <p className="text-sm text-muted-foreground">{t.checkout.fail.cancelledDescription}</p>
+      {knownFailure ? (
+        <p className="text-sm text-muted-foreground">{knownFailure.description}</p>
       ) : null}
       <dl className="flex flex-col gap-2 rounded-lg border border-border p-4 text-sm">
         <div className="flex justify-between">
