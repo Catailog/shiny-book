@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { TOSS_PAYMENT_STATUS } from '@/constants/toss-payment-status';
 import { env } from '@/env';
 
 interface ConfirmPaymentParams {
@@ -45,8 +46,6 @@ function isTossPaymentBody(value: unknown): value is TossPaymentBody {
   );
 }
 
-const TOSS_PAYMENT_STATUS_DONE = 'DONE';
-
 export async function confirmTossPayment(
   params: ConfirmPaymentParams,
 ): Promise<ConfirmPaymentResult> {
@@ -72,7 +71,7 @@ export async function confirmTossPayment(
     return { isConfirmed: false, errorMessage: 'Unexpected response from payment provider' };
   }
 
-  if (body.status !== TOSS_PAYMENT_STATUS_DONE) {
+  if (body.status !== TOSS_PAYMENT_STATUS.DONE) {
     return { isConfirmed: false, errorMessage: `Unexpected payment status: ${body.status}` };
   }
 

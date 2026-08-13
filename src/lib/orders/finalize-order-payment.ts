@@ -16,7 +16,7 @@ export type FinalizeOrderPaymentResult =
 export async function finalizeOrderPayment(
   orderId: string,
   paymentKey: string,
-  paidAmount: number,
+  reportedAmount?: number,
 ): Promise<FinalizeOrderPaymentResult> {
   const supabase = createServiceRoleClient();
 
@@ -29,14 +29,14 @@ export async function finalizeOrderPayment(
     return { outcome: 'already_processed', order };
   }
 
-  if (order.amount !== paidAmount) {
+  if (reportedAmount !== undefined && order.amount !== reportedAmount) {
     return { outcome: 'amount_mismatch' };
   }
 
   const confirmResult = await confirmTossPayment({
     paymentKey,
     orderId,
-    amount: paidAmount,
+    amount: order.amount,
   });
 
   if (!confirmResult.isConfirmed) {

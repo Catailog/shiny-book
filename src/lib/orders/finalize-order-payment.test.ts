@@ -103,6 +103,21 @@ describe('finalizeOrderPayment', () => {
     }
   });
 
+  it('confirms using the stored order amount when no reported amount is given', async () => {
+    selectMaybeSingleMock.mockResolvedValueOnce({ data: buildOrder() });
+    confirmTossPaymentMock.mockResolvedValueOnce({ isConfirmed: true });
+    updateMaybeSingleMock.mockResolvedValueOnce({ data: buildOrder({ status: 'paid' }) });
+
+    const result = await finalizeOrderPayment('order-1', 'payment-key');
+
+    expect(confirmTossPaymentMock).toHaveBeenCalledWith({
+      paymentKey: 'payment-key',
+      orderId: 'order-1',
+      amount: 10000,
+    });
+    expect(result.outcome).toBe('confirmed');
+  });
+
   it('falls back to already_processed when the conditional update loses a race', async () => {
     selectMaybeSingleMock.mockResolvedValueOnce({ data: buildOrder() });
     confirmTossPaymentMock.mockResolvedValueOnce({ isConfirmed: true });
