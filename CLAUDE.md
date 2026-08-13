@@ -66,14 +66,17 @@
 
 ## 6. Next.js, React, UI & 상태 관리 최적화
 
+- **Async Runtime API:** `cookies()`, `headers()`, `params`, `searchParams` 등 런타임 API는 반드시 `await` 키워드를 사용합니다. (예: `const cookieStore = await cookies();`, `const { id } = await props.params;`)
 - **데이터 패칭 및 렌더링 위계질서:**
   1. **1순위 (Server Component):** SEO, 초기 페이지 로드, 단순 조회의 경우 반드시 Next.js Server Component에서 async/await 및 표준 `fetch()` (또는 Supabase Server Client)를 사용합니다.
   2. **2순위 (TanStack Query):** 무한 스크롤, 낙관적 업데이트(Optimistic Updates), 주기적 폴링 등 인터랙티브한 클라이언트 기능이 필수적인 경우에만 `'use client'` 컴포넌트에서 `TanStack Query`를 제한적으로 활용합니다. (Query Key는 계층적 배열 구조 준수)
+  - **캐싱 기본값:** 이 프로젝트는 `cacheComponents`를 켜지 않은 기존 모델을 사용하며, `fetch()`는 기본적으로 캐시되지 않습니다. 반복 조회를 캐싱하려면 `fetch(url, { cache: 'force-cache' })`처럼 명시적으로 옵션을 지정합니다.
 - **`'use client'` 최소화:** 데이터 패칭이나 단순 상태 관리에 사용하지 않으며, Web API 접근 및 Event Listener가 필요한 최하단 소형 컴포넌트에만 최소한으로 선언합니다.
 - **상태 관리 역할 분담:**
   - 전역 UI 상태 (Client Global): `Zustand` (필요 시 `immer`, `persist` 미들웨어 적용)
   - 폼 상태 (Form State): `React Hook Form` + `Zod`
   - URL 파라미터 상태 (URL State): `nuqs`
+  - Server Action의 pending/결과 상태 (RHF를 쓰지 않는 단순 폼, 관리자 빠른 액션 등): deprecated된 `useFormState` 대신 React 19의 `useActionState`
 - **UI 및 스타일링:**
   - Shadcn UI, Radix UI, Tailwind CSS를 사용하며, Mobile-first 반응형 디자인과 시맨틱 HTML 태그를 적용합니다.
   - **컴포넌트 소싱 우선순위:** UI 컴포넌트 작성 전 shadcn/ui 문서에서 동등한 컴포넌트나 유사 패턴이 있는지 먼저 확인합니다. 있으면 `npx shadcn add <name>`으로 설치(`src/components/ui/`에 추가), 컴포넌트는 없지만 관련 패턴/예제(Input with Icon, Form validation 등)가 있으면 그걸 기반으로 구현, 문서에도 없을 때만 처음부터 직접 작성합니다.
@@ -96,6 +99,7 @@
 - **포괄적 에러 처리:**
   - 모든 Async/Fetch 작업 및 API 호출에는 try-catch, 로딩 상태, Fallback UI를 갖춘 `<Suspense>` 및 Error Boundary 처리를 필수 포함합니다.
   - 사용자에게는 기술적 세부사항이 노출되지 않는 유저 친화적 에러 메시지를 제공합니다.
+  - **예외:** Server Action에서 폼 검증 실패 등 예상 가능한 에러는 try-catch로 던지지 않고 `useActionState`의 반환값으로 모델링합니다. try-catch와 Error Boundary는 예기치 못한 예외에만 사용합니다.
 - **로깅 및 개인정보 마스킹:**
   - 에러/디버그 로그에 이름, 주소, 연락처 등 개인정보(PII)를 원문 그대로 남기지 않고, 마스킹하거나 주문 ID 같은 식별자로 대체합니다.
 - **동시 상태 변경 방지 (경량 처리):**
