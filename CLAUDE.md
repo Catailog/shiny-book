@@ -56,7 +56,7 @@
 - 모든 디렉터리명과 파일명은 **kebab-case**를 사용합니다. (예: `components/auth-wizard/my-component.tsx`)
 - 일반 컴포넌트/유틸은 **Named Export**를 선호하며, Next.js Page/Layout/Route 등 엔트리 파일에만 Default Export를 사용합니다.
 - **Git 커밋 메세지 컨벤션:** 커밋 메세지 작성 시 Conventional Commits 규격을 따릅니다. (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`)
-- **Git 브랜치 전략:** 모든 작업은 `dev` 브랜치에서 진행합니다. `main`은 항상 검증이 끝난 상태만 유지하는 보호 브랜치이며, `dev`에서 타입체크/린트/테스트(CI)를 모두 통과한 뒤에만 `main`으로 병합합니다. `main`에 직접 커밋하지 않습니다.
+- **Git 브랜치 전략:** 모든 작업은 `dev` 브랜치에서 진행합니다. `main`은 항상 검증이 끝난 상태만 유지하는 보호 브랜치이며, `dev` → `main`은 **PR을 통해서만** 병합합니다(직접 push 금지). PR에서 CI(타입체크/린트/테스트/빌드)를 모두 통과해야 병합 가능합니다. `main`에 직접 커밋하지 않습니다.
 - **파일 내부 구성 순서**:
   1. Main Exported Component
   2. Sub-components
