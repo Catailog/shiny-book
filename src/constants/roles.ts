@@ -5,6 +5,8 @@ export const ROLE = {
 
 export type Role = (typeof ROLE)[keyof typeof ROLE];
 
+const ROLE_VALUES: readonly Role[] = Object.values(ROLE);
+
 export function isRole(value: string): value is Role {
-  return (Object.values(ROLE) as readonly string[]).includes(value);
+  return ROLE_VALUES.some((role) => role === value);
 }
