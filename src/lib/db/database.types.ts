@@ -102,6 +102,47 @@ export type Database = {
           },
         ];
       };
+      print_jobs: {
+        Row: {
+          cover_file_url: string;
+          created_at: string;
+          id: string;
+          manuscript_file_url: string;
+          order_id: string;
+          quantity: number;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          cover_file_url: string;
+          created_at?: string;
+          id?: string;
+          manuscript_file_url: string;
+          order_id: string;
+          quantity: number;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          cover_file_url?: string;
+          created_at?: string;
+          id?: string;
+          manuscript_file_url?: string;
+          order_id?: string;
+          quantity?: number;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'print_jobs_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
