@@ -19,16 +19,39 @@ export const ko = {
     amountLabel: '결제 금액',
     payButton: '결제하기',
     payError: '결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.',
+    payCancelled: '결제를 취소하셨습니다.',
     alreadyProcessed: '이미 결제가 진행된 주문입니다.',
-    success: {
-      title: '결제 요청이 접수되었습니다',
-      description: '결제 승인 처리는 다음 단계에서 이어집니다.',
-      paymentKeyLabel: '결제 키',
-      orderIdLabel: '주문 번호',
-      amountLabel: '결제 금액',
+    orderIdLabel: '주문 번호',
+    confirm: {
+      confirmed: {
+        title: '결제가 완료됐습니다',
+        description: '주문이 결제완료 상태로 전환됐습니다.',
+      },
+      alreadyProcessed: {
+        title: '이미 처리된 결제입니다',
+        description: '이 주문은 이미 결제 처리가 완료됐습니다.',
+      },
+      amountMismatch: {
+        title: '결제 금액이 일치하지 않습니다',
+        description: '결제 승인을 진행할 수 없습니다. 고객센터에 문의해주세요.',
+      },
+      confirmFailed: {
+        title: '결제 승인에 실패했습니다',
+        description: '잠시 후 다시 시도하거나 고객센터에 문의해주세요.',
+      },
+      notFound: {
+        title: '주문을 찾을 수 없습니다',
+        description: '',
+      },
+      invalidRequest: {
+        title: '잘못된 요청입니다',
+        description: '',
+      },
     },
     fail: {
       title: '결제에 실패했습니다',
+      cancelledTitle: '결제를 취소하셨습니다',
+      cancelledDescription: '결제 진행이 중단됐습니다. 다시 시도해주세요.',
       codeLabel: '오류 코드',
       messageLabel: '오류 메시지',
     },

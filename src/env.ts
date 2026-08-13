@@ -7,6 +7,7 @@ export const env = createEnv({
     SUPABASE_SECRET_KEY: z.string().min(1),
     KV_REST_API_URL: z.string().url(),
     KV_REST_API_TOKEN: z.string().min(1),
+    TOSS_SECRET_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),

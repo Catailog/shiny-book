@@ -11,6 +11,7 @@ import {
 } from '@tosspayments/tosspayments-sdk';
 
 import { Button } from '@/components/ui/button';
+import { TOSS_ERROR_CODES, getTossErrorCode } from '@/constants/toss-error-codes';
 import { env } from '@/env';
 import { useT } from '@/hooks/use-t';
 
@@ -20,11 +21,16 @@ interface CheckoutWidgetProps {
   amount: number;
 }
 
+interface PaymentNotice {
+  kind: 'error' | 'cancelled';
+  message: string;
+}
+
 export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetProps) {
   const t = useT();
   const widgetsRef = useRef<TossPaymentsWidgets | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const [payError, setPayError] = useState<string | null>(null);
+  const [paymentNotice, setPaymentNotice] = useState<PaymentNotice | null>(null);
 
   useEffect(() => {
     let isCancelled = false;
@@ -72,7 +78,7 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
       return;
     }
 
-    setPayError(null);
+    setPaymentNotice(null);
     try {
       await widgets.requestPayment({
         orderId,
@@ -80,8 +86,13 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
         successUrl: `${window.location.origin}/checkout/${orderId}/success`,
         failUrl: `${window.location.origin}/checkout/${orderId}/fail`,
       });
-    } catch {
-      setPayError(t.checkout.payError);
+    } catch (error) {
+      if (getTossErrorCode(error) === TOSS_ERROR_CODES.USER_CANCEL) {
+        setPaymentNotice({ kind: 'cancelled', message: t.checkout.payCancelled });
+        return;
+      }
+
+      setPaymentNotice({ kind: 'error', message: t.checkout.payError });
     }
   }
 
@@ -89,7 +100,17 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
     <div className="flex flex-col gap-6">
       <div id="toss-payment-methods" />
       <div id="toss-agreement" />
-      {payError ? <p className="text-sm text-destructive">{payError}</p> : null}
+      {paymentNotice ? (
+        <p
+          className={
+            paymentNotice.kind === 'error'
+              ? 'text-sm text-destructive'
+              : 'text-sm text-muted-foreground'
+          }
+        >
+          {paymentNotice.message}
+        </p>
+      ) : null}
       <Button onClick={handlePayClick} disabled={!isReady} className="w-full">
         {t.checkout.payButton}
       </Button>

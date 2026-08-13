@@ -1,0 +1,64 @@
+import 'server-only';
+
+import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import type { Tables } from '@/lib/db/database.types';
+import { canTransition } from '@/lib/orders/order-state-machine';
+import { confirmTossPayment } from '@/lib/payments/toss-confirm-payment';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+
+export type FinalizeOrderPaymentResult =
+  | { outcome: 'confirmed'; order: Tables<'orders'> }
+  | { outcome: 'already_processed'; order: Tables<'orders'> }
+  | { outcome: 'amount_mismatch' }
+  | { outcome: 'confirm_failed'; errorMessage: string }
+  | { outcome: 'not_found' };
+
+export async function finalizeOrderPayment(
+  orderId: string,
+  paymentKey: string,
+  paidAmount: number,
+): Promise<FinalizeOrderPaymentResult> {
+  const supabase = createServiceRoleClient();
+
+  const { data: order } = await supabase.from('orders').select().eq('id', orderId).maybeSingle();
+  if (!order || !isOrderStatus(order.status)) {
+    return { outcome: 'not_found' };
+  }
+
+  if (!canTransition(order.status, ORDER_STATUS.PAID)) {
+    return { outcome: 'already_processed', order };
+  }
+
+  if (order.amount !== paidAmount) {
+    return { outcome: 'amount_mismatch' };
+  }
+
+  const confirmResult = await confirmTossPayment({
+    paymentKey,
+    orderId,
+    amount: paidAmount,
+  });
+
+  if (!confirmResult.isConfirmed) {
+    return { outcome: 'confirm_failed', errorMessage: confirmResult.errorMessage };
+  }
+
+  const { data: updated } = await supabase
+    .from('orders')
+    .update({ status: ORDER_STATUS.PAID })
+    .eq('id', orderId)
+    .eq('status', ORDER_STATUS.AWAITING_PAYMENT)
+    .select()
+    .maybeSingle();
+
+  if (updated) {
+    return { outcome: 'confirmed', order: updated };
+  }
+
+  const { data: latest } = await supabase.from('orders').select().eq('id', orderId).maybeSingle();
+  if (latest) {
+    return { outcome: 'already_processed', order: latest };
+  }
+
+  return { outcome: 'not_found' };
+}

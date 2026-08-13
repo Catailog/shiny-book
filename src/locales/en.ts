@@ -19,16 +19,39 @@ export const en = {
     amountLabel: 'Amount',
     payButton: 'Pay now',
     payError: 'Something went wrong while requesting payment. Please try again.',
+    payCancelled: 'You cancelled the payment.',
     alreadyProcessed: 'This order has already been processed.',
-    success: {
-      title: 'Payment request received',
-      description: 'Payment confirmation will be handled in the next step.',
-      paymentKeyLabel: 'Payment key',
-      orderIdLabel: 'Order ID',
-      amountLabel: 'Amount',
+    orderIdLabel: 'Order ID',
+    confirm: {
+      confirmed: {
+        title: 'Payment complete',
+        description: 'The order has moved to the paid status.',
+      },
+      alreadyProcessed: {
+        title: 'Payment already processed',
+        description: 'This order has already been confirmed.',
+      },
+      amountMismatch: {
+        title: 'Payment amount mismatch',
+        description: 'We could not confirm this payment. Please contact support.',
+      },
+      confirmFailed: {
+        title: 'Payment confirmation failed',
+        description: 'Please try again later or contact support.',
+      },
+      notFound: {
+        title: 'Order not found',
+        description: '',
+      },
+      invalidRequest: {
+        title: 'Invalid request',
+        description: '',
+      },
     },
     fail: {
       title: 'Payment failed',
+      cancelledTitle: 'Payment cancelled',
+      cancelledDescription: 'The payment was cancelled. Please try again.',
       codeLabel: 'Error code',
       messageLabel: 'Error message',
     },
