@@ -1,0 +1,26 @@
+# dependencies
+node_modules
+
+# build output
+.next
+out
+build
+
+# test artifacts
+coverage
+playwright-report
+test-results
+blob-report
+
+# supabase local state
+supabase/.branches
+supabase/.temp
+
+# auto-generated, not meant to be reformatted
+package-lock.json
+
+# secrets, no parser needed
+.env*
+
+# local-only scratch docs
+.claude/tmp
