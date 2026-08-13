@@ -1,8 +1,10 @@
 import type { NextRequest } from 'next/server';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
+import { ORDER_STATUS } from '@/constants/order-status';
 import { SHIPMENT_JOB_STATUS } from '@/constants/shipment-job-status';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
+import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { generateTrackingNumber } from '@/lib/vendors/generate-tracking-number';
 import { toShipmentJobResponse } from '@/lib/vendors/to-shipment-job-response';
@@ -35,6 +37,8 @@ export async function POST(request: NextRequest) {
   if (!shipmentJob) {
     return apiError(API_ERROR_CODES.INTERNAL_ERROR, 'Failed to create shipment job');
   }
+
+  await transitionOrderStatus(parsed.data.orderId, ORDER_STATUS.BINDING, ORDER_STATUS.SHIPPING);
 
   return apiSuccess(shipmentJob, 201);
 }

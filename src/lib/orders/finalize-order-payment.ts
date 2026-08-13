@@ -3,6 +3,7 @@ import 'server-only';
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import type { Tables } from '@/lib/db/database.types';
 import { canTransition } from '@/lib/orders/order-state-machine';
+import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
 import { confirmTossPayment } from '@/lib/payments/toss-confirm-payment';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
@@ -43,13 +44,11 @@ export async function finalizeOrderPayment(
     return { outcome: 'confirm_failed', errorMessage: confirmResult.errorMessage };
   }
 
-  const { data: updated } = await supabase
-    .from('orders')
-    .update({ status: ORDER_STATUS.PAID })
-    .eq('id', orderId)
-    .eq('status', ORDER_STATUS.AWAITING_PAYMENT)
-    .select()
-    .maybeSingle();
+  const updated = await transitionOrderStatus(
+    orderId,
+    ORDER_STATUS.AWAITING_PAYMENT,
+    ORDER_STATUS.PAID,
+  );
 
   if (updated) {
     return { outcome: 'confirmed', order: updated };
