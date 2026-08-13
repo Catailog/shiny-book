@@ -1,15 +1,11 @@
 import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
 import 'server-only';
 
 import { API_RATE_LIMIT } from '@/constants/rate-limit';
-import { env } from '@/env';
+import { createRedisClient } from '@/lib/redis/create-redis-client';
 
 const ratelimit = new Ratelimit({
-  redis: new Redis({
-    url: env.KV_REST_API_URL,
-    token: env.KV_REST_API_TOKEN,
-  }),
+  redis: createRedisClient(),
   limiter: Ratelimit.slidingWindow(API_RATE_LIMIT.MAX_REQUESTS, API_RATE_LIMIT.WINDOW),
   prefix: 'book-print-api',
 });
