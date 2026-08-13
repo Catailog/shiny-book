@@ -28,7 +28,30 @@ export type Database = {
   };
   public: {
     Tables: {
-      [_ in never]: never;
+      api_keys: {
+        Row: {
+          client_name: string;
+          created_at: string;
+          id: string;
+          key_hash: string;
+          revoked_at: string | null;
+        };
+        Insert: {
+          client_name: string;
+          created_at?: string;
+          id?: string;
+          key_hash: string;
+          revoked_at?: string | null;
+        };
+        Update: {
+          client_name?: string;
+          created_at?: string;
+          id?: string;
+          key_hash?: string;
+          revoked_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
