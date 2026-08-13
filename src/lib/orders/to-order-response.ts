@@ -14,6 +14,7 @@ export function toOrderResponse(order: Tables<'orders'>): OrderResponse | null {
     manuscriptFileUrl: order.manuscript_file_url,
     coverFileUrl: order.cover_file_url,
     quantity: order.quantity,
+    amount: order.amount,
     createdAt: order.created_at,
     updatedAt: order.updated_at,
   };

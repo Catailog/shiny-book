@@ -12,6 +12,7 @@ function buildOrderRow(overrides: Partial<Tables<'orders'>> = {}): Tables<'order
     manuscript_file_url: 'https://storage.example.com/manuscript.pdf',
     cover_file_url: 'https://storage.example.com/cover.png',
     quantity: 1,
+    amount: 10000,
     created_at: '2026-08-13T00:00:00.000Z',
     updated_at: '2026-08-13T00:00:00.000Z',
     ...overrides,
@@ -29,6 +30,7 @@ describe('toOrderResponse', () => {
       manuscriptFileUrl: 'https://storage.example.com/manuscript.pdf',
       coverFileUrl: 'https://storage.example.com/cover.png',
       quantity: 1,
+      amount: 10000,
       createdAt: '2026-08-13T00:00:00.000Z',
       updatedAt: '2026-08-13T00:00:00.000Z',
     });

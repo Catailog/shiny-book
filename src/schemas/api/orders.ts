@@ -26,6 +26,7 @@ export const orderResponseSchema = z.object({
   manuscriptFileUrl: z.string(),
   coverFileUrl: z.string(),
   quantity: z.number(),
+  amount: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

@@ -13,4 +13,24 @@ export const en = {
     RATE_LIMITED: 'Too many requests. Please try again later.',
     INTERNAL_ERROR: 'Something went wrong. Please try again.',
   } satisfies Record<ApiErrorCode, string>,
+  checkout: {
+    title: 'Checkout',
+    quantitySuffix: 'copies',
+    amountLabel: 'Amount',
+    payButton: 'Pay now',
+    payError: 'Something went wrong while requesting payment. Please try again.',
+    alreadyProcessed: 'This order has already been processed.',
+    success: {
+      title: 'Payment request received',
+      description: 'Payment confirmation will be handled in the next step.',
+      paymentKeyLabel: 'Payment key',
+      orderIdLabel: 'Order ID',
+      amountLabel: 'Amount',
+    },
+    fail: {
+      title: 'Payment failed',
+      codeLabel: 'Error code',
+      messageLabel: 'Error message',
+    },
+  },
 } as const;

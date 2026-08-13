@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
 import { ORDER_STATUS } from '@/constants/order-status';
+import { PRICING } from '@/constants/pricing';
 import { ROLE } from '@/constants/roles';
 import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
       manuscript_file_url: parsed.data.manuscriptFileUrl,
       cover_file_url: parsed.data.coverFileUrl,
       quantity: parsed.data.quantity,
+      amount: parsed.data.quantity * PRICING.BOOK_UNIT_PRICE_KRW,
     })
     .select()
     .single();

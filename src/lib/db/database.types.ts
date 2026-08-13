@@ -57,6 +57,7 @@ export type Database = {
       };
       orders: {
         Row: {
+          amount: number;
           client_id: string;
           cover_file_url: string;
           created_at: string;
@@ -68,6 +69,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          amount: number;
           client_id: string;
           cover_file_url: string;
           created_at?: string;
@@ -79,6 +81,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          amount?: number;
           client_id?: string;
           cover_file_url?: string;
           created_at?: string;
