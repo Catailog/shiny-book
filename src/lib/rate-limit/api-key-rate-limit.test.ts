@@ -4,8 +4,8 @@ const limitMock = vi.fn();
 
 vi.mock('@/env', () => ({
   env: {
-    UPSTASH_REDIS_REST_URL: 'https://example.upstash.io',
-    UPSTASH_REDIS_REST_TOKEN: 'fake-token',
+    KV_REST_API_URL: 'https://example.upstash.io',
+    KV_REST_API_TOKEN: 'fake-token',
   },
 }));
 

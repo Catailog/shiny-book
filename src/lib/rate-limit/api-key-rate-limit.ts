@@ -7,8 +7,8 @@ import { env } from '@/env';
 
 const ratelimit = new Ratelimit({
   redis: new Redis({
-    url: env.UPSTASH_REDIS_REST_URL,
-    token: env.UPSTASH_REDIS_REST_TOKEN,
+    url: env.KV_REST_API_URL,
+    token: env.KV_REST_API_TOKEN,
   }),
   limiter: Ratelimit.slidingWindow(API_RATE_LIMIT.MAX_REQUESTS, API_RATE_LIMIT.WINDOW),
   prefix: 'book-print-api',
