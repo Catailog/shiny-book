@@ -55,6 +55,50 @@ export type Database = {
         };
         Relationships: [];
       };
+      orders: {
+        Row: {
+          client_id: string;
+          cover_file_url: string;
+          created_at: string;
+          id: string;
+          manuscript_file_url: string;
+          quantity: number;
+          status: string;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          client_id: string;
+          cover_file_url: string;
+          created_at?: string;
+          id?: string;
+          manuscript_file_url: string;
+          quantity: number;
+          status?: string;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          client_id?: string;
+          cover_file_url?: string;
+          created_at?: string;
+          id?: string;
+          manuscript_file_url?: string;
+          quantity?: number;
+          status?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'orders_client_id_fkey';
+            columns: ['client_id'];
+            isOneToOne: false;
+            referencedRelation: 'api_keys';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;

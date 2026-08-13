@@ -14,3 +14,12 @@ const API_ERROR_CODE_VALUES: readonly ApiErrorCode[] = Object.values(API_ERROR_C
 export function isApiErrorCode(value: string): value is ApiErrorCode {
   return API_ERROR_CODE_VALUES.some((code) => code === value);
 }
+
+export const API_ERROR_HTTP_STATUS: Record<ApiErrorCode, number> = {
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  VALIDATION_FAILED: 400,
+  RATE_LIMITED: 429,
+  INTERNAL_ERROR: 500,
+};
