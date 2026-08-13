@@ -67,7 +67,7 @@ describe('authenticateApiKey', () => {
 
   it('authorizes when the key hash matches an active api key', async () => {
     maybeSingleMock.mockResolvedValueOnce({
-      data: { id: 'client-1', client_name: 'test-client-web' },
+      data: { id: 'client-1', client_name: 'test-client-web', role: 'consumer' },
       error: null,
     });
 
@@ -80,7 +80,22 @@ describe('authenticateApiKey', () => {
       isAuthorized: true,
       clientId: 'client-1',
       clientName: 'test-client-web',
+      role: 'consumer',
     });
+  });
+
+  it('rejects when the stored role is not a recognized role', async () => {
+    maybeSingleMock.mockResolvedValueOnce({
+      data: { id: 'client-1', client_name: 'test-client-web', role: 'superuser' },
+      error: null,
+    });
+
+    const request = new Request('https://example.com', {
+      headers: { authorization: 'Bearer valid-key' },
+    });
+    const result = await authenticateApiKey(request);
+
+    expect(result).toEqual({ isAuthorized: false, errorCode: API_ERROR_CODES.UNAUTHORIZED });
   });
 
   it('rejects when no matching api key is found', async () => {

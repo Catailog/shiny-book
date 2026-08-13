@@ -35,6 +35,7 @@ export type Database = {
           id: string;
           key_hash: string;
           revoked_at: string | null;
+          role: string;
         };
         Insert: {
           client_name: string;
@@ -42,6 +43,7 @@ export type Database = {
           id?: string;
           key_hash: string;
           revoked_at?: string | null;
+          role?: string;
         };
         Update: {
           client_name?: string;
@@ -49,6 +51,7 @@ export type Database = {
           id?: string;
           key_hash?: string;
           revoked_at?: string | null;
+          role?: string;
         };
         Relationships: [];
       };
