@@ -302,8 +302,10 @@ export const en = {
           amount: 'Amount',
           status: 'Status',
           createdAt: 'Created at',
+          actions: 'Actions',
         },
         quantitySuffix: 'copies',
+        reviewLink: 'Review',
       },
     },
     account: {
@@ -371,6 +373,23 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
+    reviews: {
+      notCompleted: 'Only completed orders can be reviewed.',
+      ratingLabel: 'Rating',
+      form: {
+        ratingLabel: 'Rating',
+        contentLabel: 'Review',
+        submitButton: 'Submit review',
+        submitting: 'Submitting...',
+      },
+      errors: {
+        unauthorized: 'You do not have permission.',
+        not_completed: 'Only completed orders can be reviewed.',
+        already_reviewed: 'This order has already been reviewed.',
+        validation_failed: 'Please check your input and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
   },
   notice: {
     list: {
@@ -384,5 +403,9 @@ export const en = {
   faq: {
     title: 'Frequently asked questions',
     empty: 'No FAQs yet.',
+  },
+  review: {
+    title: 'Reviews',
+    empty: 'No reviews yet.',
   },
 } as const;

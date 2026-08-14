@@ -24,3 +24,7 @@ export const NOTICE_ROUTES = {
 export const FAQ_ROUTES = {
   LIST: '/faq',
 } as const;
+
+export const REVIEW_ROUTES = {
+  LIST: '/reviews',
+} as const;

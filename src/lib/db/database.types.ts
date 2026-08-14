@@ -273,6 +273,44 @@ export type Database = {
           },
         ];
       };
+      reviews: {
+        Row: {
+          consumer_id: string;
+          content: string;
+          created_at: string;
+          id: string;
+          order_id: string;
+          rating: number;
+          updated_at: string;
+        };
+        Insert: {
+          consumer_id: string;
+          content: string;
+          created_at?: string;
+          id?: string;
+          order_id: string;
+          rating: number;
+          updated_at?: string;
+        };
+        Update: {
+          consumer_id?: string;
+          content?: string;
+          created_at?: string;
+          id?: string;
+          order_id?: string;
+          rating?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'reviews_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: true;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       shipment_jobs: {
         Row: {
           created_at: string;

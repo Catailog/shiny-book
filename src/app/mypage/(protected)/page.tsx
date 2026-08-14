@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { isOrderStatus } from '@/constants/order-status';
+import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
@@ -59,6 +59,7 @@ export default async function MypagePage() {
                 <TableHead>{t.consumer.mypage.orders.columns.amount}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.status}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.createdAt}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.actions}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -78,6 +79,18 @@ export default async function MypagePage() {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {new Date(order.created_at).toLocaleString('ko-KR')}
+                    </TableCell>
+                    <TableCell>
+                      {status === ORDER_STATUS.COMPLETED ? (
+                        <Link
+                          href={`/mypage/orders/${order.id}/review`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {t.consumer.mypage.orders.reviewLink}
+                        </Link>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
                     </TableCell>
                   </TableRow>
                 );

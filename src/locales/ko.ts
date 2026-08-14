@@ -301,8 +301,10 @@ export const ko = {
           amount: '결제 금액',
           status: '상태',
           createdAt: '주문일시',
+          actions: '관리',
         },
         quantitySuffix: '권',
+        reviewLink: '후기',
       },
     },
     account: {
@@ -370,6 +372,23 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
+    reviews: {
+      notCompleted: '완료된 주문만 후기를 작성할 수 있습니다.',
+      ratingLabel: '평점',
+      form: {
+        ratingLabel: '평점',
+        contentLabel: '후기 내용',
+        submitButton: '후기 등록',
+        submitting: '등록 중...',
+      },
+      errors: {
+        unauthorized: '권한이 없습니다.',
+        not_completed: '완료된 주문만 후기를 작성할 수 있습니다.',
+        already_reviewed: '이미 후기를 작성한 주문입니다.',
+        validation_failed: '입력값을 다시 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
   },
   notice: {
     list: {
@@ -383,5 +402,9 @@ export const ko = {
   faq: {
     title: '자주 묻는 질문',
     empty: '등록된 FAQ가 없습니다.',
+  },
+  review: {
+    title: '구매후기',
+    empty: '등록된 후기가 없습니다.',
   },
 } as const;
