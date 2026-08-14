@@ -6,6 +6,11 @@ export const ko = {
     loading: '로딩 중...',
     error: '오류가 발생했습니다.',
   },
+  notFound: {
+    title: '페이지를 찾을 수 없습니다',
+    description: '요청하신 페이지가 존재하지 않거나 이동됐습니다.',
+    backToHome: '홈으로 돌아가기',
+  },
   orderStatus: {
     awaiting_payment: '결제대기',
     paid: '결제완료',
@@ -92,6 +97,8 @@ export const ko = {
       orders: '주문 목록',
       coupons: '쿠폰 관리',
       announcements: '공지사항 관리',
+      faqs: 'FAQ 관리',
+      inquiries: '문의 관리',
     },
     login: {
       title: '관리자 로그인',
@@ -198,6 +205,53 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
+    faqs: {
+      title: 'FAQ 관리',
+      editTitle: 'FAQ 수정',
+      empty: '등록된 FAQ가 없습니다.',
+      editLink: '수정',
+      saveSuccess: '저장됐습니다.',
+      form: {
+        questionLabel: '질문',
+        answerLabel: '답변',
+        createButton: '등록하기',
+        saveButton: '저장하기',
+        submitting: '저장 중...',
+      },
+      columns: {
+        question: '질문',
+        createdAt: '작성일시',
+        actions: '관리',
+      },
+      errors: {
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        validation_failed: '입력값을 다시 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
+    inquiries: {
+      title: '문의 관리',
+      empty: '등록된 문의가 없습니다.',
+      columns: {
+        title: '제목',
+        consumer: '작성자',
+        status: '상태',
+        createdAt: '작성일시',
+        actions: '관리',
+      },
+      statusPending: '답변대기',
+      statusAnswered: '답변완료',
+      viewLink: '보기',
+      answerLabel: '답변',
+      answerButton: '답변 등록',
+      answering: '등록 중...',
+      answerSuccess: '답변이 등록됐습니다.',
+      errors: {
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        validation_failed: '입력값을 다시 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
   },
   consumer: {
     login: {
@@ -237,6 +291,7 @@ export const ko = {
       signOutButton: '로그아웃',
       newOrderButton: '새 주문 만들기',
       accountButton: '회원정보 변경',
+      inquiriesButton: '1:1 문의',
       orders: {
         title: '주문내역',
         empty: '아직 주문 내역이 없습니다.',
@@ -294,6 +349,27 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
+    inquiries: {
+      title: '1:1 문의',
+      newTitle: '문의하기',
+      newButton: '문의하기',
+      empty: '문의 내역이 없습니다.',
+      statusPending: '답변대기',
+      statusAnswered: '답변완료',
+      answerLabel: '답변',
+      backToList: '목록으로 돌아가기',
+      form: {
+        titleLabel: '제목',
+        contentLabel: '내용',
+        submitButton: '문의하기',
+        submitting: '등록 중...',
+      },
+      errors: {
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        validation_failed: '입력값을 다시 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
   },
   notice: {
     list: {
@@ -303,5 +379,9 @@ export const ko = {
     detail: {
       backToList: '목록으로 돌아가기',
     },
+  },
+  faq: {
+    title: '자주 묻는 질문',
+    empty: '등록된 FAQ가 없습니다.',
   },
 } as const;

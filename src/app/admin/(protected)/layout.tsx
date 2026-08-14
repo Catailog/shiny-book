@@ -38,6 +38,18 @@ export default async function AdminLayout(props: LayoutProps<'/admin'>) {
           >
             {t.admin.nav.announcements}
           </Link>
+          <Link
+            href={ADMIN_ROUTES.FAQS}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            {t.admin.nav.faqs}
+          </Link>
+          <Link
+            href={ADMIN_ROUTES.INQUIRIES}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            {t.admin.nav.inquiries}
+          </Link>
         </nav>
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted-foreground">{admin.email}</span>

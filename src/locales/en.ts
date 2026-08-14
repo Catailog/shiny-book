@@ -6,6 +6,11 @@ export const en = {
     loading: 'Loading...',
     error: 'Something went wrong.',
   },
+  notFound: {
+    title: 'Page not found',
+    description: 'The page you requested does not exist or has been moved.',
+    backToHome: 'Back to home',
+  },
   orderStatus: {
     awaiting_payment: 'Awaiting payment',
     paid: 'Paid',
@@ -93,6 +98,8 @@ export const en = {
       orders: 'Orders',
       coupons: 'Coupons',
       announcements: 'Announcements',
+      faqs: 'FAQs',
+      inquiries: 'Inquiries',
     },
     login: {
       title: 'Admin login',
@@ -199,6 +206,53 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
+    faqs: {
+      title: 'FAQs',
+      editTitle: 'Edit FAQ',
+      empty: 'No FAQs yet.',
+      editLink: 'Edit',
+      saveSuccess: 'Saved.',
+      form: {
+        questionLabel: 'Question',
+        answerLabel: 'Answer',
+        createButton: 'Create',
+        saveButton: 'Save',
+        submitting: 'Saving...',
+      },
+      columns: {
+        question: 'Question',
+        createdAt: 'Created at',
+        actions: 'Actions',
+      },
+      errors: {
+        unauthorized: 'You do not have permission. Please sign in again.',
+        validation_failed: 'Please check your input and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
+    inquiries: {
+      title: 'Inquiries',
+      empty: 'No inquiries yet.',
+      columns: {
+        title: 'Title',
+        consumer: 'Consumer',
+        status: 'Status',
+        createdAt: 'Created at',
+        actions: 'Actions',
+      },
+      statusPending: 'Pending',
+      statusAnswered: 'Answered',
+      viewLink: 'View',
+      answerLabel: 'Answer',
+      answerButton: 'Submit answer',
+      answering: 'Submitting...',
+      answerSuccess: 'Answer submitted.',
+      errors: {
+        unauthorized: 'You do not have permission. Please sign in again.',
+        validation_failed: 'Please check your input and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
   },
   consumer: {
     login: {
@@ -238,6 +292,7 @@ export const en = {
       signOutButton: 'Sign out',
       newOrderButton: 'Create new order',
       accountButton: 'Account settings',
+      inquiriesButton: 'Inquiries',
       orders: {
         title: 'Order history',
         empty: 'No orders yet.',
@@ -295,6 +350,27 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
+    inquiries: {
+      title: 'Inquiries',
+      newTitle: 'New inquiry',
+      newButton: 'New inquiry',
+      empty: 'No inquiries yet.',
+      statusPending: 'Pending',
+      statusAnswered: 'Answered',
+      answerLabel: 'Answer',
+      backToList: 'Back to list',
+      form: {
+        titleLabel: 'Title',
+        contentLabel: 'Content',
+        submitButton: 'Submit',
+        submitting: 'Submitting...',
+      },
+      errors: {
+        unauthorized: 'You do not have permission. Please sign in again.',
+        validation_failed: 'Please check your input and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
   },
   notice: {
     list: {
@@ -304,5 +380,9 @@ export const en = {
     detail: {
       backToList: 'Back to list',
     },
+  },
+  faq: {
+    title: 'Frequently asked questions',
+    empty: 'No FAQs yet.',
   },
 } as const;

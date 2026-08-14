@@ -27,6 +27,13 @@ export default async function MypagePage() {
         <h1 className="text-2xl font-semibold text-foreground">{t.consumer.mypage.title}</h1>
         <div className="flex gap-2">
           <Button
+            render={<Link href={CONSUMER_ROUTES.INQUIRIES} />}
+            nativeButton={false}
+            variant="outline"
+          >
+            {t.consumer.mypage.inquiriesButton}
+          </Button>
+          <Button
             render={<Link href={CONSUMER_ROUTES.ACCOUNT} />}
             nativeButton={false}
             variant="outline"

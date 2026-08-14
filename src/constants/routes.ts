@@ -3,6 +3,8 @@ export const ADMIN_ROUTES = {
   DASHBOARD: '/admin',
   COUPONS: '/admin/coupons',
   ANNOUNCEMENTS: '/admin/announcements',
+  FAQS: '/admin/faqs',
+  INQUIRIES: '/admin/inquiries',
 } as const;
 
 export const CONSUMER_ROUTES = {
@@ -11,8 +13,14 @@ export const CONSUMER_ROUTES = {
   MYPAGE: '/mypage',
   NEW_ORDER: '/mypage/orders/new',
   ACCOUNT: '/mypage/account',
+  INQUIRIES: '/mypage/inquiries',
+  NEW_INQUIRY: '/mypage/inquiries/new',
 } as const;
 
 export const NOTICE_ROUTES = {
   LIST: '/notices',
+} as const;
+
+export const FAQ_ROUTES = {
+  LIST: '/faq',
 } as const;

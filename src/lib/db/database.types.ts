@@ -115,6 +115,63 @@ export type Database = {
         };
         Relationships: [];
       };
+      faqs: {
+        Row: {
+          answer: string;
+          created_at: string;
+          id: string;
+          question: string;
+          updated_at: string;
+        };
+        Insert: {
+          answer: string;
+          created_at?: string;
+          id?: string;
+          question: string;
+          updated_at?: string;
+        };
+        Update: {
+          answer?: string;
+          created_at?: string;
+          id?: string;
+          question?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      inquiries: {
+        Row: {
+          answer: string | null;
+          answered_at: string | null;
+          consumer_id: string;
+          content: string;
+          created_at: string;
+          id: string;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          answer?: string | null;
+          answered_at?: string | null;
+          consumer_id: string;
+          content: string;
+          created_at?: string;
+          id?: string;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          answer?: string | null;
+          answered_at?: string | null;
+          consumer_id?: string;
+          content?: string;
+          created_at?: string;
+          id?: string;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
           amount: number;
