@@ -125,4 +125,42 @@ export const en = {
       },
     },
   },
+  consumer: {
+    login: {
+      title: 'Sign in',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      submitButton: 'Sign in',
+      submitting: 'Signing in...',
+      signupPrompt: "Don't have an account yet?",
+      signupLink: 'Sign up',
+      errors: {
+        emailInvalid: 'Please enter a valid email.',
+        passwordRequired: 'Please enter your password.',
+        invalid_credentials: 'Please check your email and password.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
+    signup: {
+      title: 'Sign up',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      passwordConfirmLabel: 'Confirm password',
+      submitButton: 'Sign up',
+      submitting: 'Creating account...',
+      loginPrompt: 'Already have an account?',
+      loginLink: 'Sign in',
+      errors: {
+        emailInvalid: 'Please enter a valid email.',
+        passwordTooShort: 'Password must be at least 6 characters.',
+        passwordMismatch: 'Passwords do not match.',
+        email_taken: 'This email is already registered.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
+    mypage: {
+      title: 'My page',
+      signOutButton: 'Sign out',
+    },
+  },
 } as const;

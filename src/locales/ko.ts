@@ -124,4 +124,42 @@ export const ko = {
       },
     },
   },
+  consumer: {
+    login: {
+      title: '로그인',
+      emailLabel: '이메일',
+      passwordLabel: '비밀번호',
+      submitButton: '로그인',
+      submitting: '로그인 중...',
+      signupPrompt: '아직 계정이 없으신가요?',
+      signupLink: '회원가입',
+      errors: {
+        emailInvalid: '올바른 이메일을 입력해주세요.',
+        passwordRequired: '비밀번호를 입력해주세요.',
+        invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
+    signup: {
+      title: '회원가입',
+      emailLabel: '이메일',
+      passwordLabel: '비밀번호',
+      passwordConfirmLabel: '비밀번호 확인',
+      submitButton: '회원가입',
+      submitting: '가입 처리 중...',
+      loginPrompt: '이미 계정이 있으신가요?',
+      loginLink: '로그인',
+      errors: {
+        emailInvalid: '올바른 이메일을 입력해주세요.',
+        passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
+        passwordMismatch: '비밀번호가 일치하지 않습니다.',
+        email_taken: '이미 가입된 이메일입니다.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
+    mypage: {
+      title: '마이페이지',
+      signOutButton: '로그아웃',
+    },
+  },
 } as const;

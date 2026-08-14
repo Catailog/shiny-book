@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@supabase/ssr';
 
-import { ADMIN_ROUTES } from '@/constants/routes';
+import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 
@@ -32,6 +32,7 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   const isAuthenticatedAdmin = user !== null && isAdminRole(user.app_metadata.role);
+  const isAuthenticatedConsumer = user !== null && !isAdminRole(user.app_metadata.role);
 
   const { pathname } = request.nextUrl;
   const isAdminLoginRoute = pathname === ADMIN_ROUTES.LOGIN;
@@ -43,6 +44,18 @@ export async function proxy(request: NextRequest) {
 
   if (isAdminLoginRoute && isAuthenticatedAdmin) {
     return NextResponse.redirect(new URL(ADMIN_ROUTES.DASHBOARD, request.url));
+  }
+
+  const isConsumerAuthRoute =
+    pathname === CONSUMER_ROUTES.LOGIN || pathname === CONSUMER_ROUTES.SIGNUP;
+  const isMypageRoute = pathname.startsWith(CONSUMER_ROUTES.MYPAGE);
+
+  if (isMypageRoute && !isAuthenticatedConsumer) {
+    return NextResponse.redirect(new URL(CONSUMER_ROUTES.LOGIN, request.url));
+  }
+
+  if (isConsumerAuthRoute && isAuthenticatedConsumer) {
+    return NextResponse.redirect(new URL(CONSUMER_ROUTES.MYPAGE, request.url));
   }
 
   return supabaseResponse;
