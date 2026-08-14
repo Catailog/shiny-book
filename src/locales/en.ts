@@ -92,6 +92,7 @@ export const en = {
     nav: {
       orders: 'Orders',
       coupons: 'Coupons',
+      announcements: 'Announcements',
     },
     login: {
       title: 'Admin login',
@@ -170,6 +171,31 @@ export const en = {
         validation_failed: 'Please check your input and try again.',
         code_taken: 'This coupon code is already in use.',
         conflict: 'This was already changed elsewhere. Please refresh and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
+    announcements: {
+      title: 'Announcements',
+      editTitle: 'Edit announcement',
+      empty: 'No announcements yet.',
+      editLink: 'Edit',
+      saveSuccess: 'Saved.',
+      form: {
+        titleLabel: 'Title',
+        contentLabel: 'Content',
+        createButton: 'Create',
+        saveButton: 'Save',
+        submitting: 'Saving...',
+      },
+      columns: {
+        title: 'Title',
+        createdAt: 'Created at',
+        updatedAt: 'Updated at',
+        actions: 'Actions',
+      },
+      errors: {
+        unauthorized: 'You do not have permission. Please sign in again.',
+        validation_failed: 'Please check your input and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -268,6 +294,15 @@ export const en = {
         coupon_conflict: 'This coupon was just used elsewhere. Please try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
+    },
+  },
+  notice: {
+    list: {
+      title: 'Announcements',
+      empty: 'No announcements yet.',
+    },
+    detail: {
+      backToList: 'Back to list',
     },
   },
 } as const;

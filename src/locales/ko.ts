@@ -91,6 +91,7 @@ export const ko = {
     nav: {
       orders: '주문 목록',
       coupons: '쿠폰 관리',
+      announcements: '공지사항 관리',
     },
     login: {
       title: '관리자 로그인',
@@ -169,6 +170,31 @@ export const ko = {
         validation_failed: '입력값을 다시 확인해주세요.',
         code_taken: '이미 존재하는 쿠폰 코드입니다.',
         conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
+    announcements: {
+      title: '공지사항 관리',
+      editTitle: '공지사항 수정',
+      empty: '등록된 공지사항이 없습니다.',
+      editLink: '수정',
+      saveSuccess: '저장됐습니다.',
+      form: {
+        titleLabel: '제목',
+        contentLabel: '내용',
+        createButton: '등록하기',
+        saveButton: '저장하기',
+        submitting: '저장 중...',
+      },
+      columns: {
+        title: '제목',
+        createdAt: '작성일시',
+        updatedAt: '수정일시',
+        actions: '관리',
+      },
+      errors: {
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        validation_failed: '입력값을 다시 확인해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -267,6 +293,15 @@ export const ko = {
         coupon_conflict: '다른 곳에서 먼저 사용된 쿠폰입니다. 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
+    },
+  },
+  notice: {
+    list: {
+      title: '공지사항',
+      empty: '등록된 공지사항이 없습니다.',
+    },
+    detail: {
+      backToList: '목록으로 돌아가기',
     },
   },
 } as const;
