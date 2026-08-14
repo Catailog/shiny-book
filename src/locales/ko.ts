@@ -160,6 +160,30 @@ export const ko = {
     mypage: {
       title: '마이페이지',
       signOutButton: '로그아웃',
+      newOrderButton: '새 주문 만들기',
+    },
+    orderNew: {
+      title: '주문 만들기',
+      titleLabel: '도서명',
+      quantityLabel: '수량',
+      manuscriptLabel: '원고 파일 (PDF)',
+      coverLabel: '표지 이미지',
+      submitButton: '결제하러 가기',
+      submitting: '주문 생성 중...',
+      status: {
+        uploading: '업로드 중...',
+        processing: '이미지 처리 중...',
+        done: '업로드 완료',
+      },
+      errors: {
+        titleRequired: '도서명을 입력해주세요.',
+        quantityInvalid: '수량은 1권 이상이어야 합니다.',
+        uploadFailed: '파일 업로드에 실패했습니다. 다시 시도해주세요.',
+        filesRequired: '원고와 표지 파일을 모두 업로드해주세요.',
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        validation_failed: '입력값을 다시 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
     },
   },
 } as const;

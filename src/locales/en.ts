@@ -161,6 +161,30 @@ export const en = {
     mypage: {
       title: 'My page',
       signOutButton: 'Sign out',
+      newOrderButton: 'Create new order',
+    },
+    orderNew: {
+      title: 'Create an order',
+      titleLabel: 'Book title',
+      quantityLabel: 'Quantity',
+      manuscriptLabel: 'Manuscript file (PDF)',
+      coverLabel: 'Cover image',
+      submitButton: 'Go to payment',
+      submitting: 'Creating order...',
+      status: {
+        uploading: 'Uploading...',
+        processing: 'Processing image...',
+        done: 'Upload complete',
+      },
+      errors: {
+        titleRequired: 'Please enter a book title.',
+        quantityInvalid: 'Quantity must be at least 1.',
+        uploadFailed: 'File upload failed. Please try again.',
+        filesRequired: 'Please upload both the manuscript and cover files.',
+        unauthorized: 'You do not have permission. Please sign in again.',
+        validation_failed: 'Please check your input and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
     },
   },
 } as const;
