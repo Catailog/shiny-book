@@ -13,6 +13,7 @@ import { getNextStatuses } from '@/lib/orders/order-state-machine';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
+import { ViewOrderFileButton } from './view-order-file-button';
 
 export default async function AdminDashboardPage() {
   const t = locales[defaultLocale];
@@ -32,6 +33,7 @@ export default async function AdminDashboardPage() {
               <TableHead>{t.admin.orders.columns.amount}</TableHead>
               <TableHead>{t.admin.orders.columns.status}</TableHead>
               <TableHead>{t.admin.orders.columns.createdAt}</TableHead>
+              <TableHead>{t.admin.orders.columns.files}</TableHead>
               <TableHead>{t.admin.orders.columns.actions}</TableHead>
             </TableRow>
           </TableHeader>
@@ -56,6 +58,18 @@ export default async function AdminDashboardPage() {
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {new Date(order.created_at).toLocaleString('ko-KR')}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <ViewOrderFileButton
+                        path={order.manuscript_file_url}
+                        label={t.admin.orders.manuscriptButton}
+                      />
+                      <ViewOrderFileButton
+                        path={order.cover_file_url}
+                        label={t.admin.orders.coverButton}
+                      />
+                    </div>
                   </TableCell>
                   <TableCell>
                     {status && nextStatus ? (
