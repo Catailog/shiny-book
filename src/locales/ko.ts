@@ -113,8 +113,15 @@ export const ko = {
         amount: '결제 금액',
         status: '상태',
         createdAt: '주문일시',
+        actions: '관리',
       },
       quantitySuffix: '권',
+      advanceButton: '다음 단계로 진행',
+      statusChangeErrors: {
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        not_allowed: '허용되지 않는 상태 변경입니다.',
+        conflict: '다른 곳에서 이미 상태가 변경됐습니다. 새로고침 후 다시 시도해주세요.',
+      },
     },
   },
 } as const;

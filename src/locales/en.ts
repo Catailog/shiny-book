@@ -114,8 +114,15 @@ export const en = {
         amount: 'Amount',
         status: 'Status',
         createdAt: 'Created at',
+        actions: 'Actions',
       },
       quantitySuffix: 'copies',
+      advanceButton: 'Advance to next stage',
+      statusChangeErrors: {
+        unauthorized: 'You do not have permission. Please sign in again.',
+        not_allowed: 'This status change is not allowed.',
+        conflict: 'This order was already updated elsewhere. Please refresh and try again.',
+      },
     },
   },
 } as const;

@@ -7,9 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { isOrderStatus } from '@/constants/order-status';
+import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { getOrders } from '@/lib/orders/get-orders';
+import { getNextStatuses } from '@/lib/orders/order-state-machine';
 import { defaultLocale, locales } from '@/locales';
+
+import { AdvanceOrderStatusButton } from './advance-order-status-button';
 
 export default async function AdminDashboardPage() {
   const t = locales[defaultLocale];
@@ -29,29 +32,41 @@ export default async function AdminDashboardPage() {
               <TableHead>{t.admin.orders.columns.amount}</TableHead>
               <TableHead>{t.admin.orders.columns.status}</TableHead>
               <TableHead>{t.admin.orders.columns.createdAt}</TableHead>
+              <TableHead>{t.admin.orders.columns.actions}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-medium text-foreground">{order.title}</TableCell>
-                <TableCell>
-                  {order.quantity}
-                  {t.admin.orders.quantitySuffix}
-                </TableCell>
-                <TableCell>{order.amount.toLocaleString()}</TableCell>
-                <TableCell>
-                  {isOrderStatus(order.status) ? (
-                    <OrderStatusBadge status={order.status} />
-                  ) : (
-                    order.status
-                  )}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {new Date(order.created_at).toLocaleString('ko-KR')}
-                </TableCell>
-              </TableRow>
-            ))}
+            {orders.map((order) => {
+              const status = isOrderStatus(order.status) ? order.status : null;
+              const nextStatus =
+                status && status !== ORDER_STATUS.AWAITING_PAYMENT
+                  ? getNextStatuses(status)[0]
+                  : undefined;
+
+              return (
+                <TableRow key={order.id}>
+                  <TableCell className="font-medium text-foreground">{order.title}</TableCell>
+                  <TableCell>
+                    {order.quantity}
+                    {t.admin.orders.quantitySuffix}
+                  </TableCell>
+                  <TableCell>{order.amount.toLocaleString()}</TableCell>
+                  <TableCell>
+                    {status ? <OrderStatusBadge status={status} /> : order.status}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {new Date(order.created_at).toLocaleString('ko-KR')}
+                  </TableCell>
+                  <TableCell>
+                    {status && nextStatus ? (
+                      <AdvanceOrderStatusButton orderId={order.id} from={status} to={nextStatus} />
+                    ) : (
+                      <span className="text-muted-foreground">-</span>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       )}
