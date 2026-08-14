@@ -28,3 +28,8 @@ export const FAQ_ROUTES = {
 export const REVIEW_ROUTES = {
   LIST: '/reviews',
 } as const;
+
+export const LEGAL_ROUTES = {
+  TERMS: '/terms',
+  PRIVACY: '/privacy',
+} as const;

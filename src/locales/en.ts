@@ -408,4 +408,152 @@ export const en = {
     title: 'Reviews',
     empty: 'No reviews yet.',
   },
+  legal: {
+    lastUpdatedLabel: 'Last updated',
+    terms: {
+      title: 'Terms of Service',
+      lastUpdated: 'August 14, 2026',
+      sections: [
+        {
+          heading: 'Article 1 (Purpose)',
+          body: 'These Terms govern the rights, obligations, and responsibilities between the "Mall" operated by Shiny Book and users regarding the use of the book printing service provided through the internet cyber mall.',
+        },
+        {
+          heading: 'Article 2 (Definitions)',
+          body: '"Mall" means the website operated by the Company to provide goods or services to users. "User" means a member or non-member who accesses the Mall and uses the services provided under these Terms. "Member" means a person registered with the Mall who may continuously use the services provided by the Mall.',
+        },
+        {
+          heading: 'Article 3 (Posting, Explanation, and Amendment of Terms)',
+          body: 'The Mall posts these Terms on its initial screen so that users can be aware of them. The Mall may amend these Terms within the scope permitted by applicable law, and will announce the effective date and reasons for amendment along with the current Terms in advance.',
+        },
+        {
+          heading: 'Article 4 (Provision and Change of Service)',
+          body: 'The Mall provides manuscript/cover upload, order production, payment, and shipment tracking services. The Mall may change the content of goods to be provided under future contracts in the event of a stockout or change in technical specifications.',
+        },
+        {
+          heading: 'Article 5 (Suspension of Service)',
+          body: 'The Mall may temporarily suspend the Service in the event of maintenance, replacement, or failure of computer or other information communication equipment, or communication outages.',
+        },
+        {
+          heading: 'Article 6 (Membership)',
+          body: 'A user applies for membership by filling out the registration form set by the Mall and expressing agreement to these Terms; the membership agreement is established when the Mall accepts the application.',
+        },
+        {
+          heading: "Article 7 (Withdrawal and Loss of Member's Status)",
+          body: "A member may request withdrawal from the Mall at any time, and the Mall will process the withdrawal immediately. The Mall may restrict or suspend a member's status if the member violates applicable law or these Terms.",
+        },
+        {
+          heading: 'Article 8 (Notices to Members)',
+          body: 'When the Mall gives notice to a member, it may do so via the email address submitted at registration or via a notice within the account page.',
+        },
+        {
+          heading: 'Article 9 (Purchase Application and Consent to Provide Personal Information)',
+          body: 'A user applies to purchase by uploading a manuscript and cover file and entering the book title, quantity, and similar details; in this process, the Mall may request personal information from the user as necessary to provide the service, including shipping.',
+        },
+        {
+          heading: 'Article 10 (Formation of Contract)',
+          body: "The Mall accepts a purchase application under Article 9 except where the content contains false statements, omissions, or errors, and the contract is deemed formed when the Mall's acceptance reaches the user.",
+        },
+        {
+          heading: 'Article 11 (Payment Methods)',
+          body: 'Payment for goods purchased through the Mall may be made by credit card or other available payment methods, and payments are processed through the payment gateway (PG) provider, Toss Payments Corp.',
+        },
+        {
+          heading:
+            'Article 12 (Confirmation Notice, and Change/Cancellation of Purchase Application)',
+          body: 'The Mall sends a confirmation notice to the user upon receiving a purchase application. The user may request a change or cancellation of the purchase application after receiving the confirmation notice and before production begins.',
+        },
+        {
+          heading: 'Article 13 (Supply of Goods)',
+          body: 'Unless otherwise agreed with the user regarding the timing of supply, the Mall arranges for goods to be shipped within 7 days of the date the user submitted the order.',
+        },
+        {
+          heading: 'Article 14 (Refunds)',
+          body: 'If the Mall is unable to supply goods requested by a user, it will notify the user of the reason without delay, and if payment was received in advance, will refund it or take the necessary measures to do so within 3 business days of receipt.',
+        },
+        {
+          heading: 'Article 15 (Withdrawal of Offer)',
+          body: "A user who has entered into a purchase contract with the Mall may withdraw the offer within 7 days of the date of contract. However, given that printed materials are individually produced to the user's specifications, withdrawal may be restricted once production has begun.",
+        },
+        {
+          heading: 'Article 16 (Effects of Withdrawal of Offer)',
+          body: 'The Mall refunds the amount already paid within 3 business days of receiving the returned goods, and the party responsible for return costs arising from withdrawal is determined in accordance with applicable law.',
+        },
+        {
+          heading: 'Article 17 (Protection of Personal Information)',
+          body: "The Mall collects the minimum personal information necessary to provide the service and endeavors to protect users' personal information as required by applicable law. Further details are governed by the Privacy Policy.",
+        },
+        {
+          heading: 'Article 18 (Obligations of the Mall)',
+          body: "The Mall does not engage in conduct prohibited by law or these Terms or contrary to public order, and makes every effort to provide continuous and stable service. The Mall maintains a security system to protect users' personal information.",
+        },
+        {
+          heading: "Article 19 (Member's Obligations Regarding ID and Password)",
+          body: 'Members are responsible for managing their own account and must not allow third parties to use it. If a member becomes aware that their account has been stolen or is being used by a third party, they must notify the Mall immediately.',
+        },
+        {
+          heading: "Article 20 (User's Obligations)",
+          body: "Users must not register false information, use another person's information without authorization, or alter information posted on the Mall. Users must not upload manuscripts or covers that infringe the copyrights or other intellectual property rights of others.",
+        },
+        {
+          heading: 'Article 21 (Relationship Between Linked and Linking "Malls")',
+          body: 'Where a mall is connected to another mall by hyperlink or similar means, the former is called the linking mall and the latter the linked mall. The linking mall is not liable for transactions conducted with users based on goods independently provided by the linked mall.',
+        },
+        {
+          heading: 'Article 22 (Copyright Ownership and Restrictions on Use)',
+          body: "Copyright in manuscripts and covers uploaded by users belongs to the user. Copyright and other intellectual property rights in works created by the Mall belong to the Mall, and users may not use information obtained through the Mall for commercial purposes without the Mall's prior consent.",
+        },
+        {
+          heading: 'Article 23 (Dispute Resolution)',
+          body: 'The Mall operates a customer support center to reflect legitimate opinions or complaints raised by users and to process compensation for damages. Disputes between the Mall and users may be resolved through a dispute mediation body such as the e-commerce dispute mediation committee.',
+        },
+        {
+          heading: 'Article 24 (Jurisdiction and Governing Law)',
+          body: "Lawsuits regarding disputes between the Mall and users are governed by the user's address at the time of filing, or place of residence if no address exists, under the exclusive jurisdiction of the competent district court, and the laws of the Republic of Korea apply to disputes related to these Terms.",
+        },
+        {
+          heading: 'Business Information',
+          body: 'Company name: Shiny Book\nRepresentative: Hong Gil-dong\nBusiness registration number: 000-00-00000\nMail order sales registration number: No. 2026-Seoul Jung-gu-0000\nAddress: 110 Sejong-daero, Jung-gu, Seoul, Republic of Korea\nPhone: 02-0000-0000\nEmail: example@example.com',
+        },
+      ],
+    },
+    privacy: {
+      title: 'Privacy Policy',
+      lastUpdated: 'August 14, 2026',
+      sections: [
+        {
+          heading: '1. Personal Information Collected',
+          body: 'The Mall collects email address and password (stored encrypted) for membership registration and service provision. Recipient information may additionally be collected for orders and shipping.',
+        },
+        {
+          heading: '2. Purpose of Collection and Use',
+          body: 'Collected personal information is used only for member identification and login authentication, order processing and shipping, customer support, and payment processing.',
+        },
+        {
+          heading: '3. Retention and Use Period',
+          body: 'Personal information is destroyed without delay upon membership withdrawal, except where retention is required by applicable law, in which case it is retained for the period required by that law.',
+        },
+        {
+          heading: '4. Provision to Third Parties',
+          body: 'The Mall does not provide personal information to external parties in principle, except for the minimum information necessary to the courier for shipping purposes.',
+        },
+        {
+          heading: '5. Outsourcing of Personal Information Processing',
+          body: 'The Mall outsources payment processing to Toss Payments Corp. and sets out the necessary matters in the outsourcing agreement to ensure personal information is managed securely.',
+        },
+        {
+          heading: "6. Users' Rights and How to Exercise Them",
+          body: 'Users may view or edit their personal information at any time through their account page, and may withdraw consent to the collection and use of personal information by deleting their account.',
+        },
+        {
+          heading: '7. Destruction of Personal Information',
+          body: 'When the retention period has elapsed or the purpose of processing has been achieved, the relevant personal information is destroyed without delay.',
+        },
+        {
+          heading: '8. Personal Information Protection Officer',
+          body: 'Personal Information Protection Officer: Hong Gil-dong / Contact: example@example.com',
+        },
+      ],
+    },
+  },
 } as const;
