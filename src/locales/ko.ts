@@ -1,10 +1,19 @@
 import type { ApiErrorCode } from '@/constants/api-errors';
+import type { OrderStatus } from '@/constants/order-status';
 
 export const ko = {
   common: {
     loading: '로딩 중...',
     error: '오류가 발생했습니다.',
   },
+  orderStatus: {
+    awaiting_payment: '결제대기',
+    paid: '결제완료',
+    printing: '인쇄중',
+    binding: '제본중',
+    shipping: '배송중',
+    completed: '완료',
+  } satisfies Record<OrderStatus, string>,
   apiErrors: {
     UNAUTHORIZED: '인증이 필요합니다.',
     FORBIDDEN: '권한이 없습니다.',
@@ -94,6 +103,18 @@ export const ko = {
     dashboard: {
       title: '관리자 대시보드',
       signOutButton: '로그아웃',
+    },
+    orders: {
+      title: '주문 목록',
+      empty: '표시할 주문이 없습니다.',
+      columns: {
+        title: '도서명',
+        quantity: '수량',
+        amount: '결제 금액',
+        status: '상태',
+        createdAt: '주문일시',
+      },
+      quantitySuffix: '권',
     },
   },
 } as const;

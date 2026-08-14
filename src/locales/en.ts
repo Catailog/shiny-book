@@ -1,10 +1,19 @@
 import type { ApiErrorCode } from '@/constants/api-errors';
+import type { OrderStatus } from '@/constants/order-status';
 
 export const en = {
   common: {
     loading: 'Loading...',
     error: 'Something went wrong.',
   },
+  orderStatus: {
+    awaiting_payment: 'Awaiting payment',
+    paid: 'Paid',
+    printing: 'Printing',
+    binding: 'Binding',
+    shipping: 'Shipping',
+    completed: 'Completed',
+  } satisfies Record<OrderStatus, string>,
   apiErrors: {
     UNAUTHORIZED: 'Authentication is required.',
     FORBIDDEN: 'You do not have permission.',
@@ -95,6 +104,18 @@ export const en = {
     dashboard: {
       title: 'Admin dashboard',
       signOutButton: 'Sign out',
+    },
+    orders: {
+      title: 'Orders',
+      empty: 'No orders to show.',
+      columns: {
+        title: 'Title',
+        quantity: 'Quantity',
+        amount: 'Amount',
+        status: 'Status',
+        createdAt: 'Created at',
+      },
+      quantitySuffix: 'copies',
     },
   },
 } as const;
