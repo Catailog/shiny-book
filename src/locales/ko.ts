@@ -85,6 +85,7 @@ export const ko = {
       codeLabel: '오류 코드',
       messageLabel: '오류 메시지',
     },
+    backToMypageButton: '마이페이지로 돌아가기',
   },
   admin: {
     login: {
@@ -165,6 +166,34 @@ export const ko = {
       title: '마이페이지',
       signOutButton: '로그아웃',
       newOrderButton: '새 주문 만들기',
+      accountButton: '회원정보 변경',
+      orders: {
+        title: '주문내역',
+        empty: '아직 주문 내역이 없습니다.',
+        columns: {
+          title: '도서명',
+          quantity: '수량',
+          amount: '결제 금액',
+          status: '상태',
+          createdAt: '주문일시',
+        },
+        quantitySuffix: '권',
+      },
+    },
+    account: {
+      title: '회원정보 변경',
+      passwordLabel: '새 비밀번호',
+      passwordConfirmLabel: '새 비밀번호 확인',
+      submitButton: '변경하기',
+      submitting: '변경 중...',
+      success: '비밀번호가 변경됐습니다.',
+      errors: {
+        passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
+        passwordMismatch: '비밀번호가 일치하지 않습니다.',
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        validation_failed: '입력값을 다시 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
     },
     orderNew: {
       title: '주문 만들기',

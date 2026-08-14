@@ -7,12 +7,25 @@ Base UI는 대신 `render` prop을 쓴다. `render`에 렌더링할 엘리먼트
 ## 올바른 패턴
 
 ```tsx
-<Button render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />} className="w-fit">
+<Button render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />} nativeButton={false} className="w-fit">
   {t.consumer.mypage.newOrderButton}
 </Button>
 ```
 
 `asChild` + children 패턴(Radix 스타일)은 이 프로젝트에서 쓰지 않는다.
+
+## nativeButton={false}도 같이 넘겨야 함
+
+`render`에 `<button>`이 아닌 엘리먼트(`<Link>`가 렌더링하는 `<a>` 등)를 넘기면 `nativeButton` prop의 기본값이 `true`라서 다음 콘솔 에러가 뜬다:
+
+```
+Base UI: A component that acts as a button expected a native <button> because the
+`nativeButton` prop is true. Rendering a non-<button> removes native button semantics,
+which can impact forms and accessibility. Use a real <button> in the `render` prop,
+or set `nativeButton` to `false`.
+```
+
+타입 에러가 아니라 런타임 콘솔 에러라서 `npm run type-check`/`npm run lint`로는 안 잡히고, 브라우저에서 직접 열어봐야 보인다. `render`로 링크(`<a>`)를 넘길 때는 항상 `nativeButton={false}`를 같이 넘긴다.
 
 ## 확인 방법
 

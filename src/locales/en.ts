@@ -86,6 +86,7 @@ export const en = {
       codeLabel: 'Error code',
       messageLabel: 'Error message',
     },
+    backToMypageButton: 'Back to my page',
   },
   admin: {
     login: {
@@ -166,6 +167,34 @@ export const en = {
       title: 'My page',
       signOutButton: 'Sign out',
       newOrderButton: 'Create new order',
+      accountButton: 'Account settings',
+      orders: {
+        title: 'Order history',
+        empty: 'No orders yet.',
+        columns: {
+          title: 'Title',
+          quantity: 'Quantity',
+          amount: 'Amount',
+          status: 'Status',
+          createdAt: 'Created at',
+        },
+        quantitySuffix: 'copies',
+      },
+    },
+    account: {
+      title: 'Account settings',
+      passwordLabel: 'New password',
+      passwordConfirmLabel: 'Confirm new password',
+      submitButton: 'Change password',
+      submitting: 'Changing...',
+      success: 'Your password has been changed.',
+      errors: {
+        passwordTooShort: 'Password must be at least 6 characters.',
+        passwordMismatch: 'Passwords do not match.',
+        unauthorized: 'You do not have permission. Please sign in again.',
+        validation_failed: 'Please check your input and try again.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
     },
     orderNew: {
       title: 'Create an order',

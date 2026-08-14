@@ -8,4 +8,5 @@ export const CONSUMER_ROUTES = {
   SIGNUP: '/signup',
   MYPAGE: '/mypage',
   NEW_ORDER: '/mypage/orders/new',
+  ACCOUNT: '/mypage/account',
 } as const;
