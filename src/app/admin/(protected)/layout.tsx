@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -18,12 +19,28 @@ export default async function AdminLayout(props: LayoutProps<'/admin'>) {
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="flex items-center justify-between border-b border-border px-6 py-4">
-        <span className="text-sm text-muted-foreground">{admin.email}</span>
-        <form action={signOutAdmin}>
-          <Button type="submit" variant="outline" size="sm">
-            {t.admin.dashboard.signOutButton}
-          </Button>
-        </form>
+        <nav className="flex items-center gap-4">
+          <Link
+            href={ADMIN_ROUTES.DASHBOARD}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            {t.admin.nav.orders}
+          </Link>
+          <Link
+            href={ADMIN_ROUTES.COUPONS}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            {t.admin.nav.coupons}
+          </Link>
+        </nav>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-muted-foreground">{admin.email}</span>
+          <form action={signOutAdmin}>
+            <Button type="submit" variant="outline" size="sm">
+              {t.admin.dashboard.signOutButton}
+            </Button>
+          </form>
+        </div>
       </header>
       <main className="flex flex-1 flex-col">{props.children}</main>
     </div>

@@ -8,6 +8,7 @@ function buildOrderRow(overrides: Partial<Tables<'orders'>> = {}): Tables<'order
     id: 'order-1',
     client_id: 'client-1',
     consumer_id: null,
+    coupon_id: null,
     status: 'awaiting_payment',
     title: '나의 첫 동화책',
     manuscript_file_url: 'https://storage.example.com/manuscript.pdf',

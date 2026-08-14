@@ -1,0 +1,126 @@
+'use client';
+
+import { useTransition } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { DISCOUNT_TYPE } from '@/constants/coupon';
+import { useT } from '@/hooks/use-t';
+
+import { createCoupon } from './actions';
+import { type CouponFormInput, couponFormSchema } from './coupon-schema';
+
+export function CouponForm() {
+  const t = useT();
+  const [isPending, startTransition] = useTransition();
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CouponFormInput>({
+    resolver: zodResolver(couponFormSchema),
+    defaultValues: { discountType: DISCOUNT_TYPE.PERCENTAGE },
+  });
+
+  function onSubmit(values: CouponFormInput) {
+    startTransition(async () => {
+      const result = await createCoupon({
+        code: values.code,
+        discountType: values.discountType,
+        discountValue: values.discountValue,
+        maxUses: values.maxUses ? Number(values.maxUses) : undefined,
+        expiresAt: values.expiresAt || undefined,
+      });
+
+      if (result) {
+        toast.error(t.admin.coupons.errors[result.errorCode]);
+        return;
+      }
+
+      toast.success(t.admin.coupons.createSuccess);
+      reset();
+    });
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-wrap items-end gap-3 rounded-lg border border-border p-4"
+      noValidate
+    >
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="code">{t.admin.coupons.form.codeLabel}</Label>
+        <Input id="code" type="text" className="w-40" {...register('code')} />
+        {errors.code ? (
+          <p className="text-sm text-destructive">{t.admin.coupons.errors.validation_failed}</p>
+        ) : null}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="discountType">{t.admin.coupons.form.discountTypeLabel}</Label>
+        <Controller
+          control={control}
+          name="discountType"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger id="discountType" className="w-32">
+                <SelectValue>
+                  {(value: string) =>
+                    value === DISCOUNT_TYPE.PERCENTAGE
+                      ? t.admin.coupons.discountTypeOptions.percentage
+                      : t.admin.coupons.discountTypeOptions.fixed
+                  }
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={DISCOUNT_TYPE.PERCENTAGE}>
+                  {t.admin.coupons.discountTypeOptions.percentage}
+                </SelectItem>
+                <SelectItem value={DISCOUNT_TYPE.FIXED}>
+                  {t.admin.coupons.discountTypeOptions.fixed}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="discountValue">{t.admin.coupons.form.discountValueLabel}</Label>
+        <Input
+          id="discountValue"
+          type="number"
+          min={1}
+          className="w-28"
+          {...register('discountValue')}
+        />
+        {errors.discountValue ? (
+          <p className="text-sm text-destructive">{t.admin.coupons.errors.validation_failed}</p>
+        ) : null}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="maxUses">{t.admin.coupons.form.maxUsesLabel}</Label>
+        <Input id="maxUses" type="number" min={1} className="w-28" {...register('maxUses')} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="expiresAt">{t.admin.coupons.form.expiresAtLabel}</Label>
+        <Input id="expiresAt" type="date" className="w-40" {...register('expiresAt')} />
+      </div>
+      <Button type="submit" disabled={isPending}>
+        {isPending ? t.admin.coupons.form.submitting : t.admin.coupons.form.submitButton}
+      </Button>
+    </form>
+  );
+}

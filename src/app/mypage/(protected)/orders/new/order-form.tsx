@@ -120,6 +120,7 @@ export function ConsumerOrderForm() {
       const result = await createConsumerOrder({
         title: values.title,
         quantity: values.quantity,
+        couponCode: values.couponCode,
         manuscriptPath,
         coverPath,
       });
@@ -189,6 +190,10 @@ export function ConsumerOrderForm() {
         {coverStatus !== 'idle' ? (
           <p className="text-sm text-muted-foreground">{uploadStatusLabel[coverStatus]}</p>
         ) : null}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
+        <Input id="couponCode" type="text" {...register('couponCode')} />
       </div>
       <Button type="submit" disabled={isSubmitDisabled} className="w-full">
         {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.submitButton}

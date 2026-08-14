@@ -55,11 +55,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      coupons: {
+        Row: {
+          code: string;
+          created_at: string;
+          discount_type: string;
+          discount_value: number;
+          expires_at: string | null;
+          id: string;
+          is_active: boolean;
+          max_uses: number | null;
+          used_count: number;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          discount_type: string;
+          discount_value: number;
+          expires_at?: string | null;
+          id?: string;
+          is_active?: boolean;
+          max_uses?: number | null;
+          used_count?: number;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          discount_type?: string;
+          discount_value?: number;
+          expires_at?: string | null;
+          id?: string;
+          is_active?: boolean;
+          max_uses?: number | null;
+          used_count?: number;
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
           amount: number;
           client_id: string | null;
           consumer_id: string | null;
+          coupon_id: string | null;
           cover_file_url: string;
           created_at: string;
           id: string;
@@ -73,6 +110,7 @@ export type Database = {
           amount: number;
           client_id?: string | null;
           consumer_id?: string | null;
+          coupon_id?: string | null;
           cover_file_url: string;
           created_at?: string;
           id?: string;
@@ -86,6 +124,7 @@ export type Database = {
           amount?: number;
           client_id?: string | null;
           consumer_id?: string | null;
+          coupon_id?: string | null;
           cover_file_url?: string;
           created_at?: string;
           id?: string;
@@ -101,6 +140,13 @@ export type Database = {
             columns: ['client_id'];
             isOneToOne: false;
             referencedRelation: 'api_keys';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'orders_coupon_id_fkey';
+            columns: ['coupon_id'];
+            isOneToOne: false;
+            referencedRelation: 'coupons';
             referencedColumns: ['id'];
           },
         ];
