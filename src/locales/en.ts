@@ -78,4 +78,23 @@ export const en = {
       messageLabel: 'Error message',
     },
   },
+  admin: {
+    login: {
+      title: 'Admin login',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      submitButton: 'Sign in',
+      submitting: 'Signing in...',
+      errors: {
+        emailInvalid: 'Please enter a valid email.',
+        passwordRequired: 'Please enter your password.',
+        invalid_credentials: 'Please check your email and password.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+    },
+    dashboard: {
+      title: 'Admin dashboard',
+      signOutButton: 'Sign out',
+    },
+  },
 } as const;

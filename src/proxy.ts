@@ -2,7 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@supabase/ssr';
 
+import { ADMIN_ROUTES } from '@/constants/routes';
 import { env } from '@/env';
+import { isAdminRole } from '@/lib/auth/is-admin-role';
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -26,7 +28,22 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isAuthenticatedAdmin = user !== null && isAdminRole(user.app_metadata.role);
+
+  const { pathname } = request.nextUrl;
+  const isAdminLoginRoute = pathname === ADMIN_ROUTES.LOGIN;
+  const isAdminRoute = pathname.startsWith(ADMIN_ROUTES.DASHBOARD);
+
+  if (isAdminRoute && !isAdminLoginRoute && !isAuthenticatedAdmin) {
+    return NextResponse.redirect(new URL(ADMIN_ROUTES.LOGIN, request.url));
+  }
+
+  if (isAdminLoginRoute && isAuthenticatedAdmin) {
+    return NextResponse.redirect(new URL(ADMIN_ROUTES.DASHBOARD, request.url));
+  }
 
   return supabaseResponse;
 }

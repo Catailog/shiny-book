@@ -77,4 +77,23 @@ export const ko = {
       messageLabel: '오류 메시지',
     },
   },
+  admin: {
+    login: {
+      title: '관리자 로그인',
+      emailLabel: '이메일',
+      passwordLabel: '비밀번호',
+      submitButton: '로그인',
+      submitting: '로그인 중...',
+      errors: {
+        emailInvalid: '올바른 이메일을 입력해주세요.',
+        passwordRequired: '비밀번호를 입력해주세요.',
+        invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+    },
+    dashboard: {
+      title: '관리자 대시보드',
+      signOutButton: '로그아웃',
+    },
+  },
 } as const;
