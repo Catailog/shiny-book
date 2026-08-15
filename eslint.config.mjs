@@ -27,6 +27,8 @@ const eslintConfig = defineConfig([
     // Supabase CLI local runtime state, not our code:
     'supabase/.temp/**',
     'supabase/.branches/**',
+    // Verbatim reference dump, not our code:
+    '.claude/.temp/design-sample/**',
   ]),
 ]);
 
