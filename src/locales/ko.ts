@@ -680,14 +680,10 @@ export const ko = {
     mypage: {
       title: '마이 페이지',
       subtitle: '진행 중인 프로젝트와 주문 내역을 확인하세요.',
-      signOutButton: '로그아웃',
-      newOrderButton: '새로운 책 만들기',
-      accountButton: '회원정보 변경',
-      inquiriesButton: '1:1 문의',
       sidebar: {
-        orders: 'My Orders',
-        account: 'Account Settings',
-        inquiries: 'My Inquiries',
+        orders: '내 주문',
+        account: '계정 설정',
+        inquiries: '1:1 문의',
       },
       stats: {
         completed: '전체 주문 완료',

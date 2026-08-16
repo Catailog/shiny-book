@@ -681,10 +681,6 @@ export const en = {
     mypage: {
       title: 'My Page',
       subtitle: 'Check your ongoing projects and order history.',
-      signOutButton: 'Sign out',
-      newOrderButton: 'Create New Book',
-      accountButton: 'Account settings',
-      inquiriesButton: 'Inquiries',
       sidebar: {
         orders: 'My Orders',
         account: 'Account Settings',
