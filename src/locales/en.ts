@@ -1168,6 +1168,61 @@ export const en = {
         "Shiny Book photobooks are custom-produced to order based on your private photos and personal template settings. Because of this, we can't cancel or refund an order mid-production simply due to a change of mind. However, if a defect in the book itself or a binding flaw is found, we promise a free, expedited reprint exchange within 7 days of receipt.",
     },
   },
+  press: {
+    hero: {
+      eyebrow: 'Media & Press Relations',
+      title: 'Press Inquiries',
+      description:
+        "A collection of brand assets showcasing Shiny Book's handcrafted atelier values and design-led approach.",
+    },
+    features: {
+      title: 'Recent Features & Mentions',
+      items: [
+        {
+          date: '2025.10',
+          outlet: 'Classic Living Korea',
+          headline: 'Where hand bookbinding tradition meets modern editorial craft: Shiny Book',
+        },
+        {
+          date: '2025.08',
+          outlet: 'The Atelier Weekly',
+          headline: 'Printing your most personal, everyday moments into a permanent fine art book',
+        },
+        {
+          date: '2025.05',
+          outlet: 'Eco Design Digest',
+          headline:
+            'A premium archival photobook made with FSC-certified biodegradable paper and non-toxic soy ink',
+        },
+      ],
+    },
+    contact: {
+      title: 'Media Contact',
+      description: 'For interviews, coverage, or partnership proposals, please reach us by email.',
+      buttonLabel: 'Contact us by email',
+    },
+    factSheet: {
+      title: 'Company Fact Sheet',
+      items: [
+        {
+          label: 'Founded',
+          value: '2023 | Started as a hand-bindery atelier in Seongsu-dong, Seoul',
+        },
+        {
+          label: 'Key Products',
+          value: 'Eco hardcover photobooks, hand-bound linen journals, leather family albums',
+        },
+        {
+          label: 'Production Method',
+          value: '180-degree lay-flat Smyth-sewn binding with eco soy-ink printing',
+        },
+        {
+          label: 'Milestones',
+          value: 'Surpassed 10,000 printed volumes while offsetting natural resource impact',
+        },
+      ],
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',

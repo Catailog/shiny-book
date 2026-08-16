@@ -1155,6 +1155,57 @@ export const ko = {
         'Shiny Book의 포토북은 고객님의 사적인 사진과 개인 설정 템플릿에 따라 개별 맞춤 가동 생산되는 커스텀 성격의 도서입니다. 이에 따라 단순 변심에 의한 중간 주문 취소 및 환불 조치는 불가능합니다. 다만 도서 자체의 파손 혹은 제본 불량 하자가 발견되는 경우에는 수령 후 7일 이내에 무상으로 빠른 재인쇄 교환 처리를 약속합니다.',
     },
   },
+  press: {
+    hero: {
+      eyebrow: '미디어 및 언론 대응',
+      title: '보도자료 문의',
+      description:
+        'Shiny Book의 수공예 감성 아틀리에 보존 가치와 디자인 중심의 브랜드 연출 자료들을 한데 모았습니다.',
+    },
+    features: {
+      title: '최근 언론 보도',
+      items: [
+        {
+          date: '2025.10',
+          outlet: 'Classic Living Korea',
+          headline: '수제 제본의 전통과 최신 편집 기술의 우아한 만남, Shiny Book',
+        },
+        {
+          date: '2025.08',
+          outlet: 'The Atelier Weekly',
+          headline: '가장 개인적이며 고유한 일상을 영구 보존용 파인아트북에 인쇄하여 물려주는 가치',
+        },
+        {
+          date: '2025.05',
+          outlet: 'Eco Design Digest',
+          headline: 'FSC 인증 생분해 종이와 무독성 콩기름 잉크로 완성한 프리미엄 아카이빙 포토북',
+        },
+      ],
+    },
+    contact: {
+      title: '미디어 문의',
+      description: '인터뷰, 취재, 협업 제안 등 언론 관련 문의는 이메일로 연락 부탁드립니다.',
+      buttonLabel: '이메일로 문의하기',
+    },
+    factSheet: {
+      title: '회사 정보',
+      items: [
+        { label: 'Founded', value: '2023 | 서울 성수동 수제 바인딩 아틀리에 기원' },
+        {
+          label: 'Key Products',
+          value: '친환경 양장 포토북, 수제 린넨 저널, 가죽 패밀리 대형 앨범',
+        },
+        {
+          label: 'Production Method',
+          value: '180도 레이플랫 사철 실 제본 및 친환경 콩기름 프린트',
+        },
+        {
+          label: 'Milestones',
+          value: '출판 수량 10,000부 돌파 및 지속적 자연 가치 복원 상쇄 동참',
+        },
+      ],
+    },
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',
