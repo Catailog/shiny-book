@@ -21,16 +21,35 @@ export function AdminLoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
+    <form onSubmit={onSubmit} className="flex flex-col gap-5" noValidate>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="email">{t.admin.login.emailLabel}</Label>
-        <Input id="email" type="email" autoComplete="email" />
+        <Label htmlFor="email" className="text-xs font-semibold">
+          {t.admin.login.emailLabel}
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          autoComplete="email"
+          defaultValue="admin@bookcraft.studio"
+          className="bg-muted"
+        />
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="password">{t.admin.login.passwordLabel}</Label>
-        <Input id="password" type="password" autoComplete="current-password" />
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password" className="text-xs font-semibold">
+            {t.admin.login.passwordLabel}
+          </Label>
+          <span className="text-xs font-medium text-primary">
+            {t.admin.login.forgotPasswordLink}
+          </span>
+        </div>
+        <Input id="password" type="password" autoComplete="current-password" className="bg-muted" />
       </div>
-      <Button type="submit" disabled={isPending} className="w-full">
+      <Button
+        type="submit"
+        disabled={isPending}
+        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+      >
         {isPending ? t.admin.login.submitting : t.admin.login.submitButton}
       </Button>
     </form>

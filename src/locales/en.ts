@@ -301,6 +301,7 @@ export const en = {
       title: 'Admin login',
       emailLabel: 'Email',
       passwordLabel: 'Password',
+      forgotPasswordLink: 'Forgot?',
       submitButton: 'Sign in',
       submitting: 'Signing in...',
       errors: {
