@@ -3,12 +3,14 @@
 import { useState } from 'react';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Upload } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 import { cn } from '@/lib/utils';
 
@@ -155,7 +157,11 @@ export function NewOrderWizard() {
               <span className="font-heading text-2xl font-bold text-primary">₩199,000</span>
             </div>
           </div>
-          <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button
+            render={<Link href={CONSUMER_ROUTES.MYPAGE} />}
+            nativeButton={false}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
             {t.consumer.orderNew.summary.payButton}
           </Button>
         </div>

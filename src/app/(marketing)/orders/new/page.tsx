@@ -1,14 +1,25 @@
+import { redirect } from 'next/navigation';
+
+import { PageSection } from '@/components/page-section';
+import { ROLE } from '@/constants/roles';
+import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
+import { getMockSessionRole } from '@/lib/mock/mock-session';
 import { locales } from '@/locales';
 
 import { NewOrderWizard } from './new-order-wizard';
 
-export default async function MypageNewOrderPage() {
+export default async function NewOrderPage() {
+  const role = await getMockSessionRole();
+  if (role !== ROLE.CONSUMER) {
+    redirect(CONSUMER_ROUTES.LOGIN);
+  }
+
   const locale = await getLocale();
   const t = locales[locale];
 
   return (
-    <div className="flex flex-1 flex-col gap-8 px-10 py-10">
+    <PageSection className="flex flex-col gap-8 py-10">
       <div className="flex items-center justify-between border-b border-border pb-6">
         <h1 className="font-heading text-4xl font-bold text-foreground">
           {t.consumer.orderNew.title}
@@ -43,6 +54,6 @@ export default async function MypageNewOrderPage() {
       </div>
 
       <NewOrderWizard />
-    </div>
+    </PageSection>
   );
 }

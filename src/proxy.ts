@@ -56,7 +56,8 @@ export async function proxy(request: NextRequest) {
 
   const isConsumerAuthRoute =
     pathname === CONSUMER_ROUTES.LOGIN || pathname === CONSUMER_ROUTES.SIGNUP;
-  const isMypageRoute = pathname.startsWith(CONSUMER_ROUTES.MYPAGE);
+  const isMypageRoute =
+    pathname.startsWith(CONSUMER_ROUTES.MYPAGE) || pathname.startsWith(CONSUMER_ROUTES.NEW_ORDER);
 
   if (isMypageRoute && !isAuthenticatedConsumer) {
     return NextResponse.redirect(new URL(CONSUMER_ROUTES.LOGIN, request.url));
