@@ -84,7 +84,9 @@ export default async function AdminDashboardPage() {
                   <span className="text-xs">
                     <span
                       className={
-                        kpi.positive ? 'font-semibold text-green-600' : 'font-semibold text-red-600'
+                        kpi.positive
+                          ? 'font-semibold text-order-status-done'
+                          : 'font-semibold text-destructive'
                       }
                     >
                       {kpi.change}
@@ -142,8 +144,8 @@ export default async function AdminDashboardPage() {
                       <Badge
                         className={
                           submission.manuscriptOk
-                            ? 'gap-1 bg-green-100 text-green-700'
-                            : 'gap-1 bg-red-100 text-red-700'
+                            ? 'gap-1 bg-order-status-done/10 text-order-status-done'
+                            : 'gap-1 bg-destructive/10 text-destructive'
                         }
                       >
                         <FileText aria-hidden="true" className="size-3" />
@@ -152,8 +154,8 @@ export default async function AdminDashboardPage() {
                       <Badge
                         className={
                           submission.coverOk
-                            ? 'gap-1 bg-green-100 text-green-700'
-                            : 'gap-1 bg-red-100 text-red-700'
+                            ? 'gap-1 bg-order-status-done/10 text-order-status-done'
+                            : 'gap-1 bg-destructive/10 text-destructive'
                         }
                       >
                         <ImageIcon aria-hidden="true" className="size-3" />
