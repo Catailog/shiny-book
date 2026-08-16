@@ -1,14 +1,15 @@
 import { redirect } from 'next/navigation';
 
+import { ROLE } from '@/constants/roles';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
+import { getMockSessionRole } from '@/lib/mock/mock-session';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminLoginForm } from './login-form';
 
 export default async function AdminLoginPage() {
-  const admin = await getCurrentAdmin();
-  if (admin) {
+  const role = await getMockSessionRole();
+  if (role === ROLE.ADMIN) {
     redirect(ADMIN_ROUTES.DASHBOARD);
   }
 
