@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -9,6 +9,17 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  ANNOUNCEMENT_CATEGORY,
+  type AnnouncementCategory,
+} from '@/constants/announcement-category';
 import { useT } from '@/hooks/use-t';
 
 import type { AnnouncementActionResult } from './actions';
@@ -33,12 +44,13 @@ export function AnnouncementForm({
   const [isPending, startTransition] = useTransition();
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<AnnouncementFormInput>({
     resolver: zodResolver(announcementFormSchema),
-    defaultValues,
+    defaultValues: defaultValues ?? { category: ANNOUNCEMENT_CATEGORY.NOTICE },
   });
 
   function onSubmit(values: AnnouncementFormInput) {
@@ -68,6 +80,29 @@ export function AnnouncementForm({
             {t.admin.announcements.errors.validation_failed}
           </p>
         ) : null}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="category">{t.admin.announcements.form.categoryLabel}</Label>
+        <Controller
+          control={control}
+          name="category"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger id="category" className="w-40">
+                <SelectValue>
+                  {(value: AnnouncementCategory) => t.announcementCategories[value]}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {Object.values(ANNOUNCEMENT_CATEGORY).map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {t.announcementCategories[category]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="content">{t.admin.announcements.form.contentLabel}</Label>

@@ -28,6 +28,7 @@ export async function createAnnouncement(
   const supabase = createServiceRoleClient();
   const { error } = await supabase.from('announcements').insert({
     title: parsed.data.title,
+    category: parsed.data.category,
     content: parsed.data.content,
   });
 
@@ -58,6 +59,7 @@ export async function updateAnnouncement(
     .from('announcements')
     .update({
       title: parsed.data.title,
+      category: parsed.data.category,
       content: parsed.data.content,
       updated_at: new Date().toISOString(),
     })
