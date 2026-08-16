@@ -45,6 +45,8 @@
   --color-order-status-done: var(--order-status-done);
   --color-inverted-foreground: var(--inverted-foreground);
   --color-inverted: var(--inverted);
+  --color-input-background: var(--input-background);
+  --radius-xs: calc(var(--radius) * 0.35);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -93,6 +95,7 @@
   --order-status-done: oklch(0.6 0.15 145);
   --inverted: oklch(0.2772 0.0301 243.26);
   --inverted-foreground: oklch(0.9885 0.0057 84.57);
+  --input-background: oklch(1 0 0);
 }
 
 .dark {
@@ -131,6 +134,7 @@
   --order-status-pending: oklch(0.75 0.14 70);
   --order-status-in-progress: oklch(0.75 0.15 250);
   --order-status-done: oklch(0.75 0.16 145);
+  --input-background: oklch(0.24 0.024 260);
 }
 
 @layer base {
