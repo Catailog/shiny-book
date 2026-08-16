@@ -890,6 +890,57 @@ export const en = {
       ],
     },
   },
+  atelier: {
+    hero: {
+      eyebrow: 'Inside the Shiny Book Workshop',
+      title: 'The Atelier',
+      description:
+        'A workspace that carries the quiet, meticulous spirit of a traditional hand bindery passed down over generations. Feel the character of eco-friendly materials that only deepen with time.',
+    },
+    process: [
+      {
+        image: '/images/atelier/process-1.png',
+        title: 'Rigorous paper analysis and print proofing',
+        description:
+          'We precisely measure the humidity and weight of imported fine art archival paper to find the ideal non-toxic ink absorption, printing a subtle, refined texture digital alone cannot reproduce.',
+      },
+      {
+        image: '/images/atelier/process-2.png',
+        title: 'Smyth-sewing and traditional binding',
+        description:
+          'Binders trained for years thread each stitch on the sewing frame, weaving the pages into a sturdy block. This is what lets a book lie fully flat at 180 degrees for decades without cracking.',
+      },
+      {
+        image: '/images/atelier/process-3.png',
+        title: 'Hand pressing and final quality check',
+        description:
+          'After machine pressing, books rest under hand presses for a day or more to set their form. Before shipping, every stitch and package is inspected one final time.',
+      },
+    ],
+    materials: {
+      title: 'Our Handcraft Material Library',
+      items: [
+        {
+          eyebrow: 'Papers',
+          title: 'Arches fine art archival paper',
+          description:
+            'Never yellows over time, staying acid-free, with a matte coating that gives a warm, ink-wash-like texture.',
+        },
+        {
+          eyebrow: 'Leathers',
+          title: 'Florentine full-grain natural leather',
+          description:
+            'Tanned by Italian leather artisans using only plant-based tannins, with a natural sheen and quiet elegance.',
+        },
+        {
+          eyebrow: 'Fabrics',
+          title: 'Eco natural Belgian linen',
+          description:
+            'Hand-woven yarn fabric from natural Belgian flax that feels warm and cozy to the touch.',
+        },
+      ],
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
