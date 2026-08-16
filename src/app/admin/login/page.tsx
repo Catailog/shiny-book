@@ -21,7 +21,6 @@ export default async function AdminLoginPage() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-muted">
-      <div className="h-1.5 w-full bg-ink" />
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="flex w-full max-w-110 flex-col gap-8 rounded-xl border border-border bg-card p-10 shadow-lg">
           <div className="flex flex-col items-center gap-1 text-center">
