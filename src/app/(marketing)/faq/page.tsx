@@ -8,12 +8,14 @@ import {
 import { FAQ_LIST_LIMIT } from '@/constants/faq';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { getLocale } from '@/lib/i18n/get-locale';
+import { MOCK_FAQS } from '@/lib/mock/mock-faqs';
 import { locales } from '@/locales';
 
 export default async function FaqPage() {
   const locale = await getLocale();
   const t = locales[locale];
-  const faqs = await getFaqs(FAQ_LIST_LIMIT);
+  const fetchedFaqs = await getFaqs(FAQ_LIST_LIMIT);
+  const faqs = fetchedFaqs.length > 0 ? fetchedFaqs : MOCK_FAQS;
 
   return (
     <>

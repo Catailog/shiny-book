@@ -1,4 +1,5 @@
 import { HOME_REVIEW_PREVIEW_LIMIT } from '@/constants/review';
+import { MOCK_REVIEWS } from '@/lib/mock/mock-reviews';
 import { getSoldBookCount } from '@/lib/orders/get-sold-book-count';
 import { getReviews } from '@/lib/reviews/get-reviews';
 
@@ -21,7 +22,7 @@ export default async function Home() {
       <ProcessSteps />
       <ProductShowcase />
       <QualityFeatures />
-      <Testimonials reviews={reviews} />
+      <Testimonials reviews={reviews.length > 0 ? reviews : MOCK_REVIEWS} />
       <FinalCta />
     </>
   );
