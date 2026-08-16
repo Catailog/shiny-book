@@ -47,7 +47,7 @@ export function NavLinks({ brandName, links }: NavLinksProps) {
               href={link.href}
               className={cn(
                 'px-3 py-1.5 transition-colors',
-                isActive ? 'text-primary' : 'hover:text-foreground',
+                isActive ? 'text-primary' : 'hover:text-primary',
               )}
             >
               {link.label}
