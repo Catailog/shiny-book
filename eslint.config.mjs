@@ -29,6 +29,8 @@ const eslintConfig = defineConfig([
     'supabase/.branches/**',
     // Verbatim reference dump, not our code:
     '.claude/.temp/design-sample/**',
+    // Figma 포팅 작업을 위해 잠시 빼둔 옛 라우트, 나중에 다시 꺼내 씀:
+    '_archive-old-app/**',
   ]),
 ]);
 
