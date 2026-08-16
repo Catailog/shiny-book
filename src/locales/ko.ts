@@ -638,6 +638,102 @@ export const ko = {
       relatedTitle: '당신의 일상에 조화를 더할 제품군',
     },
   },
+  pricing: {
+    hero: {
+      eyebrow: '투명한 가격 정책',
+      title: '가격 및 옵션 안내',
+      description:
+        'Shiny Book은 소중한 순간에 걸맞은 타협 없는 가치를 제안합니다. 복잡한 계산 없이 명확하고 합리적인 패키지 플랜으로 품격 높은 소장본을 제작하세요.',
+    },
+    tiers: [
+      {
+        name: 'Essential',
+        image: '/images/pricing/essential.png',
+        price: '₩45,000~',
+        highlighted: false,
+        features: [
+          '가벼운 소프트커버 마감',
+          '40페이지 기본 제공',
+          '고급 매트 수입지',
+          '수제 반양장식 사철 제본',
+          '모바일 전용 간편 편집',
+          '기본 친환경 무지 상자 배송',
+        ],
+      },
+      {
+        name: 'Classic',
+        image: '/images/pricing/classic.png',
+        price: '₩85,000~',
+        highlighted: true,
+        features: [
+          '견고한 보드 하드커버',
+          '60페이지 기본 제공',
+          '무독성 아카이빙 페이퍼',
+          '완벽히 펼쳐지는 180도 레이플랫',
+          '클래식 잡지 스타일 레이아웃',
+          '고급 린넨 북 파우치 포장',
+        ],
+      },
+      {
+        name: 'Premium',
+        image: '/images/pricing/premium.png',
+        price: '₩160,000~',
+        highlighted: false,
+        features: [
+          '최고급 이탈리아산 풀그레인 가죽',
+          '80페이지 기본 제공',
+          '보존용 최고급 파인아트지',
+          '전통 양장 사철 제본 + 리본 마감',
+          '1:1 디자이너 맞춤 편집 코칭',
+          '인그레이빙 각인 전용 우드 케이스',
+        ],
+      },
+    ],
+    ctaLabel: '내 책 만들기',
+    specsTitle: '상세 사양 비교',
+    specsCategoryLabel: '구분',
+    specRows: [
+      { label: '기본 제공 페이지', values: ['40p', '60p', '80p'] },
+      {
+        label: '제본 방식',
+        values: ['사철 제본 (소프트)', '180도 수제 사철 양장', '전통 무독성 풀양장 수공'],
+      },
+      {
+        label: '사용 지류',
+        values: ['매트 수입지 (150g)', '아카이빙 페이퍼 (180g)', '최고급 파인아트 아치스지 (240g)'],
+      },
+      {
+        label: '커버 패브릭 옵션',
+        values: [
+          '컬러풀 종이 코팅 커버',
+          '프리미엄 린넨 5종 / 가죽 2종',
+          '풀그레인 가죽 4종 / 실크 패브릭',
+        ],
+      },
+      {
+        label: '디자인 보정 서비스',
+        values: [
+          '기본 사진 정렬',
+          '스튜디오 템플릿 + 자동 보정',
+          '전문 디자이너 1:1 레이아웃 리터칭',
+        ],
+      },
+      {
+        label: '포장 및 패키지',
+        values: ['일반 친환경 에코 박스', '린넨 보관백 + 하드웨어 상자', '맞춤형 원목 우드 케이스'],
+      },
+    ],
+    volumeDiscount: {
+      title: '수량 할인 및 정기 도서관 지원',
+      description:
+        '독립출판, 사진 동호회, 전시 카탈로그, 또는 대량 가족 기념 서적 제작을 위해 동일한 파일로 5권 이상 대량 주문 시 할인 혜택을 드립니다.',
+      tiers: [
+        { range: '5 - 9권', description: '전체 제작 비용의 10% 자동 할인' },
+        { range: '10 - 29권', description: '전체 제작 비용의 20% 자동 할인' },
+        { range: '30권 이상', description: '디자이너 밀착 지원 및 견적 협의 (최대 35%)' },
+      ],
+    },
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',

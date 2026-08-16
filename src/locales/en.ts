@@ -639,6 +639,113 @@ export const en = {
       relatedTitle: 'More pieces to complement your everyday',
     },
   },
+  pricing: {
+    hero: {
+      eyebrow: 'Transparent Values',
+      title: 'Pricing & Options',
+      description:
+        'Shiny Book offers uncompromising value for your most treasured moments. Choose a clear, sensible package plan and create a keepsake worth the shelf space, no calculator needed.',
+    },
+    tiers: [
+      {
+        name: 'Essential',
+        image: '/images/pricing/essential.png',
+        price: '$44.99~',
+        highlighted: false,
+        features: [
+          'Lightweight softcover finish',
+          '40 pages included',
+          'Premium matte imported paper',
+          'Hand-sewn half-binding',
+          'Simple mobile-only editing',
+          'Standard eco-friendly plain box shipping',
+        ],
+      },
+      {
+        name: 'Classic',
+        image: '/images/pricing/classic.png',
+        price: '$84.99~',
+        highlighted: true,
+        features: [
+          'Sturdy board hardcover',
+          '60 pages included',
+          'Non-toxic archival paper',
+          'Perfect 180-degree lay-flat spread',
+          'Classic magazine-style layout',
+          'Premium linen book pouch packaging',
+        ],
+      },
+      {
+        name: 'Premium',
+        image: '/images/pricing/premium.png',
+        price: '$159.99~',
+        highlighted: false,
+        features: [
+          'Finest full-grain Italian leather',
+          '80 pages included',
+          'Top-grade archival fine art paper',
+          'Traditional Smyth-sewn binding with ribbon finish',
+          '1:1 designer editing coaching',
+          'Engraved wood case exclusively for this tier',
+        ],
+      },
+    ],
+    ctaLabel: 'Start my book',
+    specsTitle: 'Detailed specifications',
+    specsCategoryLabel: 'Category',
+    specRows: [
+      { label: 'Pages included', values: ['40p', '60p', '80p'] },
+      {
+        label: 'Binding method',
+        values: [
+          'Perfect binding (soft)',
+          '180-degree hand-sewn hardcover',
+          'Traditional non-toxic full binding, handmade',
+        ],
+      },
+      {
+        label: 'Paper stock',
+        values: [
+          'Matte imported paper (150gsm)',
+          'Archival paper (180gsm)',
+          'Top-grade Arches fine art paper (240gsm)',
+        ],
+      },
+      {
+        label: 'Cover fabric options',
+        values: [
+          'Colorful paper-coated cover',
+          '5 premium linens / 2 leathers',
+          '4 full-grain leathers / silk fabric',
+        ],
+      },
+      {
+        label: 'Design retouching',
+        values: [
+          'Basic photo alignment',
+          'Studio templates + auto-retouching',
+          '1:1 layout retouching by a professional designer',
+        ],
+      },
+      {
+        label: 'Packaging',
+        values: ['Standard eco-friendly box', 'Linen pouch + hardware box', 'Custom wood case'],
+      },
+    ],
+    volumeDiscount: {
+      title: 'Volume discounts & library support',
+      description:
+        'Ordering 5 or more copies from the same file for independent publishing, photo clubs, exhibition catalogs, or large family keepsakes? You qualify for a discount.',
+      tiers: [
+        { range: '5-9 copies', description: 'Automatic 10% discount on the total cost' },
+        { range: '10-29 copies', description: 'Automatic 20% discount on the total cost' },
+        {
+          range: '30+ copies',
+          description: 'Dedicated designer support and custom quotes (up to 35%)',
+        },
+      ],
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
