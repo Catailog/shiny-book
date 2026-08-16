@@ -1,18 +1,20 @@
 import Image from 'next/image';
 
 import { PageSection } from '@/components/page-section';
+import { getLocale } from '@/lib/i18n/get-locale';
 import { cn } from '@/lib/utils';
-import { defaultLocale, locales } from '@/locales';
+import { locales } from '@/locales';
 
-export default function AtelierPage() {
-  const t = locales[defaultLocale];
+export default async function AtelierPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const atelier = t.atelier;
 
   return (
     <>
       <PageSection sectionClassName="bg-secondary" className="pt-20 pb-15">
         <div className="flex max-w-3xl flex-col gap-5">
-          <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+          <p className="text-sm font-semibold tracking-wide text-primary uppercase">
             {atelier.hero.eyebrow}
           </p>
           <h1 className="font-heading text-5xl font-bold text-foreground">{atelier.hero.title}</h1>
@@ -59,7 +61,7 @@ export default function AtelierPage() {
               key={material.title}
               className="flex flex-col gap-4 rounded-md border border-border bg-background p-8"
             >
-              <p className="text-[11px] font-semibold tracking-wide text-accent uppercase">
+              <p className="text-[11px] font-semibold tracking-wide text-primary uppercase">
                 {material.eyebrow}
               </p>
               <h3 className="font-heading text-xl font-semibold text-foreground">

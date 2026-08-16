@@ -1,4 +1,3 @@
-import { FinalCta } from '@/app/(marketing)/final-cta';
 import { PageSection } from '@/components/page-section';
 import {
   Accordion,
@@ -8,17 +7,19 @@ import {
 } from '@/components/ui/accordion';
 import { FAQ_LIST_LIMIT } from '@/constants/faq';
 import { getFaqs } from '@/lib/faqs/get-faqs';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
 export default async function FaqPage() {
-  const t = locales[defaultLocale];
+  const locale = await getLocale();
+  const t = locales[locale];
   const faqs = await getFaqs(FAQ_LIST_LIMIT);
 
   return (
     <>
       <PageSection sectionClassName="bg-secondary" className="pt-20 pb-15">
         <div className="flex max-w-3xl flex-col gap-5">
-          <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+          <p className="text-sm font-semibold tracking-wide text-primary uppercase">
             {t.faq.hero.eyebrow}
           </p>
           <h1 className="font-heading text-5xl font-bold text-foreground">{t.faq.title}</h1>
@@ -43,7 +44,6 @@ export default async function FaqPage() {
           </Accordion>
         )}
       </PageSection>
-      <FinalCta />
     </>
   );
 }

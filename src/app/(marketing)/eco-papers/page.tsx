@@ -3,10 +3,12 @@ import Image from 'next/image';
 import { Leaf } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
-export default function EcoPapersPage() {
-  const t = locales[defaultLocale];
+export default async function EcoPapersPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const page = t.ecoPapers;
 
   return (
@@ -16,7 +18,7 @@ export default function EcoPapersPage() {
         className="flex flex-col items-center gap-10 py-20 lg:flex-row"
       >
         <div className="flex flex-1 flex-col gap-5">
-          <span className="w-fit rounded bg-accent-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
+          <span className="w-fit rounded bg-primary-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
             {page.hero.eyebrow}
           </span>
           <h1 className="font-heading text-4xl leading-tight font-normal text-foreground sm:text-5xl">
@@ -40,8 +42,8 @@ export default function EcoPapersPage() {
         sectionClassName="border-y border-border bg-secondary"
         className="flex flex-col items-center gap-8 py-15 sm:flex-row"
       >
-        <div className="flex size-30 shrink-0 items-center justify-center rounded-full bg-accent-soft">
-          <Leaf aria-hidden="true" className="size-10 text-accent" />
+        <div className="flex size-30 shrink-0 items-center justify-center rounded-full bg-primary-soft">
+          <Leaf aria-hidden="true" className="size-10 text-primary" />
         </div>
         <div className="flex flex-col gap-3">
           <h2 className="font-heading text-2xl font-normal text-foreground">{page.fsc.title}</h2>
@@ -51,7 +53,7 @@ export default function EcoPapersPage() {
 
       <PageSection className="flex flex-col gap-12 py-20">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.catalog.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">
@@ -76,7 +78,7 @@ export default function EcoPapersPage() {
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-heading text-lg font-semibold text-foreground">{paper.name}</p>
-                  <p className="text-xs font-semibold text-accent">{paper.weight}</p>
+                  <p className="text-xs font-semibold text-primary">{paper.weight}</p>
                 </div>
                 <p className="text-[13px] text-muted-foreground">{paper.description}</p>
                 <div className="h-px w-full bg-border" />
@@ -94,7 +96,7 @@ export default function EcoPapersPage() {
         className="flex flex-col items-center gap-12 py-20"
       >
         <div className="flex flex-col items-center gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.impact.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">{page.impact.title}</h2>

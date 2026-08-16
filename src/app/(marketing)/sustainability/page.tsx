@@ -4,15 +4,16 @@ import Link from 'next/link';
 import { ArrowRight, Leaf, Minimize2, Truck } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
-import { SiteContainer } from '@/components/site-container';
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
 const PILLAR_ICONS = [Leaf, Minimize2, Truck];
 
-export default function SustainabilityPage() {
-  const t = locales[defaultLocale];
+export default async function SustainabilityPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const page = t.sustainability;
 
   return (
@@ -22,7 +23,7 @@ export default function SustainabilityPage() {
         className="flex flex-col items-center gap-10 py-20 lg:flex-row"
       >
         <div className="flex flex-1 flex-col gap-5">
-          <span className="w-fit rounded bg-accent-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
+          <span className="w-fit rounded bg-primary-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
             {page.hero.eyebrow}
           </span>
           <h1 className="font-heading text-4xl leading-tight font-normal text-foreground sm:text-5xl">
@@ -44,7 +45,7 @@ export default function SustainabilityPage() {
 
       <PageSection className="flex flex-col gap-12 py-20">
         <div className="flex flex-col items-center gap-3 text-center">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.pillars.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">
@@ -59,16 +60,16 @@ export default function SustainabilityPage() {
                 key={pillar.title}
                 className="flex flex-col items-start gap-5 rounded-lg border border-border bg-secondary p-8"
               >
-                <div className="flex size-10 items-center justify-center rounded bg-accent-soft">
+                <div className="flex size-10 items-center justify-center rounded bg-primary-soft">
                   {PillarIcon ? (
-                    <PillarIcon aria-hidden="true" className="size-4 text-accent" />
+                    <PillarIcon aria-hidden="true" className="size-4 text-primary" />
                   ) : null}
                 </div>
                 <div className="flex flex-col items-start gap-2">
                   <h3 className="font-heading text-xl font-semibold text-foreground">
                     {pillar.title}
                   </h3>
-                  <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+                  <p className="text-xs font-semibold tracking-wide text-primary uppercase">
                     {pillar.tag}
                   </p>
                   <p className="text-sm text-muted-foreground">{pillar.description}</p>
@@ -81,7 +82,7 @@ export default function SustainabilityPage() {
 
       <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-12 py-20">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.roadmap.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">
@@ -94,7 +95,7 @@ export default function SustainabilityPage() {
               key={milestone.year}
               className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:gap-8"
             >
-              <p className="w-35 shrink-0 font-heading text-4xl font-bold text-accent">
+              <p className="w-35 shrink-0 font-heading text-4xl font-bold text-primary">
                 {milestone.year}
               </p>
               <div className="flex flex-col gap-1">
@@ -108,35 +109,28 @@ export default function SustainabilityPage() {
         </div>
       </PageSection>
 
-      <section className="relative w-full overflow-hidden">
-        <Image
-          src="/images/sustainability/bottom-cta.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-primary/85" />
-        <SiteContainer className="relative flex flex-col items-center gap-8 py-24 text-center">
-          <div className="flex max-w-2xl flex-col items-center gap-4">
-            <p className="text-[13px] font-semibold tracking-wide text-accent uppercase">
-              {page.cta.eyebrow}
-            </p>
-            <h2 className="font-heading text-4xl leading-tight font-normal text-primary-foreground sm:text-5xl">
-              {page.cta.title}
-            </h2>
-            <p className="text-base text-primary-foreground/80">{page.cta.description}</p>
-          </div>
-          <Button
-            render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
-            nativeButton={false}
-            className="h-auto gap-2 rounded bg-accent px-7 py-3.5 text-xs font-semibold tracking-wide text-accent-foreground uppercase hover:bg-accent/90"
-          >
-            {page.cta.buttonLabel}
-            <ArrowRight aria-hidden="true" className="size-3.5" />
-          </Button>
-        </SiteContainer>
-      </section>
+      <PageSection
+        sectionClassName="bg-inverted"
+        className="flex flex-col items-center gap-8 py-24 text-center"
+      >
+        <div className="flex max-w-2xl flex-col items-center gap-4">
+          <p className="text-[13px] font-semibold tracking-wide text-primary uppercase">
+            {page.cta.eyebrow}
+          </p>
+          <h2 className="font-heading text-4xl leading-tight font-normal text-inverted-foreground sm:text-5xl">
+            {page.cta.title}
+          </h2>
+          <p className="text-base text-inverted-foreground/80">{page.cta.description}</p>
+        </div>
+        <Button
+          render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
+          nativeButton={false}
+          className="h-auto gap-2 rounded bg-primary px-7 py-3.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-primary/90"
+        >
+          {page.cta.buttonLabel}
+          <ArrowRight aria-hidden="true" className="size-3.5" />
+        </Button>
+      </PageSection>
     </>
   );
 }

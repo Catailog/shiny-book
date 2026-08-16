@@ -6,17 +6,18 @@ import { ArrowRight } from 'lucide-react';
 import { PageSection } from '@/components/page-section';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { HOME_SECTION_ANCHORS } from '@/constants/home-sections';
 import { PREMIUM_PRODUCT_COUNT } from '@/constants/product-catalog';
-import { CONSUMER_ROUTES } from '@/constants/routes';
-import { defaultLocale, locales } from '@/locales';
+import { CONSUMER_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
 interface HeroProps {
   soldBookCount: number;
 }
 
-export function Hero({ soldBookCount }: HeroProps) {
-  const t = locales[defaultLocale];
+export async function Hero({ soldBookCount }: HeroProps) {
+  const locale = await getLocale();
+  const t = locales[locale];
   const hero = t.site.home.hero;
   const statValues = [100, PREMIUM_PRODUCT_COUNT, soldBookCount];
 
@@ -27,7 +28,7 @@ export function Hero({ soldBookCount }: HeroProps) {
     >
       <div className="flex flex-1 flex-col items-start gap-10">
         <div className="flex w-full flex-col items-start gap-4">
-          <Badge className="rounded bg-accent-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
+          <Badge className="rounded bg-primary-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
             {hero.eyebrow}
           </Badge>
           <h1 className="w-full font-heading text-4xl leading-tight font-normal text-foreground sm:text-5xl lg:text-6xl">
@@ -39,13 +40,13 @@ export function Hero({ soldBookCount }: HeroProps) {
           <Button
             render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
             nativeButton={false}
-            className="h-auto gap-2 rounded bg-accent px-7 py-3.5 text-xs font-semibold tracking-wide text-accent-foreground uppercase hover:bg-accent/90"
+            className="h-auto gap-2 rounded bg-primary px-7 py-3.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-primary/90"
           >
             {hero.primaryCtaLabel}
             <ArrowRight aria-hidden="true" className="size-3.5" />
           </Button>
           <Button
-            render={<Link href={`#${HOME_SECTION_ANCHORS.PRODUCT_COLLECTION}`} />}
+            render={<Link href={PRODUCT_ROUTES.LIST} />}
             nativeButton={false}
             variant="outline"
             className="h-auto rounded border-foreground bg-transparent px-7 py-3.5 text-xs font-semibold tracking-wide text-foreground uppercase hover:bg-muted"

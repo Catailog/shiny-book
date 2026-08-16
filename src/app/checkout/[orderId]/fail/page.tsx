@@ -1,9 +1,11 @@
 import { TOSS_ERROR_CODES } from '@/constants/toss-error-codes';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
 export default async function CheckoutFailPage(props: PageProps<'/checkout/[orderId]/fail'>) {
   const searchParams = await props.searchParams;
-  const t = locales[defaultLocale];
+  const locale = await getLocale();
+  const t = locales[locale];
 
   const code = firstParam(searchParams.code);
   const message = firstParam(searchParams.message);
@@ -33,7 +35,7 @@ export default async function CheckoutFailPage(props: PageProps<'/checkout/[orde
       {knownFailure ? (
         <p className="text-sm text-muted-foreground">{knownFailure.description}</p>
       ) : null}
-      <dl className="flex flex-col gap-2 rounded-lg border border-border p-4 text-sm">
+      <dl className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 text-sm shadow-sm">
         <div className="flex justify-between">
           <dt className="text-muted-foreground">{t.checkout.fail.codeLabel}</dt>
           <dd>{code}</dd>

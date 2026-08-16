@@ -1,15 +1,17 @@
 import { notFound } from 'next/navigation';
 
 import { ORDER_STATUS } from '@/constants/order-status';
+import { getLocale } from '@/lib/i18n/get-locale';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
-import { defaultLocale, locales } from '@/locales';
+import { locales } from '@/locales';
 
 import { CheckoutWidget } from './checkout-widget';
 
 export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]'>) {
   const { orderId } = await props.params;
   const order = await getOrderById(orderId);
-  const t = locales[defaultLocale];
+  const locale = await getLocale();
+  const t = locales[locale];
 
   if (!order) {
     notFound();
@@ -56,7 +58,7 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
           <p className="font-heading text-base font-bold text-foreground">
             {t.checkout.amountLabel}
           </p>
-          <p className="font-heading text-xl font-bold text-accent">
+          <p className="font-heading text-xl font-bold text-primary">
             {order.amount.toLocaleString()}
           </p>
         </div>

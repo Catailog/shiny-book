@@ -1,10 +1,12 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
-export default function NotFound() {
-  const t = locales[defaultLocale];
+export default async function NotFound() {
+  const locale = await getLocale();
+  const t = locales[locale];
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-4 px-4 py-12 text-center">

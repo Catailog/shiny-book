@@ -7,8 +7,9 @@ import { ArrowRight, FileText, LayoutGrid, ScrollText } from 'lucide-react';
 import { PageSection } from '@/components/page-section';
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
+import { getLocale } from '@/lib/i18n/get-locale';
 import { getProductCatalog } from '@/lib/products/get-product-catalog';
-import { defaultLocale, locales } from '@/locales';
+import { locales } from '@/locales';
 
 const SPEC_ICONS = [FileText, ScrollText, LayoutGrid];
 
@@ -21,7 +22,8 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
     notFound();
   }
 
-  const t = locales[defaultLocale];
+  const locale = await getLocale();
+  const t = locales[locale];
   const products = t.site.home.products;
   const detail = t.products.detail;
   const relatedProducts = catalog.filter((item) => item.slug !== product.slug).slice(0, 3);
@@ -41,7 +43,7 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
         </div>
         <div className="flex w-full flex-col gap-8 lg:w-135">
           <div className="flex flex-col gap-4">
-            <span className="w-fit rounded bg-accent-soft px-2.5 py-1 text-xs font-semibold tracking-wide text-accent uppercase">
+            <span className="w-fit rounded bg-primary-soft px-2.5 py-1 text-xs font-semibold tracking-wide text-primary uppercase">
               {products.filters[product.category]}
             </span>
             <div className="flex items-baseline justify-between gap-3">
@@ -51,14 +53,14 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
             <p className="text-[15px] leading-relaxed text-muted-foreground">
               {product.description}
             </p>
-            <p className="font-heading text-3xl font-bold text-accent">{product.price}</p>
+            <p className="font-heading text-3xl font-bold text-primary">{product.price}</p>
           </div>
           <div className="h-px w-full bg-border" />
           <div className="flex flex-col gap-3">
             <Button
               render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
               nativeButton={false}
-              className="h-auto gap-2 rounded bg-accent p-4.5 text-sm font-bold text-accent-foreground uppercase hover:bg-accent/90"
+              className="h-auto gap-2 rounded bg-primary p-4.5 text-sm font-bold text-primary-foreground uppercase hover:bg-primary/90"
             >
               {detail.ctaLabel}
               <ArrowRight aria-hidden="true" className="size-4" />
@@ -77,7 +79,7 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
         className="flex flex-col items-center gap-16 py-24"
       >
         <div className="flex flex-col items-center gap-4 text-center">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {detail.specsEyebrow}
           </p>
           <h2 className="font-heading text-4xl font-normal text-foreground">{detail.specsTitle}</h2>
@@ -90,7 +92,7 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
                 key={spec.title}
                 className="flex flex-col items-start gap-5 rounded-lg border border-border bg-background p-8"
               >
-                {SpecIcon ? <SpecIcon aria-hidden="true" className="size-10 text-accent" /> : null}
+                {SpecIcon ? <SpecIcon aria-hidden="true" className="size-10 text-primary" /> : null}
                 <div className="flex flex-col items-start gap-2">
                   <h3 className="font-heading text-lg font-semibold text-foreground">
                     {spec.title}
@@ -104,7 +106,7 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
       </PageSection>
       <PageSection className="flex flex-col gap-12 py-24">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {detail.relatedEyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">
@@ -129,7 +131,7 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
               </div>
               <div className="flex flex-col gap-3 px-5 pb-5">
                 <p className="font-heading text-xl font-semibold text-foreground">{related.name}</p>
-                <p className="text-sm font-bold text-accent">{related.price}</p>
+                <p className="text-sm font-bold text-primary">{related.price}</p>
               </div>
             </Link>
           ))}

@@ -3,12 +3,14 @@ import Image from 'next/image';
 import { Maximize2, Palette } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
 const SPEC_ICONS = [Maximize2, Palette];
 
-export default function LayoutGuidelinesPage() {
-  const t = locales[defaultLocale];
+export default async function LayoutGuidelinesPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const page = t.layoutGuidelines;
 
   return (
@@ -18,7 +20,7 @@ export default function LayoutGuidelinesPage() {
         className="flex flex-col items-center gap-10 py-20 lg:flex-row"
       >
         <div className="flex flex-1 flex-col gap-5">
-          <span className="w-fit rounded bg-accent-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
+          <span className="w-fit rounded bg-primary-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
             {page.hero.eyebrow}
           </span>
           <h1 className="font-heading text-4xl leading-tight font-normal text-foreground sm:text-5xl">
@@ -40,7 +42,7 @@ export default function LayoutGuidelinesPage() {
 
       <PageSection className="flex flex-col gap-12 py-20">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.specs.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">{page.specs.title}</h2>
@@ -53,7 +55,7 @@ export default function LayoutGuidelinesPage() {
                 key={spec.title}
                 className="flex flex-col items-start gap-5 rounded-lg border border-border bg-secondary p-8"
               >
-                {SpecIcon ? <SpecIcon aria-hidden="true" className="size-6 text-accent" /> : null}
+                {SpecIcon ? <SpecIcon aria-hidden="true" className="size-6 text-primary" /> : null}
                 <h3 className="font-heading text-xl font-semibold text-foreground">{spec.title}</h3>
                 <p className="text-sm text-muted-foreground">{spec.description}</p>
               </div>
@@ -64,7 +66,7 @@ export default function LayoutGuidelinesPage() {
 
       <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-12 py-20">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.templates.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">

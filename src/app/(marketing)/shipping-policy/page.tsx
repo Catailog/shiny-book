@@ -3,10 +3,12 @@ import Image from 'next/image';
 import { Gift } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
-export default function ShippingPolicyPage() {
-  const t = locales[defaultLocale];
+export default async function ShippingPolicyPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const page = t.shippingPolicy;
 
   return (
@@ -16,7 +18,7 @@ export default function ShippingPolicyPage() {
         className="flex flex-col items-center gap-10 py-20 lg:flex-row"
       >
         <div className="flex flex-1 flex-col gap-5">
-          <span className="w-fit rounded bg-accent-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
+          <span className="w-fit rounded bg-primary-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
             {page.hero.eyebrow}
           </span>
           <h1 className="font-heading text-4xl leading-tight font-normal text-foreground sm:text-5xl">
@@ -38,7 +40,7 @@ export default function ShippingPolicyPage() {
 
       <PageSection className="flex flex-col gap-8 py-20">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.methods.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">
@@ -68,7 +70,7 @@ export default function ShippingPolicyPage() {
                 <tr key={item.method} className="border-t border-border">
                   <td className="p-5 font-semibold text-foreground">{item.method}</td>
                   <td className="p-5 text-muted-foreground">{item.duration}</td>
-                  <td className="p-5 font-semibold text-accent">{item.cost}</td>
+                  <td className="p-5 font-semibold text-primary">{item.cost}</td>
                   <td className="p-5 text-muted-foreground">{item.coverage}</td>
                 </tr>
               ))}
@@ -79,7 +81,7 @@ export default function ShippingPolicyPage() {
 
       <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-8 py-20">
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.packaging.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">
@@ -95,7 +97,7 @@ export default function ShippingPolicyPage() {
               {page.packaging.description}
             </p>
             <div className="flex items-center gap-3">
-              <Gift aria-hidden="true" className="size-5 text-accent" />
+              <Gift aria-hidden="true" className="size-5 text-primary" />
               <p className="text-sm font-semibold text-foreground">{page.packaging.badgeLabel}</p>
             </div>
           </div>

@@ -3,19 +3,21 @@ import Image from 'next/image';
 import { Gem, Hammer, Leaf } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
 const VALUE_ICONS = [Hammer, Leaf, Gem];
 
-export default function AboutPage() {
-  const t = locales[defaultLocale];
+export default async function AboutPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const about = t.about;
 
   return (
     <>
       <PageSection className="flex flex-col items-center gap-10 py-20 lg:flex-row">
         <div className="flex flex-1 flex-col gap-5">
-          <span className="w-fit rounded bg-accent-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
+          <span className="w-fit rounded bg-primary-soft px-3 py-1.5 text-xs font-semibold tracking-wide text-primary uppercase">
             {about.hero.eyebrow}
           </span>
           <h1 className="font-heading text-4xl leading-tight font-normal text-foreground sm:text-5xl">
@@ -39,7 +41,7 @@ export default function AboutPage() {
 
       <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-12 py-20">
         <div className="flex flex-col items-center gap-4 text-center">
-          <p className="text-xs font-semibold tracking-wide text-accent uppercase">
+          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {about.values.eyebrow}
           </p>
           <h2 className="font-heading text-4xl font-normal text-foreground">
@@ -55,7 +57,7 @@ export default function AboutPage() {
                 className="flex flex-col items-start gap-5 rounded-lg border border-border bg-background p-10"
               >
                 {ValueIcon ? (
-                  <ValueIcon aria-hidden="true" className="size-12 text-accent" />
+                  <ValueIcon aria-hidden="true" className="size-12 text-primary" />
                 ) : null}
                 <h3 className="font-heading text-xl font-semibold text-foreground">
                   {value.title}
@@ -74,7 +76,7 @@ export default function AboutPage() {
         <div className="flex flex-col gap-8">
           {about.milestones.items.map((milestone) => (
             <div key={milestone.year} className="flex gap-10">
-              <p className="w-24 shrink-0 font-heading text-3xl font-light text-accent">
+              <p className="w-24 shrink-0 font-heading text-3xl font-light text-primary">
                 {milestone.year}
               </p>
               <div className="flex flex-col gap-2">
@@ -107,7 +109,7 @@ export default function AboutPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <p className="font-heading text-xl font-semibold text-foreground">{member.name}</p>
-                <p className="text-sm font-semibold text-accent">{member.role}</p>
+                <p className="text-sm font-semibold text-primary">{member.role}</p>
               </div>
               <p className="text-sm text-muted-foreground">{member.description}</p>
             </div>

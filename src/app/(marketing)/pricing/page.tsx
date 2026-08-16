@@ -6,18 +6,19 @@ import { Check } from 'lucide-react';
 import { PageSection } from '@/components/page-section';
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { cn } from '@/lib/utils';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
-export default function PricingPage() {
-  const t = locales[defaultLocale];
+export default async function PricingPage() {
+  const locale = await getLocale();
+  const t = locales[locale];
   const pricing = t.pricing;
 
   return (
     <>
       <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-5 pt-20 pb-15">
         <div className="flex max-w-3xl flex-col gap-5">
-          <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+          <p className="text-sm font-semibold tracking-wide text-primary uppercase">
             {pricing.hero.eyebrow}
           </p>
           <h1 className="font-heading text-5xl font-bold text-foreground">{pricing.hero.title}</h1>
@@ -30,10 +31,7 @@ export default function PricingPage() {
           {pricing.tiers.map((tier) => (
             <div
               key={tier.name}
-              className={cn(
-                'flex flex-col gap-8 rounded-lg border p-10',
-                tier.highlighted ? 'border-accent' : 'border-border',
-              )}
+              className="flex flex-col gap-8 rounded-lg border border-border p-10"
             >
               <div className="flex flex-col gap-4">
                 <h2 className="font-heading text-2xl font-bold text-foreground">{tier.name}</h2>
@@ -46,13 +44,13 @@ export default function PricingPage() {
                     className="object-cover"
                   />
                 </div>
-                <p className="font-heading text-4xl font-bold text-accent">{tier.price}</p>
+                <p className="font-heading text-4xl font-bold text-primary">{tier.price}</p>
               </div>
               <div className="h-px w-full bg-border" />
               <ul className="flex flex-col gap-4">
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2.5">
-                    <Check aria-hidden="true" className="size-4 shrink-0 text-accent" />
+                    <Check aria-hidden="true" className="size-4 shrink-0 text-primary" />
                     <span className="text-sm text-muted-foreground">{feature}</span>
                   </li>
                 ))}
@@ -60,13 +58,7 @@ export default function PricingPage() {
               <Button
                 render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
                 nativeButton={false}
-                variant={tier.highlighted ? undefined : 'secondary'}
-                className={cn(
-                  'h-auto rounded p-4 text-sm font-semibold uppercase',
-                  tier.highlighted
-                    ? 'bg-accent text-accent-foreground hover:bg-accent/90'
-                    : 'bg-primary text-primary-foreground hover:bg-primary/90',
-                )}
+                className="h-auto rounded bg-ink p-4 text-sm font-semibold text-ink-foreground uppercase transition-colors hover:bg-primary hover:text-primary-foreground"
               >
                 {pricing.ctaLabel}
               </Button>
@@ -81,7 +73,7 @@ export default function PricingPage() {
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-175 border-collapse text-sm">
               <thead>
-                <tr className="bg-primary text-primary-foreground">
+                <tr className="bg-ink text-ink-foreground">
                   <th className="p-5 text-left font-bold">{pricing.specsCategoryLabel}</th>
                   {pricing.tiers.map((tier) => (
                     <th key={tier.name} className="p-5 text-center font-bold">
@@ -108,7 +100,7 @@ export default function PricingPage() {
       </PageSection>
 
       <PageSection className="pt-15 pb-25">
-        <div className="flex flex-col gap-5 rounded-lg border border-border bg-accent-soft p-10">
+        <div className="flex flex-col gap-5 rounded-lg border border-border bg-primary-soft p-10">
           <h2 className="font-heading text-2xl font-bold text-foreground">
             {pricing.volumeDiscount.title}
           </h2>
@@ -118,7 +110,7 @@ export default function PricingPage() {
           <div className="flex flex-wrap gap-8">
             {pricing.volumeDiscount.tiers.map((tier) => (
               <div key={tier.range} className="flex flex-col gap-1">
-                <p className="font-heading text-xl font-bold text-accent">{tier.range}</p>
+                <p className="font-heading text-xl font-bold text-primary">{tier.range}</p>
                 <p className="text-[13px] text-muted-foreground">{tier.description}</p>
               </div>
             ))}

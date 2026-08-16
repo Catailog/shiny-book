@@ -4,13 +4,15 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { getLocale } from '@/lib/i18n/get-locale';
 import { finalizeOrderPayment } from '@/lib/orders/finalize-order-payment';
-import { defaultLocale, locales } from '@/locales';
+import { locales } from '@/locales';
 
 export default async function CheckoutSuccessPage(props: PageProps<'/checkout/[orderId]/success'>) {
   const { orderId } = await props.params;
   const searchParams = await props.searchParams;
-  const t = locales[defaultLocale];
+  const locale = await getLocale();
+  const t = locales[locale];
 
   const paymentKey = firstParam(searchParams.paymentKey);
   const amountParam = firstParam(searchParams.amount);
@@ -35,7 +37,7 @@ export default async function CheckoutSuccessPage(props: PageProps<'/checkout/[o
 
     return (
       <ResultCard title={copy.title} description={copy.description}>
-        <dl className="flex flex-col gap-2 rounded-lg border border-border p-4 text-sm">
+        <dl className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 text-sm shadow-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">{t.checkout.orderIdLabel}</dt>
             <dd>{result.order.id}</dd>
@@ -75,7 +77,7 @@ export default async function CheckoutSuccessPage(props: PageProps<'/checkout/[o
   );
 }
 
-function ResultCard({
+async function ResultCard({
   title,
   description,
   children,
@@ -84,7 +86,8 @@ function ResultCard({
   description?: string;
   children?: ReactNode;
 }) {
-  const t = locales[defaultLocale];
+  const locale = await getLocale();
+  const t = locales[locale];
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-12">
