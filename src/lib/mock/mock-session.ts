@@ -3,8 +3,7 @@ import { cookies } from 'next/headers';
 import 'server-only';
 
 import { type Role, isRole } from '@/constants/roles';
-
-export const MOCK_SESSION_COOKIE = 'mock_session_role';
+import { MOCK_SESSION_COOKIE } from '@/lib/mock/mock-session-cookie';
 
 export async function getMockSessionRole(): Promise<Role | null> {
   const cookieStore = await cookies();

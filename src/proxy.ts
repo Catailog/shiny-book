@@ -2,9 +2,11 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@supabase/ssr';
 
+import { ROLE, isRole } from '@/constants/roles';
 import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
+import { MOCK_SESSION_COOKIE } from '@/lib/mock/mock-session-cookie';
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -31,8 +33,14 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const isAuthenticatedAdmin = user !== null && isAdminRole(user.app_metadata.role);
-  const isAuthenticatedConsumer = user !== null && !isAdminRole(user.app_metadata.role);
+
+  const mockRoleValue = request.cookies.get(MOCK_SESSION_COOKIE)?.value;
+  const mockRole = mockRoleValue && isRole(mockRoleValue) ? mockRoleValue : null;
+
+  const isAuthenticatedAdmin =
+    mockRole === ROLE.ADMIN || (user !== null && isAdminRole(user.app_metadata.role));
+  const isAuthenticatedConsumer =
+    mockRole === ROLE.CONSUMER || (user !== null && !isAdminRole(user.app_metadata.role));
 
   const { pathname } = request.nextUrl;
   const isAdminLoginRoute = pathname === ADMIN_ROUTES.LOGIN;

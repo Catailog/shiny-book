@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { ROLE } from '@/constants/roles';
 import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
-import { MOCK_SESSION_COOKIE } from '@/lib/mock/mock-session';
+import { MOCK_SESSION_COOKIE } from '@/lib/mock/mock-session-cookie';
 
 const MOCK_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24;
 
