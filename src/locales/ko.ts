@@ -614,6 +614,29 @@ export const ko = {
     },
     resultsLabel: '{count}개 상품',
     viewDetails: '자세히 보기',
+    detail: {
+      notFoundTitle: '상품을 찾을 수 없습니다',
+      backToList: '목록으로 돌아가기',
+      ctaLabel: '내 책 만들기',
+      specsEyebrow: '스펙',
+      specsTitle: '수공예로 완성되는 품격 있는 명세',
+      specs: [
+        {
+          title: '보존용 무산성지',
+          description: '수십 년이 지나도 누렇게 바래지 않는 최고급 아카이브 전용지 적용.',
+        },
+        {
+          title: '정통 수제 양장제본',
+          description: '한 땀 한 땀 사철 바느질로 엮어 180도 완벽한 스프레드를 보장합니다.',
+        },
+        {
+          title: '감각적인 여백 템플릿',
+          description: '디자이너들의 조형적 황금비율 레이아웃 설계 템플릿 제공.',
+        },
+      ],
+      relatedEyebrow: '추천 상품',
+      relatedTitle: '당신의 일상에 조화를 더할 제품군',
+    },
   },
   review: {
     title: '구매후기',

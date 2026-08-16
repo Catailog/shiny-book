@@ -1,6 +1,6 @@
 import { SiteContainer } from '@/components/site-container';
 import { HOME_SECTION_ANCHORS } from '@/constants/home-sections';
-import { PRODUCT_CATALOG } from '@/constants/product-catalog';
+import { getProductCatalog } from '@/lib/products/get-product-catalog';
 import { defaultLocale, locales } from '@/locales';
 
 import { ProductFilterGrid } from './product-filter-grid';
@@ -8,11 +8,7 @@ import { ProductFilterGrid } from './product-filter-grid';
 export function ProductShowcase() {
   const t = locales[defaultLocale];
   const products = t.site.home.products;
-
-  const items = PRODUCT_CATALOG.map((product, index) => {
-    const copy = products.items[index];
-    return copy ? { ...product, ...copy } : null;
-  }).filter((item): item is NonNullable<typeof item> => item !== null);
+  const items = getProductCatalog();
 
   return (
     <section id={HOME_SECTION_ANCHORS.PRODUCT_COLLECTION} className="w-full bg-background">

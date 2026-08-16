@@ -1,4 +1,4 @@
-import { PRODUCT_CATALOG } from '@/constants/product-catalog';
+import { getProductCatalog } from '@/lib/products/get-product-catalog';
 import { defaultLocale, locales } from '@/locales';
 
 import { ProductCatalog } from './product-catalog';
@@ -7,11 +7,7 @@ export default function ProductsPage() {
   const t = locales[defaultLocale];
   const products = t.site.home.products;
   const page = t.products;
-
-  const items = PRODUCT_CATALOG.map((product, index) => {
-    const copy = products.items[index];
-    return copy ? { ...product, ...copy } : null;
-  }).filter((item): item is NonNullable<typeof item> => item !== null);
+  const items = getProductCatalog();
 
   return (
     <>

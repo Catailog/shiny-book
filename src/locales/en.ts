@@ -615,6 +615,29 @@ export const en = {
     },
     resultsLabel: '{count} products',
     viewDetails: 'View details',
+    detail: {
+      notFoundTitle: 'Product not found',
+      backToList: 'Back to list',
+      ctaLabel: 'Start my book',
+      specsEyebrow: 'Specifications',
+      specsTitle: 'Crafted with meticulous detail',
+      specs: [
+        {
+          title: 'Archival acid-free paper',
+          description: 'Premium archive-grade paper that resists yellowing for decades.',
+        },
+        {
+          title: 'Authentic hand binding',
+          description: 'Hand Smyth-sewn stitching that guarantees a perfect 180-degree spread.',
+        },
+        {
+          title: 'Considered whitespace templates',
+          description: "Layout templates designed around our team's golden-ratio proportions.",
+        },
+      ],
+      relatedEyebrow: 'Recommended',
+      relatedTitle: 'More pieces to complement your everyday',
+    },
   },
   review: {
     title: 'Reviews',

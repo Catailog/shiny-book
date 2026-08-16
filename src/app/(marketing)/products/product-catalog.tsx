@@ -10,20 +10,11 @@ import { ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import type { ProductCategory } from '@/constants/product-catalog';
 import { PRODUCT_ROUTES } from '@/constants/routes';
+import type { CatalogProduct } from '@/lib/products/get-product-catalog';
 import { cn } from '@/lib/utils';
 
-interface ProductItem {
-  slug: string;
-  image: string;
-  category: ProductCategory;
-  name: string;
-  size: string;
-  description: string;
-  price: string;
-}
-
 interface ProductCatalogProps {
-  items: ProductItem[];
+  items: CatalogProduct[];
   filters: { all: string; classic: string; premium: string };
   resultsLabel: string;
   viewDetailsLabel: string;

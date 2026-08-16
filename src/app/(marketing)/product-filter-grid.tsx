@@ -10,16 +10,8 @@ import { ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import type { ProductCategory } from '@/constants/product-catalog';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import type { CatalogProduct } from '@/lib/products/get-product-catalog';
 import { cn } from '@/lib/utils';
-
-interface ProductItem {
-  image: string;
-  category: ProductCategory;
-  name: string;
-  size: string;
-  description: string;
-  price: string;
-}
 
 interface ProductFilters {
   all: string;
@@ -28,7 +20,7 @@ interface ProductFilters {
 }
 
 interface ProductFilterGridProps {
-  items: ProductItem[];
+  items: CatalogProduct[];
   filters: ProductFilters;
   filterLabel: string;
   startingFromLabel: string;
@@ -77,7 +69,7 @@ export function ProductFilterGrid({
       </div>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {visibleItems.map((item) => (
-          <Link key={item.name} href={CONSUMER_ROUTES.NEW_ORDER} className="group block">
+          <Link key={item.slug} href={CONSUMER_ROUTES.NEW_ORDER} className="group block">
             <Card className="overflow-hidden py-0 shadow-none ring-border transition-shadow group-hover:shadow-lg">
               <div className="relative h-76 w-full">
                 <Image
