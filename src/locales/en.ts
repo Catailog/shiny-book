@@ -1523,6 +1523,17 @@ export const en = {
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
+    hero: {
+      eyebrow: 'Customer Board',
+      title: 'Customer Reviews',
+      averageLabel: 'Average Rating',
+      totalReviewsLabel: '{count} Total Reviews',
+    },
+    filters: {
+      allProducts: 'All Products',
+      sortLabel: 'Sort by:',
+      sortMostRecent: 'Most Recent',
+    },
   },
   legal: {
     lastUpdatedLabel: 'Last updated',

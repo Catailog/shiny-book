@@ -1506,6 +1506,17 @@ export const ko = {
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',
+    hero: {
+      eyebrow: 'Customer Board',
+      title: 'Customer Reviews',
+      averageLabel: '전체 평점',
+      totalReviewsLabel: '{count}개의 후기',
+    },
+    filters: {
+      allProducts: '전체 상품',
+      sortLabel: '정렬:',
+      sortMostRecent: '최신순',
+    },
   },
   legal: {
     lastUpdatedLabel: '최종 개정일',
