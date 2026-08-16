@@ -729,6 +729,35 @@ export const en = {
         validation_failed: 'Please check your input and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
+      personalInfo: {
+        title: 'Personal Information',
+        editLink: 'Edit',
+        nameLabel: 'Name',
+        emailLabel: 'Email',
+        phoneLabel: 'Phone',
+      },
+      changePassword: {
+        title: 'Change Password',
+        currentPasswordLabel: 'Current Password',
+        newPasswordLabel: 'New Password',
+        newPasswordConfirmLabel: 'Confirm New Password',
+      },
+      shippingAddress: {
+        title: 'Shipping Addresses',
+        addButton: '+ Add Address',
+        editLink: 'Edit',
+        deleteLink: 'Delete',
+        defaultLabel: 'Default Address',
+      },
+      notifications: {
+        title: 'Notification Settings',
+        emailMarketing: 'Agree to email marketing',
+        smsUpdates: 'SMS updates for production/shipping',
+      },
+      deleteAccount: {
+        prompt: 'No longer using your account?',
+        button: 'Delete Account',
+      },
     },
     orderNew: {
       title: 'Create an order',

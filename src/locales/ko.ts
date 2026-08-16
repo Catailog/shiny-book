@@ -715,7 +715,7 @@ export const ko = {
       },
     },
     account: {
-      title: '회원정보 변경',
+      title: '계정 설정',
       passwordLabel: '새 비밀번호',
       passwordConfirmLabel: '새 비밀번호 확인',
       submitButton: '변경하기',
@@ -727,6 +727,35 @@ export const ko = {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+      personalInfo: {
+        title: '개인 정보',
+        editLink: '수정',
+        nameLabel: '이름',
+        emailLabel: '이메일',
+        phoneLabel: '연락처',
+      },
+      changePassword: {
+        title: '비밀번호 변경',
+        currentPasswordLabel: '현재 비밀번호',
+        newPasswordLabel: '새 비밀번호',
+        newPasswordConfirmLabel: '새 비밀번호 확인',
+      },
+      shippingAddress: {
+        title: '배송지 관리',
+        addButton: '+ 배송지 추가',
+        editLink: '수정',
+        deleteLink: '삭제',
+        defaultLabel: '기본 배송지',
+      },
+      notifications: {
+        title: '알림 설정',
+        emailMarketing: '이메일 마케팅 동의',
+        smsUpdates: '제작/배송 현황 SMS 알림',
+      },
+      deleteAccount: {
+        prompt: '더 이상 계정을 사용하지 않으시나요?',
+        button: '회원 탈퇴하기',
       },
     },
     orderNew: {
