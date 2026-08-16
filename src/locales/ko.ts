@@ -987,6 +987,66 @@ export const ko = {
       ],
     },
   },
+  ecoPapers: {
+    hero: {
+      eyebrow: '친환경 용지',
+      title: '우리의 종이 약속',
+      description:
+        '우리가 만드는 모든 책은 지구에 해를 입히지 않고, 오직 소장자에게 감동만을 안기도록 제작됩니다. FSC 인증 친환경 제지로 자연과 아름다운 공존을 만들어갑니다.',
+    },
+    fsc: {
+      title: 'FSC® 인증 및 친환경 콩기름 잉크 공정',
+      description:
+        'Shiny Book이 사용하는 모든 내지와 커버 패브릭은 산림자원을 지속가능하게 보호하는 국제 산림 관리 협회(FSC)의 합법적 가이드라인에 따라 철저히 추적된 원재료로만 만듭니다. 휘발성 유기 화학물 방출을 차단하는 친환경 식물성 콩기름 배합 잉크를 전면 사용하여 피부에 직접 장시간 닿아도 안전합니다.',
+    },
+    catalog: {
+      eyebrow: '아틀리에 스와치',
+      title: '프리미엄 용지 카탈로그',
+      items: [
+        {
+          image: '/images/eco-papers/fine-art-matte.png',
+          name: 'Fine Art Matte',
+          weight: '240 gsm',
+          description:
+            '무광택 특유의 극도로 차분하고 깊이 있는 질감으로, 목가적인 풍경이나 차분한 인물 화보 소장에 최적화된 시그니처 한지 풍감 수입지입니다.',
+          bestFor: '풍경 및 파인아트 사진에 추천',
+        },
+        {
+          image: '/images/eco-papers/lustre-semi-gloss.png',
+          name: 'Lustre Semi-Gloss',
+          weight: '260 gsm',
+          description:
+            '은은하고 고급스러운 미세 반사 코팅 처리가 특징으로, 선명한 원색 보존력과 하이라이트 표현력이 좋아 결혼 앨범 및 생생한 인물 스냅에 뛰어난 매칭률을 보입니다.',
+          bestFor: '웨딩 앨범 및 인물 사진에 추천',
+        },
+        {
+          image: '/images/eco-papers/cotton-rag.png',
+          name: 'Cotton Rag',
+          weight: '310 gsm',
+          description:
+            '최고급 100% 면 유기 섬유 원료로 제작되어 영구 보존용 무독성 산도 중립 보장과 부드러운 순백색의 기품 있는 두께감을 자랑하는 박물관 등급 파인아트지.',
+          bestFor: '아카이브 보존용 작품 인쇄에 추천',
+        },
+        {
+          image: '/images/eco-papers/recycled-kraft.png',
+          name: 'Recycled Kraft',
+          weight: '180 gsm',
+          description:
+            '소박하고 정겨운 내추럴 브라운 톤의 100% 지속 가능 친환경 리사이클 지로, 필름 사진이나 여행의 깊은 성찰, 에세이 및 수채화 스케치 수집에 독특한 풍미를 가미합니다.',
+          bestFor: '필름 사진 및 여행 저널에 추천',
+        },
+      ],
+    },
+    impact: {
+      eyebrow: '누적 성과',
+      title: '자연 자원 보호 통계',
+      stats: [
+        { value: '1,420+', label: '보호한 나무 수' },
+        { value: '12.4톤', label: '탄소 발자국 상쇄량' },
+        { value: '32만 리터', label: '절약한 청정수' },
+      ],
+    },
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',

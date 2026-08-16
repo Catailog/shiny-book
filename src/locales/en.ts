@@ -1000,6 +1000,66 @@ export const en = {
       ],
     },
   },
+  ecoPapers: {
+    hero: {
+      eyebrow: 'Ecological Papers',
+      title: 'Our Paper Promise',
+      description:
+        'Every book we make is designed to do no harm to the planet, and only bring joy to the person who keeps it. FSC-certified eco paper is how we live alongside nature.',
+    },
+    fsc: {
+      title: 'FSC® certification and eco soy ink',
+      description:
+        'Every text block and cover fabric Shiny Book uses is made only from materials tracked under the Forest Stewardship Council (FSC), the international body protecting forest resources sustainably. We use plant-based soy inks throughout, blocking volatile organic compounds, so they stay safe even against skin for long periods.',
+    },
+    catalog: {
+      eyebrow: 'Atelier Swatches',
+      title: 'Premium Paper Catalog',
+      items: [
+        {
+          image: '/images/eco-papers/fine-art-matte.png',
+          name: 'Fine Art Matte',
+          weight: '240 gsm',
+          description:
+            'An imported signature paper with a calm, deep matte texture, ideal for pastoral landscapes or quiet portrait collections.',
+          bestFor: 'Best for fine art & landscape photos',
+        },
+        {
+          image: '/images/eco-papers/lustre-semi-gloss.png',
+          name: 'Lustre Semi-Gloss',
+          weight: '260 gsm',
+          description:
+            'A subtle, refined micro-sheen coating with vivid color retention and highlight rendering, a great match for wedding albums and lively portrait snaps.',
+          bestFor: 'Best for bright portraiture & wedding albums',
+        },
+        {
+          image: '/images/eco-papers/cotton-rag.png',
+          name: 'Cotton Rag',
+          weight: '310 gsm',
+          description:
+            'A museum-grade fine art paper made from 100% organic cotton fiber, guaranteeing non-toxic pH-neutral archival preservation with an elegant soft-white thickness.',
+          bestFor: 'Best for archival art reproductions',
+        },
+        {
+          image: '/images/eco-papers/recycled-kraft.png',
+          name: 'Recycled Kraft',
+          weight: '180 gsm',
+          description:
+            'A rustic, warm natural brown 100% sustainable recycled paper that adds distinct character to film photography, travel reflections, essays, and watercolor sketches.',
+          bestFor: 'Best for vintage film & journal essays',
+        },
+      ],
+    },
+    impact: {
+      eyebrow: 'Cumulative Progress',
+      title: 'Natural Resource Protection Stats',
+      stats: [
+        { value: '1,420+', label: 'Managed Trees Saved' },
+        { value: '12.4 Tons', label: 'Carbon Footprint Offset' },
+        { value: '320k Liters', label: 'Pure Water Conserved' },
+      ],
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
