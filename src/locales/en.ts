@@ -895,8 +895,23 @@ export const en = {
   },
   notice: {
     list: {
-      title: 'Announcements',
+      eyebrow: 'Archive & Bulletin',
+      title: 'Notices & Announcements',
       empty: 'No announcements yet.',
+      searchPlaceholder: 'Search notices',
+      categoryTabs: {
+        all: 'All',
+        serviceUpdate: 'Service Update',
+        event: 'Event',
+        maintenance: 'Maintenance',
+      },
+      table: {
+        category: 'Category',
+        title: 'Title',
+        date: 'Date',
+        views: 'Views',
+      },
+      pinnedLabel: 'PINNED',
     },
     detail: {
       backToList: 'Back to list',

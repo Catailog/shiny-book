@@ -894,8 +894,23 @@ export const ko = {
   },
   notice: {
     list: {
+      eyebrow: 'Archive & Bulletin',
       title: '공지사항',
       empty: '등록된 공지사항이 없습니다.',
+      searchPlaceholder: '공지사항 검색',
+      categoryTabs: {
+        all: '전체',
+        serviceUpdate: '서비스 업데이트',
+        event: '이벤트',
+        maintenance: '점검',
+      },
+      table: {
+        category: '분류',
+        title: '제목',
+        date: '작성일',
+        views: '조회수',
+      },
+      pinnedLabel: 'PINNED',
     },
     detail: {
       backToList: '목록으로 돌아가기',
