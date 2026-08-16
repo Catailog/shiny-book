@@ -680,11 +680,25 @@ export const ko = {
       },
     },
     mypage: {
-      title: '마이페이지',
+      title: '마이 페이지',
+      subtitle: '진행 중인 프로젝트와 주문 내역을 확인하세요.',
       signOutButton: '로그아웃',
-      newOrderButton: '새 주문 만들기',
+      newOrderButton: '새로운 책 만들기',
       accountButton: '회원정보 변경',
       inquiriesButton: '1:1 문의',
+      sidebar: {
+        orders: 'My Orders',
+        account: 'Account Settings',
+        inquiries: 'My Inquiries',
+      },
+      stats: {
+        completed: '전체 주문 완료',
+        inProgress: '제작 및 배송 중',
+        inquiries: '나의 1:1 문의',
+        volumeSuffix: '권',
+        countSuffix: '건',
+      },
+      recentOrdersTitle: '최근 주문 내역',
       orders: {
         title: '주문내역',
         empty: '아직 주문 내역이 없습니다.',

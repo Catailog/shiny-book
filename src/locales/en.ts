@@ -681,11 +681,25 @@ export const en = {
       },
     },
     mypage: {
-      title: 'My page',
+      title: 'My Page',
+      subtitle: 'Check your ongoing projects and order history.',
       signOutButton: 'Sign out',
-      newOrderButton: 'Create new order',
+      newOrderButton: 'Create New Book',
       accountButton: 'Account settings',
       inquiriesButton: 'Inquiries',
+      sidebar: {
+        orders: 'My Orders',
+        account: 'Account Settings',
+        inquiries: 'My Inquiries',
+      },
+      stats: {
+        completed: 'Total Orders Completed',
+        inProgress: 'In Production & Shipping',
+        inquiries: 'My 1:1 Inquiries',
+        volumeSuffix: '',
+        countSuffix: '',
+      },
+      recentOrdersTitle: 'Recent Orders',
       orders: {
         title: 'Order history',
         empty: 'No orders yet.',
