@@ -17,7 +17,7 @@ export default async function EditFaqPage(props: PageProps<'/admin/faqs/[id]/edi
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8">
       <h1 className="text-2xl font-semibold text-foreground">{t.admin.faqs.editTitle}</h1>
-      <div className="max-w-md rounded-lg border border-border p-4">
+      <div className="max-w-md rounded-lg border border-border bg-card p-4 shadow-sm">
         <EditFaqForm id={faq.id} defaultValues={{ question: faq.question, answer: faq.answer }} />
       </div>
     </div>
