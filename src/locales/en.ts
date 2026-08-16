@@ -13,6 +13,7 @@ export const en = {
       gallery: 'Gallery',
       pricing: 'Pricing',
       about: 'About',
+      atelier: 'The Atelier',
       notices: 'Notices',
       faq: 'FAQ',
       reviews: 'Reviews',
@@ -604,6 +605,16 @@ export const en = {
   faq: {
     title: 'Frequently asked questions',
     empty: 'No FAQs yet.',
+  },
+  products: {
+    hero: {
+      eyebrow: 'The Atelier Collection',
+      title: 'The Collection',
+      description:
+        'A premium book guide curated by Shiny Book for pieces worth keeping. We use only authentic Smyth-sewn binding and carefully selected eco-friendly papers.',
+    },
+    resultsLabel: '{count} products',
+    viewDetails: 'View details',
   },
   review: {
     title: 'Reviews',

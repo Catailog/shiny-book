@@ -13,6 +13,7 @@ export const ko = {
       gallery: '갤러리',
       pricing: '가격',
       about: '소개',
+      atelier: '아틀리에',
       notices: '공지사항',
       faq: 'FAQ',
       reviews: '후기',
@@ -603,6 +604,16 @@ export const ko = {
   faq: {
     title: '자주 묻는 질문',
     empty: '등록된 FAQ가 없습니다.',
+  },
+  products: {
+    hero: {
+      eyebrow: '아틀리에 컬렉션',
+      title: '전체 컬렉션',
+      description:
+        'Shiny Book이 제안하는 소장 가치를 담은 프리미엄 도서 가이드입니다. 정통 사철 제본 기법과 엄선된 친환경 용지만을 사용합니다.',
+    },
+    resultsLabel: '{count}개 상품',
+    viewDetails: '자세히 보기',
   },
   review: {
     title: '구매후기',

@@ -4,18 +4,19 @@ import { BookOpen } from 'lucide-react';
 
 import { SiteContainer } from '@/components/site-container';
 import { Button } from '@/components/ui/button';
-import { HOME_SECTION_ANCHORS } from '@/constants/home-sections';
-import { CONSUMER_ROUTES, MARKETING_ROUTES } from '@/constants/routes';
+import { CONSUMER_ROUTES, FAQ_ROUTES, MARKETING_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
 import { defaultLocale, locales } from '@/locales';
 
 export function Nav() {
   const t = locales[defaultLocale];
 
   const navLinks = [
-    { label: t.site.nav.products, href: `#${HOME_SECTION_ANCHORS.PRODUCT_COLLECTION}` },
+    { label: t.site.nav.products, href: PRODUCT_ROUTES.LIST },
     { label: t.site.nav.gallery, href: MARKETING_ROUTES.GALLERY },
     { label: t.site.nav.pricing, href: MARKETING_ROUTES.PRICING },
     { label: t.site.nav.about, href: MARKETING_ROUTES.ABOUT },
+    { label: t.site.nav.atelier, href: MARKETING_ROUTES.ATELIER },
+    { label: t.site.nav.faq, href: FAQ_ROUTES.LIST },
   ];
 
   return (

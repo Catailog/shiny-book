@@ -34,6 +34,10 @@ export const LEGAL_ROUTES = {
   PRIVACY: '/privacy',
 } as const;
 
+export const PRODUCT_ROUTES = {
+  LIST: '/products',
+} as const;
+
 export const MARKETING_ROUTES = {
   GALLERY: '/gallery',
   PRICING: '/pricing',
