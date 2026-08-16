@@ -1,4 +1,5 @@
 import { FinalCta } from '@/app/(marketing)/final-cta';
+import { PageSection } from '@/components/page-section';
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +16,7 @@ export default async function FaqPage() {
 
   return (
     <>
-      <section className="w-full bg-secondary px-6 pt-20 pb-15 sm:px-10 lg:px-20">
+      <PageSection sectionClassName="bg-secondary" className="pt-20 pb-15">
         <div className="flex max-w-3xl flex-col gap-5">
           <p className="text-sm font-semibold tracking-wide text-accent uppercase">
             {t.faq.hero.eyebrow}
@@ -23,8 +24,8 @@ export default async function FaqPage() {
           <h1 className="font-heading text-5xl font-bold text-foreground">{t.faq.title}</h1>
           <p className="text-base text-muted-foreground">{t.faq.hero.description}</p>
         </div>
-      </section>
-      <section className="w-full px-6 py-15 sm:px-10 lg:px-20">
+      </PageSection>
+      <PageSection className="py-15">
         {faqs.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t.faq.empty}</p>
         ) : (
@@ -41,7 +42,7 @@ export default async function FaqPage() {
             ))}
           </Accordion>
         )}
-      </section>
+      </PageSection>
       <FinalCta />
     </>
   );

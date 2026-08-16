@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { Check } from 'lucide-react';
 
+import { PageSection } from '@/components/page-section';
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils';
@@ -14,7 +15,7 @@ export default function PricingPage() {
 
   return (
     <>
-      <section className="w-full bg-secondary px-6 pt-20 pb-15 sm:px-10 lg:px-20">
+      <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-5 pt-20 pb-15">
         <div className="flex max-w-3xl flex-col gap-5">
           <p className="text-sm font-semibold tracking-wide text-accent uppercase">
             {pricing.hero.eyebrow}
@@ -22,9 +23,9 @@ export default function PricingPage() {
           <h1 className="font-heading text-5xl font-bold text-foreground">{pricing.hero.title}</h1>
           <p className="text-base text-muted-foreground">{pricing.hero.description}</p>
         </div>
-      </section>
+      </PageSection>
 
-      <section className="w-full px-6 py-15 sm:px-10 lg:px-20">
+      <PageSection className="py-15">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {pricing.tiers.map((tier) => (
             <div
@@ -72,9 +73,9 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
-      </section>
+      </PageSection>
 
-      <section className="w-full px-6 py-15 sm:px-10 lg:px-20">
+      <PageSection className="py-15">
         <div className="flex flex-col gap-8">
           <h2 className="font-heading text-3xl font-bold text-foreground">{pricing.specsTitle}</h2>
           <div className="overflow-x-auto rounded-lg border border-border">
@@ -104,9 +105,9 @@ export default function PricingPage() {
             </table>
           </div>
         </div>
-      </section>
+      </PageSection>
 
-      <section className="w-full px-6 pt-15 pb-25 sm:px-10 lg:px-20">
+      <PageSection className="pt-15 pb-25">
         <div className="flex flex-col gap-5 rounded-lg border border-border bg-accent-soft p-10">
           <h2 className="font-heading text-2xl font-bold text-foreground">
             {pricing.volumeDiscount.title}
@@ -123,7 +124,7 @@ export default function PricingPage() {
             ))}
           </div>
         </div>
-      </section>
+      </PageSection>
     </>
   );
 }

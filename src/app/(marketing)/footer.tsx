@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { BookOpen } from 'lucide-react';
 
+import { SiteContainer } from '@/components/site-container';
 import { HOME_SECTION_ANCHORS } from '@/constants/home-sections';
 import { CONSUMER_ROUTES, FAQ_ROUTES, MARKETING_ROUTES, REVIEW_ROUTES } from '@/constants/routes';
 import { defaultLocale, locales } from '@/locales';
@@ -46,8 +47,8 @@ export function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-primary px-6 pt-20 pb-12 text-primary-foreground sm:px-10 lg:px-20">
-      <div className="flex w-full flex-col gap-16">
+    <footer className="w-full bg-primary text-primary-foreground">
+      <SiteContainer className="flex flex-col gap-16 pt-20 pb-12">
         <div className="flex w-full flex-col justify-between gap-12 lg:flex-row lg:gap-16">
           <div className="flex max-w-xs flex-col gap-5">
             <div className="inline-flex items-center gap-2">
@@ -103,7 +104,7 @@ export function Footer() {
             </ul>
           </div>
         </div>
-      </div>
+      </SiteContainer>
     </footer>
   );
 }
