@@ -7,11 +7,11 @@ import Link from 'next/link';
 
 import { ArrowRight } from 'lucide-react';
 
+import { FilterButton } from '@/components/filter-button';
 import { Card, CardContent } from '@/components/ui/card';
 import type { ProductCategory } from '@/constants/product-catalog';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import type { CatalogProduct } from '@/lib/products/get-product-catalog';
-import { cn } from '@/lib/utils';
 
 interface ProductFilters {
   all: string;
@@ -51,26 +51,18 @@ export function ProductFilterGrid({
     <div className="flex flex-col gap-8">
       <div role="group" aria-label={filterLabel} className="flex flex-wrap gap-3">
         {filterOptions.map((option) => (
-          <button
+          <FilterButton
             key={option.value}
-            type="button"
-            aria-pressed={activeFilter === option.value}
+            label={option.label}
+            isActive={activeFilter === option.value}
             onClick={() => setActiveFilter(option.value)}
-            className={cn(
-              'rounded border border-foreground px-7 py-3.5 text-xs font-semibold tracking-wide text-foreground uppercase transition-colors',
-              activeFilter === option.value
-                ? 'bg-foreground text-background'
-                : 'bg-transparent hover:bg-muted',
-            )}
-          >
-            {option.label}
-          </button>
+          />
         ))}
       </div>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {visibleItems.map((item) => (
           <Link key={item.slug} href={CONSUMER_ROUTES.NEW_ORDER} className="group block">
-            <Card className="overflow-hidden py-0 shadow-none ring-border transition-shadow group-hover:shadow-lg">
+            <Card className="overflow-hidden py-0 shadow-none ring-border transition-shadow group-hover:shadow-lg group-hover:ring-primary">
               <div className="relative h-76 w-full">
                 <Image
                   src={item.image}
@@ -97,7 +89,7 @@ export function ProductFilterGrid({
                     <p className="text-[11px] text-muted-foreground uppercase">
                       {startingFromLabel}
                     </p>
-                    <p className="font-heading text-lg font-bold text-accent">{item.price}</p>
+                    <p className="font-heading text-lg font-bold text-primary">{item.price}</p>
                   </div>
                   <span className="flex items-center gap-1 text-[13px] font-semibold text-foreground">
                     {ctaLabel}

@@ -7,11 +7,11 @@ import Link from 'next/link';
 
 import { ArrowRight } from 'lucide-react';
 
+import { FilterButton } from '@/components/filter-button';
 import { Card, CardContent } from '@/components/ui/card';
 import type { ProductCategory } from '@/constants/product-catalog';
 import { PRODUCT_ROUTES } from '@/constants/routes';
 import type { CatalogProduct } from '@/lib/products/get-product-catalog';
-import { cn } from '@/lib/utils';
 
 interface ProductCatalogProps {
   items: CatalogProduct[];
@@ -46,20 +46,12 @@ export function ProductCatalog({
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-8">
         <div className="flex flex-wrap gap-3">
           {filterOptions.map((option) => (
-            <button
+            <FilterButton
               key={option.value}
-              type="button"
-              aria-pressed={activeFilter === option.value}
+              label={option.label}
+              isActive={activeFilter === option.value}
               onClick={() => setActiveFilter(option.value)}
-              className={cn(
-                'rounded border border-border px-5 py-2.5 text-[13px] font-semibold transition-colors',
-                activeFilter === option.value
-                  ? 'border-transparent bg-primary text-primary-foreground'
-                  : 'text-foreground hover:bg-muted',
-              )}
-            >
-              {option.label}
-            </button>
+            />
           ))}
         </div>
         <p className="text-sm text-muted-foreground">
@@ -73,7 +65,7 @@ export function ProductCatalog({
             href={`${PRODUCT_ROUTES.LIST}/${item.slug}`}
             className="group block"
           >
-            <Card className="overflow-hidden py-0 shadow-none ring-border transition-shadow group-hover:shadow-lg">
+            <Card className="overflow-hidden py-0 shadow-none ring-border transition-shadow group-hover:shadow-lg group-hover:ring-primary">
               <div className="relative h-80 w-full">
                 <Image
                   src={item.image}
@@ -98,7 +90,7 @@ export function ProductCatalog({
                     <p className="text-[11px] text-muted-foreground uppercase">
                       {startingFromLabel}
                     </p>
-                    <p className="font-heading text-lg font-bold text-accent">{item.price}</p>
+                    <p className="font-heading text-lg font-bold text-primary">{item.price}</p>
                   </div>
                   <span className="flex items-center gap-1 text-[13px] font-semibold text-foreground">
                     {viewDetailsLabel}

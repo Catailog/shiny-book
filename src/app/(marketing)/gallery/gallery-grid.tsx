@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
-import { cn } from '@/lib/utils';
+import { FilterButton } from '@/components/filter-button';
 
 type GalleryCategory = 'wedding' | 'travel' | 'family' | 'baby' | 'lifestyle';
 
@@ -50,20 +50,12 @@ export function GalleryGrid({ items, filters }: GalleryGridProps) {
     <div className="flex flex-col gap-12">
       <div className="flex flex-wrap gap-3 border-b border-border pb-8">
         {filterOptions.map((option) => (
-          <button
+          <FilterButton
             key={option.value}
-            type="button"
-            aria-pressed={activeFilter === option.value}
+            label={option.label}
+            isActive={activeFilter === option.value}
             onClick={() => setActiveFilter(option.value)}
-            className={cn(
-              'rounded border px-4 py-2 text-[13px] font-semibold transition-colors',
-              activeFilter === option.value
-                ? 'border-accent bg-accent-soft text-accent'
-                : 'border-border text-foreground hover:bg-muted',
-            )}
-          >
-            {option.label}
-          </button>
+          />
         ))}
       </div>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -79,7 +71,7 @@ export function GalleryGrid({ items, filters }: GalleryGridProps) {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <span className="w-fit rounded bg-accent-soft px-2.5 py-1 text-[11px] font-semibold tracking-wide text-accent uppercase">
+              <span className="w-fit rounded bg-primary-soft px-2.5 py-1 text-[11px] font-semibold tracking-wide text-primary uppercase">
                 {filters[item.category]}
               </span>
               <p className="font-heading text-xl font-semibold text-foreground">{item.title}</p>
