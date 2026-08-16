@@ -1104,6 +1104,57 @@ export const ko = {
       buttonLabel: '지속가능한 책 만들기',
     },
   },
+  shippingPolicy: {
+    hero: {
+      eyebrow: '배송 정책',
+      title: '안전한 여정',
+      description:
+        '전문 제작 장인의 마무리를 거친 소장본을 집 앞까지 완벽한 비훼손 보존 상태로 전달해 드리기 위한 세심하고 엄격한 배송 안전 가이드입니다.',
+    },
+    methods: {
+      eyebrow: '배송 등급',
+      title: '배송 방식 및 요금',
+      headers: {
+        method: '배송 방식',
+        duration: '배송 기한',
+        cost: '비용',
+        coverage: '대상',
+      },
+      items: [
+        {
+          method: 'Standard Delivery (일반 배송)',
+          duration: '7-10 영업일 이내',
+          cost: '무료 (₩100,000 이상 주문 시)',
+          coverage: '도서산간 외 전국 지원',
+        },
+        {
+          method: 'Express Custom (특급 신속 배송)',
+          duration: '3-5 영업일 이내',
+          cost: '₩8,000 (전국 고정 균일가)',
+          coverage: '맞춤 최우선 긴급 가동',
+        },
+        {
+          method: 'Atelier Premium (장인 직배송)',
+          duration: '동일 주간 예약 배송',
+          cost: '₩15,000',
+          coverage: '서울 및 수도권 한정 제공',
+        },
+      ],
+    },
+    packaging: {
+      eyebrow: '언박싱 경험',
+      title: '맞춤 보존 패키징',
+      description:
+        '우리는 도서의 모서리가 운송 도중 찌그러지거나 표면에 스크래치가 발생하는 상황을 철저히 차단하고자 견고한 재생 카드보드로 제작된 도서 보호 프레임 및 중성 습기 제어 종이 파우치로 이중 보습/방습 진공 패키징을 거쳐 발송합니다.',
+      subtitle: '이중 보호 박스와 무독성 완충재',
+      badgeLabel: '맞춤 제작 하드 박스 무상 포함',
+    },
+    returns: {
+      title: '반품 및 제작 상 교환 규정',
+      description:
+        'Shiny Book의 포토북은 고객님의 사적인 사진과 개인 설정 템플릿에 따라 개별 맞춤 가동 생산되는 커스텀 성격의 도서입니다. 이에 따라 단순 변심에 의한 중간 주문 취소 및 환불 조치는 불가능합니다. 다만 도서 자체의 파손 혹은 제본 불량 하자가 발견되는 경우에는 수령 후 7일 이내에 무상으로 빠른 재인쇄 교환 처리를 약속합니다.',
+    },
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',

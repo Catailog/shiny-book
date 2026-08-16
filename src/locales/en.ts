@@ -1117,6 +1117,57 @@ export const en = {
       buttonLabel: 'Make a sustainable book',
     },
   },
+  shippingPolicy: {
+    hero: {
+      eyebrow: 'Logistics & Delivery',
+      title: 'Safe Passage',
+      description:
+        'A careful, rigorous shipping safety guide for delivering your finished keepsake to your door in perfect, undamaged condition.',
+    },
+    methods: {
+      eyebrow: 'Execution Tiers',
+      title: 'Shipping Methods & Rates',
+      headers: {
+        method: 'Method',
+        duration: 'Duration',
+        cost: 'Cost',
+        coverage: 'Coverage',
+      },
+      items: [
+        {
+          method: 'Standard Delivery',
+          duration: 'Within 7-10 business days',
+          cost: 'Free (orders over $99)',
+          coverage: 'Nationwide, excluding remote islands',
+        },
+        {
+          method: 'Express Custom',
+          duration: 'Within 3-5 business days',
+          cost: '$8 flat nationwide rate',
+          coverage: 'Custom priority handling',
+        },
+        {
+          method: 'Atelier Premium',
+          duration: 'Same-week scheduled delivery',
+          cost: '$15',
+          coverage: 'Seoul metro area only',
+        },
+      ],
+    },
+    packaging: {
+      eyebrow: 'The Unboxing Ritual',
+      title: 'Custom Preservation Packaging',
+      description:
+        'To fully prevent corner crushing or surface scratches in transit, we ship every book in a double-sealed, moisture-controlled package: a sturdy recycled cardboard protective frame plus a neutral humidity-control paper pouch.',
+      subtitle: 'Double-protection box with non-toxic cushioning',
+      badgeLabel: 'Custom hard box included at no charge',
+    },
+    returns: {
+      title: 'Returns & Production Exchange Policy',
+      description:
+        "Shiny Book photobooks are custom-produced to order based on your private photos and personal template settings. Because of this, we can't cancel or refund an order mid-production simply due to a change of mind. However, if a defect in the book itself or a binding flaw is found, we promise a free, expedited reprint exchange within 7 days of receipt.",
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
