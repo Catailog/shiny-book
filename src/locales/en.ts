@@ -746,6 +746,66 @@ export const en = {
       ],
     },
   },
+  gallery: {
+    hero: {
+      eyebrow: 'Archived Memories',
+      title: 'The Shiny Book Gallery',
+      description:
+        'A showcase of finished volumes created together with our customers. See the real layouts and hand-bound fabric finishes for yourself.',
+    },
+    filters: {
+      all: 'All',
+      wedding: 'Wedding',
+      travel: 'Travel',
+      family: 'Family',
+      baby: 'Baby',
+      lifestyle: 'Lifestyle',
+    },
+    items: [
+      {
+        image: '/images/gallery/forest-record.png',
+        category: 'travel',
+        title: 'A Quiet Record of the Forest',
+        description:
+          "Nordic conifer forests and minimal interiors, foil-stamped onto a sand linen cover to capture the region's stillness.",
+      },
+      {
+        image: '/images/gallery/wedding-day.png',
+        category: 'wedding',
+        title: 'Our Classic Wedding Day',
+        description:
+          'Elegant Italian silk fabric with silver foil engraving, capturing the grandeur of a stately cathedral ceremony.',
+      },
+      {
+        image: '/images/gallery/first-steps.png',
+        category: 'baby',
+        title: "Spring, Baby's First Steps",
+        description:
+          "A tender album printed on soft pastel fine art paper that captures a baby's downy hair and bright laughter.",
+      },
+      {
+        image: '/images/gallery/alps-hiking.png',
+        category: 'travel',
+        title: 'Alps Hiking Journal',
+        description:
+          'A pocket-sized classic journal with fountain-pen notes and a handsome orange-brown leather cord binding.',
+      },
+      {
+        image: '/images/gallery/three-generations.png',
+        category: 'family',
+        title: 'Family Time, A Three-Generation Portrait',
+        description:
+          "A grand 12-inch premium album made for grandparents' 70th birthday, with the distinct elegance of a leather cover.",
+      },
+      {
+        image: '/images/gallery/afternoon-essay.png',
+        category: 'lifestyle',
+        title: 'A Modest Afternoon Essay',
+        description:
+          'Quiet everyday moments, a cup of coffee, light through the window, composed simply in a modern layout.',
+      },
+    ],
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',

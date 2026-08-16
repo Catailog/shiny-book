@@ -734,6 +734,66 @@ export const ko = {
       ],
     },
   },
+  gallery: {
+    hero: {
+      eyebrow: '보존된 기억들',
+      title: 'Shiny Book 갤러리',
+      description:
+        'Shiny Book과 고객이 함께 완성한 한 권의 작품집들을 소개합니다. 실제 출간본의 레이아웃과 수제 제본 패브릭 마감을 직접 눈으로 확인해 보세요.',
+    },
+    filters: {
+      all: '전체',
+      wedding: '웨딩',
+      travel: '여행',
+      family: '가족',
+      baby: '베이비',
+      lifestyle: '라이프스타일',
+    },
+    items: [
+      {
+        image: '/images/gallery/forest-record.png',
+        category: 'travel',
+        title: '고요한 숲속의 기록',
+        description:
+          '북유럽의 깊은 침엽수림과 미니멀 인테리어를 린넨 샌드 커버에 은박 가공하여 기록한 포토북.',
+      },
+      {
+        image: '/images/gallery/wedding-day.png',
+        category: 'wedding',
+        title: 'Our Classic Wedding Day',
+        description:
+          '우아한 이탈리아 실크 패브릭과 은박 인그레이빙으로 고풍스러운 성당 예식의 장엄함을 담았습니다.',
+      },
+      {
+        image: '/images/gallery/first-steps.png',
+        category: 'baby',
+        title: '봄, 아기의 첫 발걸음',
+        description:
+          '아기의 솜털과 해맑은 웃음소리가 느껴지도록 포근한 파스텔 파인아트지에 섬세하게 출력한 앨범.',
+      },
+      {
+        image: '/images/gallery/alps-hiking.png',
+        category: 'travel',
+        title: '알프스 하이킹 일지',
+        description:
+          '손에 쥐기 쉬운 클래식 저널 사이즈로 만년필 기록과 오렌지 브라운 레더 끈 제본이 멋스럽습니다.',
+      },
+      {
+        image: '/images/gallery/three-generations.png',
+        category: 'family',
+        title: '가족의 시간, 삼대의 초상',
+        description:
+          '조부모님의 칠순을 맞아 제작된 장엄한 12인치 프리미엄 앨범. 가죽 커버 특유의 기품이 드러납니다.',
+      },
+      {
+        image: '/images/gallery/afternoon-essay.png',
+        category: 'lifestyle',
+        title: '오후의 소박한 에세이',
+        description:
+          '매일 마시는 커피 한 잔, 창가의 햇빛 등 조용한 일상을 모던한 레이아웃으로 담백하게 구성.',
+      },
+    ],
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',
