@@ -24,26 +24,43 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-12">
-      <h1 className="text-2xl font-semibold text-foreground">{t.checkout.title}</h1>
-      <div className="flex flex-col gap-2 rounded-lg border border-border p-4 text-sm">
-        <div className="flex justify-between">
-          <span className="text-foreground">{order.title}</span>
-          <span className="text-muted-foreground">
-            {order.quantity}
-            {t.checkout.quantitySuffix}
-          </span>
-        </div>
-        <div className="flex justify-between font-medium">
-          <span>{t.checkout.amountLabel}</span>
-          <span>{order.amount.toLocaleString()}</span>
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-16 lg:flex-row lg:items-start lg:gap-16">
+      <div className="flex flex-1 flex-col gap-8">
+        <h1 className="font-heading text-3xl font-bold text-foreground">{t.checkout.title}</h1>
+        <div className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold tracking-wide text-foreground uppercase">
+            {t.checkout.paymentTitle}
+          </h2>
+          <div className="flex flex-col gap-2 rounded-lg bg-secondary p-4 text-sm">
+            <p className="font-medium text-foreground">{t.checkout.testNotice.title}</p>
+            <p className="text-muted-foreground">{t.checkout.testNotice.body}</p>
+          </div>
+          <CheckoutWidget orderId={order.id} orderName={order.title} amount={order.amount} />
         </div>
       </div>
-      <div className="flex flex-col gap-1 rounded-lg bg-muted p-4 text-sm">
-        <p className="font-medium text-foreground">{t.checkout.testNotice.title}</p>
-        <p className="text-muted-foreground">{t.checkout.testNotice.body}</p>
+      <div className="flex w-full flex-col gap-6 rounded-xl border border-border bg-secondary p-8 lg:w-90">
+        <h2 className="font-heading text-xl font-bold text-foreground">
+          {t.checkout.summaryTitle}
+        </h2>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <p className="font-heading text-base font-semibold text-foreground">{order.title}</p>
+            <p className="text-sm text-muted-foreground">
+              {order.quantity}
+              {t.checkout.quantitySuffix}
+            </p>
+          </div>
+        </div>
+        <div className="h-px w-full bg-border" />
+        <div className="flex items-center justify-between">
+          <p className="font-heading text-base font-bold text-foreground">
+            {t.checkout.amountLabel}
+          </p>
+          <p className="font-heading text-xl font-bold text-accent">
+            {order.amount.toLocaleString()}
+          </p>
+        </div>
       </div>
-      <CheckoutWidget orderId={order.id} orderName={order.title} amount={order.amount} />
     </main>
   );
 }

@@ -216,6 +216,8 @@ export const ko = {
   } satisfies Record<ApiErrorCode, string>,
   checkout: {
     title: '결제하기',
+    summaryTitle: '주문 요약',
+    paymentTitle: '결제 방식',
     quantitySuffix: '권',
     amountLabel: '결제 금액',
     payButton: '결제하기',
