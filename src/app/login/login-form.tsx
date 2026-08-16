@@ -99,13 +99,13 @@ export function ConsumerLoginForm() {
         <Button
           type="submit"
           disabled={isPending}
-          className="h-auto w-full rounded bg-accent p-4 text-sm font-semibold text-accent-foreground uppercase hover:bg-accent/90"
+          className="h-auto w-full rounded bg-primary p-4 text-sm font-semibold text-primary-foreground uppercase hover:bg-primary/90"
         >
           {isPending ? t.consumer.login.submitting : t.consumer.login.submitButton}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           {t.consumer.login.signupPrompt}{' '}
-          <Link href={CONSUMER_ROUTES.SIGNUP} className="font-semibold text-accent underline">
+          <Link href={CONSUMER_ROUTES.SIGNUP} className="font-semibold text-primary underline">
             {t.consumer.login.signupLink}
           </Link>
         </p>
