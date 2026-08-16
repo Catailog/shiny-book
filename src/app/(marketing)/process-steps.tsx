@@ -36,7 +36,7 @@ export async function ProcessSteps() {
                     <StepIcon aria-hidden="true" className="size-5 text-primary" />
                   ) : null}
                 </div>
-                <p className="font-heading text-3xl font-light text-border">
+                <p className="font-heading text-3xl font-light text-muted-foreground">
                   {String(index + 1).padStart(2, '0')}
                 </p>
               </div>

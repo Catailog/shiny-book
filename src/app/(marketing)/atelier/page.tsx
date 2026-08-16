@@ -41,7 +41,7 @@ export default async function AtelierPage() {
               />
             </div>
             <div className="flex flex-1 flex-col gap-4">
-              <p className="font-heading text-5xl font-light text-border">
+              <p className="font-heading text-5xl font-light text-muted-foreground">
                 {String(index + 1).padStart(2, '0')}
               </p>
               <h2 className="font-heading text-2xl font-bold text-foreground">{step.title}</h2>
