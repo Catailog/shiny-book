@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowRight, FileText, LayoutGrid, ScrollText } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
+import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
@@ -115,25 +116,12 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
         </div>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {relatedProducts.map((related) => (
-            <Link
+            <ProductCard
               key={related.slug}
-              href={`${PRODUCT_ROUTES.LIST}/${related.slug}`}
-              className="group flex flex-col gap-4 overflow-hidden rounded-lg border border-border"
-            >
-              <div className="relative h-60 w-full">
-                <Image
-                  src={related.image}
-                  alt={related.name}
-                  fill
-                  sizes="(min-width: 640px) 33vw, 100vw"
-                  className="object-cover transition-transform group-hover:scale-105"
-                />
-              </div>
-              <div className="flex flex-col gap-3 px-5 pb-5">
-                <p className="font-heading text-xl font-semibold text-foreground">{related.name}</p>
-                <p className="text-sm font-bold text-primary">{related.price}</p>
-              </div>
-            </Link>
+              item={related}
+              startingFromLabel={products.startingFromLabel}
+              ctaLabel={detail.ctaLabel}
+            />
           ))}
         </div>
       </PageSection>

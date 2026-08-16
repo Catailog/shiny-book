@@ -1,11 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
-
-import { Plus } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
@@ -51,21 +46,11 @@ export default async function MypagePage() {
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-10 py-10">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-heading text-4xl font-bold text-foreground">
-            {t.consumer.mypage.title}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t.consumer.mypage.subtitle}</p>
-        </div>
-        <Button
-          render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
-          nativeButton={false}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          <Plus aria-hidden="true" className="size-4" />
-          {t.consumer.mypage.newOrderButton}
-        </Button>
+      <div>
+        <h1 className="font-heading text-4xl font-bold text-foreground">
+          {t.consumer.mypage.title}
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t.consumer.mypage.subtitle}</p>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
