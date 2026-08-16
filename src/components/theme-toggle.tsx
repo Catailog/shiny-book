@@ -4,6 +4,8 @@ import { useSyncExternalStore } from 'react';
 
 import { Moon, Sun } from 'lucide-react';
 
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
 interface ThemeToggleProps {
   switchToLightLabel: string;
   switchToDarkLabel: string;
@@ -11,6 +13,7 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeToggleProps) {
   const isDark = useSyncExternalStore(subscribeToThemeChange, getIsDarkSnapshot, getServerSnapshot);
+  const label = isDark ? switchToLightLabel : switchToDarkLabel;
 
   function toggleTheme() {
     const nextIsDark = !isDark;
@@ -19,18 +22,25 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
   }
 
   return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      aria-label={isDark ? switchToLightLabel : switchToDarkLabel}
-      className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-    >
-      {isDark ? (
-        <Sun aria-hidden="true" className="size-5" />
-      ) : (
-        <Moon aria-hidden="true" className="size-5" />
-      )}
-    </button>
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={label}
+            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          />
+        }
+      >
+        {isDark ? (
+          <Sun aria-hidden="true" className="size-5" />
+        ) : (
+          <Moon aria-hidden="true" className="size-5" />
+        )}
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   );
 }
 

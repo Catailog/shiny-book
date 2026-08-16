@@ -1,7 +1,5 @@
 'use client';
 
-import { useTransition } from 'react';
-
 import { useRouter } from 'next/navigation';
 
 import { Check, Languages } from 'lucide-react';
@@ -12,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { LOCALE_LABELS, LOCALE_OPTIONS } from '@/constants/locale';
 import { setLocale } from '@/lib/i18n/actions';
 import type { Locale } from '@/locales';
@@ -23,31 +22,38 @@ interface LanguageToggleProps {
 
 export function LanguageToggle({ locale, label }: LanguageToggleProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
-  function handleSelect(nextLocale: Locale) {
+  async function handleSelect(nextLocale: Locale) {
     if (nextLocale === locale) {
       return;
     }
 
-    startTransition(async () => {
-      await setLocale(nextLocale);
-      router.refresh();
-    });
+    await setLocale(nextLocale);
+    router.refresh();
   }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        aria-label={label}
-        disabled={isPending}
-        className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
-      >
-        <Languages aria-hidden="true" className="size-5" />
-      </DropdownMenuTrigger>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <DropdownMenuTrigger
+              aria-label={label}
+              className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            />
+          }
+        >
+          <Languages aria-hidden="true" className="size-5" />
+        </TooltipTrigger>
+        <TooltipContent>{label}</TooltipContent>
+      </Tooltip>
       <DropdownMenuContent align="end">
         {LOCALE_OPTIONS.map((option) => (
-          <DropdownMenuItem key={option} onClick={() => handleSelect(option)}>
+          <DropdownMenuItem
+            key={option}
+            onClick={() => handleSelect(option)}
+            className="cursor-pointer"
+          >
             <span className="flex-1">{LOCALE_LABELS[option]}</span>
             {option === locale ? <Check aria-hidden="true" className="size-4" /> : null}
           </DropdownMenuItem>
