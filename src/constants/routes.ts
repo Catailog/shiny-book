@@ -33,3 +33,15 @@ export const LEGAL_ROUTES = {
   TERMS: '/terms',
   PRIVACY: '/privacy',
 } as const;
+
+export const MARKETING_ROUTES = {
+  GALLERY: '/gallery',
+  PRICING: '/pricing',
+  ABOUT: '/about',
+  ATELIER: '/atelier',
+  SUSTAINABILITY: '/sustainability',
+  PRESS: '/press',
+  LAYOUT_GUIDELINES: '/layout-guidelines',
+  ECO_PAPERS: '/eco-papers',
+  SHIPPING_POLICY: '/shipping-policy',
+} as const;

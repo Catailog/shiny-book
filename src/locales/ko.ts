@@ -1,3 +1,4 @@
+import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
 import type { OrderStatus } from '@/constants/order-status';
 
@@ -5,6 +6,186 @@ export const ko = {
   common: {
     loading: '로딩 중...',
     error: '오류가 발생했습니다.',
+  },
+  site: {
+    nav: {
+      products: '제품',
+      gallery: '갤러리',
+      pricing: '가격',
+      about: '소개',
+      notices: '공지사항',
+      faq: 'FAQ',
+      reviews: '후기',
+      login: '로그인',
+      signup: '회원가입',
+      mypage: '마이페이지',
+      logout: '로그아웃',
+      startOrder: '주문 시작하기',
+    },
+    footer: {
+      productsTitle: '제품',
+      customerServiceTitle: '고객지원',
+      companyTitle: '회사',
+      inquiries: '1:1 문의',
+      terms: '이용약관',
+      privacy: '개인정보처리방침',
+      businessInfo:
+        '대표: 홍길동\n사업자등록번호: 000-00-00000\n통신판매업 신고번호: 제2026-서울중구-0000호\n서울특별시 중구 세종대로 110\n02-0000-0000\nexample@example.com',
+      copyright: '© 2026 Shiny Book',
+      links: {
+        viewProducts: '제품 보기',
+        layoutGuidelines: '레이아웃 가이드',
+        ecoPapers: '친환경 용지',
+        shippingPolicy: '배송 정책',
+        ourStory: '브랜드 스토리',
+        atelier: '아틀리에 소개',
+        sustainability: '지속가능성',
+        press: '보도자료 문의',
+      },
+    },
+    home: {
+      hero: {
+        eyebrow: '맞춤 도서 인쇄 및 제작',
+        title: '당신의 이야기를, 한 권의 책으로',
+        description:
+          '소중한 순간들을 바래지 않는 가치로 보존하세요. Shiny Book은 정성껏 고른 고급 용지와 견고한 제본 기술로 단 하나뿐인 나만의 책을 만들어드립니다.',
+        primaryCtaLabel: '내 책 만들기',
+        secondaryCtaLabel: '상품 보기',
+        stats: [
+          { label: '고급 용지 사용률', suffix: '%' },
+          { label: '프리미엄 상품 종류', suffix: '개' },
+          { label: '누적 판매 부수', suffix: '권' },
+        ],
+      },
+      steps: {
+        eyebrow: '제작 과정',
+        title: '생각보다 쉬운 프리미엄 책 만들기',
+        items: [
+          {
+            title: '사진 업로드',
+            description:
+              '추억이 담긴 고화질 사진들을 업로드하세요. 모바일과 데스크톱 어디서든 안전하게 전송됩니다.',
+          },
+          {
+            title: '레이아웃 & 커버 선택',
+            description:
+              '스튜디오 디자이너가 정교하게 설계한 클래식 템플릿과 고급 린넨/가죽 커버 패브릭을 매칭합니다.',
+          },
+          {
+            title: '단락 제본 및 수령',
+            description:
+              '전문 제본 장인의 섬세한 마감을 거쳐 맞춤 상자에 안전하게 포장된 완성본을 집에서 만나보세요.',
+          },
+        ],
+      },
+      features: {
+        eyebrow: '품질 약속',
+        title: '타협 없는 퀄리티와 집요한 마감',
+        subtitle: '작은 디테일까지 신경 쓴 인쇄와 제본으로 완성도 높은 책을 만들어드립니다.',
+        items: [
+          {
+            title: '무독성 아카이빙 페이퍼',
+            description:
+              '시간이 흘러도 변색되거나 손상되지 않는 아카이브 보존용 파인아트지를 엄선하여 사용합니다.',
+          },
+          {
+            title: '수제 사철실 양장 제본',
+            description:
+              '쉽게 낱장이 떨어지지 않고, 시원하게 펼쳐지는 정통 수공예 하드커버 바인딩 기술을 적용합니다.',
+          },
+          {
+            title: '감각적인 맞춤 편집',
+            description:
+              '여백의 미를 극대화한 클래식 잡지 스타일부터 밀도 높은 컬렉션까지, 다양한 디자인 템플릿을 지원합니다.',
+          },
+          {
+            title: '맞춤형 친환경 패키징',
+            description:
+              '제작 완료 후, 외부 충격과 오염으로부터 책을 안전하게 보호하는 전용 패키지에 담아 신속히 배송됩니다.',
+          },
+        ],
+      },
+      products: {
+        eyebrow: '컬렉션',
+        title: 'Shiny Book 제품군',
+        ctaLabel: '주문 시작하기',
+        startingFromLabel: '시작가',
+        filterLabel: '제품 필터',
+        filters: {
+          all: '전체 보기',
+          classic: '기본 시리즈',
+          premium: '프리미엄 시리즈',
+        },
+        items: [
+          {
+            name: '하드커버 포토북',
+            size: '10 x 10 in',
+            description:
+              '견고한 보드 커버와 정밀한 마감으로 오래도록 보관하기 좋은 클래식한 하드커버 북입니다.',
+            price: '990원',
+          },
+          {
+            name: '소프트커버 포토북',
+            size: '8 x 10 in',
+            description:
+              '가볍고 부드러운 커버로 제작해 매일 편하게 넘겨보기 좋은 데일리 기록용 북입니다.',
+            price: '790원',
+          },
+          {
+            name: '프리미엄 포토 앨범',
+            size: '12 x 12 in',
+            description:
+              '고급 레더 커버와 두툼한 보존용 용지로 완성하는 가장 특별한 소장용 앨범입니다.',
+            price: '9,900원',
+          },
+          {
+            name: '여행 저널',
+            size: '6 x 8 in',
+            description:
+              '휴대하기 좋은 아담한 사이즈로, 여행의 순간과 감상을 기록하기 좋은 저널입니다.',
+            price: '690원',
+          },
+          {
+            name: '웨딩 앨범',
+            size: '11 x 14 in',
+            description: '인생에서 가장 빛나는 순간을 우아하게 담아내는 웨딩 전용 앨범입니다.',
+            price: '9,900원',
+          },
+          {
+            name: '베이비 앨범',
+            size: '9 x 9 in',
+            description: '아기의 첫 1년, 소중한 성장 기록을 사랑스럽게 담아내는 앨범입니다.',
+            price: '8,900원',
+          },
+        ],
+      },
+      notices: {
+        title: '공지사항',
+        empty: '등록된 공지사항이 없습니다.',
+        more: '더보기',
+        expandLabel: '공지사항 목록 펼치기',
+        prevPageLabel: '이전 페이지',
+        nextPageLabel: '다음 페이지',
+      },
+      reviews: {
+        eyebrow: '고객 이야기',
+        title: '먼저 이야기를 남겨주신 분들',
+        empty: '등록된 후기가 없습니다.',
+        more: '모든 후기 보기',
+        ratingLabel: '평점',
+        purchasedLabel: '구매 상품',
+        prevLabel: '이전 후기',
+        nextLabel: '다음 후기',
+      },
+      cta: {
+        eyebrow: '지금 바로 시작하기',
+        title: '지금 나만의 포토북을 만들어보세요',
+        description:
+          '단 몇 분이면 사진 업로드와 편집을 모두 끝내고, 수공예 감성의 아름다운 인쇄본을 주문할 수 있습니다.',
+        primaryLabel: '지금 바로 만들기',
+        secondaryLabel: '문의하기',
+      },
+    },
   },
   notFound: {
     title: '페이지를 찾을 수 없습니다',
@@ -19,6 +200,11 @@ export const ko = {
     shipping: '배송중',
     completed: '완료',
   } satisfies Record<OrderStatus, string>,
+  announcementCategories: {
+    notice: '공지사항',
+    event: '이벤트',
+    winner: '당첨자 발표',
+  } satisfies Record<AnnouncementCategory, string>,
   apiErrors: {
     UNAUTHORIZED: '인증이 필요합니다.',
     FORBIDDEN: '권한이 없습니다.',
@@ -142,6 +328,8 @@ export const ko = {
     },
     coupons: {
       title: '쿠폰 관리',
+      newTitle: '쿠폰 발급',
+      issueButton: '발급하기',
       empty: '등록된 쿠폰이 없습니다.',
       createSuccess: '쿠폰이 발급됐습니다.',
       unlimited: '무제한',
@@ -182,18 +370,22 @@ export const ko = {
     },
     announcements: {
       title: '공지사항 관리',
+      newTitle: '공지사항 작성',
       editTitle: '공지사항 수정',
       empty: '등록된 공지사항이 없습니다.',
       editLink: '수정',
+      writeButton: '글쓰기',
       saveSuccess: '저장됐습니다.',
       form: {
         titleLabel: '제목',
+        categoryLabel: '카테고리',
         contentLabel: '내용',
         createButton: '등록하기',
         saveButton: '저장하기',
         submitting: '저장 중...',
       },
       columns: {
+        category: '카테고리',
         title: '제목',
         createdAt: '작성일시',
         updatedAt: '수정일시',
@@ -207,9 +399,11 @@ export const ko = {
     },
     faqs: {
       title: 'FAQ 관리',
+      newTitle: 'FAQ 작성',
       editTitle: 'FAQ 수정',
       empty: '등록된 FAQ가 없습니다.',
       editLink: '수정',
+      writeButton: '글쓰기',
       saveSuccess: '저장됐습니다.',
       form: {
         questionLabel: '질문',

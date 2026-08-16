@@ -1,3 +1,4 @@
+import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
 import type { OrderStatus } from '@/constants/order-status';
 
@@ -5,6 +6,186 @@ export const en = {
   common: {
     loading: 'Loading...',
     error: 'Something went wrong.',
+  },
+  site: {
+    nav: {
+      products: 'Products',
+      gallery: 'Gallery',
+      pricing: 'Pricing',
+      about: 'About',
+      notices: 'Notices',
+      faq: 'FAQ',
+      reviews: 'Reviews',
+      login: 'Sign in',
+      signup: 'Sign up',
+      mypage: 'My page',
+      logout: 'Sign out',
+      startOrder: 'Start an order',
+    },
+    footer: {
+      productsTitle: 'Products',
+      customerServiceTitle: 'Support',
+      companyTitle: 'Company',
+      inquiries: 'Contact Us',
+      terms: 'Terms of Service',
+      privacy: 'Privacy Policy',
+      businessInfo:
+        'Representative: Hong Gil-dong\nBusiness registration No. 000-00-00000\nMail order sales registration No. 2026-Seoul Jung-gu-0000\n110 Sejong-daero, Jung-gu, Seoul, Republic of Korea\n02-0000-0000\nexample@example.com',
+      copyright: '© 2026 Shiny Book',
+      links: {
+        viewProducts: 'View products',
+        layoutGuidelines: 'Layout guidelines',
+        ecoPapers: 'Eco-friendly papers',
+        shippingPolicy: 'Shipping policy',
+        ourStory: 'Our story',
+        atelier: 'The atelier',
+        sustainability: 'Sustainability',
+        press: 'Press inquiries',
+      },
+    },
+    home: {
+      hero: {
+        eyebrow: 'Custom Book Printing & Publishing',
+        title: 'Your story, bound in a book of its own',
+        description:
+          'Preserve your most treasured moments in a form that lasts. Shiny Book prints on carefully chosen premium paper with durable binding to create a book that is truly yours.',
+        primaryCtaLabel: 'Make my book',
+        secondaryCtaLabel: 'View products',
+        stats: [
+          { label: 'Premium paper usage', suffix: '%' },
+          { label: 'Premium collections', suffix: '' },
+          { label: 'Books sold', suffix: '' },
+        ],
+      },
+      steps: {
+        eyebrow: 'The Process',
+        title: 'Making a premium book is easier than you think',
+        items: [
+          {
+            title: 'Upload your photos',
+            description:
+              'Upload your high-resolution, memory-filled photos. Sent securely from mobile or desktop.',
+          },
+          {
+            title: 'Choose layout & cover',
+            description:
+              'Match a classic template, precisely designed by our studio, with a premium linen or leather cover.',
+          },
+          {
+            title: 'Bind & receive',
+            description:
+              "After a craftsman's careful finishing, meet your finished book at home, safely packed in a custom box.",
+          },
+        ],
+      },
+      features: {
+        eyebrow: 'Our Promise',
+        title: 'Uncompromising quality, obsessive finishing',
+        subtitle:
+          'Careful printing and binding, down to the smallest detail, for a book that feels complete.',
+        items: [
+          {
+            title: 'Non-toxic archival paper',
+            description:
+              'Carefully selected archival-grade fine art paper that resists fading and damage over time.',
+          },
+          {
+            title: 'Hand-sewn Smyth binding',
+            description:
+              "Traditional hand-crafted hardcover binding that won't easily lose pages and opens smoothly.",
+          },
+          {
+            title: 'Thoughtful, custom layouts',
+            description:
+              'From spacious, minimal magazine styles to dense collections, we support a range of design templates.',
+          },
+          {
+            title: 'Eco-conscious custom packaging',
+            description:
+              'Once finished, every book is shipped promptly in dedicated packaging that protects it from impact and moisture.',
+          },
+        ],
+      },
+      products: {
+        eyebrow: 'The Collection',
+        title: 'The Shiny Book Lineup',
+        ctaLabel: 'Start an order',
+        startingFromLabel: 'Starting from',
+        filterLabel: 'Product filter',
+        filters: {
+          all: 'View all',
+          classic: 'Classic series',
+          premium: 'Premium series',
+        },
+        items: [
+          {
+            name: 'Hardcover Photobook',
+            size: '10 x 10 in',
+            description:
+              'A sturdy board cover with precise finishing, built to last for generations.',
+            price: '$0.99',
+          },
+          {
+            name: 'Softcover Photobook',
+            size: '8 x 10 in',
+            description:
+              'A light, soft cover that is comfortable to flip through for everyday keepsakes.',
+            price: '$0.79',
+          },
+          {
+            name: 'Premium Photo Album',
+            size: '12 x 12 in',
+            description:
+              'A premium leather cover with thick archival paper for your most special keepsake.',
+            price: '$9.90',
+          },
+          {
+            name: 'Travel Journal',
+            size: '6 x 8 in',
+            description: 'A compact, portable size, perfect for recording moments on the road.',
+            price: '$0.69',
+          },
+          {
+            name: 'Wedding Album',
+            size: '11 x 14 in',
+            description: 'An elegant album dedicated to the most radiant moment of a lifetime.',
+            price: '$9.90',
+          },
+          {
+            name: "Baby's First Year",
+            size: '9 x 9 in',
+            description: 'A lovingly crafted album capturing a baby’s first year of growth.',
+            price: '$8.90',
+          },
+        ],
+      },
+      notices: {
+        title: 'Notices',
+        empty: 'No notices yet.',
+        more: 'More',
+        expandLabel: 'Expand notice list',
+        prevPageLabel: 'Previous page',
+        nextPageLabel: 'Next page',
+      },
+      reviews: {
+        eyebrow: 'Customer Voices',
+        title: 'Stories from our customers',
+        empty: 'No reviews yet.',
+        more: 'View all reviews',
+        ratingLabel: 'Rating',
+        purchasedLabel: 'Purchased',
+        prevLabel: 'Previous review',
+        nextLabel: 'Next review',
+      },
+      cta: {
+        eyebrow: 'Get Started Now',
+        title: 'Create your own photobook, right now',
+        description:
+          "It only takes a few minutes to upload and arrange your photos, then order a beautifully crafted print you'll be proud of.",
+        primaryLabel: 'Start now',
+        secondaryLabel: 'Contact us',
+      },
+    },
   },
   notFound: {
     title: 'Page not found',
@@ -19,6 +200,11 @@ export const en = {
     shipping: 'Shipping',
     completed: 'Completed',
   } satisfies Record<OrderStatus, string>,
+  announcementCategories: {
+    notice: 'Notice',
+    event: 'Event',
+    winner: 'Winners',
+  } satisfies Record<AnnouncementCategory, string>,
   apiErrors: {
     UNAUTHORIZED: 'Authentication is required.',
     FORBIDDEN: 'You do not have permission.',
@@ -143,6 +329,8 @@ export const en = {
     },
     coupons: {
       title: 'Coupons',
+      newTitle: 'Issue Coupon',
+      issueButton: 'Issue',
       empty: 'No coupons yet.',
       createSuccess: 'Coupon created.',
       unlimited: 'Unlimited',
@@ -183,18 +371,22 @@ export const en = {
     },
     announcements: {
       title: 'Announcements',
+      newTitle: 'Write announcement',
       editTitle: 'Edit announcement',
       empty: 'No announcements yet.',
       editLink: 'Edit',
+      writeButton: 'Write',
       saveSuccess: 'Saved.',
       form: {
         titleLabel: 'Title',
+        categoryLabel: 'Category',
         contentLabel: 'Content',
         createButton: 'Create',
         saveButton: 'Save',
         submitting: 'Saving...',
       },
       columns: {
+        category: 'Category',
         title: 'Title',
         createdAt: 'Created at',
         updatedAt: 'Updated at',
@@ -208,9 +400,11 @@ export const en = {
     },
     faqs: {
       title: 'FAQs',
+      newTitle: 'Write FAQ',
       editTitle: 'Edit FAQ',
       empty: 'No FAQs yet.',
       editLink: 'Edit',
+      writeButton: 'Write',
       saveSuccess: 'Saved.',
       form: {
         questionLabel: 'Question',
