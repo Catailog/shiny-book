@@ -286,12 +286,16 @@ export const en = {
     backToMypageButton: 'Back to my page',
   },
   admin: {
+    portalLabel: 'Admin Portal',
+    notificationsLabel: 'Notifications',
     nav: {
+      dashboard: 'Dashboard',
       orders: 'Orders',
       coupons: 'Coupons',
       announcements: 'Announcements',
       faqs: 'FAQs',
       inquiries: 'Inquiries',
+      logout: 'Logout',
     },
     login: {
       title: 'Admin login',
@@ -307,8 +311,32 @@ export const en = {
       },
     },
     dashboard: {
-      title: 'Admin dashboard',
+      title: 'Dashboard Overview',
       signOutButton: 'Sign out',
+      kpi: {
+        todayOrders: "TODAY'S ORDERS",
+        pendingProduction: 'PENDING PRODUCTION',
+        revenueThisMonth: 'REVENUE THIS MONTH',
+        activeCoupons: 'ACTIVE COUPONS',
+        vsLastMonth: 'vs last month',
+      },
+      recentSubmissions: {
+        title: 'Recent Submissions',
+        exportCsv: 'Export CSV',
+        viewAll: 'View All',
+        columns: {
+          orderId: 'ORDER ID',
+          customer: 'CUSTOMER',
+          product: 'PRODUCT',
+          status: 'STATUS',
+          files: 'FILES (MAN/COV)',
+          date: 'DATE',
+          amount: 'AMOUNT',
+        },
+        selected: 'Selected',
+        viewManuscript: 'View Manuscript',
+        viewCoverLayout: 'View Cover Layout',
+      },
     },
     orders: {
       title: 'Orders',

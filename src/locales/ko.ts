@@ -285,12 +285,16 @@ export const ko = {
     backToMypageButton: '마이페이지로 돌아가기',
   },
   admin: {
+    portalLabel: 'Admin Portal',
+    notificationsLabel: '알림',
     nav: {
+      dashboard: '대시보드',
       orders: '주문 목록',
       coupons: '쿠폰 관리',
       announcements: '공지사항 관리',
       faqs: 'FAQ 관리',
       inquiries: '문의 관리',
+      logout: '로그아웃',
     },
     login: {
       title: '관리자 로그인',
@@ -306,8 +310,32 @@ export const ko = {
       },
     },
     dashboard: {
-      title: '관리자 대시보드',
+      title: 'Dashboard Overview',
       signOutButton: '로그아웃',
+      kpi: {
+        todayOrders: "TODAY'S ORDERS",
+        pendingProduction: 'PENDING PRODUCTION',
+        revenueThisMonth: 'REVENUE THIS MONTH',
+        activeCoupons: 'ACTIVE COUPONS',
+        vsLastMonth: 'vs last month',
+      },
+      recentSubmissions: {
+        title: 'Recent Submissions',
+        exportCsv: 'Export CSV',
+        viewAll: 'View All',
+        columns: {
+          orderId: 'ORDER ID',
+          customer: 'CUSTOMER',
+          product: 'PRODUCT',
+          status: 'STATUS',
+          files: 'FILES (MAN/COV)',
+          date: 'DATE',
+          amount: 'AMOUNT',
+        },
+        selected: '선택됨',
+        viewManuscript: 'View Manuscript',
+        viewCoverLayout: 'View Cover Layout',
+      },
     },
     orders: {
       title: '주문 목록',

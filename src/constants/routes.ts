@@ -1,9 +1,13 @@
 export const ADMIN_ROUTES = {
   LOGIN: '/admin/login',
   DASHBOARD: '/admin',
+  ORDERS: '/admin/orders',
   COUPONS: '/admin/coupons',
+  COUPONS_NEW: '/admin/coupons/new',
   ANNOUNCEMENTS: '/admin/announcements',
+  ANNOUNCEMENTS_NEW: '/admin/announcements/new',
   FAQS: '/admin/faqs',
+  FAQS_NEW: '/admin/faqs/new',
   INQUIRIES: '/admin/inquiries',
 } as const;
 
