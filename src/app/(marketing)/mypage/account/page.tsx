@@ -26,18 +26,45 @@ export default async function MypageAccountPage() {
         </div>
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="account-name">{t.consumer.account.personalInfo.nameLabel}</Label>
-            <Input id="account-name" defaultValue={MOCK_CONSUMER.name} readOnly />
+            <Label htmlFor="account-name" className="text-xs font-semibold tracking-wide uppercase">
+              {t.consumer.account.personalInfo.nameLabel}
+            </Label>
+            <Input
+              id="account-name"
+              defaultValue={MOCK_CONSUMER.name}
+              readOnly
+              className="h-auto rounded p-4"
+            />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="account-email">{t.consumer.account.personalInfo.emailLabel}</Label>
-            <Input id="account-email" defaultValue={MOCK_CONSUMER.email} readOnly />
+            <Label
+              htmlFor="account-email"
+              className="text-xs font-semibold tracking-wide uppercase"
+            >
+              {t.consumer.account.personalInfo.emailLabel}
+            </Label>
+            <Input
+              id="account-email"
+              defaultValue={MOCK_CONSUMER.email}
+              readOnly
+              className="h-auto rounded p-4"
+            />
           </div>
         </div>
         <div className="w-80">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="account-phone">{t.consumer.account.personalInfo.phoneLabel}</Label>
-            <Input id="account-phone" defaultValue="010-1234-5678" readOnly />
+            <Label
+              htmlFor="account-phone"
+              className="text-xs font-semibold tracking-wide uppercase"
+            >
+              {t.consumer.account.personalInfo.phoneLabel}
+            </Label>
+            <Input
+              id="account-phone"
+              defaultValue="010-1234-5678"
+              readOnly
+              className="h-auto rounded p-4"
+            />
           </div>
         </div>
       </section>
@@ -48,22 +75,28 @@ export default async function MypageAccountPage() {
         </h2>
         <div className="grid grid-cols-3 gap-6">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="current-password">
+            <Label
+              htmlFor="current-password"
+              className="text-xs font-semibold tracking-wide uppercase"
+            >
               {t.consumer.account.changePassword.currentPasswordLabel}
             </Label>
-            <Input id="current-password" type="password" />
+            <Input id="current-password" type="password" className="h-auto rounded p-4" />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="new-password">
+            <Label htmlFor="new-password" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.account.changePassword.newPasswordLabel}
             </Label>
-            <Input id="new-password" type="password" />
+            <Input id="new-password" type="password" className="h-auto rounded p-4" />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="new-password-confirm">
+            <Label
+              htmlFor="new-password-confirm"
+              className="text-xs font-semibold tracking-wide uppercase"
+            >
               {t.consumer.account.changePassword.newPasswordConfirmLabel}
             </Label>
-            <Input id="new-password-confirm" type="password" />
+            <Input id="new-password-confirm" type="password" className="h-auto rounded p-4" />
           </div>
         </div>
       </section>
