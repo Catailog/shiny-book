@@ -86,7 +86,11 @@ export function CreateAnnouncementForm({ cancelHref }: CreateAnnouncementFormPro
               <Button variant="outline" render={<Link href={cancelHref} />} nativeButton={false}>
                 {t.admin.announcements.create.saveDraftButton}
               </Button>
-              <Button render={<Link href={cancelHref} />} nativeButton={false}>
+              <Button
+                render={<Link href={cancelHref} />}
+                nativeButton={false}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
                 {t.admin.announcements.create.publishButton}
               </Button>
             </div>

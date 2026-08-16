@@ -101,7 +101,9 @@ export function CreateFaqForm() {
 
           <div className="flex justify-end gap-3">
             <Button variant="outline">{t.admin.faqs.create.cancelButton}</Button>
-            <Button>{t.admin.faqs.create.submitButton}</Button>
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+              {t.admin.faqs.create.submitButton}
+            </Button>
           </div>
         </div>
       </div>

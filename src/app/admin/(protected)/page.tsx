@@ -111,7 +111,9 @@ export default async function AdminDashboardPage() {
                 <Download aria-hidden="true" className="size-3.5" />
                 {t.admin.dashboard.recentSubmissions.exportCsv}
               </Button>
-              <Button size="sm">{t.admin.dashboard.recentSubmissions.viewAll}</Button>
+              <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                {t.admin.dashboard.recentSubmissions.viewAll}
+              </Button>
             </div>
           </div>
           <Table>

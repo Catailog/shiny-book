@@ -72,7 +72,11 @@ export default async function AdminFaqsPage() {
         title={t.admin.faqs.title}
         subtitle={t.admin.faqs.list.subtitle}
         actions={
-          <Button render={<Link href={ADMIN_ROUTES.FAQS_NEW} />} nativeButton={false}>
+          <Button
+            render={<Link href={ADMIN_ROUTES.FAQS_NEW} />}
+            nativeButton={false}
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+          >
             <Plus aria-hidden="true" className="size-4" />
             {t.admin.faqs.writeButton}
           </Button>

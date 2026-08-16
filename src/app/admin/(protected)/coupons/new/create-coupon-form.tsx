@@ -118,7 +118,11 @@ export function CreateCouponForm({ cancelHref }: CreateCouponFormProps) {
             <Button variant="outline" render={<Link href={cancelHref} />} nativeButton={false}>
               {t.admin.coupons.create.cancelButton}
             </Button>
-            <Button render={<Link href={cancelHref} />} nativeButton={false}>
+            <Button
+              render={<Link href={cancelHref} />}
+              nativeButton={false}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
               {t.admin.coupons.create.submitButton}
             </Button>
           </div>
