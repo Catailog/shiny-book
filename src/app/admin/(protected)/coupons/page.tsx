@@ -69,7 +69,7 @@ export default async function AdminCouponsPage() {
               <Input
                 type="search"
                 placeholder={t.admin.coupons.list.searchPlaceholder}
-                className="w-60 pl-9"
+                className="w-60 bg-input-background pl-9"
               />
             </div>
             <Button

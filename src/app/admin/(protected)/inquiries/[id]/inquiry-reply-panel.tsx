@@ -103,7 +103,7 @@ export function InquiryReplyPanel() {
             value={reply}
             onChange={(event) => setReply(event.target.value)}
             rows={7}
-            className="rounded-t-none border-none focus-visible:ring-0"
+            className="rounded-t-none border-none bg-input-background focus-visible:ring-0"
           />
         </div>
 

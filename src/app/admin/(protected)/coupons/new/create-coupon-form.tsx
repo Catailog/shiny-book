@@ -44,7 +44,7 @@ export function CreateCouponForm({ cancelHref }: CreateCouponFormProps) {
                 id="coupon-code"
                 value={code}
                 onChange={(event) => setCode(event.target.value)}
-                className="flex-1"
+                className="flex-1 bg-input-background"
               />
               <Button type="button" variant="outline" onClick={generateCode}>
                 {t.admin.coupons.create.autoGenerateButton}
@@ -81,6 +81,7 @@ export function CreateCouponForm({ cancelHref }: CreateCouponFormProps) {
                 id="coupon-value"
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
+                className="bg-input-background"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -89,6 +90,7 @@ export function CreateCouponForm({ cancelHref }: CreateCouponFormProps) {
                 id="coupon-min-order"
                 value={minOrder}
                 onChange={(event) => setMinOrder(event.target.value)}
+                className="bg-input-background"
               />
             </div>
           </div>
@@ -96,7 +98,12 @@ export function CreateCouponForm({ cancelHref }: CreateCouponFormProps) {
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
               <Label htmlFor="coupon-start-date">{t.admin.coupons.create.startDateLabel}</Label>
-              <Input id="coupon-start-date" type="date" defaultValue="2025-10-15" />
+              <Input
+                id="coupon-start-date"
+                type="date"
+                defaultValue="2025-10-15"
+                className="bg-input-background"
+              />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="coupon-end-date">{t.admin.coupons.create.endDateLabel}</Label>
@@ -105,13 +112,14 @@ export function CreateCouponForm({ cancelHref }: CreateCouponFormProps) {
                 type="date"
                 defaultValue="2025-11-15"
                 onChange={(event) => setEndDate(event.target.value.replaceAll('-', '.') || endDate)}
+                className="bg-input-background"
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <Label htmlFor="coupon-description">{t.admin.coupons.create.descriptionLabel}</Label>
-            <Textarea id="coupon-description" rows={4} />
+            <Textarea id="coupon-description" rows={4} className="bg-input-background" />
           </div>
 
           <div className="flex justify-end gap-3">

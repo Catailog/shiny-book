@@ -73,7 +73,7 @@ export default async function AdminAnnouncementsPage() {
               <Input
                 type="search"
                 placeholder={t.admin.announcements.list.searchPlaceholder}
-                className="w-60 pl-9"
+                className="w-60 bg-input-background pl-9"
               />
             </div>
             <Button

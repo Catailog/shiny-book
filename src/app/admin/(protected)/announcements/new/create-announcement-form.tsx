@@ -38,13 +38,21 @@ export function CreateAnnouncementForm({ cancelHref }: CreateAnnouncementFormPro
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
               <Label htmlFor="announcement-title">{t.admin.announcements.create.titleLabel}</Label>
-              <Input id="announcement-title" defaultValue="추석 연휴 배송 일정 및 고사 휴무 안내" />
+              <Input
+                id="announcement-title"
+                defaultValue="추석 연휴 배송 일정 및 고사 휴무 안내"
+                className="bg-input-background"
+              />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="announcement-category">
                 {t.admin.announcements.create.categoryLabel}
               </Label>
-              <Input id="announcement-category" defaultValue="Service" />
+              <Input
+                id="announcement-category"
+                defaultValue="Service"
+                className="bg-input-background"
+              />
             </div>
           </div>
 

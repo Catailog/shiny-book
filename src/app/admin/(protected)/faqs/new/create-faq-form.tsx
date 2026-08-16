@@ -56,11 +56,12 @@ export function CreateFaqForm() {
                 id="faq-category"
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
+                className="bg-input-background"
               />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="faq-display-order">{t.admin.faqs.create.displayOrderLabel}</Label>
-              <Input id="faq-display-order" defaultValue="3" />
+              <Input id="faq-display-order" defaultValue="3" className="bg-input-background" />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="faq-status">{t.admin.faqs.create.statusLabel}</Label>
@@ -79,6 +80,7 @@ export function CreateFaqForm() {
               id="faq-question"
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
+              className="bg-input-background"
             />
           </div>
 
@@ -94,7 +96,7 @@ export function CreateFaqForm() {
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
                 rows={8}
-                className="rounded-t-none border-none focus-visible:ring-0"
+                className="rounded-t-none border-none bg-input-background focus-visible:ring-0"
               />
             </div>
           </div>

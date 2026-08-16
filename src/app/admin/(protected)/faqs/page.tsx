@@ -93,7 +93,7 @@ export default async function AdminFaqsPage() {
               <Input
                 type="search"
                 placeholder={t.admin.faqs.list.searchPlaceholder}
-                className="w-70 pl-9"
+                className="w-70 bg-input-background pl-9"
               />
             </div>
             <Button variant="outline">{t.admin.faqs.list.allCategories}</Button>

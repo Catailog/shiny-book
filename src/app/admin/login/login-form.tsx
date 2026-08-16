@@ -31,7 +31,7 @@ export function AdminLoginForm() {
           type="email"
           autoComplete="email"
           defaultValue="admin@bookcraft.studio"
-          className="bg-muted"
+          className="bg-input-background"
         />
       </div>
       <div className="flex flex-col gap-1.5">
@@ -43,7 +43,12 @@ export function AdminLoginForm() {
             {t.admin.login.forgotPasswordLink}
           </span>
         </div>
-        <Input id="password" type="password" autoComplete="current-password" className="bg-muted" />
+        <Input
+          id="password"
+          type="password"
+          autoComplete="current-password"
+          className="bg-input-background"
+        />
       </div>
       <Button
         type="submit"
