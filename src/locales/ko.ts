@@ -22,6 +22,9 @@ export const ko = {
       mypage: '마이페이지',
       logout: '로그아웃',
       startOrder: '주문 시작하기',
+      changeLanguage: '언어 변경',
+      switchToLightMode: '라이트 모드로 전환',
+      switchToDarkMode: '다크 모드로 전환',
     },
     footer: {
       productsTitle: '제품',
@@ -657,7 +660,6 @@ export const ko = {
         name: 'Essential',
         image: '/images/pricing/essential.png',
         price: '₩45,000~',
-        highlighted: false,
         features: [
           '가벼운 소프트커버 마감',
           '40페이지 기본 제공',
@@ -671,7 +673,6 @@ export const ko = {
         name: 'Classic',
         image: '/images/pricing/classic.png',
         price: '₩85,000~',
-        highlighted: true,
         features: [
           '견고한 보드 하드커버',
           '60페이지 기본 제공',
@@ -685,7 +686,6 @@ export const ko = {
         name: 'Premium',
         image: '/images/pricing/premium.png',
         price: '₩160,000~',
-        highlighted: false,
         features: [
           '최고급 이탈리아산 풀그레인 가죽',
           '80페이지 기본 제공',

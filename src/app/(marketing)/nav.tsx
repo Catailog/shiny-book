@@ -1,14 +1,19 @@
 import Link from 'next/link';
 
-import { BookOpen } from 'lucide-react';
+import { User } from 'lucide-react';
 
+import { LanguageToggle } from '@/components/language-toggle';
 import { SiteContainer } from '@/components/site-container';
-import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { CONSUMER_ROUTES, FAQ_ROUTES, MARKETING_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
-import { defaultLocale, locales } from '@/locales';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { locales } from '@/locales';
 
-export function Nav() {
-  const t = locales[defaultLocale];
+import { NavLinks } from './nav-links';
+
+export async function Nav() {
+  const locale = await getLocale();
+  const t = locales[locale];
 
   const navLinks = [
     { label: t.site.nav.products, href: PRODUCT_ROUTES.LIST },
@@ -22,24 +27,21 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 h-20 w-full border-b border-border bg-background">
       <SiteContainer className="flex h-full items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <BookOpen aria-hidden="true" strokeWidth={1.8} className="size-5 text-foreground" />
-          <span className="font-heading text-lg font-semibold text-foreground">Shiny Book</span>
-        </Link>
-        <nav className="hidden items-start gap-10 text-sm font-medium text-muted-foreground md:flex">
-          {navLinks.map((link) => (
-            <Link key={link.label} href={link.href} className="hover:text-foreground">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <Button
-          render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
-          nativeButton={false}
-          className="h-auto rounded bg-accent px-7 py-3.5 text-xs font-semibold tracking-wide text-accent-foreground uppercase hover:bg-accent/90"
-        >
-          {t.site.nav.startOrder}
-        </Button>
+        <NavLinks brandName="Shiny Book" links={navLinks} />
+        <div className="flex items-center gap-1">
+          <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
+          <ThemeToggle
+            switchToLightLabel={t.site.nav.switchToLightMode}
+            switchToDarkLabel={t.site.nav.switchToDarkMode}
+          />
+          <Link
+            href={CONSUMER_ROUTES.LOGIN}
+            aria-label={t.site.nav.login}
+            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <User aria-hidden="true" className="size-5" />
+          </Link>
+        </div>
       </SiteContainer>
     </header>
   );

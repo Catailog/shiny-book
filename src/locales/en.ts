@@ -22,6 +22,9 @@ export const en = {
       mypage: 'My page',
       logout: 'Sign out',
       startOrder: 'Start an order',
+      changeLanguage: 'Change language',
+      switchToLightMode: 'Switch to light mode',
+      switchToDarkMode: 'Switch to dark mode',
     },
     footer: {
       productsTitle: 'Products',
@@ -658,7 +661,6 @@ export const en = {
         name: 'Essential',
         image: '/images/pricing/essential.png',
         price: '$44.99~',
-        highlighted: false,
         features: [
           'Lightweight softcover finish',
           '40 pages included',
@@ -672,7 +674,6 @@ export const en = {
         name: 'Classic',
         image: '/images/pricing/classic.png',
         price: '$84.99~',
-        highlighted: true,
         features: [
           'Sturdy board hardcover',
           '60 pages included',
@@ -686,7 +687,6 @@ export const en = {
         name: 'Premium',
         image: '/images/pricing/premium.png',
         price: '$159.99~',
-        highlighted: false,
         features: [
           'Finest full-grain Italian leather',
           '80 pages included',
