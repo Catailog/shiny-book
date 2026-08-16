@@ -794,6 +794,89 @@ export const ko = {
       },
     ],
   },
+  about: {
+    hero: {
+      eyebrow: '우리의 이야기와 철학',
+      title: '세상의 단 하나뿐인 역사, 영원히 흐려지지 않도록',
+      description:
+        '스마트폰 속에 묻혀 잊혀가는 수천 장의 사진들. 그 속에는 단순히 파일이 아니라 삶의 가장 빛나던 온도가 담겨 있습니다. 우리는 기술과 수공예 제본의 융합을 통해 디지털 데이터가 누릴 수 없는 만져지는 아날로그의 영속적인 기쁨을 선사하고자 설립되었습니다.',
+    },
+    values: {
+      eyebrow: '우리가 지키는 가치',
+      title: 'Shiny Book이 추구하는 세 가지 정수',
+      items: [
+        {
+          title: '장인정신 (Craftsmanship)',
+          description:
+            '전문 서적 바인더 장인의 손길을 거칩니다. 풀칠 하나, 실 한 땀에도 타협 없는 완성도를 추구합니다.',
+        },
+        {
+          title: '지속가능성 (Sustainability)',
+          description:
+            '100년이 흘러도 노랗게 변하지 않는 아카이브 전용 FSC 친환경 지류와 생분해성 코팅 원단만을 사용합니다.',
+        },
+        {
+          title: '디테일의 미학 (Quality)',
+          description:
+            '여백의 완벽한 밸런스를 계산한 레이아웃 템플릿과 정밀 스펙 인쇄 기법으로 사진의 생동감을 온전히 보존합니다.',
+        },
+      ],
+    },
+    milestones: {
+      title: '주요 연혁',
+      items: [
+        {
+          year: '2018',
+          title: '스튜디오 설립',
+          description:
+            '마포구 성산동의 소박한 제본실에서 장인 2인과 디지털 디자이너 1인이 전통 도서 출판을 목표로 시작했습니다.',
+        },
+        {
+          year: '2020',
+          title: 'FSC 친환경 지류 전면 교체',
+          description:
+            '지속 가능한 보존을 위한 FSC 인증 무독성 지류만을 엄선하여 고품격 아카이빙 서적을 시장에 공식 출시했습니다.',
+        },
+        {
+          year: '2022',
+          title: '이탈리아 풀그레인 레더 도입',
+          description:
+            '최고급 명품 브랜드에 사용되는 피렌체 친환경 태닝 가죽 마감을 정식 도입해 프리미엄 앨범 라인을 확장했습니다.',
+        },
+        {
+          year: '2024',
+          title: '10,000번째 추억 보존',
+          description:
+            '수많은 가구와 크리에이터들의 귀중한 개인 역사를 보존 서적으로 인쇄하여 가치를 전달하고 있습니다.',
+        },
+      ],
+    },
+    team: {
+      title: '스튜디오 장정 팀',
+      members: [
+        {
+          image: '/images/about/team-1.png',
+          name: '장서영',
+          role: 'Master Bookbinder (제본 장인)',
+          description:
+            '30년 경력의 수제 도서 장정 마스터. 사철 실꿰기 및 전통 가죽 제본을 총괄합니다.',
+        },
+        {
+          image: '/images/about/team-2.png',
+          name: '데이비드 김',
+          role: 'Creative Director',
+          description:
+            '런던 센트럴 세인트 마틴 출신. Shiny Book만의 클래식 편집 템플릿을 설계했습니다.',
+        },
+        {
+          image: '/images/about/team-3.png',
+          name: '한지우',
+          role: 'Chief Paper Curator',
+          description: '전 세계의 친환경 고품질 지류를 감정하고, 인쇄 발색 상태를 정밀 제어합니다.',
+        },
+      ],
+    },
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',

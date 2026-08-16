@@ -806,6 +806,90 @@ export const en = {
       },
     ],
   },
+  about: {
+    hero: {
+      eyebrow: 'Our Story & Philosophy',
+      title: "The world's only history, kept from ever fading",
+      description:
+        "Thousands of photos buried and forgotten inside a phone. They hold not just files, but the warmest moments of a life. We were founded to bring the tactile, lasting joy of analog craft to what digital data alone can't offer, through a fusion of technology and hand bookbinding.",
+    },
+    values: {
+      eyebrow: 'Our Core Values',
+      title: 'The three essentials Shiny Book stands for',
+      items: [
+        {
+          title: 'Craftsmanship',
+          description:
+            'Every book passes through the hands of a professional bookbinder. No compromise, down to a single stitch of thread.',
+        },
+        {
+          title: 'Sustainability',
+          description:
+            'We use only archive-grade FSC-certified eco paper and biodegradable coated fabrics that resist yellowing for a century.',
+        },
+        {
+          title: 'Quality',
+          description:
+            'Layout templates with perfectly balanced whitespace and precise print specs preserve every photo at its full vitality.',
+        },
+      ],
+    },
+    milestones: {
+      title: 'Company Milestones',
+      items: [
+        {
+          year: '2018',
+          title: 'Studio founded',
+          description:
+            'Two master binders and one digital designer began in a modest bindery in Seoul, aiming for traditional book publishing.',
+        },
+        {
+          year: '2020',
+          title: 'Switched fully to FSC eco paper',
+          description:
+            'Officially launched our archival-grade books using only FSC-certified non-toxic paper for sustainable preservation.',
+        },
+        {
+          year: '2022',
+          title: 'Introduced full-grain Italian leather',
+          description:
+            'Adopted eco-tanned Florentine leather used by top luxury brands, expanding our premium album line.',
+        },
+        {
+          year: '2024',
+          title: 'Preserved our 10,000th memory',
+          description:
+            "We've printed countless families' and creators' precious personal histories into books worth keeping.",
+        },
+      ],
+    },
+    team: {
+      title: 'The Makers',
+      members: [
+        {
+          image: '/images/about/team-1.png',
+          name: 'Seoyoung Jang',
+          role: 'Master Bookbinder',
+          description:
+            'A hand-bookbinding master with 30 years of experience, overseeing Smyth-sewing and traditional leather binding.',
+        },
+        {
+          image: '/images/about/team-2.png',
+          name: 'David Kim',
+          role: 'Creative Director',
+          description:
+            "A Central Saint Martins graduate who designed Shiny Book's own classic editorial templates.",
+        },
+        {
+          image: '/images/about/team-3.png',
+          name: 'Jiwoo Han',
+          role: 'Chief Paper Curator',
+          description:
+            'Appraises eco-friendly, high-quality paper stock from around the world and controls precise print color.',
+        },
+      ],
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
