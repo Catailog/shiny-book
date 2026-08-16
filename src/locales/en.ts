@@ -603,6 +603,11 @@ export const en = {
     },
   },
   faq: {
+    hero: {
+      eyebrow: 'How Can We Help You?',
+      description:
+        "We've carefully gathered the most common questions about creating a premium archival book. For anything else, reach us through 1:1 inquiries.",
+    },
     title: 'Frequently asked questions',
     empty: 'No FAQs yet.',
   },
