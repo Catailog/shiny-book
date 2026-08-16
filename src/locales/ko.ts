@@ -933,6 +933,60 @@ export const ko = {
       ],
     },
   },
+  layoutGuidelines: {
+    hero: {
+      eyebrow: '편집 규격 안내',
+      title: '레이아웃 가이드라인',
+      description:
+        '전문 디자이너와 인쇄 장인이 조율한 최상의 포토북 비율과 인쇄 최적화 규격입니다. 올바른 포맷과 여백의 배치 조율을 통해 소장본의 격조를 극대화하세요.',
+    },
+    specs: {
+      eyebrow: '최적화 가이드',
+      title: '권장 이미지 규격',
+      items: [
+        {
+          title: '권장 해상도 (Resolution)',
+          description:
+            '인쇄 선명도를 완벽하게 보존하기 위해 최소 300 DPI 이상의 고화질 JPG/PNG 이미지 파일 활용을 강력히 제안합니다.',
+        },
+        {
+          title: '색상 프로파일 (Color Space)',
+          description:
+            '풍부한 인쇄 톤 재현을 위해 원본의 sRGB 프로파일을 그대로 사용하세요. 출력 전 장비 캘리브레이션에 맞춰 자동 교정됩니다.',
+        },
+      ],
+    },
+    templates: {
+      eyebrow: '클래식 템플릿',
+      title: '레이아웃 미리보기',
+      items: [
+        {
+          image: '/images/layout-guidelines/classic-single.png',
+          title: 'Classic Single',
+          description:
+            '여백의 미를 살려 한 페이지에 하나의 인물 혹은 풍경을 조화롭게 담아내는 시대를 초월한 기본 포맷.',
+        },
+        {
+          image: '/images/layout-guidelines/panorama-spread.png',
+          title: 'Panorama Spread',
+          description:
+            '사철 제본의 180도 완전 펼침 면을 활용해 웅장한 가로형 사진을 단절 없이 광활하게 전개하는 기법.',
+        },
+        {
+          image: '/images/layout-guidelines/grid-collage.png',
+          title: 'Grid Collage',
+          description:
+            '시간 순서에 따른 감정선이나 디테일 컷들을 2x2 혹은 3x3 격자 배열로 컴팩트하게 연출하는 다큐멘터리 포맷.',
+        },
+        {
+          image: '/images/layout-guidelines/full-bleed.png',
+          title: 'Full Bleed',
+          description:
+            '텍스트나 여백 없이 페이지 전체를 고화질 이미지로 꽉 채워 압도적인 몰입감과 온전한 온기를 전하는 스타일.',
+        },
+      ],
+    },
+  },
   review: {
     title: '구매후기',
     empty: '등록된 후기가 없습니다.',

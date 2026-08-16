@@ -946,6 +946,60 @@ export const en = {
       ],
     },
   },
+  layoutGuidelines: {
+    hero: {
+      eyebrow: 'Editorial Specs',
+      title: 'Layout Guidelines',
+      description:
+        'The best photobook proportions and print-optimized specs, tuned by our designers and print artisans. Get the format and margins right to elevate your keepsake.',
+    },
+    specs: {
+      eyebrow: 'Optimization Guide',
+      title: 'Recommended Image Specs',
+      items: [
+        {
+          title: 'Resolution',
+          description:
+            'To fully preserve print sharpness, we strongly recommend high-quality JPG/PNG images at 300 DPI or higher.',
+        },
+        {
+          title: 'Color Space',
+          description:
+            'Use your original sRGB profile for rich, faithful print tones. We auto-correct to our print equipment calibration before output.',
+        },
+      ],
+    },
+    templates: {
+      eyebrow: 'Classic Templates',
+      title: 'Available Layout Preview',
+      items: [
+        {
+          image: '/images/layout-guidelines/classic-single.png',
+          title: 'Classic Single',
+          description:
+            'A timeless default format that pairs generous whitespace with a single portrait or landscape per page.',
+        },
+        {
+          image: '/images/layout-guidelines/panorama-spread.png',
+          title: 'Panorama Spread',
+          description:
+            'Uses the 180-degree lay-flat spread of our Smyth-sewn binding to run a grand landscape photo uninterrupted across the gutter.',
+        },
+        {
+          image: '/images/layout-guidelines/grid-collage.png',
+          title: 'Grid Collage',
+          description:
+            'A documentary format that compactly arranges chronological or detail shots in a 2x2 or 3x3 grid.',
+        },
+        {
+          image: '/images/layout-guidelines/full-bleed.png',
+          title: 'Full Bleed',
+          description:
+            'Fills the entire page with a high-resolution image, no text or margins, for total immersion and warmth.',
+        },
+      ],
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
