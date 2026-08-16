@@ -1060,6 +1060,63 @@ export const en = {
       ],
     },
   },
+  sustainability: {
+    hero: {
+      eyebrow: 'Ecological Story',
+      title: 'Our Eco Mission',
+      description:
+        'Shiny Book preserves the beauty of owning a paper book, while running a strict, honest zero-carbon system so the process never harms forest conservation or a greener future.',
+    },
+    pillars: {
+      eyebrow: 'Operational Commitments',
+      title: 'Three Pillars of Ecology',
+      items: [
+        {
+          title: 'Responsible Sourcing',
+          tag: 'FSC-certified paper & eco materials',
+          description:
+            'From raw materials onward, we use only non-toxic, forest-traceable fine art paper to help preserve forests.',
+        },
+        {
+          title: 'Zero-Waste Production',
+          tag: 'Cut-loss-minimizing design',
+          description:
+            'Precision layout design radically reduces scrap loss, driving a self-sustaining recycling cycle.',
+        },
+        {
+          title: 'Carbon-Neutral Delivery',
+          tag: 'Carbon-neutral shipping',
+          description:
+            'We partner with international climate protection organizations and reforestation funds to offset shipping emissions.',
+        },
+      ],
+    },
+    roadmap: {
+      eyebrow: 'Roadmap',
+      title: 'Future Eco Goals Timeline',
+      items: [
+        {
+          year: '2025',
+          title: 'Fully sustainable, eco-friendly packaging',
+          description:
+            'Transitioning every packaging material, from cushioning to adhesive tape, to biodegradable organic sources.',
+        },
+        {
+          year: '2026',
+          title: 'Solar-powered atelier',
+          description:
+            'Installing solar panels across our print and hand-binding workshop roofs to reach carbon-free operations.',
+        },
+      ],
+    },
+    cta: {
+      eyebrow: 'Start Now',
+      title: 'Elegant craft that cares for nature and people',
+      description:
+        "Turn a child's everyday moments or the best wedding story of a lifetime into the most elegant book, with eco-friendly non-toxic paper and leather cover fabric.",
+      buttonLabel: 'Make a sustainable book',
+    },
+  },
   review: {
     title: 'Reviews',
     empty: 'No reviews yet.',
