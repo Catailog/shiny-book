@@ -451,8 +451,15 @@ export const en = {
   consumer: {
     login: {
       title: 'Sign in',
+      subtitle: 'Continue making your own book',
+      quote: {
+        text: 'The reading of all good books is like a conversation with the finest minds of past centuries.',
+        author: 'René Descartes',
+      },
       emailLabel: 'Email',
       passwordLabel: 'Password',
+      showPasswordLabel: 'Show password',
+      hidePasswordLabel: 'Hide password',
       submitButton: 'Sign in',
       submitting: 'Signing in...',
       signupPrompt: "Don't have an account yet?",

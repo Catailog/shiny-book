@@ -450,8 +450,15 @@ export const ko = {
   consumer: {
     login: {
       title: '로그인',
+      subtitle: '나만의 책 만들기를 이어가세요',
+      quote: {
+        text: '모든 좋은 책들을 읽는 것은 과거의 가장 훌륭한 사람들과 대화를 나누는 것과 같다.',
+        author: '르네 데카르트',
+      },
       emailLabel: '이메일',
       passwordLabel: '비밀번호',
+      showPasswordLabel: '비밀번호 표시',
+      hidePasswordLabel: '비밀번호 숨기기',
       submitButton: '로그인',
       submitting: '로그인 중...',
       signupPrompt: '아직 계정이 없으신가요?',
