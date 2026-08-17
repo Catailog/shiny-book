@@ -18,6 +18,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "db:types": "supabase gen types typescript --local > src/lib/db/database.types.ts",
+    "db:seed-admin": "node --env-file=.env.local scripts/seed-admin-account.mjs",
     "prepare": "husky"
   },
   "dependencies": {
