@@ -4,6 +4,7 @@ import { PageSection } from '@/components/page-section';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
+import { getProducts } from '@/lib/products/get-products';
 import { locales } from '@/locales';
 
 import { NewOrderWizard } from './new-order-wizard';
@@ -16,6 +17,7 @@ export default async function NewOrderPage() {
 
   const locale = await getLocale();
   const t = locales[locale];
+  const products = await getProducts();
 
   return (
     <PageSection className="flex flex-col gap-8 py-10">
@@ -52,7 +54,7 @@ export default async function NewOrderPage() {
         </div>
       </div>
 
-      <NewOrderWizard />
+      <NewOrderWizard products={products} />
     </PageSection>
   );
 }
