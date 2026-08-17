@@ -54,7 +54,7 @@ export async function Testimonials({ reviews }: TestimonialsProps) {
                   </div>
                   <p className="text-[15px] leading-relaxed text-foreground">{review.content}</p>
                   <p className="text-xs text-muted-foreground">
-                    {copy.purchasedLabel}: {review.orderTitle}
+                    {copy.purchasedLabel}: {review.productName ?? review.orderTitle}
                   </p>
                 </div>
               </CarouselItem>

@@ -5,13 +5,14 @@ import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 export interface ReviewWithOrderTitle extends Tables<'reviews'> {
   orderTitle: string;
+  productName: string | null;
 }
 
 export async function getReviews(limit: number): Promise<ReviewWithOrderTitle[]> {
   const supabase = createServiceRoleClient();
   const { data } = await supabase
     .from('reviews')
-    .select('*, orders(title)')
+    .select('*, orders(title, products(name))')
     .order('created_at', { ascending: false })
     .limit(limit);
 
@@ -22,5 +23,6 @@ export async function getReviews(limit: number): Promise<ReviewWithOrderTitle[]>
   return data.map(({ orders, ...review }) => ({
     ...review,
     orderTitle: orders?.title ?? '',
+    productName: orders?.products?.name ?? null,
   }));
 }
