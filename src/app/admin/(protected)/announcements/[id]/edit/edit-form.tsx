@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { updateAnnouncement } from '../../actions';
 import { AnnouncementForm } from '../../announcement-form';
@@ -15,7 +15,7 @@ interface EditAnnouncementFormProps {
 }
 
 export function EditAnnouncementForm({ id, defaultValues }: EditAnnouncementFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const router = useRouter();
 
   return (

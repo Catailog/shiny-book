@@ -4,8 +4,7 @@ import { BookOpen } from 'lucide-react';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
-import { getLocale } from '@/lib/i18n/get-locale';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminLoginForm } from './login-form';
 
@@ -15,8 +14,7 @@ export default async function AdminLoginPage() {
     redirect(ADMIN_ROUTES.DASHBOARD);
   }
 
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-muted">

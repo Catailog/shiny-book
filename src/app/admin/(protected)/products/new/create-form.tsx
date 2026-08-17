@@ -3,13 +3,13 @@
 import { useRouter } from 'next/navigation';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { createProduct } from '../actions';
 import { ProductForm } from '../product-form';
 
 export function CreateProductForm() {
-  const t = useT();
+  const t = locales[defaultLocale];
   const router = useRouter();
 
   return (

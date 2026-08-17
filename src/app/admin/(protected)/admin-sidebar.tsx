@@ -15,15 +15,15 @@ import {
 } from 'lucide-react';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { useT } from '@/hooks/use-t';
 import { cn } from '@/lib/utils';
+import { defaultLocale, locales } from '@/locales';
 
 interface AdminSidebarProps {
   signOutAction: () => Promise<void>;
 }
 
 export function AdminSidebar({ signOutAction }: AdminSidebarProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const pathname = usePathname();
 
   const navItems = [

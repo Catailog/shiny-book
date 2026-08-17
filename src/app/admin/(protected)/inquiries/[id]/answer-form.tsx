@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { answerInquiry } from '../actions';
 import { type AnswerFormInput, answerFormSchema } from '../answer-schema';
@@ -18,7 +18,7 @@ interface AnswerInquiryFormProps {
 }
 
 export function AnswerInquiryForm({ id, defaultAnswer }: AnswerInquiryFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const {
     register,

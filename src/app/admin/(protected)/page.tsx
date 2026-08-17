@@ -12,10 +12,9 @@ import {
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDate } from '@/lib/format-date';
-import { getLocale } from '@/lib/i18n/get-locale';
 import { getOrders } from '@/lib/orders/get-orders';
 import { getNextStatuses } from '@/lib/orders/order-state-machine';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
@@ -29,8 +28,7 @@ const PENDING_PRODUCTION_STATUSES = new Set<string>([
 ]);
 
 export default async function AdminDashboardPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const [orders, coupons] = await Promise.all([getOrders(), getCoupons()]);
 
   const today = new Date().toDateString();

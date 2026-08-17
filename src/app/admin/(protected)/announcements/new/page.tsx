@@ -3,15 +3,13 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { getLocale } from '@/lib/i18n/get-locale';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../../admin-topbar';
 import { CreateAnnouncementForm } from './create-form';
 
 export default async function AdminAnnouncementsNewPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
 
   return (
     <div className="flex flex-1 flex-col">

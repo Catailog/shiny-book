@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PRODUCT_CATEGORY } from '@/constants/product-category';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import type { ProductActionResult } from './actions';
 import { type ProductFormInput, productFormSchema } from './product-schema';
@@ -38,7 +38,7 @@ export function ProductForm({
   submittingLabel,
   onSuccess,
 }: ProductFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const {
     register,

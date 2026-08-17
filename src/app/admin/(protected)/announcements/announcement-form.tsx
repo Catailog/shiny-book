@@ -20,7 +20,7 @@ import {
   ANNOUNCEMENT_CATEGORY,
   type AnnouncementCategory,
 } from '@/constants/announcement-category';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import type { AnnouncementActionResult } from './actions';
 import { type AnnouncementFormInput, announcementFormSchema } from './announcement-schema';
@@ -40,7 +40,7 @@ export function AnnouncementForm({
   submittingLabel,
   onSuccess,
 }: AnnouncementFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const {
     register,

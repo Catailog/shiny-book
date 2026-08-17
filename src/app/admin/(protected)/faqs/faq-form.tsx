@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import type { FaqActionResult } from './actions';
 import { type FaqFormInput, faqFormSchema } from './faq-schema';
@@ -29,7 +29,7 @@ export function FaqForm({
   submittingLabel,
   onSuccess,
 }: FaqFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const {
     register,

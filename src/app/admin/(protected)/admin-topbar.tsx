@@ -4,8 +4,7 @@ import { Bell } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
-import { getLocale } from '@/lib/i18n/get-locale';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 interface AdminTopbarProps {
   title: string;
@@ -14,8 +13,7 @@ interface AdminTopbarProps {
 }
 
 export async function AdminTopbar({ title, subtitle, actions }: AdminTopbarProps) {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const admin = await getCurrentAdmin();
   const adminEmail = admin?.email ?? '';
 

@@ -9,13 +9,13 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { signInAdmin } from './actions';
 import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
 export function AdminLoginForm() {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const {
     register,

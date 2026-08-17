@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DISCOUNT_TYPE } from '@/constants/coupon';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { createCoupon } from './actions';
 import { type CouponFormInput, couponFormSchema } from './coupon-schema';
@@ -27,7 +27,7 @@ interface CouponFormProps {
 }
 
 export function CouponForm({ onSuccess }: CouponFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const {
     register,

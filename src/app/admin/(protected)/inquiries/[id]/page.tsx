@@ -5,9 +5,8 @@ import { ArrowLeft } from 'lucide-react';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { formatDate } from '@/lib/format-date';
-import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../../admin-topbar';
 import { AnswerInquiryForm } from './answer-form';
@@ -15,8 +14,7 @@ import { AnswerInquiryForm } from './answer-form';
 export default async function AdminInquiryDetailPage(props: PageProps<'/admin/inquiries/[id]'>) {
   const { id } = await props.params;
   const inquiry = await getInquiryById(id);
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
 
   if (!inquiry) {
     notFound();

@@ -16,15 +16,13 @@ import { DISCOUNT_TYPE, isDiscountType } from '@/constants/coupon';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDate } from '@/lib/format-date';
-import { getLocale } from '@/lib/i18n/get-locale';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 import { ToggleCouponButton } from './toggle-coupon-button';
 
 export default async function AdminCouponsPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const coupons = await getCoupons();
 
   return (

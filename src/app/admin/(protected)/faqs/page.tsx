@@ -16,14 +16,12 @@ import { ADMIN_FAQ_LIST_LIMIT } from '@/constants/faq';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { formatDate } from '@/lib/format-date';
-import { getLocale } from '@/lib/i18n/get-locale';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
 export default async function AdminFaqsPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const faqs = await getFaqs(ADMIN_FAQ_LIST_LIMIT);
 
   return (

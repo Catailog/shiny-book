@@ -17,14 +17,12 @@ import { ADMIN_ANNOUNCEMENT_LIST_LIMIT } from '@/constants/announcement';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { formatDate } from '@/lib/format-date';
-import { getLocale } from '@/lib/i18n/get-locale';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
 export default async function AdminAnnouncementsPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const announcements = await getAnnouncements(ADMIN_ANNOUNCEMENT_LIST_LIMIT);
 
   return (

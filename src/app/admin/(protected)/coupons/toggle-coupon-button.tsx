@@ -5,7 +5,7 @@ import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { type ToggleCouponState, toggleCouponActive } from './actions';
 
@@ -17,7 +17,7 @@ interface ToggleCouponButtonProps {
 const initialState: ToggleCouponState = { error: null };
 
 export function ToggleCouponButton({ couponId, isActive }: ToggleCouponButtonProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const [state, formAction, isPending] = useActionState(
     toggleCouponActive.bind(null, couponId, isActive),
     initialState,

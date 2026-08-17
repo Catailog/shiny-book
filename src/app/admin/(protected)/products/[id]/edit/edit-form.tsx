@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { useT } from '@/hooks/use-t';
+import { defaultLocale, locales } from '@/locales';
 
 import { updateProduct } from '../../actions';
 import { ProductForm } from '../../product-form';
@@ -15,7 +15,7 @@ interface EditProductFormProps {
 }
 
 export function EditProductForm({ id, defaultValues }: EditProductFormProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
   const router = useRouter();
 
   return (

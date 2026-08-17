@@ -15,15 +15,13 @@ import {
 } from '@/components/ui/table';
 import { isProductCategory } from '@/constants/product-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { getLocale } from '@/lib/i18n/get-locale';
 import { getAllProducts } from '@/lib/products/get-all-products';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
 export default async function AdminProductsPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const products = await getAllProducts();
 
   return (

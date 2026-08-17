@@ -3,8 +3,8 @@
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { useT } from '@/hooks/use-t';
 import { getSignedFileUrl } from '@/lib/uploads/get-signed-file-url';
+import { defaultLocale, locales } from '@/locales';
 
 interface ViewOrderFileButtonProps {
   path: string;
@@ -12,7 +12,7 @@ interface ViewOrderFileButtonProps {
 }
 
 export function ViewOrderFileButton({ path, label }: ViewOrderFileButtonProps) {
-  const t = useT();
+  const t = locales[defaultLocale];
 
   async function handleClick() {
     const newTab = window.open('', '_blank');

@@ -13,15 +13,13 @@ import {
 } from '@/components/ui/table';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { formatDate } from '@/lib/format-date';
-import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiries } from '@/lib/inquiries/get-inquiries';
-import { locales } from '@/locales';
+import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
 export default async function AdminInquiriesPage() {
-  const locale = await getLocale();
-  const t = locales[locale];
+  const t = locales[defaultLocale];
   const inquiries = await getInquiries();
 
   return (
