@@ -1,9 +1,11 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getAddressesByConsumer } from '@/lib/addresses/get-addresses-by-consumer';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
+import { AddressManager } from './address-manager';
 import { DeleteAccountButton } from './delete-account-button';
 import { NotificationPreferencesForm } from './notification-form';
 import { ChangePasswordForm } from './password-form';
@@ -12,6 +14,7 @@ export default async function MypageAccountPage() {
   const locale = await getLocale();
   const t = locales[locale];
   const consumer = await getCurrentConsumer();
+  const addresses = consumer ? await getAddressesByConsumer(consumer.id) : [];
   const consumerName =
     typeof consumer?.user_metadata.name === 'string' ? consumer.user_metadata.name : '';
   const consumerEmail = consumer?.email ?? '';
@@ -85,50 +88,7 @@ export default async function MypageAccountPage() {
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-xl font-bold text-foreground">
-            {t.consumer.account.shippingAddress.title}
-          </h2>
-          <button type="button" className="text-sm font-semibold text-primary">
-            {t.consumer.account.shippingAddress.addButton}
-          </button>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1 rounded-md border border-border bg-muted p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-foreground">
-                {t.consumer.account.shippingAddress.defaultLabel} (우리집)
-              </span>
-              <span className="flex gap-3 text-xs">
-                <button type="button" className="text-muted-foreground">
-                  {t.consumer.account.shippingAddress.editLink}
-                </button>
-                <button type="button" className="text-destructive">
-                  {t.consumer.account.shippingAddress.deleteLink}
-                </button>
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              [06140] 서울특별시 강남구 테헤란로 123, 401호
-            </p>
-          </div>
-          <div className="flex flex-col gap-1 rounded-md border border-border p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-foreground">회사</span>
-              <span className="flex gap-3 text-xs">
-                <button type="button" className="text-muted-foreground">
-                  {t.consumer.account.shippingAddress.editLink}
-                </button>
-                <button type="button" className="text-destructive">
-                  {t.consumer.account.shippingAddress.deleteLink}
-                </button>
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              [04030] 서울특별시 마포구 어울림마당로 45, 2층
-            </p>
-          </div>
-        </div>
+        <AddressManager addresses={addresses} />
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">

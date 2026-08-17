@@ -28,6 +28,48 @@ export type Database = {
   };
   public: {
     Tables: {
+      addresses: {
+        Row: {
+          address_line1: string;
+          address_line2: string | null;
+          consumer_id: string;
+          created_at: string;
+          id: string;
+          is_default: boolean;
+          label: string;
+          phone: string;
+          postal_code: string;
+          recipient_name: string;
+          updated_at: string;
+        };
+        Insert: {
+          address_line1: string;
+          address_line2?: string | null;
+          consumer_id: string;
+          created_at?: string;
+          id?: string;
+          is_default?: boolean;
+          label: string;
+          phone: string;
+          postal_code: string;
+          recipient_name: string;
+          updated_at?: string;
+        };
+        Update: {
+          address_line1?: string;
+          address_line2?: string | null;
+          consumer_id?: string;
+          created_at?: string;
+          id?: string;
+          is_default?: boolean;
+          label?: string;
+          phone?: string;
+          postal_code?: string;
+          recipient_name?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       announcements: {
         Row: {
           category: string;
