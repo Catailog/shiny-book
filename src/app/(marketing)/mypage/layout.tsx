@@ -11,9 +11,12 @@ export default async function MypageLayout(props: LayoutProps<'/mypage'>) {
     redirect(CONSUMER_ROUTES.LOGIN);
   }
 
+  const consumerName =
+    typeof consumer.user_metadata.name === 'string' ? consumer.user_metadata.name : '';
+
   return (
     <div className="flex flex-1">
-      <MypageSidebar />
+      <MypageSidebar consumerName={consumerName} consumerEmail={consumer.email ?? ''} />
       <div className="flex flex-1 flex-col">{props.children}</div>
     </div>
   );

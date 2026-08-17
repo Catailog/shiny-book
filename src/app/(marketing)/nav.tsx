@@ -2,10 +2,9 @@ import { LanguageToggle } from '@/components/language-toggle';
 import { SiteContainer } from '@/components/site-container';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ROLE } from '@/constants/roles';
 import { FAQ_ROUTES, MARKETING_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
-import { getMockSessionRole } from '@/lib/mock/mock-session';
 import { locales } from '@/locales';
 
 import { NavAuthIcons } from './nav-auth-icons';
@@ -14,8 +13,8 @@ import { NavLinks } from './nav-links';
 export async function Nav() {
   const locale = await getLocale();
   const t = locales[locale];
-  const role = await getMockSessionRole();
-  const isConsumer = role === ROLE.CONSUMER;
+  const consumer = await getCurrentConsumer();
+  const isConsumer = consumer !== null;
 
   const navLinks = [
     { label: t.site.nav.products, href: PRODUCT_ROUTES.LIST },

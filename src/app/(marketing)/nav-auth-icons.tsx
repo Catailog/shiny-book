@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 
 import { LogIn, LogOut, User } from 'lucide-react';
 
+import { signOutConsumer } from '@/app/(marketing)/actions';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { mockSignOut } from '@/lib/mock/mock-session-actions';
 import { cn } from '@/lib/utils';
 
 interface NavAuthIconsProps {
@@ -25,7 +25,6 @@ export function NavAuthIcons({
 }: NavAuthIconsProps) {
   const pathname = usePathname();
   const isMypageRoute = pathname.startsWith(CONSUMER_ROUTES.MYPAGE);
-  const signOutFromNav = mockSignOut.bind(null, '/');
 
   if (!isConsumer) {
     return (
@@ -68,7 +67,7 @@ export function NavAuthIcons({
       <Tooltip>
         <TooltipTrigger
           render={
-            <form action={signOutFromNav}>
+            <form action={signOutConsumer}>
               <button
                 type="submit"
                 aria-label={logoutLabel}

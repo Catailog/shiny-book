@@ -8,10 +8,14 @@ import { MessageSquare, Package, User } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
-import { MOCK_CONSUMER } from '@/lib/mock/mock-accounts';
 import { cn } from '@/lib/utils';
 
-export function MypageSidebar() {
+interface MypageSidebarProps {
+  consumerName: string;
+  consumerEmail: string;
+}
+
+export function MypageSidebar({ consumerName, consumerEmail }: MypageSidebarProps) {
   const t = useT();
   const pathname = usePathname();
 
@@ -29,13 +33,11 @@ export function MypageSidebar() {
     <aside className="flex w-70 shrink-0 flex-col gap-8 border-r border-border bg-muted px-6 py-8">
       <div className="flex items-center gap-3">
         <Avatar className="size-12">
-          <AvatarFallback>{MOCK_CONSUMER.name.slice(0, 1)}</AvatarFallback>
+          <AvatarFallback>{consumerName.slice(0, 1)}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <span className="font-heading text-lg font-bold text-foreground">
-            {MOCK_CONSUMER.name}
-          </span>
-          <span className="text-xs text-muted-foreground">{MOCK_CONSUMER.email}</span>
+          <span className="font-heading text-lg font-bold text-foreground">{consumerName}</span>
+          <span className="text-xs text-muted-foreground">{consumerEmail}</span>
         </div>
       </div>
       <nav className="flex flex-col gap-1">
