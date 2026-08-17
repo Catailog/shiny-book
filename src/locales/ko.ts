@@ -17,6 +17,9 @@ export const ko = {
       notices: '공지사항',
       faq: 'FAQ',
       reviews: '후기',
+      studioGroup: '스튜디오',
+      productionGroup: '제작 안내',
+      supportGroup: '고객센터',
       login: '로그인',
       signup: '회원가입',
       mypage: '마이페이지',
@@ -304,10 +307,17 @@ export const ko = {
       forgotPasswordLink: '비밀번호를 잊으셨나요?',
       submitButton: '로그인',
       submitting: '로그인 중...',
+      testLoginButton: '테스트 계정 즉시 로그인',
+      testLoginSubmitting: '로그인 중...',
+      testLoginTooltip: '개발 환경 전용 기능입니다. 테스트용 관리자 계정으로 바로 로그인합니다.',
       errors: {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
         invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+      testLoginErrors: {
+        unavailable: '지금은 사용할 수 없는 기능입니다.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -353,8 +363,6 @@ export const ko = {
       },
       quantitySuffix: '권',
       advanceButton: '다음 단계로 진행',
-      manuscriptButton: '원고 보기',
-      coverButton: '표지 보기',
       viewPhotosButton: '업로드 사진 보기',
       photosLoading: '불러오는 중...',
       photosEmpty: '업로드된 사진이 없습니다.',
@@ -415,6 +423,7 @@ export const ko = {
           usage: '사용 현황 / 한도',
           expiry: '만료일',
           status: '상태',
+          actions: '관리',
         },
         typeLabels: {
           percentage: '정률 할인',
@@ -544,7 +553,6 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       list: {
-        subtitle: '구매 카테고리별 고객 응대용 자주 묻는 질문을 관리합니다',
         searchPlaceholder: '질문 검색...',
         allCategories: '전체 카테고리',
         allStatuses: '전체 상태',
@@ -597,7 +605,6 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       list: {
-        subtitle: '고객의 문의와 요청사항에 답변합니다',
         statusTabs: {
           all: '전체 문의',
           new: '신규',
@@ -612,7 +619,6 @@ export const ko = {
           subject: '제목',
           status: '상태',
           receivedDate: '접수일',
-          view: '보기',
         },
       },
       detail: {
@@ -647,6 +653,7 @@ export const ko = {
       form: {
         slugLabel: '슬러그 (URL 식별자)',
         nameLabel: '상품명',
+        nameEnLabel: '상품명 (영문, 선택)',
         sizeLabel: '사이즈',
         descriptionLabel: '설명',
         priceLabel: '가격 (원)',
@@ -666,15 +673,19 @@ export const ko = {
         category: '카테고리',
         price: '가격',
         status: '상태',
+        actions: '관리',
       },
       statusLabels: {
         active: '노출중',
         inactive: '숨김',
       },
+      showButton: '노출하기',
+      hideButton: '숨기기',
       errors: {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         slug_taken: '이미 존재하는 슬러그입니다.',
+        conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -693,12 +704,19 @@ export const ko = {
       hidePasswordLabel: '비밀번호 숨기기',
       submitButton: '로그인',
       submitting: '로그인 중...',
+      testLoginButton: '테스트 계정 즉시 로그인',
+      testLoginSubmitting: '로그인 중...',
+      testLoginTooltip: '개발 환경 전용 기능입니다. 테스트용 계정으로 바로 로그인합니다.',
       signupPrompt: '아직 계정이 없으신가요?',
       signupLink: '회원가입',
       errors: {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
         invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      },
+      testLoginErrors: {
+        unavailable: '지금은 사용할 수 없는 기능입니다.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -754,10 +772,13 @@ export const ko = {
           amount: '결제 금액',
           status: '상태',
           createdAt: '주문일시',
-          actions: '관리',
+          actions: '후기',
+          inquiry: '문의',
         },
         quantitySuffix: '권',
-        reviewLink: '후기',
+        reviewWriteLink: '작성',
+        reviewDoneLink: '완료',
+        inquiryLink: '문의하기',
       },
     },
     account: {
@@ -801,6 +822,7 @@ export const ko = {
           recipientNameLabel: '수령인',
           phoneLabel: '연락처',
           postalCodeLabel: '우편번호',
+          searchAddressButton: '주소 검색',
           addressLine1Label: '주소',
           addressLine2Label: '상세주소 (선택)',
           isDefaultLabel: '기본 배송지로 설정',
@@ -859,9 +881,11 @@ export const ko = {
       },
       summary: {
         title: '주문 요약',
+        productLine: '{productName} ({pageCount}p) x{quantity}',
         pageCountLine: '페이지 수 ({pageCount}p)',
         shipping: '배송비',
         shippingFree: '무료',
+        shippingUndetermined: '미정',
         finalEstimate: '최종 예상 금액',
         payButton: '의뢰 및 결제하기',
       },
@@ -870,11 +894,15 @@ export const ko = {
         quantityInvalid: '수량은 1권 이상이어야 합니다.',
         pageCountInvalid: '페이지 수를 선택해주세요.',
         photoCountMismatch: '내지 사진을 정확한 장수만큼 업로드해주세요.',
+        photoCountExceeded:
+          '업로드된 사진 {count}장이 변경된 페이지 수의 필요 장수({required}장)를 초과했습니다. 사진을 정리하거나 페이지 수를 늘려주세요.',
+        addressRequired: '배송지를 선택해주세요.',
         uploadFailed: '파일 업로드에 실패했습니다. 다시 시도해주세요.',
         filesRequired: '내지 사진을 업로드해주세요.',
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         product_not_found: '상품을 찾을 수 없습니다.',
+        address_not_found: '선택한 배송지를 찾을 수 없습니다. 다시 선택해주세요.',
         coupon_not_found: '존재하지 않는 쿠폰 코드입니다.',
         coupon_inactive: '사용할 수 없는 쿠폰입니다.',
         coupon_expired: '만료된 쿠폰입니다.',
@@ -882,6 +910,9 @@ export const ko = {
         coupon_conflict: '다른 곳에서 먼저 사용된 쿠폰입니다. 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
+      addressLabel: '배송지',
+      addressEmpty: '등록된 배송지가 없습니다. 마이페이지에서 배송지를 먼저 등록해주세요.',
+      addAddressLink: '배송지 추가하러 가기',
     },
     inquiries: {
       title: '1:1 문의 내역',
@@ -907,9 +938,13 @@ export const ko = {
       },
       form: {
         categoryLabel: '문의 카테고리',
-        categoryPlaceholder: '선택: 제작 일정 / 배송 예정',
-        relatedOrderLabel: '연관 주문번호 (선택사항)',
-        relatedOrderPlaceholder: 'BC-2026-XXXX',
+        categoryOptions: {
+          general: '일반 문의',
+          order: '주문 문의',
+        },
+        relatedOrderLabel: '관련 주문 선택 (선택사항)',
+        relatedOrderPlaceholder: '주문을 선택해주세요',
+        relatedOrderLine: '관련 주문',
         titleLabel: '제목',
         titlePlaceholder: '문의할 핵심 내용을 적어주세요.',
         contentLabel: '내용',
@@ -954,17 +989,12 @@ export const ko = {
       searchPlaceholder: '공지사항 검색',
       categoryTabs: {
         all: '전체',
-        serviceUpdate: '서비스 업데이트',
-        event: '이벤트',
-        maintenance: '점검',
       },
       table: {
         category: '분류',
         title: '제목',
         date: '작성일',
-        views: '조회수',
       },
-      pinnedLabel: 'PINNED',
     },
     detail: {
       backToList: '목록으로 돌아가기',
@@ -978,6 +1008,7 @@ export const ko = {
     },
     title: '자주 묻는 질문',
     empty: '등록된 FAQ가 없습니다.',
+    inquiryCtaLabel: '1:1 문의하기',
   },
   products: {
     hero: {
@@ -1015,95 +1046,30 @@ export const ko = {
   pricing: {
     hero: {
       eyebrow: '투명한 가격 정책',
-      title: '가격 및 옵션 안내',
+      title: '가격 안내',
       description:
-        'Shiny Book은 소중한 순간에 걸맞은 타협 없는 가치를 제안합니다. 복잡한 계산 없이 명확하고 합리적인 패키지 플랜으로 품격 높은 소장본을 제작하세요.',
+        '상품 기본 가격은 상품마다 다르며, 여기에 선택한 페이지 수만큼의 비용과 배송비가 더해집니다. 숨겨진 옵션 없이 아래 기준 그대로 계산됩니다.',
     },
-    tiers: [
-      {
-        name: 'Essential',
-        image: '/images/pricing/essential.png',
-        price: '₩45,000~',
-        features: [
-          '가벼운 소프트커버 마감',
-          '40페이지 기본 제공',
-          '고급 매트 수입지',
-          '수제 반양장식 사철 제본',
-          '모바일 전용 간편 편집',
-          '기본 친환경 무지 상자 배송',
-        ],
+    pagePricing: {
+      title: '페이지 수에 따른 추가 비용',
+      description:
+        '상품 기본 가격은 상품마다 달라 상품 목록에서 확인할 수 있습니다. 여기에 선택한 페이지 수만큼 아래 비용이 더해집니다.',
+      perPageLine: '페이지당 추가 비용',
+      productLinkLabel: '상품별 기본 가격 보기',
+    },
+    shippingPricing: {
+      title: '배송비 안내',
+      tableHeaders: {
+        item: '구분',
+        amount: '금액',
       },
-      {
-        name: 'Classic',
-        image: '/images/pricing/classic.png',
-        price: '₩85,000~',
-        features: [
-          '견고한 보드 하드커버',
-          '60페이지 기본 제공',
-          '무독성 아카이빙 페이퍼',
-          '완벽히 펼쳐지는 180도 레이플랫',
-          '클래식 잡지 스타일 레이아웃',
-          '고급 린넨 북 파우치 포장',
-        ],
-      },
-      {
-        name: 'Premium',
-        image: '/images/pricing/premium.png',
-        price: '₩160,000~',
-        features: [
-          '최고급 이탈리아산 풀그레인 가죽',
-          '80페이지 기본 제공',
-          '보존용 최고급 파인아트지',
-          '전통 양장 사철 제본 + 리본 마감',
-          '1:1 디자이너 맞춤 편집 코칭',
-          '인그레이빙 각인 전용 우드 케이스',
-        ],
-      },
-    ],
+      baseFeeLine: '기본 배송비',
+      jejuLine: '제주 지역 추가',
+      remoteLine: '도서산간 지역 추가',
+      freeThresholdLine: '{amount} 이상 구매 시',
+      freeThresholdValue: '무료배송',
+    },
     ctaLabel: '내 책 만들기',
-    specsTitle: '상세 사양 비교',
-    specsCategoryLabel: '구분',
-    specRows: [
-      { label: '기본 제공 페이지', values: ['40p', '60p', '80p'] },
-      {
-        label: '제본 방식',
-        values: ['사철 제본 (소프트)', '180도 수제 사철 양장', '전통 무독성 풀양장 수공'],
-      },
-      {
-        label: '사용 지류',
-        values: ['매트 수입지 (150g)', '아카이빙 페이퍼 (180g)', '최고급 파인아트 아치스지 (240g)'],
-      },
-      {
-        label: '커버 패브릭 옵션',
-        values: [
-          '컬러풀 종이 코팅 커버',
-          '프리미엄 린넨 5종 / 가죽 2종',
-          '풀그레인 가죽 4종 / 실크 패브릭',
-        ],
-      },
-      {
-        label: '디자인 보정 서비스',
-        values: [
-          '기본 사진 정렬',
-          '스튜디오 템플릿 + 자동 보정',
-          '전문 디자이너 1:1 레이아웃 리터칭',
-        ],
-      },
-      {
-        label: '포장 및 패키지',
-        values: ['일반 친환경 에코 박스', '린넨 보관백 + 하드웨어 상자', '맞춤형 원목 우드 케이스'],
-      },
-    ],
-    volumeDiscount: {
-      title: '수량 할인 및 정기 도서관 지원',
-      description:
-        '독립출판, 사진 동호회, 전시 카탈로그, 또는 대량 가족 기념 서적 제작을 위해 동일한 파일로 5권 이상 대량 주문 시 할인 혜택을 드립니다.',
-      tiers: [
-        { range: '5 - 9권', description: '전체 제작 비용의 10% 자동 할인' },
-        { range: '10 - 29권', description: '전체 제작 비용의 20% 자동 할인' },
-        { range: '30권 이상', description: '디자이너 밀착 지원 및 견적 협의 (최대 35%)' },
-      ],
-    },
   },
   gallery: {
     hero: {
@@ -1406,6 +1372,7 @@ export const ko = {
     impact: {
       eyebrow: '누적 성과',
       title: '자연 자원 보호 통계',
+      asOfLabel: '2026년 7월 기준',
       stats: [
         { value: '1,420+', label: '보호한 나무 수' },
         { value: '12.4톤', label: '탄소 발자국 상쇄량' },
@@ -1462,13 +1429,6 @@ export const ko = {
         },
       ],
     },
-    cta: {
-      eyebrow: '지금 시작하기',
-      title: '자연과 사람을 배려하는 품격 있는 제작',
-      description:
-        '친환경 무독성 종이와 가죽 커버 패브릭으로 아이의 일상, 인생 최고의 결혼식 이야기를 가장 우아한 책으로 만들어보세요.',
-      buttonLabel: '지속가능한 책 만들기',
-    },
   },
   shippingPolicy: {
     hero: {
@@ -1480,33 +1440,8 @@ export const ko = {
     methods: {
       eyebrow: '배송 등급',
       title: '배송 방식 및 요금',
-      headers: {
-        method: '배송 방식',
-        duration: '배송 기한',
-        cost: '비용',
-        coverage: '대상',
-      },
-      items: [
-        {
-          method: 'Standard Delivery (일반 배송)',
-          duration: '7-10 영업일 이내',
-          cost: '무료 (₩100,000 이상 주문 시)',
-          coverage: '도서산간 외 전국 지원',
-        },
-        {
-          method: 'Express Custom (특급 신속 배송)',
-          duration: '3-5 영업일 이내',
-          cost: '₩8,000 (전국 고정 균일가)',
-          coverage: '맞춤 최우선 긴급 가동',
-        },
-        {
-          method: 'Atelier Premium (장인 직배송)',
-          duration: '동일 주간 예약 배송',
-          cost: '₩15,000',
-          coverage: '서울 및 수도권 한정 제공',
-        },
-      ],
     },
+    viewPricingButton: '배송 요금 보러 가기',
     packaging: {
       eyebrow: '언박싱 경험',
       title: '맞춤 보존 패키징',
@@ -1583,8 +1518,6 @@ export const ko = {
     },
     filters: {
       allProducts: '전체 상품',
-      sortLabel: '정렬:',
-      sortMostRecent: '최신순',
     },
   },
   legal: {

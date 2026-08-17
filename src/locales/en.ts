@@ -17,6 +17,9 @@ export const en = {
       notices: 'Notices',
       faq: 'FAQ',
       reviews: 'Reviews',
+      studioGroup: 'Studio',
+      productionGroup: 'Production Info',
+      supportGroup: 'Support',
       login: 'Sign in',
       signup: 'Sign up',
       mypage: 'My page',
@@ -305,10 +308,17 @@ export const en = {
       forgotPasswordLink: 'Forgot?',
       submitButton: 'Sign in',
       submitting: 'Signing in...',
+      testLoginButton: 'Instant test account login',
+      testLoginSubmitting: 'Signing in...',
+      testLoginTooltip: 'Development only. Signs you in instantly with a test admin account.',
       errors: {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
         invalid_credentials: 'Please check your email and password.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+      testLoginErrors: {
+        unavailable: 'This feature is not available right now.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -354,8 +364,6 @@ export const en = {
       },
       quantitySuffix: 'copies',
       advanceButton: 'Advance to next stage',
-      manuscriptButton: 'View manuscript',
-      coverButton: 'View cover',
       viewPhotosButton: 'View uploaded photos',
       photosLoading: 'Loading...',
       photosEmpty: 'No photos uploaded.',
@@ -416,6 +424,7 @@ export const en = {
           usage: 'USAGE / LIMIT',
           expiry: 'EXPIRY',
           status: 'STATUS',
+          actions: 'ACTIONS',
         },
         typeLabels: {
           percentage: 'Percentage',
@@ -545,7 +554,6 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       list: {
-        subtitle: 'Manage customer-facing frequently asked questions across purchase categories',
         searchPlaceholder: 'Search questions...',
         allCategories: 'All Categories',
         allStatuses: 'All Statuses',
@@ -598,7 +606,6 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       list: {
-        subtitle: 'Respond to inquiries and custom requests from clients',
         statusTabs: {
           all: 'All Inquiries',
           new: 'New',
@@ -613,7 +620,6 @@ export const en = {
           subject: 'SUBJECT',
           status: 'STATUS BADGE',
           receivedDate: 'RECEIVED DATE',
-          view: 'VIEW',
         },
       },
       detail: {
@@ -648,6 +654,7 @@ export const en = {
       form: {
         slugLabel: 'Slug (URL identifier)',
         nameLabel: 'Product name',
+        nameEnLabel: 'Name (English, optional)',
         sizeLabel: 'Size',
         descriptionLabel: 'Description',
         priceLabel: 'Price (KRW)',
@@ -667,15 +674,19 @@ export const en = {
         category: 'Category',
         price: 'Price',
         status: 'Status',
+        actions: 'Actions',
       },
       statusLabels: {
         active: 'Visible',
         inactive: 'Hidden',
       },
+      showButton: 'Show',
+      hideButton: 'Hide',
       errors: {
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         slug_taken: 'This slug is already in use.',
+        conflict: 'This was just changed elsewhere. Please refresh and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -694,12 +705,19 @@ export const en = {
       hidePasswordLabel: 'Hide password',
       submitButton: 'Sign in',
       submitting: 'Signing in...',
+      testLoginButton: 'Instant test account login',
+      testLoginSubmitting: 'Signing in...',
+      testLoginTooltip: 'Development only. Signs you in instantly with a test account.',
       signupPrompt: "Don't have an account yet?",
       signupLink: 'Sign up',
       errors: {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
         invalid_credentials: 'Please check your email and password.',
+        unexpected_error: 'Something went wrong. Please try again shortly.',
+      },
+      testLoginErrors: {
+        unavailable: 'This feature is not available right now.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -755,10 +773,13 @@ export const en = {
           amount: 'Amount',
           status: 'Status',
           createdAt: 'Created at',
-          actions: 'Actions',
+          actions: 'Review',
+          inquiry: 'Inquiry',
         },
         quantitySuffix: 'copies',
-        reviewLink: 'Review',
+        reviewWriteLink: 'Write',
+        reviewDoneLink: 'Done',
+        inquiryLink: 'Ask',
       },
     },
     account: {
@@ -802,6 +823,7 @@ export const en = {
           recipientNameLabel: 'Recipient',
           phoneLabel: 'Phone',
           postalCodeLabel: 'Postal code',
+          searchAddressButton: 'Search address',
           addressLine1Label: 'Address',
           addressLine2Label: 'Address line 2 (optional)',
           isDefaultLabel: 'Set as default address',
@@ -862,9 +884,11 @@ export const en = {
       },
       summary: {
         title: 'Order Summary',
+        productLine: '{productName} ({pageCount}p) x{quantity}',
         pageCountLine: 'Page count ({pageCount}p)',
         shipping: 'Shipping',
         shippingFree: 'Free',
+        shippingUndetermined: 'To be determined',
         finalEstimate: 'Final Estimated Total',
         payButton: 'Request & Pay',
       },
@@ -873,11 +897,15 @@ export const en = {
         quantityInvalid: 'Quantity must be at least 1.',
         pageCountInvalid: 'Please select a page count.',
         photoCountMismatch: 'Please upload the exact number of interior photos required.',
+        photoCountExceeded:
+          'The {count} uploaded photos exceed what the new page count needs ({required}). Please remove some photos or increase the page count.',
+        addressRequired: 'Please select a shipping address.',
         uploadFailed: 'File upload failed. Please try again.',
         filesRequired: 'Please upload interior photos.',
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         product_not_found: 'Product not found.',
+        address_not_found: 'The selected address could not be found. Please choose again.',
         coupon_not_found: 'This coupon code does not exist.',
         coupon_inactive: 'This coupon is not available.',
         coupon_expired: 'This coupon has expired.',
@@ -885,6 +913,9 @@ export const en = {
         coupon_conflict: 'This coupon was just used elsewhere. Please try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
+      addressLabel: 'Shipping address',
+      addressEmpty: 'No saved addresses yet. Please add one from My Page first.',
+      addAddressLink: 'Add a shipping address',
     },
     inquiries: {
       title: '1:1 Inquiry History',
@@ -910,9 +941,13 @@ export const en = {
       },
       form: {
         categoryLabel: 'Inquiry Category',
-        categoryPlaceholder: 'Select: Production Schedule / Delivery',
-        relatedOrderLabel: 'Related Order Number (optional)',
-        relatedOrderPlaceholder: 'BC-2026-XXXX',
+        categoryOptions: {
+          general: 'General Inquiry',
+          order: 'Order Inquiry',
+        },
+        relatedOrderLabel: 'Related Order (optional)',
+        relatedOrderPlaceholder: 'Select an order',
+        relatedOrderLine: 'Related order',
         titleLabel: 'Title',
         titlePlaceholder: 'Summarize what you need help with.',
         contentLabel: 'Content',
@@ -957,17 +992,12 @@ export const en = {
       searchPlaceholder: 'Search notices',
       categoryTabs: {
         all: 'All',
-        serviceUpdate: 'Service Update',
-        event: 'Event',
-        maintenance: 'Maintenance',
       },
       table: {
         category: 'Category',
         title: 'Title',
         date: 'Date',
-        views: 'Views',
       },
-      pinnedLabel: 'PINNED',
     },
     detail: {
       backToList: 'Back to list',
@@ -981,6 +1011,7 @@ export const en = {
     },
     title: 'Frequently asked questions',
     empty: 'No FAQs yet.',
+    inquiryCtaLabel: 'Ask a 1:1 question',
   },
   products: {
     hero: {
@@ -1018,106 +1049,30 @@ export const en = {
   pricing: {
     hero: {
       eyebrow: 'Transparent Values',
-      title: 'Pricing & Options',
+      title: 'Pricing',
       description:
-        'Shiny Book offers uncompromising value for your most treasured moments. Choose a clear, sensible package plan and create a keepsake worth the shelf space, no calculator needed.',
+        'The base price depends on the product you choose, and your selected page count and shipping fee are added on top. No hidden options, calculated exactly as shown below.',
     },
-    tiers: [
-      {
-        name: 'Essential',
-        image: '/images/pricing/essential.png',
-        price: '$44.99~',
-        features: [
-          'Lightweight softcover finish',
-          '40 pages included',
-          'Premium matte imported paper',
-          'Hand-sewn half-binding',
-          'Simple mobile-only editing',
-          'Standard eco-friendly plain box shipping',
-        ],
+    pagePricing: {
+      title: 'Price by page count',
+      description:
+        'Base product prices vary by product, so check the product list for those. Your selected page count adds the cost below on top.',
+      perPageLine: 'Additional cost per page',
+      productLinkLabel: 'View base prices by product',
+    },
+    shippingPricing: {
+      title: 'Shipping',
+      tableHeaders: {
+        item: 'Item',
+        amount: 'Amount',
       },
-      {
-        name: 'Classic',
-        image: '/images/pricing/classic.png',
-        price: '$84.99~',
-        features: [
-          'Sturdy board hardcover',
-          '60 pages included',
-          'Non-toxic archival paper',
-          'Perfect 180-degree lay-flat spread',
-          'Classic magazine-style layout',
-          'Premium linen book pouch packaging',
-        ],
-      },
-      {
-        name: 'Premium',
-        image: '/images/pricing/premium.png',
-        price: '$159.99~',
-        features: [
-          'Finest full-grain Italian leather',
-          '80 pages included',
-          'Top-grade archival fine art paper',
-          'Traditional Smyth-sewn binding with ribbon finish',
-          '1:1 designer editing coaching',
-          'Engraved wood case exclusively for this tier',
-        ],
-      },
-    ],
+      baseFeeLine: 'Base shipping fee',
+      jejuLine: 'Jeju surcharge',
+      remoteLine: 'Remote island surcharge',
+      freeThresholdLine: 'On orders of {amount} or more',
+      freeThresholdValue: 'Free shipping',
+    },
     ctaLabel: 'Start my book',
-    specsTitle: 'Detailed specifications',
-    specsCategoryLabel: 'Category',
-    specRows: [
-      { label: 'Pages included', values: ['40p', '60p', '80p'] },
-      {
-        label: 'Binding method',
-        values: [
-          'Perfect binding (soft)',
-          '180-degree hand-sewn hardcover',
-          'Traditional non-toxic full binding, handmade',
-        ],
-      },
-      {
-        label: 'Paper stock',
-        values: [
-          'Matte imported paper (150gsm)',
-          'Archival paper (180gsm)',
-          'Top-grade Arches fine art paper (240gsm)',
-        ],
-      },
-      {
-        label: 'Cover fabric options',
-        values: [
-          'Colorful paper-coated cover',
-          '5 premium linens / 2 leathers',
-          '4 full-grain leathers / silk fabric',
-        ],
-      },
-      {
-        label: 'Design retouching',
-        values: [
-          'Basic photo alignment',
-          'Studio templates + auto-retouching',
-          '1:1 layout retouching by a professional designer',
-        ],
-      },
-      {
-        label: 'Packaging',
-        values: ['Standard eco-friendly box', 'Linen pouch + hardware box', 'Custom wood case'],
-      },
-    ],
-    volumeDiscount: {
-      title: 'Volume discounts & library support',
-      description:
-        'Ordering 5 or more copies from the same file for independent publishing, photo clubs, exhibition catalogs, or large family keepsakes? You qualify for a discount.',
-      tiers: [
-        { range: '5-9 copies', description: 'Automatic 10% discount on the total cost' },
-        { range: '10-29 copies', description: 'Automatic 20% discount on the total cost' },
-        {
-          range: '30+ copies',
-          description: 'Dedicated designer support and custom quotes (up to 35%)',
-        },
-      ],
-    },
   },
   gallery: {
     hero: {
@@ -1421,6 +1376,7 @@ export const en = {
     impact: {
       eyebrow: 'Cumulative Progress',
       title: 'Natural Resource Protection Stats',
+      asOfLabel: 'As of July 2026',
       stats: [
         { value: '1,420+', label: 'Managed Trees Saved' },
         { value: '12.4 Tons', label: 'Carbon Footprint Offset' },
@@ -1477,13 +1433,6 @@ export const en = {
         },
       ],
     },
-    cta: {
-      eyebrow: 'Start Now',
-      title: 'Elegant craft that cares for nature and people',
-      description:
-        "Turn a child's everyday moments or the best wedding story of a lifetime into the most elegant book, with eco-friendly non-toxic paper and leather cover fabric.",
-      buttonLabel: 'Make a sustainable book',
-    },
   },
   shippingPolicy: {
     hero: {
@@ -1495,33 +1444,8 @@ export const en = {
     methods: {
       eyebrow: 'Execution Tiers',
       title: 'Shipping Methods & Rates',
-      headers: {
-        method: 'Method',
-        duration: 'Duration',
-        cost: 'Cost',
-        coverage: 'Coverage',
-      },
-      items: [
-        {
-          method: 'Standard Delivery',
-          duration: 'Within 7-10 business days',
-          cost: 'Free (orders over $99)',
-          coverage: 'Nationwide, excluding remote islands',
-        },
-        {
-          method: 'Express Custom',
-          duration: 'Within 3-5 business days',
-          cost: '$8 flat nationwide rate',
-          coverage: 'Custom priority handling',
-        },
-        {
-          method: 'Atelier Premium',
-          duration: 'Same-week scheduled delivery',
-          cost: '$15',
-          coverage: 'Seoul metro area only',
-        },
-      ],
     },
+    viewPricingButton: 'View shipping rates',
     packaging: {
       eyebrow: 'The Unboxing Ritual',
       title: 'Custom Preservation Packaging',
@@ -1602,8 +1526,6 @@ export const en = {
     },
     filters: {
       allProducts: 'All Products',
-      sortLabel: 'Sort by:',
-      sortMostRecent: 'Most Recent',
     },
   },
   legal: {
