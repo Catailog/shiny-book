@@ -5,7 +5,7 @@ import {
   isAnnouncementCategory,
 } from '@/constants/announcement-category';
 import { cn } from '@/lib/utils';
-import { defaultLocale, locales } from '@/locales';
+import { type Locale, defaultLocale, locales } from '@/locales';
 
 const TONE_CLASSES = {
   notice: 'bg-primary-soft text-primary',
@@ -15,11 +15,16 @@ const TONE_CLASSES = {
 
 interface AnnouncementCategoryBadgeProps {
   category: string;
+  locale?: Locale;
   className?: string;
 }
 
-export function AnnouncementCategoryBadge({ category, className }: AnnouncementCategoryBadgeProps) {
-  const t = locales[defaultLocale];
+export function AnnouncementCategoryBadge({
+  category,
+  locale = defaultLocale,
+  className,
+}: AnnouncementCategoryBadgeProps) {
+  const t = locales[locale];
   const resolvedCategory = isAnnouncementCategory(category)
     ? category
     : ANNOUNCEMENT_CATEGORY.NOTICE;
