@@ -10,7 +10,7 @@ export default async function ProductsPage() {
   const t = locales[locale];
   const products = t.site.home.products;
   const page = t.products;
-  const items = await getProductCatalog();
+  const items = await getProductCatalog(locale);
 
   return (
     <>

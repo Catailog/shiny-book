@@ -28,6 +28,7 @@ export default async function EditProductPage(props: PageProps<'/admin/products/
           defaultValues={{
             slug: product.slug,
             name: product.name,
+            nameEn: product.name_en ?? undefined,
             size: product.size,
             description: product.description,
             price: product.price,

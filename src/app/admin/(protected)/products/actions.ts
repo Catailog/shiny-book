@@ -31,6 +31,7 @@ export async function createProduct(
   const { error } = await supabase.from('products').insert({
     slug: parsed.data.slug,
     name: parsed.data.name,
+    name_en: parsed.data.nameEn || null,
     size: parsed.data.size,
     description: parsed.data.description,
     price: parsed.data.price,
@@ -67,6 +68,7 @@ export async function updateProduct(
     .update({
       slug: parsed.data.slug,
       name: parsed.data.name,
+      name_en: parsed.data.nameEn || null,
       size: parsed.data.size,
       description: parsed.data.description,
       price: parsed.data.price,
@@ -83,4 +85,34 @@ export async function updateProduct(
 
   revalidatePath(ADMIN_ROUTES.PRODUCTS);
   return undefined;
+}
+
+export interface ToggleProductActiveState {
+  error: 'unauthorized' | 'conflict' | null;
+}
+
+export async function toggleProductActive(
+  productId: string,
+  currentlyActive: boolean,
+): Promise<ToggleProductActiveState> {
+  const admin = await getCurrentAdmin();
+  if (!admin) {
+    return { error: 'unauthorized' };
+  }
+
+  const supabase = createServiceRoleClient();
+  const { data } = await supabase
+    .from('products')
+    .update({ is_active: !currentlyActive })
+    .eq('id', productId)
+    .eq('is_active', currentlyActive)
+    .select()
+    .maybeSingle();
+
+  if (!data) {
+    return { error: 'conflict' };
+  }
+
+  revalidatePath(ADMIN_ROUTES.PRODUCTS);
+  return { error: null };
 }

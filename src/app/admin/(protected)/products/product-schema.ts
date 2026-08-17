@@ -8,6 +8,7 @@ export const productFormSchema = z.object({
     .min(1)
     .regex(/^[a-z0-9-]+$/),
   name: z.string().min(1),
+  nameEn: z.string().optional(),
   size: z.string().min(1),
   description: z.string().min(1),
   price: z.coerce.number().int().min(0),

@@ -80,6 +80,10 @@ export function ProductForm({
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
+        <Label htmlFor="nameEn">{t.admin.products.form.nameEnLabel}</Label>
+        <Input id="nameEn" type="text" {...register('nameEn')} />
+      </div>
+      <div className="flex flex-col gap-1.5">
         <Label htmlFor="size">{t.admin.products.form.sizeLabel}</Label>
         <Input id="size" type="text" {...register('size')} />
         {errors.size ? (

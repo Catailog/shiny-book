@@ -16,14 +16,14 @@ const SPEC_ICONS = [FileText, ScrollText, LayoutGrid];
 
 export default async function ProductDetailPage(props: PageProps<'/products/[id]'>) {
   const { id } = await props.params;
-  const catalog = await getProductCatalog();
+  const locale = await getLocale();
+  const catalog = await getProductCatalog(locale);
   const product = catalog.find((item) => item.slug === id);
 
   if (!product) {
     notFound();
   }
 
-  const locale = await getLocale();
   const t = locales[locale];
   const products = t.site.home.products;
   const detail = t.products.detail;
