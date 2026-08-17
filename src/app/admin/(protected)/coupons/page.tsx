@@ -4,7 +4,6 @@ import { Plus, Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -13,36 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { DISCOUNT_TYPE, isDiscountType } from '@/constants/coupon';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { getCoupons } from '@/lib/coupons/get-coupons';
+import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
-
-const MOCK_COUPONS = [
-  {
-    code: 'WELCOME10',
-    type: 'percentage',
-    value: '10%',
-    minOrder: '₩50,000',
-    usage: '428 / 1000',
-    expiry: '2025.12.31',
-    active: true,
-  },
-  {
-    code: 'AUTUMN30K',
-    type: 'fixed',
-    value: '₩30,000',
-    minOrder: '₩150,000',
-    usage: '92 / 500',
-    expiry: '2025.11.15',
-    active: true,
-  },
-] as const;
+import { ToggleCouponButton } from './toggle-coupon-button';
 
 export default async function AdminCouponsPage() {
   const locale = await getLocale();
   const t = locales[locale];
+  const coupons = await getCoupons();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -90,30 +73,54 @@ export default async function AdminCouponsPage() {
                 <TableHead>{t.admin.coupons.list.table.code}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.type}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.value}</TableHead>
-                <TableHead>{t.admin.coupons.list.table.minOrder}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.usage}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.expiry}</TableHead>
                 <TableHead className="text-right">{t.admin.coupons.list.table.status}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {MOCK_COUPONS.map((coupon) => (
-                <TableRow key={coupon.code}>
-                  <TableCell>
-                    <span className="rounded bg-primary-soft px-2.5 py-1 font-semibold text-primary">
-                      {coupon.code}
-                    </span>
-                  </TableCell>
-                  <TableCell>{t.admin.coupons.list.typeLabels[coupon.type]}</TableCell>
-                  <TableCell className="font-semibold text-foreground">{coupon.value}</TableCell>
-                  <TableCell className="text-muted-foreground">{coupon.minOrder}</TableCell>
-                  <TableCell>{coupon.usage}</TableCell>
-                  <TableCell className="text-muted-foreground">{coupon.expiry}</TableCell>
-                  <TableCell className="text-right">
-                    <Switch defaultChecked={coupon.active} className="ml-auto" />
+              {coupons.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                    {t.admin.coupons.empty}
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : null}
+              {coupons.map((coupon) => {
+                const discountType = isDiscountType(coupon.discount_type)
+                  ? coupon.discount_type
+                  : DISCOUNT_TYPE.PERCENTAGE;
+                const value =
+                  discountType === DISCOUNT_TYPE.PERCENTAGE
+                    ? `${coupon.discount_value}%`
+                    : `₩${coupon.discount_value.toLocaleString()}`;
+                const usage =
+                  coupon.max_uses === null
+                    ? `${coupon.used_count}`
+                    : `${coupon.used_count} / ${coupon.max_uses}`;
+                const expiry = coupon.expires_at
+                  ? formatDate(coupon.expires_at)
+                  : t.admin.coupons.noExpiry;
+
+                return (
+                  <TableRow key={coupon.id}>
+                    <TableCell>
+                      <span className="rounded bg-primary-soft px-2.5 py-1 font-semibold text-primary">
+                        {coupon.code}
+                      </span>
+                    </TableCell>
+                    <TableCell>{t.admin.coupons.list.typeLabels[discountType]}</TableCell>
+                    <TableCell className="font-semibold text-foreground">{value}</TableCell>
+                    <TableCell>{usage}</TableCell>
+                    <TableCell className="text-muted-foreground">{expiry}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end">
+                        <ToggleCouponButton couponId={coupon.id} isActive={coupon.is_active} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
