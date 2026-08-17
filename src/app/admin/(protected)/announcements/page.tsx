@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Plus, Search } from 'lucide-react';
 
 import { AnnouncementCategoryBadge } from '@/components/announcement-category-badge';
+import { ClickableTableRow } from '@/components/clickable-table-row';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -53,10 +54,10 @@ export default async function AdminAnnouncementsPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.admin.announcements.list.table.category}</TableHead>
                 <TableHead>{t.admin.announcements.list.table.title}</TableHead>
                 <TableHead>{t.admin.announcements.list.table.date}</TableHead>
@@ -71,22 +72,20 @@ export default async function AdminAnnouncementsPage() {
                 </TableRow>
               ) : null}
               {announcements.map((announcement) => (
-                <TableRow key={announcement.id}>
+                <ClickableTableRow
+                  key={announcement.id}
+                  href={`${ADMIN_ROUTES.ANNOUNCEMENTS}/${announcement.id}/edit`}
+                >
                   <TableCell>
                     <AnnouncementCategoryBadge category={announcement.category} />
                   </TableCell>
                   <TableCell className="font-semibold text-foreground">
-                    <Link
-                      href={`${ADMIN_ROUTES.ANNOUNCEMENTS}/${announcement.id}/edit`}
-                      className="hover:underline"
-                    >
-                      {announcement.title}
-                    </Link>
+                    {announcement.title}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(announcement.created_at)}
                   </TableCell>
-                </TableRow>
+                </ClickableTableRow>
               ))}
             </TableBody>
           </Table>

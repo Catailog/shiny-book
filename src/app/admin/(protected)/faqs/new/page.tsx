@@ -13,7 +13,7 @@ export default async function AdminFaqsNewPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.faqs.newTitle} subtitle={t.admin.faqs.list.subtitle} />
+      <AdminTopbar title={t.admin.faqs.newTitle} />
       <div className="flex flex-1 flex-col gap-4 px-10 py-8">
         <Link
           href={ADMIN_ROUTES.FAQS}

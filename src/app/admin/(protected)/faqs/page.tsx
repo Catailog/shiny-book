@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Plus, Search } from 'lucide-react';
 
+import { ClickableTableRow } from '@/components/clickable-table-row';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -26,22 +27,9 @@ export default async function AdminFaqsPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar
-        title={t.admin.faqs.title}
-        subtitle={t.admin.faqs.list.subtitle}
-        actions={
-          <Button
-            render={<Link href={ADMIN_ROUTES.FAQS_NEW} />}
-            nativeButton={false}
-            variant="primary"
-          >
-            <Plus aria-hidden="true" className="size-4" />
-            {t.admin.faqs.writeButton}
-          </Button>
-        }
-      />
+      <AdminTopbar title={t.admin.faqs.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
-        <div className="flex items-center justify-between rounded-lg border border-border bg-card px-6 py-4">
+        <div className="flex items-center justify-between">
           <div className="relative">
             <Search
               aria-hidden="true"
@@ -50,18 +38,28 @@ export default async function AdminFaqsPage() {
             <Input
               type="search"
               placeholder={t.admin.faqs.list.searchPlaceholder}
-              className="w-70 bg-input-background pl-9"
+              className="w-70 pl-9"
             />
           </div>
-          <span className="text-sm text-muted-foreground">
-            {t.admin.faqs.list.showingCount.replace('{shown}', String(faqs.length))}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground">
+              {t.admin.faqs.list.showingCount.replace('{shown}', String(faqs.length))}
+            </span>
+            <Button
+              render={<Link href={ADMIN_ROUTES.FAQS_NEW} />}
+              nativeButton={false}
+              variant="primary"
+            >
+              <Plus aria-hidden="true" className="size-4" />
+              {t.admin.faqs.writeButton}
+            </Button>
+          </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.admin.faqs.list.table.title}</TableHead>
                 <TableHead>{t.admin.faqs.list.table.lastEdited}</TableHead>
               </TableRow>
@@ -75,16 +73,12 @@ export default async function AdminFaqsPage() {
                 </TableRow>
               ) : null}
               {faqs.map((faq) => (
-                <TableRow key={faq.id}>
-                  <TableCell className="font-medium text-foreground">
-                    <Link href={`${ADMIN_ROUTES.FAQS}/${faq.id}/edit`} className="hover:underline">
-                      {faq.question}
-                    </Link>
-                  </TableCell>
+                <ClickableTableRow key={faq.id} href={`${ADMIN_ROUTES.FAQS}/${faq.id}/edit`}>
+                  <TableCell className="font-medium text-foreground">{faq.question}</TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(faq.updated_at)}
                   </TableCell>
-                </TableRow>
+                </ClickableTableRow>
               ))}
             </TableBody>
           </Table>

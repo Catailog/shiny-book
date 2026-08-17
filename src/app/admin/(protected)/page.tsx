@@ -18,7 +18,6 @@ import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
-import { ViewOrderFileButton } from './view-order-file-button';
 import { ViewOrderPhotosButton } from './view-order-photos-button';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
@@ -85,81 +84,72 @@ export default async function AdminDashboardPage() {
           <h2 className="font-heading text-xl font-bold text-foreground">
             {t.admin.dashboard.recentSubmissions.title}
           </h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t.admin.orders.columns.title}</TableHead>
-                <TableHead>{t.admin.orders.columns.quantity}</TableHead>
-                <TableHead>{t.admin.orders.columns.amount}</TableHead>
-                <TableHead>{t.admin.orders.columns.status}</TableHead>
-                <TableHead>{t.admin.orders.columns.files}</TableHead>
-                <TableHead>{t.admin.orders.columns.createdAt}</TableHead>
-                <TableHead>{t.admin.orders.columns.actions}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
-                    {t.admin.orders.empty}
-                  </TableCell>
+          <div className="overflow-hidden rounded-lg border border-border bg-input-background">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted hover:bg-muted">
+                  <TableHead>{t.admin.orders.columns.title}</TableHead>
+                  <TableHead>{t.admin.orders.columns.quantity}</TableHead>
+                  <TableHead>{t.admin.orders.columns.amount}</TableHead>
+                  <TableHead>{t.admin.orders.columns.status}</TableHead>
+                  <TableHead>{t.admin.orders.columns.files}</TableHead>
+                  <TableHead>{t.admin.orders.columns.createdAt}</TableHead>
+                  <TableHead>{t.admin.orders.columns.actions}</TableHead>
                 </TableRow>
-              ) : null}
-              {orders.map((order) => {
-                const status = isOrderStatus(order.status) ? order.status : null;
-                const nextStatus =
-                  status && status !== ORDER_STATUS.AWAITING_PAYMENT
-                    ? getNextStatuses(status)[0]
-                    : undefined;
+              </TableHeader>
+              <TableBody>
+                {orders.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center text-muted-foreground">
+                      {t.admin.orders.empty}
+                    </TableCell>
+                  </TableRow>
+                ) : null}
+                {orders.map((order) => {
+                  const status = isOrderStatus(order.status) ? order.status : null;
+                  const nextStatus =
+                    status && status !== ORDER_STATUS.AWAITING_PAYMENT
+                      ? getNextStatuses(status)[0]
+                      : undefined;
 
-                return (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium text-foreground">{order.title}</TableCell>
-                    <TableCell>
-                      {order.quantity}
-                      {t.admin.orders.quantitySuffix}
-                    </TableCell>
-                    <TableCell>₩{order.amount.toLocaleString()}</TableCell>
-                    <TableCell>
-                      {status ? <OrderStatusBadge status={status} /> : order.status}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1.5">
+                  return (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium text-foreground">{order.title}</TableCell>
+                      <TableCell>
+                        {order.quantity}
+                        {t.admin.orders.quantitySuffix}
+                      </TableCell>
+                      <TableCell>₩{order.amount.toLocaleString()}</TableCell>
+                      <TableCell>
+                        {status ? <OrderStatusBadge status={status} /> : order.status}
+                      </TableCell>
+                      <TableCell>
                         {order.page_count !== null ? (
                           <ViewOrderPhotosButton orderId={order.id} />
                         ) : (
-                          <>
-                            <ViewOrderFileButton
-                              path={order.manuscript_file_url}
-                              label={t.admin.orders.manuscriptButton}
-                            />
-                            <ViewOrderFileButton
-                              path={order.cover_file_url}
-                              label={t.admin.orders.coverButton}
-                            />
-                          </>
+                          <span className="text-muted-foreground">-</span>
                         )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {formatDate(order.created_at)}
-                    </TableCell>
-                    <TableCell>
-                      {status && nextStatus ? (
-                        <AdvanceOrderStatusButton
-                          orderId={order.id}
-                          from={status}
-                          to={nextStatus}
-                        />
-                      ) : (
-                        <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {formatDate(order.created_at)}
+                      </TableCell>
+                      <TableCell>
+                        {status && nextStatus ? (
+                          <AdvanceOrderStatusButton
+                            orderId={order.id}
+                            from={status}
+                            to={nextStatus}
+                          />
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </div>

@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { Plus, Search } from 'lucide-react';
 
+import { FilterLink } from '@/components/filter-link';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,15 +17,37 @@ import {
 import { DISCOUNT_TYPE, isDiscountType } from '@/constants/coupon';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
-import { formatDate } from '@/lib/format-date';
+import { formatDateTime } from '@/lib/format-date';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 import { ToggleCouponButton } from './toggle-coupon-button';
 
-export default async function AdminCouponsPage() {
+const FILTER_TABS = ['all', 'active', 'expired'] as const;
+type CouponFilter = (typeof FILTER_TABS)[number];
+
+function isCouponFilter(value: string): value is CouponFilter {
+  return (FILTER_TABS as readonly string[]).includes(value);
+}
+
+export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'>) {
   const t = locales[defaultLocale];
+  const searchParams = await props.searchParams;
+  const filterParam = firstParam(searchParams.filter);
+  const activeFilter = isCouponFilter(filterParam) ? filterParam : 'all';
+
   const coupons = await getCoupons();
+  const now = new Date();
+  const filteredCoupons = coupons.filter((coupon) => {
+    const isExpired = coupon.expires_at !== null && new Date(coupon.expires_at) <= now;
+    if (activeFilter === 'active') {
+      return coupon.is_active && !isExpired;
+    }
+    if (activeFilter === 'expired') {
+      return isExpired;
+    }
+    return true;
+  });
 
   return (
     <div className="flex flex-1 flex-col">
@@ -31,15 +55,21 @@ export default async function AdminCouponsPage() {
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <Button variant="default" size="sm">
+            <FilterLink href={ADMIN_ROUTES.COUPONS} isActive={activeFilter === 'all'}>
               {t.admin.coupons.list.tabs.all}
-            </Button>
-            <Button variant="outline" size="sm">
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.COUPONS}?filter=active`}
+              isActive={activeFilter === 'active'}
+            >
               {t.admin.coupons.list.tabs.activeOnly}
-            </Button>
-            <Button variant="outline" size="sm">
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.COUPONS}?filter=expired`}
+              isActive={activeFilter === 'expired'}
+            >
               {t.admin.coupons.list.tabs.expired}
-            </Button>
+            </FilterLink>
           </div>
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -50,7 +80,7 @@ export default async function AdminCouponsPage() {
               <Input
                 type="search"
                 placeholder={t.admin.coupons.list.searchPlaceholder}
-                className="w-60 bg-input-background pl-9"
+                className="w-60 pl-9"
               />
             </div>
             <Button
@@ -64,27 +94,28 @@ export default async function AdminCouponsPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.admin.coupons.list.table.code}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.type}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.value}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.usage}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.expiry}</TableHead>
-                <TableHead className="text-right">{t.admin.coupons.list.table.status}</TableHead>
+                <TableHead>{t.admin.coupons.list.table.status}</TableHead>
+                <TableHead className="text-right">{t.admin.coupons.list.table.actions}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {coupons.length === 0 ? (
+              {filteredCoupons.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground">
                     {t.admin.coupons.empty}
                   </TableCell>
                 </TableRow>
               ) : null}
-              {coupons.map((coupon) => {
+              {filteredCoupons.map((coupon) => {
                 const discountType = isDiscountType(coupon.discount_type)
                   ? coupon.discount_type
                   : DISCOUNT_TYPE.PERCENTAGE;
@@ -97,8 +128,9 @@ export default async function AdminCouponsPage() {
                     ? `${coupon.used_count}`
                     : `${coupon.used_count} / ${coupon.max_uses}`;
                 const expiry = coupon.expires_at
-                  ? formatDate(coupon.expires_at)
+                  ? formatDateTime(coupon.expires_at)
                   : t.admin.coupons.noExpiry;
+                const isExpired = coupon.expires_at !== null && new Date(coupon.expires_at) <= now;
 
                 return (
                   <TableRow key={coupon.id}>
@@ -111,6 +143,19 @@ export default async function AdminCouponsPage() {
                     <TableCell className="font-semibold text-foreground">{value}</TableCell>
                     <TableCell>{usage}</TableCell>
                     <TableCell className="text-muted-foreground">{expiry}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={
+                          coupon.is_active && !isExpired
+                            ? 'bg-order-status-done/10 text-order-status-done'
+                            : 'bg-muted text-muted-foreground'
+                        }
+                      >
+                        {coupon.is_active && !isExpired
+                          ? t.admin.coupons.activeLabel
+                          : t.admin.coupons.inactiveLabel}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end">
                         <ToggleCouponButton couponId={coupon.id} isActive={coupon.is_active} />
@@ -125,4 +170,8 @@ export default async function AdminCouponsPage() {
       </div>
     </div>
   );
+}
+
+function firstParam(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

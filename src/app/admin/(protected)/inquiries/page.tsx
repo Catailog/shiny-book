@@ -1,7 +1,4 @@
-import Link from 'next/link';
-
-import { ChevronRight } from 'lucide-react';
-
+import { ClickableTableRow } from '@/components/clickable-table-row';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -11,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { formatDate } from '@/lib/format-date';
 import { getInquiries } from '@/lib/inquiries/get-inquiries';
@@ -24,17 +22,17 @@ export default async function AdminInquiriesPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.inquiries.title} subtitle={t.admin.inquiries.list.subtitle} />
+      <AdminTopbar title={t.admin.inquiries.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
-        <div className="rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.admin.inquiries.list.table.customerName}</TableHead>
+                <TableHead>{t.admin.inquiries.list.table.category}</TableHead>
                 <TableHead>{t.admin.inquiries.list.table.subject}</TableHead>
                 <TableHead>{t.admin.inquiries.list.table.status}</TableHead>
                 <TableHead>{t.admin.inquiries.list.table.receivedDate}</TableHead>
-                <TableHead className="text-right">{t.admin.inquiries.list.table.view}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -49,8 +47,18 @@ export default async function AdminInquiriesPage() {
                 const isAnswered = inquiry.answer !== null;
 
                 return (
-                  <TableRow key={inquiry.id} className={isAnswered ? '' : 'bg-primary-soft'}>
+                  <ClickableTableRow
+                    key={inquiry.id}
+                    href={`${ADMIN_ROUTES.INQUIRIES}/${inquiry.id}`}
+                  >
                     <TableCell>{inquiry.consumerEmail ?? '-'}</TableCell>
+                    <TableCell>
+                      <Badge className="bg-muted text-muted-foreground">
+                        {inquiry.category === INQUIRY_CATEGORY.ORDER
+                          ? t.consumer.inquiries.form.categoryOptions.order
+                          : t.consumer.inquiries.form.categoryOptions.general}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="font-medium text-foreground">{inquiry.title}</TableCell>
                     <TableCell>
                       <Badge
@@ -68,16 +76,7 @@ export default async function AdminInquiriesPage() {
                     <TableCell className="text-muted-foreground">
                       {formatDate(inquiry.created_at)}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <Link
-                        href={`${ADMIN_ROUTES.INQUIRIES}/${inquiry.id}`}
-                        className="inline-flex text-muted-foreground hover:text-foreground"
-                        aria-label={inquiry.title}
-                      >
-                        <ChevronRight aria-hidden="true" className="size-4" />
-                      </Link>
-                    </TableCell>
-                  </TableRow>
+                  </ClickableTableRow>
                 );
               })}
             </TableBody>
