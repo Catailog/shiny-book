@@ -1,8 +1,11 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Gift } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
+import { Button } from '@/components/ui/button';
+import { MARKETING_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
@@ -38,7 +41,7 @@ export default async function ShippingPolicyPage() {
         </div>
       </PageSection>
 
-      <PageSection className="flex flex-col gap-8 py-20">
+      <PageSection className="flex flex-col items-start gap-6 py-20">
         <div className="flex flex-col gap-3">
           <p className="text-xs font-semibold tracking-wide text-primary uppercase">
             {page.methods.eyebrow}
@@ -47,36 +50,14 @@ export default async function ShippingPolicyPage() {
             {page.methods.title}
           </h2>
         </div>
-        <div className="overflow-x-auto rounded-lg border border-border">
-          <table className="w-full min-w-175 border-collapse text-sm">
-            <thead>
-              <tr className="bg-secondary">
-                <th className="p-5 text-left font-bold text-foreground">
-                  {page.methods.headers.method}
-                </th>
-                <th className="p-5 text-left font-bold text-foreground">
-                  {page.methods.headers.duration}
-                </th>
-                <th className="p-5 text-left font-bold text-foreground">
-                  {page.methods.headers.cost}
-                </th>
-                <th className="p-5 text-left font-bold text-foreground">
-                  {page.methods.headers.coverage}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {page.methods.items.map((item) => (
-                <tr key={item.method} className="border-t border-border">
-                  <td className="p-5 font-semibold text-foreground">{item.method}</td>
-                  <td className="p-5 text-muted-foreground">{item.duration}</td>
-                  <td className="p-5 font-semibold text-primary">{item.cost}</td>
-                  <td className="p-5 text-muted-foreground">{item.coverage}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Button
+          render={<Link href={MARKETING_ROUTES.PRICING} />}
+          nativeButton={false}
+          variant="primary"
+          className="h-auto w-fit p-4 text-sm font-semibold uppercase"
+        >
+          {page.viewPricingButton}
+        </Button>
       </PageSection>
 
       <PageSection sectionClassName="bg-secondary" className="flex flex-col gap-8 py-20">
