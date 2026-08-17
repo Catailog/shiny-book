@@ -754,6 +754,16 @@ export const en = {
       deleteAccount: {
         prompt: 'No longer using your account?',
         button: 'Delete Account',
+        confirmTitle: 'Are you sure you want to delete your account?',
+        confirmDescription:
+          'Your account and related data will be permanently deleted. This cannot be undone.',
+        confirmButton: 'Delete account',
+        cancelButton: 'Cancel',
+        errors: {
+          unauthorized: 'You do not have permission. Please sign in again.',
+          unexpected_error:
+            'Something went wrong while deleting your account. Please contact support.',
+        },
       },
     },
     orderNew: {

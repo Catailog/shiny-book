@@ -5,6 +5,7 @@ import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
+import { DeleteAccountButton } from './delete-account-button';
 import { ChangePasswordForm } from './password-form';
 
 export default async function MypageAccountPage() {
@@ -132,9 +133,7 @@ export default async function MypageAccountPage() {
         <span className="text-sm text-muted-foreground">
           {t.consumer.account.deleteAccount.prompt}
         </span>
-        <button type="button" className="text-sm font-semibold text-destructive">
-          {t.consumer.account.deleteAccount.button}
-        </button>
+        <DeleteAccountButton />
       </div>
     </div>
   );

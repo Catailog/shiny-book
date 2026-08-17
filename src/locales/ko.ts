@@ -753,6 +753,14 @@ export const ko = {
       deleteAccount: {
         prompt: '더 이상 계정을 사용하지 않으시나요?',
         button: '회원 탈퇴하기',
+        confirmTitle: '정말 탈퇴하시겠어요?',
+        confirmDescription: '계정과 관련 정보가 영구적으로 삭제되며 되돌릴 수 없습니다.',
+        confirmButton: '탈퇴하기',
+        cancelButton: '취소',
+        errors: {
+          unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+          unexpected_error: '탈퇴 처리 중 문제가 발생했습니다. 고객센터로 문의해주세요.',
+        },
       },
     },
     orderNew: {
