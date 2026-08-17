@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 
 import Link from 'next/link';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,22 +16,30 @@ import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 
 import { signInConsumer } from './actions';
+import { type ConsumerLoginInput, consumerLoginSchema } from './login-schema';
 
 export function ConsumerLoginForm() {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ConsumerLoginInput>({ resolver: zodResolver(consumerLoginSchema) });
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function onSubmit(values: ConsumerLoginInput) {
     startTransition(async () => {
-      await signInConsumer();
+      const result = await signInConsumer(values);
+      if (result) {
+        toast.error(t.consumer.login.errors[result.errorCode]);
+      }
     });
   }
 
   return (
     <div className="w-full max-w-120 rounded-xl border border-border bg-card p-12 shadow-lg">
-      <form onSubmit={onSubmit} className="flex flex-col gap-8" noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8" noValidate>
         <div className="flex flex-col items-center gap-3 text-center">
           <h1 className="font-heading text-3xl font-bold text-foreground">
             {t.consumer.login.title}
@@ -40,7 +51,16 @@ export function ConsumerLoginForm() {
             <Label htmlFor="email" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.login.emailLabel}
             </Label>
-            <Input id="email" type="email" autoComplete="email" className="h-auto rounded p-4" />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              className="h-auto rounded p-4"
+              {...register('email')}
+            />
+            {errors.email ? (
+              <p className="text-sm text-destructive">{t.consumer.login.errors.emailInvalid}</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="password" className="text-xs font-semibold tracking-wide uppercase">
@@ -52,6 +72,7 @@ export function ConsumerLoginForm() {
                 type={isPasswordVisible ? 'text' : 'password'}
                 autoComplete="current-password"
                 className="h-auto rounded p-4 pr-11"
+                {...register('password')}
               />
               <button
                 type="button"
@@ -70,6 +91,9 @@ export function ConsumerLoginForm() {
                 )}
               </button>
             </div>
+            {errors.password ? (
+              <p className="text-sm text-destructive">{t.consumer.login.errors.passwordRequired}</p>
+            ) : null}
           </div>
         </div>
         <Button

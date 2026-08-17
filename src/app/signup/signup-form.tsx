@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 
 import Link from 'next/link';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -12,24 +15,33 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
-import { mockSignInConsumer } from '@/lib/mock/mock-session-actions';
+
+import { signUpConsumer } from './actions';
+import { type ConsumerSignupInput, consumerSignupSchema } from './signup-schema';
 
 export function SignupForm() {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ConsumerSignupInput>({ resolver: zodResolver(consumerSignupSchema) });
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function onSubmit(values: ConsumerSignupInput) {
     startTransition(async () => {
-      await mockSignInConsumer();
+      const result = await signUpConsumer(values);
+      if (result) {
+        toast.error(t.consumer.signup.errors[result.errorCode]);
+      }
     });
   }
 
   return (
     <div className="w-full max-w-120 rounded-xl border border-border bg-card p-12 shadow-lg">
-      <form onSubmit={onSubmit} className="flex flex-col gap-8" noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8" noValidate>
         <div className="flex flex-col items-center gap-3 text-center">
           <h1 className="font-heading text-3xl font-bold text-foreground">
             {t.consumer.signup.title}
@@ -41,13 +53,30 @@ export function SignupForm() {
             <Label htmlFor="name" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.nameLabel}
             </Label>
-            <Input id="name" autoComplete="name" className="h-auto rounded p-4" />
+            <Input
+              id="name"
+              autoComplete="name"
+              className="h-auto rounded p-4"
+              {...register('name')}
+            />
+            {errors.name ? (
+              <p className="text-sm text-destructive">{t.consumer.signup.errors.nameRequired}</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="email" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.emailLabel}
             </Label>
-            <Input id="email" type="email" autoComplete="email" className="h-auto rounded p-4" />
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              className="h-auto rounded p-4"
+              {...register('email')}
+            />
+            {errors.email ? (
+              <p className="text-sm text-destructive">{t.consumer.signup.errors.emailInvalid}</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="password" className="text-xs font-semibold tracking-wide uppercase">
@@ -59,6 +88,7 @@ export function SignupForm() {
                 type={isPasswordVisible ? 'text' : 'password'}
                 autoComplete="new-password"
                 className="h-auto rounded p-4 pr-11"
+                {...register('password')}
               />
               <button
                 type="button"
@@ -77,6 +107,11 @@ export function SignupForm() {
                 )}
               </button>
             </div>
+            {errors.password ? (
+              <p className="text-sm text-destructive">
+                {t.consumer.signup.errors.passwordTooShort}
+              </p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2">
             <Label
@@ -91,6 +126,7 @@ export function SignupForm() {
                 type={isConfirmVisible ? 'text' : 'password'}
                 autoComplete="new-password"
                 className="h-auto rounded p-4 pr-11"
+                {...register('passwordConfirm')}
               />
               <button
                 type="button"
@@ -109,6 +145,11 @@ export function SignupForm() {
                 )}
               </button>
             </div>
+            {errors.passwordConfirm ? (
+              <p className="text-sm text-destructive">
+                {t.consumer.signup.errors.passwordMismatch}
+              </p>
+            ) : null}
           </div>
           <div className="flex items-center gap-2">
             <Checkbox id="agree-terms" />

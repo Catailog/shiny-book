@@ -1,14 +1,13 @@
 import { redirect } from 'next/navigation';
 
-import { ROLE } from '@/constants/roles';
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { getMockSessionRole } from '@/lib/mock/mock-session';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 
 import { MypageSidebar } from './mypage-sidebar';
 
 export default async function MypageLayout(props: LayoutProps<'/mypage'>) {
-  const role = await getMockSessionRole();
-  if (role !== ROLE.CONSUMER) {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
     redirect(CONSUMER_ROUTES.LOGIN);
   }
 

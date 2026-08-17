@@ -1,13 +1,17 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
-import { MOCK_CONSUMER } from '@/lib/mock/mock-accounts';
 import { locales } from '@/locales';
 
 export default async function MypageAccountPage() {
   const locale = await getLocale();
   const t = locales[locale];
+  const consumer = await getCurrentConsumer();
+  const consumerName =
+    typeof consumer?.user_metadata.name === 'string' ? consumer.user_metadata.name : '';
+  const consumerEmail = consumer?.email ?? '';
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-10 py-10">
@@ -31,7 +35,7 @@ export default async function MypageAccountPage() {
             </Label>
             <Input
               id="account-name"
-              defaultValue={MOCK_CONSUMER.name}
+              defaultValue={consumerName}
               readOnly
               className="h-auto rounded p-4"
             />
@@ -45,7 +49,7 @@ export default async function MypageAccountPage() {
             </Label>
             <Input
               id="account-email"
-              defaultValue={MOCK_CONSUMER.email}
+              defaultValue={consumerEmail}
               readOnly
               className="h-auto rounded p-4"
             />

@@ -670,6 +670,7 @@ export const ko = {
       loginPrompt: '이미 계정이 있으신가요?',
       loginLink: '로그인',
       errors: {
+        nameRequired: '이름을 입력해주세요.',
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',

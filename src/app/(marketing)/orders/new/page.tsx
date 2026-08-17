@@ -1,17 +1,16 @@
 import { redirect } from 'next/navigation';
 
 import { PageSection } from '@/components/page-section';
-import { ROLE } from '@/constants/roles';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
-import { getMockSessionRole } from '@/lib/mock/mock-session';
 import { locales } from '@/locales';
 
 import { NewOrderWizard } from './new-order-wizard';
 
 export default async function NewOrderPage() {
-  const role = await getMockSessionRole();
-  if (role !== ROLE.CONSUMER) {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
     redirect(CONSUMER_ROUTES.LOGIN);
   }
 

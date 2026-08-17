@@ -1,15 +1,14 @@
 import { redirect } from 'next/navigation';
 
 import { LoginVisual } from '@/app/login/login-visual';
-import { ROLE } from '@/constants/roles';
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { getMockSessionRole } from '@/lib/mock/mock-session';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 
 import { SignupForm } from './signup-form';
 
 export default async function SignupPage() {
-  const role = await getMockSessionRole();
-  if (role === ROLE.CONSUMER) {
+  const consumer = await getCurrentConsumer();
+  if (consumer) {
     redirect(CONSUMER_ROUTES.MYPAGE);
   }
 

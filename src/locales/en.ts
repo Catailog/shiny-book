@@ -671,6 +671,7 @@ export const en = {
       loginPrompt: 'Already have an account?',
       loginLink: 'Sign in',
       errors: {
+        nameRequired: 'Please enter your name.',
         emailInvalid: 'Please enter a valid email.',
         passwordTooShort: 'Password must be at least 6 characters.',
         passwordMismatch: 'Passwords do not match.',
