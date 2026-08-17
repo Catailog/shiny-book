@@ -7,7 +7,7 @@ import { getSignedFileUrl } from '@/lib/uploads/get-signed-file-url';
 import { defaultLocale, locales } from '@/locales';
 
 interface ViewOrderFileButtonProps {
-  path: string;
+  path: string | null;
   label: string;
 }
 
@@ -15,6 +15,10 @@ export function ViewOrderFileButton({ path, label }: ViewOrderFileButtonProps) {
   const t = locales[defaultLocale];
 
   async function handleClick() {
+    if (!path) {
+      return;
+    }
+
     const newTab = window.open('', '_blank');
     const result = await getSignedFileUrl(path);
 
@@ -30,7 +34,13 @@ export function ViewOrderFileButton({ path, label }: ViewOrderFileButtonProps) {
   }
 
   return (
-    <Button type="button" variant="outline" size="sm" onClick={() => void handleClick()}>
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      disabled={!path}
+      onClick={() => void handleClick()}
+    >
       {label}
     </Button>
   );

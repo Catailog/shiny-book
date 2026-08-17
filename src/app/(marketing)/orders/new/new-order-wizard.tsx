@@ -2,38 +2,61 @@
 
 import type { ChangeEvent } from 'react';
 import { useState, useTransition } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import Image from 'next/image';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload } from 'lucide-react';
+import { ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   FILE_UPLOAD_KIND,
   FILE_UPLOAD_RULES,
   type FileUploadKind,
   STORAGE_BUCKETS,
 } from '@/constants/file-upload';
+import {
+  PHOTOBOOK_PAGE_COUNT_MIN,
+  PHOTOBOOK_PAGE_COUNT_OPTIONS,
+  PHOTOBOOK_PHOTOS_PER_PAGE,
+} from '@/constants/photobook';
 import { PRICING } from '@/constants/pricing';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
-import { processCoverImage } from '@/lib/uploads/process-cover-image';
-import { cn } from '@/lib/utils';
+import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
 
 import { createConsumerOrder } from './actions';
-import { type OrderDetailsInput, orderDetailsSchema } from './order-schema';
+import {
+  type OrderDetailsInput,
+  createConsumerOrderSchema,
+  orderDetailsSchema,
+} from './order-schema';
 
-type UploadStatus = 'idle' | 'uploading' | 'processing' | 'done' | 'error';
+type UploadStatus = 'uploading' | 'processing' | 'done' | 'error';
+type Phase = 'details' | 'photos';
+
+interface PhotoItem {
+  id: string;
+  previewUrl: string;
+  path: string | null;
+  status: UploadStatus;
+}
 
 interface NewOrderWizardProps {
-  products: Tables<'products'>[];
+  product: Tables<'products'>;
 }
 
 async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string | null> {
@@ -60,220 +83,306 @@ async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string |
   return error ? null : signed.path;
 }
 
-export function NewOrderWizard({ products }: NewOrderWizardProps) {
+export function NewOrderWizard({ product }: NewOrderWizardProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(products[0]?.slug ?? null);
-  const [manuscriptPath, setManuscriptPath] = useState<string | null>(null);
-  const [coverPath, setCoverPath] = useState<string | null>(null);
-  const [manuscriptStatus, setManuscriptStatus] = useState<UploadStatus>('idle');
-  const [coverStatus, setCoverStatus] = useState<UploadStatus>('idle');
+  const [phase, setPhase] = useState<Phase>('details');
+  const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const {
     register,
     control,
-    handleSubmit,
-    setValue,
+    trigger,
+    getValues,
     formState: { errors },
   } = useForm<OrderDetailsInput>({
     resolver: zodResolver(orderDetailsSchema),
-    defaultValues: { title: products[0]?.name ?? '', quantity: 1 },
+    defaultValues: {
+      productId: product.id,
+      title: '',
+      quantity: 1,
+      pageCount: PHOTOBOOK_PAGE_COUNT_MIN,
+      couponCode: '',
+    },
   });
+  const title = useWatch({ control, name: 'title' });
   const quantity = useWatch({ control, name: 'quantity' }) || 0;
-  const totalAmount = quantity * PRICING.BOOK_UNIT_PRICE_KRW;
+  const pageCount = useWatch({ control, name: 'pageCount' }) || PHOTOBOOK_PAGE_COUNT_MIN;
+  const requiredPhotoCount = pageCount * PHOTOBOOK_PHOTOS_PER_PAGE;
+  const totalAmount = (product.price + pageCount * PRICING.PRICE_PER_PAGE_KRW) * quantity;
+  const donePhotoCount = photos.filter((photo) => photo.status === 'done').length;
 
-  function handleSelectProduct(product: Tables<'products'>) {
-    setSelectedSlug(product.slug);
-    setValue('title', product.name);
+  async function handleNext() {
+    const isValid = await trigger(['title', 'quantity', 'pageCount']);
+    if (isValid) {
+      setPhase('photos');
+    }
   }
 
-  async function handleManuscriptChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
-
-    setManuscriptStatus('uploading');
-    const path = await uploadRawFile(FILE_UPLOAD_KIND.MANUSCRIPT, file);
-    if (!path) {
-      setManuscriptPath(null);
-      setManuscriptStatus('error');
-      toast.error(t.consumer.orderNew.errors.uploadFailed);
-      return;
-    }
-
-    setManuscriptPath(path);
-    setManuscriptStatus('done');
+  function handleEdit() {
+    photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+    setPhotos([]);
+    setPhase('details');
   }
 
-  async function handleCoverChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) {
+  async function handlePhotosChange(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = '';
+    if (files.length === 0) {
       return;
     }
 
-    setCoverStatus('uploading');
-    const rawPath = await uploadRawFile(FILE_UPLOAD_KIND.COVER, file);
-    if (!rawPath) {
-      setCoverPath(null);
-      setCoverStatus('error');
-      toast.error(t.consumer.orderNew.errors.uploadFailed);
-      return;
-    }
+    const pending = files.map((file) => ({
+      id: crypto.randomUUID(),
+      previewUrl: URL.createObjectURL(file),
+      path: null as string | null,
+      status: 'uploading' as UploadStatus,
+      file,
+    }));
 
-    setCoverStatus('processing');
-    const processed = await processCoverImage(rawPath);
-    if (!processed.success) {
-      setCoverPath(null);
-      setCoverStatus('error');
-      toast.error(t.consumer.orderNew.errors.uploadFailed);
-      return;
-    }
+    setPhotos((current) => [...current, ...pending]);
 
-    setCoverPath(processed.path);
-    setCoverStatus('done');
+    for (const item of pending) {
+      const rawPath = await uploadRawFile(FILE_UPLOAD_KIND.PHOTO, item.file);
+      if (!rawPath) {
+        setPhotos((current) =>
+          current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
+        );
+        toast.error(t.consumer.orderNew.errors.uploadFailed);
+        continue;
+      }
+
+      setPhotos((current) =>
+        current.map((photo) => (photo.id === item.id ? { ...photo, status: 'processing' } : photo)),
+      );
+
+      const processed = await processOrderPhoto(rawPath);
+      if (!processed.success) {
+        setPhotos((current) =>
+          current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
+        );
+        toast.error(t.consumer.orderNew.errors.uploadFailed);
+        continue;
+      }
+
+      setPhotos((current) =>
+        current.map((photo) =>
+          photo.id === item.id ? { ...photo, path: processed.path, status: 'done' } : photo,
+        ),
+      );
+    }
   }
 
-  function onSubmit(values: OrderDetailsInput) {
-    if (!manuscriptPath || !coverPath) {
-      toast.error(t.consumer.orderNew.errors.filesRequired);
+  function handleRemovePhoto(id: string) {
+    setPhotos((current) => {
+      const target = current.find((photo) => photo.id === id);
+      if (target) {
+        URL.revokeObjectURL(target.previewUrl);
+      }
+      return current.filter((photo) => photo.id !== id);
+    });
+  }
+
+  function handleSubmit() {
+    const values = getValues();
+    const photoPaths = photos
+      .filter((photo) => photo.status === 'done' && photo.path)
+      .map((photo) => photo.path as string);
+
+    const parsed = createConsumerOrderSchema.safeParse({ ...values, photoPaths });
+    if (!parsed.success) {
+      const issueField = parsed.error.issues[0]?.path[0];
+      if (issueField === 'title') {
+        toast.error(t.consumer.orderNew.errors.titleRequired);
+      } else if (issueField === 'quantity') {
+        toast.error(t.consumer.orderNew.errors.quantityInvalid);
+      } else if (issueField === 'pageCount') {
+        toast.error(t.consumer.orderNew.errors.pageCountInvalid);
+      } else {
+        toast.error(t.consumer.orderNew.errors.photoCountMismatch);
+      }
       return;
     }
 
     startTransition(async () => {
-      const result = await createConsumerOrder({
-        title: values.title,
-        quantity: values.quantity,
-        couponCode: values.couponCode,
-        manuscriptPath,
-        coverPath,
-      });
+      const result = await createConsumerOrder(parsed.data);
       if (result) {
         toast.error(t.consumer.orderNew.errors[result.errorCode]);
       }
     });
   }
 
-  const uploadStatusLabel: Record<UploadStatus, string> = {
-    idle: '',
-    uploading: t.consumer.orderNew.status.uploading,
-    processing: t.consumer.orderNew.status.processing,
-    done: t.consumer.orderNew.status.done,
-    error: t.consumer.orderNew.errors.uploadFailed,
-  };
-
-  const isSubmitDisabled =
-    isPending ||
-    manuscriptStatus !== 'done' ||
-    coverStatus !== 'done' ||
-    manuscriptPath === null ||
-    coverPath === null;
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-6" noValidate>
+    <div className="flex gap-6">
       <div className="flex flex-1 flex-col gap-10">
-        <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-bold text-foreground">
-            {t.consumer.orderNew.productStep.heading}
-          </h2>
-          <div className="grid grid-cols-3 gap-4">
-            {products.map((product) => (
-              <button
-                key={product.id}
-                type="button"
-                onClick={() => handleSelectProduct(product)}
-                className={cn(
-                  'flex flex-col gap-3 rounded-md border p-4 text-left transition-colors',
-                  selectedSlug === product.slug
-                    ? 'border-primary bg-primary-soft'
-                    : 'border-border bg-card hover:border-primary/50',
-                )}
-              >
-                <div className="relative h-25 w-full overflow-hidden rounded bg-muted">
-                  <Image
-                    src={product.image_url}
-                    alt=""
-                    fill
-                    sizes="240px"
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="font-heading text-lg font-bold text-foreground">{product.name}</p>
-                  <p className="text-xs text-muted-foreground">{product.size}</p>
-                </div>
-              </button>
-            ))}
+        <section className="flex items-center gap-5 rounded-lg border border-border bg-card p-5">
+          <div className="relative size-28 shrink-0 overflow-hidden rounded-md bg-muted">
+            <Image
+              src={product.image_url}
+              alt={product.name}
+              fill
+              sizes="112px"
+              className="object-cover"
+            />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="title">{t.consumer.orderNew.titleLabel}</Label>
-            <Input id="title" type="text" {...register('title')} />
-            {errors.title ? (
-              <p className="text-sm text-destructive">{t.consumer.orderNew.errors.titleRequired}</p>
-            ) : null}
+          <div className="flex flex-col gap-1">
+            <p className="text-xs font-semibold tracking-wide text-primary uppercase">
+              {t.consumer.orderNew.productLabel}
+            </p>
+            <p className="font-heading text-2xl font-bold text-foreground">{product.name}</p>
+            <p className="text-sm text-muted-foreground">{product.size}</p>
           </div>
         </section>
 
-        <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-bold text-foreground">
-            {t.consumer.orderNew.uploadStep.heading}
-          </h2>
-          <div className="flex flex-col gap-2 rounded-lg border border-primary bg-muted px-4 py-6">
-            <Upload aria-hidden="true" className="size-6 text-primary" />
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="manuscript">{t.consumer.orderNew.manuscriptLabel}</Label>
-              <Input
-                id="manuscript"
-                type="file"
-                accept="application/pdf"
-                onChange={(event) => void handleManuscriptChange(event)}
-              />
-              {manuscriptStatus !== 'idle' ? (
-                <p className="text-xs text-muted-foreground">
-                  {uploadStatusLabel[manuscriptStatus]}
-                </p>
-              ) : null}
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="cover">{t.consumer.orderNew.coverLabel}</Label>
-              <Input
-                id="cover"
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={(event) => void handleCoverChange(event)}
-              />
-              {coverStatus !== 'idle' ? (
-                <p className="text-xs text-muted-foreground">{uploadStatusLabel[coverStatus]}</p>
-              ) : null}
-            </div>
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-6">
-          <h2 className="font-heading text-xl font-bold text-foreground">
-            {t.consumer.orderNew.detailsStep.heading}
-          </h2>
-          <div className="grid grid-cols-2 gap-6">
+        {phase === 'details' ? (
+          <section className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="quantity">{t.consumer.orderNew.quantityLabel}</Label>
+              <Label htmlFor="title">{t.consumer.orderNew.titleLabel}</Label>
               <Input
-                id="quantity"
-                type="number"
-                min={1}
-                step={1}
-                {...register('quantity', { valueAsNumber: true })}
+                id="title"
+                type="text"
+                placeholder={t.consumer.orderNew.titlePlaceholder}
+                {...register('title')}
               />
-              {errors.quantity ? (
+              {errors.title ? (
                 <p className="text-sm text-destructive">
-                  {t.consumer.orderNew.errors.quantityInvalid}
+                  {t.consumer.orderNew.errors.titleRequired}
                 </p>
               ) : null}
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="quantity">{t.consumer.orderNew.quantityLabel}</Label>
+                <Input
+                  id="quantity"
+                  type="number"
+                  min={1}
+                  step={1}
+                  {...register('quantity', { valueAsNumber: true })}
+                />
+                {errors.quantity ? (
+                  <p className="text-sm text-destructive">
+                    {t.consumer.orderNew.errors.quantityInvalid}
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="pageCount">{t.consumer.orderNew.pageCountLabel}</Label>
+                <Controller
+                  control={control}
+                  name="pageCount"
+                  render={({ field }) => (
+                    <Select
+                      value={String(field.value)}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                    >
+                      <SelectTrigger id="pageCount" className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PHOTOBOOK_PAGE_COUNT_OPTIONS.map((option) => (
+                          <SelectItem key={option} value={String(option)}>
+                            {option}p
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="primary"
+              className="w-fit"
+              onClick={() => void handleNext()}
+            >
+              {t.consumer.orderNew.nextButton}
+            </Button>
+          </section>
+        ) : (
+          <>
+            <section className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted p-5">
+              <div className="flex flex-col gap-1">
+                <p className="font-heading text-lg font-bold text-foreground">{title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t.consumer.orderNew.quantityLabel} {quantity} /{' '}
+                  {t.consumer.orderNew.summary.pageCountLine.replace(
+                    '{pageCount}',
+                    String(pageCount),
+                  )}
+                </p>
+              </div>
+              <Button type="button" variant="outline" onClick={handleEdit}>
+                {t.consumer.orderNew.editButton}
+              </Button>
+            </section>
+
+            <section className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <Label>{t.consumer.orderNew.photosLabel}</Label>
+                <p className="text-sm text-muted-foreground">
+                  {t.consumer.orderNew.photosHint
+                    .replace('{count}', String(donePhotoCount))
+                    .replace('{required}', String(requiredPhotoCount))}
+                </p>
+              </div>
+              <div className="grid grid-cols-4 gap-4">
+                {photos.map((photo) => (
+                  <div
+                    key={photo.id}
+                    className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted"
+                  >
+                    <Image
+                      src={photo.previewUrl}
+                      alt=""
+                      fill
+                      sizes="160px"
+                      className="object-cover"
+                      unoptimized
+                    />
+                    {photo.status !== 'done' ? (
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/70 text-xs text-foreground">
+                        {photo.status === 'error'
+                          ? t.consumer.orderNew.errors.uploadFailed
+                          : t.consumer.orderNew.status[photo.status]}
+                      </div>
+                    ) : null}
+                    <button
+                      type="button"
+                      aria-label={t.consumer.orderNew.removePhotoLabel}
+                      onClick={() => handleRemovePhoto(photo.id)}
+                      className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-background/90 text-foreground"
+                    >
+                      <X aria-hidden="true" className="size-3.5" />
+                    </button>
+                  </div>
+                ))}
+                <label
+                  htmlFor="photos"
+                  className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed border-primary text-primary hover:bg-primary-soft"
+                >
+                  <ImagePlus aria-hidden="true" className="size-6" />
+                  <span className="text-xs font-semibold">
+                    {t.consumer.orderNew.addPhotosButton}
+                  </span>
+                </label>
+                <input
+                  id="photos"
+                  type="file"
+                  multiple
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={(event) => void handlePhotosChange(event)}
+                />
+              </div>
+            </section>
+
+            <section className="flex flex-col gap-2">
               <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
               <Input id="couponCode" type="text" {...register('couponCode')} />
-            </div>
-          </div>
-        </section>
+            </section>
+          </>
+        )}
       </div>
 
       <div className="w-95 shrink-0 rounded-lg border border-border bg-muted p-6">
@@ -282,6 +391,14 @@ export function NewOrderWizard({ products }: NewOrderWizardProps) {
             {t.consumer.orderNew.summary.title}
           </h2>
           <div className="flex flex-col gap-2 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">
+                {t.consumer.orderNew.summary.pageCountLine.replace(
+                  '{pageCount}',
+                  String(pageCount),
+                )}
+              </span>
+            </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">{t.consumer.orderNew.summary.shipping}</span>
               <span className="text-foreground">{t.consumer.orderNew.summary.shippingFree}</span>
@@ -297,15 +414,19 @@ export function NewOrderWizard({ products }: NewOrderWizardProps) {
               </span>
             </div>
           </div>
-          <Button
-            type="submit"
-            disabled={isSubmitDisabled}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.summary.payButton}
-          </Button>
+          {phase === 'photos' ? (
+            <Button
+              type="button"
+              variant="primary"
+              disabled={isPending}
+              className="w-full"
+              onClick={handleSubmit}
+            >
+              {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.summary.payButton}
+            </Button>
+          ) : null}
         </div>
       </div>
-    </form>
+    </div>
   );
 }

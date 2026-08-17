@@ -4,7 +4,7 @@ import { FILE_UPLOAD_KIND, FILE_UPLOAD_RULES } from '@/constants/file-upload';
 
 export const signedUploadUrlRequestSchema = z
   .object({
-    kind: z.enum([FILE_UPLOAD_KIND.MANUSCRIPT, FILE_UPLOAD_KIND.COVER]),
+    kind: z.enum([FILE_UPLOAD_KIND.PHOTO]),
     fileName: z.string().min(1).max(255),
     fileType: z.string().min(1),
     fileSize: z.number().int().positive(),

@@ -19,6 +19,7 @@ import { defaultLocale, locales } from '@/locales';
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
 import { ViewOrderFileButton } from './view-order-file-button';
+import { ViewOrderPhotosButton } from './view-order-photos-button';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
   ORDER_STATUS.PAID,
@@ -124,14 +125,20 @@ export default async function AdminDashboardPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1.5">
-                        <ViewOrderFileButton
-                          path={order.manuscript_file_url}
-                          label={t.admin.orders.manuscriptButton}
-                        />
-                        <ViewOrderFileButton
-                          path={order.cover_file_url}
-                          label={t.admin.orders.coverButton}
-                        />
+                        {order.page_count !== null ? (
+                          <ViewOrderPhotosButton orderId={order.id} />
+                        ) : (
+                          <>
+                            <ViewOrderFileButton
+                              path={order.manuscript_file_url}
+                              label={t.admin.orders.manuscriptButton}
+                            />
+                            <ViewOrderFileButton
+                              path={order.cover_file_url}
+                              label={t.admin.orders.coverButton}
+                            />
+                          </>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">

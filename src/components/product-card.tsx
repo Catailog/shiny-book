@@ -15,7 +15,10 @@ interface ProductCardProps {
 
 export function ProductCard({ item, startingFromLabel, ctaLabel }: ProductCardProps) {
   return (
-    <Link href={CONSUMER_ROUTES.NEW_ORDER} className="group block">
+    <Link
+      href={`${CONSUMER_ROUTES.NEW_ORDER}?product=${encodeURIComponent(item.slug)}`}
+      className="group block"
+    >
       <Card className="overflow-hidden py-0 shadow-none ring-border transition-shadow group-hover:shadow-lg group-hover:ring-primary">
         <div className="relative h-76 w-full">
           <Image

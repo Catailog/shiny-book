@@ -13,6 +13,7 @@ function buildOrderRow(overrides: Partial<Tables<'orders'>> = {}): Tables<'order
     title: '나의 첫 동화책',
     manuscript_file_url: 'https://storage.example.com/manuscript.pdf',
     cover_file_url: 'https://storage.example.com/cover.png',
+    page_count: null,
     quantity: 1,
     amount: 10000,
     created_at: '2026-08-13T00:00:00.000Z',

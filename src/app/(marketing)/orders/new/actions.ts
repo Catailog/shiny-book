@@ -7,6 +7,7 @@ import { ORDER_STATUS } from '@/constants/order-status';
 import { PRICING } from '@/constants/pricing';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { redeemCoupon } from '@/lib/coupons/redeem-coupon';
+import { getProductById } from '@/lib/products/get-product-by-id';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 import { type CreateConsumerOrderInput, createConsumerOrderSchema } from './order-schema';
@@ -15,6 +16,7 @@ export interface CreateConsumerOrderResult {
   errorCode:
     | 'unauthorized'
     | 'validation_failed'
+    | 'product_not_found'
     | 'coupon_not_found'
     | 'coupon_inactive'
     | 'coupon_expired'
@@ -36,15 +38,20 @@ export async function createConsumerOrder(
     return { errorCode: 'validation_failed' };
   }
 
-  const isOwnManuscript = parsed.data.manuscriptPath.startsWith(
-    `${consumer.id}/${FILE_UPLOAD_KIND.MANUSCRIPT}/`,
+  const areOwnPhotos = parsed.data.photoPaths.every((path) =>
+    path.startsWith(`${consumer.id}/${FILE_UPLOAD_KIND.PHOTO}/`),
   );
-  const isOwnCover = parsed.data.coverPath.startsWith(`${consumer.id}/${FILE_UPLOAD_KIND.COVER}/`);
-  if (!isOwnManuscript || !isOwnCover) {
+  if (!areOwnPhotos) {
     return { errorCode: 'validation_failed' };
   }
 
-  const baseAmount = parsed.data.quantity * PRICING.BOOK_UNIT_PRICE_KRW;
+  const product = await getProductById(parsed.data.productId);
+  if (!product) {
+    return { errorCode: 'product_not_found' };
+  }
+
+  const baseAmount =
+    (product.price + parsed.data.pageCount * PRICING.PRICE_PER_PAGE_KRW) * parsed.data.quantity;
   const couponCode = parsed.data.couponCode?.trim().toUpperCase();
 
   let amount = baseAmount;
@@ -71,24 +78,37 @@ export async function createConsumerOrder(
   }
 
   const supabase = createServiceRoleClient();
-  const { data, error } = await supabase
+  const { data: order, error } = await supabase
     .from('orders')
     .insert({
       consumer_id: consumer.id,
       coupon_id: couponId,
       status: ORDER_STATUS.AWAITING_PAYMENT,
       title: parsed.data.title,
-      manuscript_file_url: parsed.data.manuscriptPath,
-      cover_file_url: parsed.data.coverPath,
+      manuscript_file_url: null,
+      cover_file_url: null,
+      page_count: parsed.data.pageCount,
       quantity: parsed.data.quantity,
       amount,
     })
     .select('id')
     .single();
 
-  if (error || !data) {
+  if (error || !order) {
     return { errorCode: 'unexpected_error' };
   }
 
-  redirect(`/checkout/${data.id}`);
+  const { error: photosError } = await supabase.from('order_photos').insert(
+    parsed.data.photoPaths.map((path, index) => ({
+      order_id: order.id,
+      storage_path: path,
+      display_order: index,
+    })),
+  );
+
+  if (photosError) {
+    return { errorCode: 'unexpected_error' };
+  }
+
+  redirect(`/checkout/${order.id}`);
 }

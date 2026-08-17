@@ -1,6 +1,5 @@
 export const FILE_UPLOAD_KIND = {
-  MANUSCRIPT: 'manuscript',
-  COVER: 'cover',
+  PHOTO: 'photo',
 } as const;
 
 export type FileUploadKind = (typeof FILE_UPLOAD_KIND)[keyof typeof FILE_UPLOAD_KIND];
@@ -15,17 +14,13 @@ interface FileUploadRule {
 }
 
 export const FILE_UPLOAD_RULES: Record<FileUploadKind, FileUploadRule> = {
-  [FILE_UPLOAD_KIND.MANUSCRIPT]: {
-    allowedMimeTypes: ['application/pdf'],
-    maxSizeBytes: 50 * 1024 * 1024,
-  },
-  [FILE_UPLOAD_KIND.COVER]: {
+  [FILE_UPLOAD_KIND.PHOTO]: {
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
     maxSizeBytes: 20 * 1024 * 1024,
   },
 };
 
-export const COVER_PROCESSED_IMAGE = {
+export const PROCESSED_PHOTO_IMAGE = {
   WIDTH: 1000,
   HEIGHT: 1400,
   WEBP_QUALITY: 82,

@@ -2,30 +2,30 @@
 
 import sharp from 'sharp';
 
-import { COVER_PROCESSED_IMAGE, FILE_UPLOAD_KIND, STORAGE_BUCKETS } from '@/constants/file-upload';
+import { FILE_UPLOAD_KIND, PROCESSED_PHOTO_IMAGE, STORAGE_BUCKETS } from '@/constants/file-upload';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
-import { buildProcessedCoverPath } from '@/lib/uploads/build-upload-path';
+import { buildProcessedPhotoPath } from '@/lib/uploads/build-upload-path';
 
-interface ProcessCoverImageSuccess {
+interface ProcessOrderPhotoSuccess {
   success: true;
   path: string;
 }
 
-interface ProcessCoverImageFailure {
+interface ProcessOrderPhotoFailure {
   success: false;
   errorCode: 'unauthorized' | 'not_found' | 'unexpected_error';
 }
 
-export type ProcessCoverImageResult = ProcessCoverImageSuccess | ProcessCoverImageFailure;
+export type ProcessOrderPhotoResult = ProcessOrderPhotoSuccess | ProcessOrderPhotoFailure;
 
-export async function processCoverImage(rawPath: string): Promise<ProcessCoverImageResult> {
+export async function processOrderPhoto(rawPath: string): Promise<ProcessOrderPhotoResult> {
   const consumer = await getCurrentConsumer();
   if (!consumer) {
     return { success: false, errorCode: 'unauthorized' };
   }
 
-  if (!rawPath.startsWith(`${consumer.id}/${FILE_UPLOAD_KIND.COVER}/`)) {
+  if (!rawPath.startsWith(`${consumer.id}/${FILE_UPLOAD_KIND.PHOTO}/`)) {
     return { success: false, errorCode: 'unauthorized' };
   }
 
@@ -42,11 +42,11 @@ export async function processCoverImage(rawPath: string): Promise<ProcessCoverIm
 
     const buffer = Buffer.from(await original.arrayBuffer());
     const processed = await sharp(buffer)
-      .resize(COVER_PROCESSED_IMAGE.WIDTH, COVER_PROCESSED_IMAGE.HEIGHT, { fit: 'cover' })
-      .webp({ quality: COVER_PROCESSED_IMAGE.WEBP_QUALITY })
+      .resize(PROCESSED_PHOTO_IMAGE.WIDTH, PROCESSED_PHOTO_IMAGE.HEIGHT, { fit: 'cover' })
+      .webp({ quality: PROCESSED_PHOTO_IMAGE.WEBP_QUALITY })
       .toBuffer();
 
-    const processedPath = buildProcessedCoverPath(rawPath);
+    const processedPath = buildProcessedPhotoPath(rawPath);
     const { error: uploadError } = await supabase.storage
       .from(STORAGE_BUCKETS.ORDER_UPLOADS)
       .upload(processedPath, processed, { contentType: 'image/webp', upsert: true });

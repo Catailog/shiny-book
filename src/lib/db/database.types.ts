@@ -217,16 +217,49 @@ export type Database = {
         };
         Relationships: [];
       };
+      order_photos: {
+        Row: {
+          created_at: string;
+          display_order: number;
+          id: string;
+          order_id: string;
+          storage_path: string;
+        };
+        Insert: {
+          created_at?: string;
+          display_order: number;
+          id?: string;
+          order_id: string;
+          storage_path: string;
+        };
+        Update: {
+          created_at?: string;
+          display_order?: number;
+          id?: string;
+          order_id?: string;
+          storage_path?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'order_photos_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       orders: {
         Row: {
           amount: number;
           client_id: string | null;
           consumer_id: string | null;
           coupon_id: string | null;
-          cover_file_url: string;
+          cover_file_url: string | null;
           created_at: string;
           id: string;
-          manuscript_file_url: string;
+          manuscript_file_url: string | null;
+          page_count: number | null;
           quantity: number;
           status: string;
           title: string;
@@ -237,10 +270,11 @@ export type Database = {
           client_id?: string | null;
           consumer_id?: string | null;
           coupon_id?: string | null;
-          cover_file_url: string;
+          cover_file_url?: string | null;
           created_at?: string;
           id?: string;
-          manuscript_file_url: string;
+          manuscript_file_url?: string | null;
+          page_count?: number | null;
           quantity: number;
           status?: string;
           title: string;
@@ -251,10 +285,11 @@ export type Database = {
           client_id?: string | null;
           consumer_id?: string | null;
           coupon_id?: string | null;
-          cover_file_url?: string;
+          cover_file_url?: string | null;
           created_at?: string;
           id?: string;
-          manuscript_file_url?: string;
+          manuscript_file_url?: string | null;
+          page_count?: number | null;
           quantity?: number;
           status?: string;
           title?: string;

@@ -59,9 +59,15 @@ export default async function ProductDetailPage(props: PageProps<'/products/[id]
           <div className="h-px w-full bg-border" />
           <div className="flex flex-col gap-3">
             <Button
-              render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
+              render={
+                <Link
+                  href={`${CONSUMER_ROUTES.NEW_ORDER}?product=${encodeURIComponent(product.slug)}`}
+                />
+              }
               nativeButton={false}
-              className="h-auto gap-2 rounded bg-primary p-4.5 text-sm font-bold text-primary-foreground uppercase hover:bg-primary/90"
+              variant="primary"
+              size="lg"
+              className="gap-2 text-sm font-bold uppercase"
             >
               {detail.ctaLabel}
               <ArrowRight aria-hidden="true" className="size-4" />

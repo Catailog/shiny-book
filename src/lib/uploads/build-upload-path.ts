@@ -15,6 +15,6 @@ export function buildUploadPath(
   return `${consumerId}/${kind}/raw-${randomUUID()}${getFileExtension(fileName)}`;
 }
 
-export function buildProcessedCoverPath(rawPath: string): string {
+export function buildProcessedPhotoPath(rawPath: string): string {
   return rawPath.replace(/\/raw-/, '/processed-').replace(/\.[^./]+$/, '.webp');
 }
