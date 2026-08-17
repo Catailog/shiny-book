@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { PageSection } from '@/components/page-section';
 import {
   Accordion,
@@ -5,7 +7,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import { FAQ_LIST_LIMIT } from '@/constants/faq';
+import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { MOCK_FAQS } from '@/lib/mock/mock-faqs';
@@ -26,6 +30,14 @@ export default async function FaqPage() {
           </p>
           <h1 className="font-heading text-5xl font-bold text-foreground">{t.faq.title}</h1>
           <p className="text-base text-muted-foreground">{t.faq.hero.description}</p>
+          <Button
+            render={<Link href={CONSUMER_ROUTES.NEW_INQUIRY} />}
+            nativeButton={false}
+            variant="primary"
+            className="h-auto w-fit p-4 text-sm font-semibold uppercase"
+          >
+            {t.faq.inquiryCtaLabel}
+          </Button>
         </div>
       </PageSection>
       <PageSection className="py-15">

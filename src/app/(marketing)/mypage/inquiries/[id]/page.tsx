@@ -2,11 +2,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
+import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
+import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { locales } from '@/locales';
 
 export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/inquiries/[id]'>) {
@@ -19,6 +21,11 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
   if (!consumer || !inquiry || inquiry.consumer_id !== consumer.id) {
     notFound();
   }
+
+  const relatedOrder =
+    inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
+      ? await getOrderById(inquiry.order_id)
+      : null;
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-10 py-10">
@@ -38,7 +45,19 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
                 : t.consumer.inquiries.statusPending}
             </Badge>
           </div>
-          <span className="text-sm text-muted-foreground">{formatDate(inquiry.created_at)}</span>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-muted text-muted-foreground">
+              {inquiry.category === INQUIRY_CATEGORY.ORDER
+                ? t.consumer.inquiries.form.categoryOptions.order
+                : t.consumer.inquiries.form.categoryOptions.general}
+            </Badge>
+            <span className="text-sm text-muted-foreground">{formatDate(inquiry.created_at)}</span>
+          </div>
+          {relatedOrder ? (
+            <span className="text-sm text-muted-foreground">
+              {t.consumer.inquiries.form.relatedOrderLine}: {relatedOrder.title}
+            </span>
+          ) : null}
         </div>
         <p className="mt-6 whitespace-pre-wrap text-foreground">{inquiry.content}</p>
         {inquiry.answer ? (

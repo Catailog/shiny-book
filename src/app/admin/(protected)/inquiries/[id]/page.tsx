@@ -3,9 +3,11 @@ import { notFound } from 'next/navigation';
 
 import { ArrowLeft } from 'lucide-react';
 
+import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { formatDate } from '@/lib/format-date';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
+import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../../admin-topbar';
@@ -20,6 +22,11 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
     notFound();
   }
 
+  const relatedOrder =
+    inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
+      ? await getOrderById(inquiry.order_id)
+      : null;
+
   return (
     <div className="flex flex-1 flex-col">
       <AdminTopbar title={inquiry.title} />
@@ -33,6 +40,17 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
         </Link>
 
         <div className="flex flex-col gap-6 rounded-lg border border-border bg-card p-6">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-bold text-muted-foreground">
+              {t.admin.inquiries.list.table.category}
+            </span>
+            <p className="text-sm text-foreground">
+              {inquiry.category === INQUIRY_CATEGORY.ORDER
+                ? t.consumer.inquiries.form.categoryOptions.order
+                : t.consumer.inquiries.form.categoryOptions.general}
+              {relatedOrder ? ` - ${relatedOrder.title}` : ''}
+            </p>
+          </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs font-bold text-muted-foreground">
               {t.admin.inquiries.detail.subjectLabel}

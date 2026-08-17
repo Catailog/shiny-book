@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatDate } from '@/lib/format-date';
@@ -44,47 +45,57 @@ export default async function MypageInquiriesPage() {
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>{t.consumer.inquiries.table.title}</TableHead>
-            <TableHead>{t.consumer.inquiries.table.status}</TableHead>
-            <TableHead>{t.consumer.inquiries.table.createdAt}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {inquiries.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={3} className="text-center text-muted-foreground">
-                {t.consumer.inquiries.empty}
-              </TableCell>
+      <div className="overflow-hidden rounded-lg border border-border bg-input-background">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted hover:bg-muted">
+              <TableHead>{t.consumer.inquiries.table.category}</TableHead>
+              <TableHead>{t.consumer.inquiries.table.title}</TableHead>
+              <TableHead>{t.consumer.inquiries.table.status}</TableHead>
+              <TableHead>{t.consumer.inquiries.table.createdAt}</TableHead>
             </TableRow>
-          ) : null}
-          {inquiries.map((inquiry) => (
-            <TableRow key={inquiry.id}>
-              <TableCell className="font-semibold text-foreground">
-                <Link href={`/mypage/inquiries/${inquiry.id}`} className="hover:underline">
-                  {inquiry.title}
-                </Link>
-              </TableCell>
-              <TableCell>
-                {inquiry.answer ? (
-                  <Badge className="bg-order-status-done/10 text-order-status-done">
-                    {t.consumer.inquiries.statusAnswered}
+          </TableHeader>
+          <TableBody>
+            {inquiries.length === 0 ? (
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  {t.consumer.inquiries.empty}
+                </TableCell>
+              </TableRow>
+            ) : null}
+            {inquiries.map((inquiry) => (
+              <TableRow key={inquiry.id} className="hover:bg-transparent">
+                <TableCell>
+                  <Badge className="bg-muted text-muted-foreground">
+                    {inquiry.category === INQUIRY_CATEGORY.ORDER
+                      ? t.consumer.inquiries.form.categoryOptions.order
+                      : t.consumer.inquiries.form.categoryOptions.general}
                   </Badge>
-                ) : (
-                  <Badge className="bg-primary-soft text-primary">
-                    {t.consumer.inquiries.statusPending}
-                  </Badge>
-                )}
-              </TableCell>
-              <TableCell className="text-muted-foreground">
-                {formatDate(inquiry.created_at)}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                </TableCell>
+                <TableCell className="font-semibold text-foreground">
+                  <Link href={`/mypage/inquiries/${inquiry.id}`} className="hover:underline">
+                    {inquiry.title}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {inquiry.answer ? (
+                    <Badge className="bg-order-status-done/10 text-order-status-done">
+                      {t.consumer.inquiries.statusAnswered}
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-primary-soft text-primary">
+                      {t.consumer.inquiries.statusPending}
+                    </Badge>
+                  )}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {formatDate(inquiry.created_at)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
