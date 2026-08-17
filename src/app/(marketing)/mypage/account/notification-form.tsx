@@ -69,7 +69,7 @@ export function NotificationPreferencesForm({ defaultValues }: NotificationPrefe
           </Label>
         </div>
       </div>
-      <Button type="submit" disabled={isPending} className="w-fit">
+      <Button type="submit" variant="primary" disabled={isPending} className="w-fit">
         {isPending ? t.consumer.account.submitting : t.consumer.account.submitButton}
       </Button>
     </form>

@@ -70,7 +70,7 @@ export function ChangePasswordForm() {
           <p className="text-sm text-destructive">{t.consumer.account.errors.passwordMismatch}</p>
         ) : null}
       </div>
-      <Button type="submit" disabled={isPending} className="w-fit">
+      <Button type="submit" variant="primary" disabled={isPending} className="w-fit">
         {isPending ? t.consumer.account.submitting : t.consumer.account.submitButton}
       </Button>
     </form>

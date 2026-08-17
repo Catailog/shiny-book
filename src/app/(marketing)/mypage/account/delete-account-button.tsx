@@ -48,11 +48,7 @@ export function DeleteAccountButton() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{t.consumer.account.deleteAccount.cancelButton}</AlertDialogCancel>
-          <AlertDialogAction
-            disabled={isPending}
-            className="text-destructive-foreground bg-destructive hover:bg-destructive/90"
-            onClick={handleConfirm}
-          >
+          <AlertDialogAction variant="destructive" disabled={isPending} onClick={handleConfirm}>
             {t.consumer.account.deleteAccount.confirmButton}
           </AlertDialogAction>
         </AlertDialogFooter>

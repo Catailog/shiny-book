@@ -138,8 +138,8 @@ export function AddressManager({ addresses }: AddressManagerProps) {
                           {t.consumer.account.shippingAddress.form.cancelButton}
                         </AlertDialogCancel>
                         <AlertDialogAction
+                          variant="destructive"
                           disabled={isPending}
-                          className="text-destructive-foreground bg-destructive hover:bg-destructive/90"
                           onClick={() => handleDelete(address.id)}
                         >
                           {t.consumer.account.shippingAddress.deleteLink}

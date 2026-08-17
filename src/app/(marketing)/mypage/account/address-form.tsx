@@ -1,6 +1,8 @@
 'use client';
 
 import { useTransition } from 'react';
+import type { Address } from 'react-daum-postcode';
+import { useKakaoPostcodePopup } from 'react-daum-postcode';
 import { Controller, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,15 +26,26 @@ interface AddressFormProps {
 export function AddressForm({ addressId, defaultValues, onSuccess }: AddressFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
+  const openPostcodePopup = useKakaoPostcodePopup();
   const {
     register,
     control,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<AddressFormInput>({
     resolver: zodResolver(addressFormSchema),
     defaultValues: defaultValues ?? { isDefault: false },
   });
+
+  function handleSearchAddress() {
+    void openPostcodePopup({
+      onComplete: (data: Address) => {
+        setValue('postalCode', data.zonecode);
+        setValue('addressLine1', data.roadAddress || data.jibunAddress);
+      },
+    });
+  }
 
   function onSubmit(values: AddressFormInput) {
     startTransition(async () => {
@@ -84,7 +97,17 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
         <Label htmlFor="address-postal-code">
           {t.consumer.account.shippingAddress.form.postalCodeLabel}
         </Label>
-        <Input id="address-postal-code" {...register('postalCode')} />
+        <div className="flex items-center gap-2">
+          <Input id="address-postal-code" readOnly {...register('postalCode')} />
+          <Button
+            type="button"
+            variant="outline"
+            className="shrink-0"
+            onClick={handleSearchAddress}
+          >
+            {t.consumer.account.shippingAddress.form.searchAddressButton}
+          </Button>
+        </div>
         {errors.postalCode ? (
           <p className="text-sm text-destructive">
             {t.consumer.account.shippingAddress.errors.validation_failed}
@@ -95,7 +118,7 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
         <Label htmlFor="address-line1">
           {t.consumer.account.shippingAddress.form.addressLine1Label}
         </Label>
-        <Input id="address-line1" {...register('addressLine1')} />
+        <Input id="address-line1" readOnly {...register('addressLine1')} />
         {errors.addressLine1 ? (
           <p className="text-sm text-destructive">
             {t.consumer.account.shippingAddress.errors.validation_failed}
@@ -124,7 +147,7 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
           {t.consumer.account.shippingAddress.form.isDefaultLabel}
         </Label>
       </div>
-      <Button type="submit" disabled={isPending} className="w-fit">
+      <Button type="submit" variant="primary" disabled={isPending} className="w-fit">
         {isPending
           ? t.consumer.account.shippingAddress.form.submitting
           : t.consumer.account.shippingAddress.form.submitButton}
