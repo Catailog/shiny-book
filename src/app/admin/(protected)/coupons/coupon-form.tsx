@@ -22,7 +22,11 @@ import { useT } from '@/hooks/use-t';
 import { createCoupon } from './actions';
 import { type CouponFormInput, couponFormSchema } from './coupon-schema';
 
-export function CouponForm() {
+interface CouponFormProps {
+  onSuccess?: () => void;
+}
+
+export function CouponForm({ onSuccess }: CouponFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const {
@@ -52,16 +56,16 @@ export function CouponForm() {
       }
 
       toast.success(t.admin.coupons.createSuccess);
-      reset();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        reset();
+      }
     });
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-wrap items-end gap-3 rounded-lg border border-border p-4"
-      noValidate
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap items-end gap-3" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="code">{t.admin.coupons.form.codeLabel}</Label>
         <Input id="code" type="text" className="w-40" {...register('code')} />

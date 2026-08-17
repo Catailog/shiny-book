@@ -432,6 +432,7 @@ export const en = {
         startDateLabel: 'Start Date',
         endDateLabel: 'End Date',
         descriptionLabel: 'Internal Description',
+        backToList: 'Back to Coupons list',
         cancelButton: 'Cancel',
         submitButton: 'Create Coupon',
         previewLabel: 'LIVE PREVIEW',
@@ -498,6 +499,7 @@ export const en = {
         },
       },
       create: {
+        backToList: 'Back to Announcements list',
         compositionTitle: 'Composition Area',
         titleLabel: 'Announcement Title',
         categoryLabel: 'Category',

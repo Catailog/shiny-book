@@ -7,7 +7,7 @@ import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
 import { AdminTopbar } from '../../admin-topbar';
-import { CreateFaqForm } from './create-faq-form';
+import { CreateFaqForm } from './create-form';
 
 export default async function AdminFaqsNewPage() {
   const locale = await getLocale();
@@ -24,7 +24,9 @@ export default async function AdminFaqsNewPage() {
           <ArrowLeft aria-hidden="true" className="size-3.5" />
           {t.admin.faqs.create.backToList}
         </Link>
-        <CreateFaqForm />
+        <div className="max-w-2xl rounded-lg border border-border bg-card p-6 shadow-sm">
+          <CreateFaqForm />
+        </div>
       </div>
     </div>
   );

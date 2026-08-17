@@ -431,6 +431,7 @@ export const ko = {
         startDateLabel: 'Start Date',
         endDateLabel: 'End Date',
         descriptionLabel: 'Internal Description',
+        backToList: 'Back to Coupons list',
         cancelButton: 'Cancel',
         submitButton: 'Create Coupon',
         previewLabel: 'LIVE PREVIEW',
@@ -497,6 +498,7 @@ export const ko = {
         },
       },
       create: {
+        backToList: 'Back to Announcements list',
         compositionTitle: 'Composition Area',
         titleLabel: 'Announcement Title',
         categoryLabel: 'Category',
