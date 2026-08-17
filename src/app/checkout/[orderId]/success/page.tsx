@@ -97,6 +97,7 @@ async function ResultCard({
       <Button
         render={<Link href={CONSUMER_ROUTES.MYPAGE} />}
         nativeButton={false}
+        variant="primary"
         className="w-fit"
       >
         {t.checkout.backToMypageButton}
