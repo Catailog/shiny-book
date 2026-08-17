@@ -6,6 +6,8 @@ import { toOrderResponse } from '@/lib/orders/to-order-response';
 function buildOrderRow(overrides: Partial<Tables<'orders'>> = {}): Tables<'orders'> {
   return {
     id: 'order-1',
+    address_id: null,
+    product_id: null,
     client_id: 'client-1',
     consumer_id: null,
     coupon_id: null,

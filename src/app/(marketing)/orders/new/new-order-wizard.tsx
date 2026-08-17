@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ImagePlus, X } from 'lucide-react';
@@ -13,6 +14,7 @@ import { toast } from 'sonner';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -32,9 +34,11 @@ import {
   PHOTOBOOK_PAGE_COUNT_OPTIONS,
   PHOTOBOOK_PHOTOS_PER_PAGE,
 } from '@/constants/photobook';
-import { PRICING } from '@/constants/pricing';
+import { PRICING, SHIPPING } from '@/constants/pricing';
+import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
+import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
 import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
@@ -59,6 +63,7 @@ interface PhotoItem {
 
 interface NewOrderWizardProps {
   product: Tables<'products'>;
+  addresses: Tables<'addresses'>[];
   allowTestUpload: boolean;
 }
 
@@ -86,7 +91,7 @@ async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string |
   return error ? null : signed.path;
 }
 
-export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps) {
+export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrderWizardProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [isGeneratingTestPhotos, startTestPhotosTransition] = useTransition();
@@ -105,30 +110,51 @@ export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps
       title: '',
       quantity: 1,
       pageCount: PHOTOBOOK_PAGE_COUNT_MIN,
+      addressId: addresses.find((address) => address.is_default)?.id ?? addresses[0]?.id ?? '',
       couponCode: '',
     },
   });
   const title = useWatch({ control, name: 'title' });
   const quantity = useWatch({ control, name: 'quantity' }) || 0;
   const pageCount = useWatch({ control, name: 'pageCount' }) || PHOTOBOOK_PAGE_COUNT_MIN;
+  const addressId = useWatch({ control, name: 'addressId' });
   const requiredPhotoCount = pageCount * PHOTOBOOK_PHOTOS_PER_PAGE;
-  const totalAmount = (product.price + pageCount * PRICING.PRICE_PER_PAGE_KRW) * quantity;
+  const isPhotoCountExceeded = photos.length > 0 && photos.length > requiredPhotoCount;
+  const productAmount = product.price * quantity;
+  const pageCountAmount = pageCount * PRICING.PRICE_PER_PAGE_KRW * quantity;
+  const merchandiseAmount = productAmount + pageCountAmount;
+  const selectedAddress = addresses.find((address) => address.id === addressId) ?? null;
+  const shippingFee = selectedAddress
+    ? calculateShippingFee(selectedAddress.postal_code, merchandiseAmount)
+    : null;
+  const isShippingFree = merchandiseAmount >= SHIPPING.FREE_SHIPPING_THRESHOLD_KRW;
+  const shippingDisplay = isShippingFree
+    ? t.consumer.orderNew.summary.shippingFree
+    : shippingFee === null
+      ? t.consumer.orderNew.summary.shippingUndetermined
+      : `₩${shippingFee.toLocaleString()}`;
+  const totalAmount = merchandiseAmount + (isShippingFree ? 0 : (shippingFee ?? 0));
   const donePhotoCount = photos.filter((photo) => photo.status === 'done').length;
 
   async function handleNext() {
     const isValid = await trigger(['title', 'quantity', 'pageCount']);
-    if (isValid) {
-      setPhase('photos');
+    if (!isValid) {
+      return;
     }
+
+    if (isPhotoCountExceeded) {
+      toast.error(
+        t.consumer.orderNew.errors.photoCountExceeded
+          .replace('{count}', String(photos.length))
+          .replace('{required}', String(requiredPhotoCount)),
+      );
+      return;
+    }
+
+    setPhase('photos');
   }
 
   function handleEdit() {
-    photos.forEach((photo) => {
-      if (photo.previewUrl) {
-        URL.revokeObjectURL(photo.previewUrl);
-      }
-    });
-    setPhotos([]);
     setPhase('details');
   }
 
@@ -229,6 +255,8 @@ export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps
         toast.error(t.consumer.orderNew.errors.quantityInvalid);
       } else if (issueField === 'pageCount') {
         toast.error(t.consumer.orderNew.errors.pageCountInvalid);
+      } else if (issueField === 'addressId') {
+        toast.error(t.consumer.orderNew.errors.addressRequired);
       } else {
         toast.error(t.consumer.orderNew.errors.photoCountMismatch);
       }
@@ -320,6 +348,13 @@ export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps
                     </Select>
                   )}
                 />
+                {isPhotoCountExceeded ? (
+                  <p className="text-sm text-destructive">
+                    {t.consumer.orderNew.errors.photoCountExceeded
+                      .replace('{count}', String(photos.length))
+                      .replace('{required}', String(requiredPhotoCount))}
+                  </p>
+                ) : null}
               </div>
             </div>
             <Button
@@ -434,6 +469,57 @@ export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps
               </div>
             </section>
 
+            <section className="flex flex-col gap-3">
+              <Label>{t.consumer.orderNew.addressLabel}</Label>
+              {addresses.length === 0 ? (
+                <div className="flex flex-col gap-2 rounded-lg border border-dashed border-border p-5 text-sm text-muted-foreground">
+                  <p>{t.consumer.orderNew.addressEmpty}</p>
+                  <Link
+                    href={CONSUMER_ROUTES.ACCOUNT}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-fit font-semibold text-primary underline"
+                  >
+                    {t.consumer.orderNew.addAddressLink}
+                  </Link>
+                </div>
+              ) : (
+                <Controller
+                  control={control}
+                  name="addressId"
+                  render={({ field }) => (
+                    <RadioGroup value={field.value} onValueChange={field.onChange}>
+                      {addresses.map((address) => (
+                        <label
+                          key={address.id}
+                          htmlFor={`address-${address.id}`}
+                          className="flex cursor-pointer items-start gap-3 rounded-lg border border-border bg-input-background p-4 has-data-checked:border-primary"
+                        >
+                          <RadioGroupItem
+                            id={`address-${address.id}`}
+                            value={address.id}
+                            className="mt-1"
+                          />
+                          <div className="flex flex-col gap-0.5 text-sm">
+                            <span className="font-semibold text-foreground">
+                              {address.label}
+                              {address.is_default
+                                ? ` (${t.consumer.account.shippingAddress.defaultLabel})`
+                                : ''}
+                            </span>
+                            <span className="text-muted-foreground">
+                              [{address.postal_code}] {address.address_line1}
+                              {address.address_line2 ? ` ${address.address_line2}` : ''}
+                            </span>
+                          </div>
+                        </label>
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+              )}
+            </section>
+
             <section className="flex flex-col gap-2">
               <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
               <Input id="couponCode" type="text" {...register('couponCode')} />
@@ -450,15 +536,16 @@ export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps
           <div className="flex flex-col gap-2 text-sm">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">
-                {t.consumer.orderNew.summary.pageCountLine.replace(
-                  '{pageCount}',
-                  String(pageCount),
-                )}
+                {t.consumer.orderNew.summary.productLine
+                  .replace('{productName}', product.name)
+                  .replace('{pageCount}', String(pageCount))
+                  .replace('{quantity}', String(quantity))}
               </span>
+              <span className="text-foreground">₩{merchandiseAmount.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">{t.consumer.orderNew.summary.shipping}</span>
-              <span className="text-foreground">{t.consumer.orderNew.summary.shippingFree}</span>
+              <span className="text-foreground">{shippingDisplay}</span>
             </div>
           </div>
           <div className="border-t border-border pt-4">

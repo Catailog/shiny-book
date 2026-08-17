@@ -8,6 +8,7 @@ export const orderDetailsSchema = z.object({
   title: z.string().min(1).max(200),
   quantity: z.number().int().positive(),
   pageCount: z.number().int().refine(isPhotobookPageCount),
+  addressId: z.string().uuid(),
   couponCode: z.string().max(COUPON_CODE_MAX_LENGTH).optional(),
 });
 

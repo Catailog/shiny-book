@@ -3,9 +3,11 @@ import { notFound, redirect } from 'next/navigation';
 import { PageSection } from '@/components/page-section';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { env } from '@/env';
+import { getAddressesByConsumer } from '@/lib/addresses/get-addresses-by-consumer';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getProducts } from '@/lib/products/get-products';
+import { resolveProductName } from '@/lib/products/resolve-product-name';
 import { locales } from '@/locales';
 
 import { NewOrderWizard } from './new-order-wizard';
@@ -23,7 +25,10 @@ export default async function NewOrderPage(props: PageProps<'/orders/new'>) {
 
   const locale = await getLocale();
   const t = locales[locale];
-  const products = await getProducts();
+  const [products, addresses] = await Promise.all([
+    getProducts(),
+    getAddressesByConsumer(consumer.id),
+  ]);
   const product = (slug ? products.find((item) => item.slug === slug) : products[0]) ?? null;
 
   if (!product) {
@@ -38,7 +43,11 @@ export default async function NewOrderPage(props: PageProps<'/orders/new'>) {
         </h1>
       </div>
 
-      <NewOrderWizard product={product} allowTestUpload={env.NODE_ENV !== 'production'} />
+      <NewOrderWizard
+        product={{ ...product, name: resolveProductName(product, locale) }}
+        addresses={addresses}
+        allowTestUpload={env.NODE_ENV !== 'production'}
+      />
     </PageSection>
   );
 }

@@ -7,6 +7,7 @@ const validDetails = {
   title: '나의 첫 포토북',
   quantity: 1,
   pageCount: 8,
+  addressId: '11111111-1111-1111-1111-111111111111',
 };
 
 describe('orderDetailsSchema', () => {
