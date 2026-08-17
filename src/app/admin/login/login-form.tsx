@@ -9,14 +9,20 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { defaultLocale, locales } from '@/locales';
 
-import { signInAdmin } from './actions';
+import { signInAdmin, signInTestAdmin } from './actions';
 import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
-export function AdminLoginForm() {
+interface AdminLoginFormProps {
+  allowTestLogin: boolean;
+}
+
+export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
   const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
+  const [isTestLoginPending, startTestLoginTransition] = useTransition();
   const {
     register,
     handleSubmit,
@@ -28,6 +34,15 @@ export function AdminLoginForm() {
       const result = await signInAdmin(values);
       if (result) {
         toast.error(t.admin.login.errors[result.errorCode]);
+      }
+    });
+  }
+
+  function handleTestLogin() {
+    startTestLoginTransition(async () => {
+      const result = await signInTestAdmin();
+      if (result) {
+        toast.error(t.admin.login.testLoginErrors[result.errorCode]);
       }
     });
   }
@@ -72,6 +87,24 @@ export function AdminLoginForm() {
       <Button type="submit" variant="primary" disabled={isPending} className="w-full">
         {isPending ? t.admin.login.submitting : t.admin.login.submitButton}
       </Button>
+      {allowTestLogin ? (
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isTestLoginPending}
+                onClick={handleTestLogin}
+                className="w-full"
+              />
+            }
+          >
+            {isTestLoginPending ? t.admin.login.testLoginSubmitting : t.admin.login.testLoginButton}
+          </TooltipTrigger>
+          <TooltipContent>{t.admin.login.testLoginTooltip}</TooltipContent>
+        </Tooltip>
+      ) : null}
     </form>
   );
 }

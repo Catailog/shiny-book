@@ -8,6 +8,10 @@ export const env = createEnv({
     KV_REST_API_URL: z.string().url(),
     KV_REST_API_TOKEN: z.string().min(1),
     TOSS_SECRET_KEY: z.string().min(1),
+    ADMIN_SEED_EMAIL: z.string().min(1).default('admin@shinybook.local'),
+    ADMIN_SEED_PASSWORD: z.string().min(1).default('LocalAdmin1234!'),
+    CONSUMER_SEED_EMAIL: z.string().min(1).default('consumer@shinybook.local'),
+    CONSUMER_SEED_PASSWORD: z.string().min(1).default('LocalConsumer1234!'),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),

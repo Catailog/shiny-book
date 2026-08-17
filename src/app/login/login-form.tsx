@@ -12,19 +12,22 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 
-import { signInConsumer } from './actions';
+import { signInConsumer, signInTestConsumer } from './actions';
 import { type ConsumerLoginInput, consumerLoginSchema } from './login-schema';
 
 interface ConsumerLoginFormProps {
   redirectTo: string;
+  allowTestLogin: boolean;
 }
 
-export function ConsumerLoginForm({ redirectTo }: ConsumerLoginFormProps) {
+export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
+  const [isTestLoginPending, startTestLoginTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     register,
@@ -37,6 +40,15 @@ export function ConsumerLoginForm({ redirectTo }: ConsumerLoginFormProps) {
       const result = await signInConsumer(values, redirectTo);
       if (result) {
         toast.error(t.consumer.login.errors[result.errorCode]);
+      }
+    });
+  }
+
+  function handleTestLogin() {
+    startTestLoginTransition(async () => {
+      const result = await signInTestConsumer(redirectTo);
+      if (result) {
+        toast.error(t.consumer.login.testLoginErrors[result.errorCode]);
       }
     });
   }
@@ -102,6 +114,26 @@ export function ConsumerLoginForm({ redirectTo }: ConsumerLoginFormProps) {
         >
           {isPending ? t.consumer.login.submitting : t.consumer.login.submitButton}
         </Button>
+        {allowTestLogin ? (
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isTestLoginPending}
+                  onClick={handleTestLogin}
+                  className="w-full text-sm font-semibold uppercase"
+                />
+              }
+            >
+              {isTestLoginPending
+                ? t.consumer.login.testLoginSubmitting
+                : t.consumer.login.testLoginButton}
+            </TooltipTrigger>
+            <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
+          </Tooltip>
+        ) : null}
         <p className="text-center text-sm text-muted-foreground">
           {t.consumer.login.signupPrompt}{' '}
           <Link
