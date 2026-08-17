@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { filterButtonClassName } from '@/lib/filter-button-style';
 
 interface FilterButtonProps {
   label: string;
@@ -14,12 +14,7 @@ export function FilterButton({ label, isActive, onClick }: FilterButtonProps) {
       type="button"
       aria-pressed={isActive}
       onClick={onClick}
-      className={cn(
-        'rounded border px-5 py-2.5 text-[13px] font-semibold transition-colors',
-        isActive
-          ? 'border-primary bg-primary-soft text-primary'
-          : 'border-border text-foreground hover:bg-muted',
-      )}
+      className={filterButtonClassName(isActive)}
     >
       {label}
     </button>
