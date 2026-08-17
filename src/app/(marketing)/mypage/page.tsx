@@ -1,48 +1,57 @@
-import Image from 'next/image';
+import Link from 'next/link';
 
-import { Badge } from '@/components/ui/badge';
+import { OrderStatusBadge } from '@/components/order-status-badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
+import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
+import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
 import { locales } from '@/locales';
 
-const MOCK_STATS = [
-  { key: 'completed', value: '8', suffix: 'volumeSuffix', tone: 'text-foreground' },
-  { key: 'inProgress', value: '2', suffix: 'volumeSuffix', tone: 'text-primary' },
-  { key: 'inquiries', value: '1', suffix: 'countSuffix', tone: 'text-foreground' },
-] as const;
-
-const MOCK_ORDERS = [
-  {
-    id: 'BC-2026-9041',
-    date: '2026.02.14',
-    title: 'Hardcover Photobook (10x10in)',
-    option: '80p / Linen Warm Gray',
-    image: '/images/products/hardcover-photobook.png',
-    status: '제작 대기',
-    statusClass: 'bg-muted text-muted-foreground',
-  },
-  {
-    id: 'BC-2026-8734',
-    date: '2026.01.28',
-    title: 'Premium Photo Album (12x12in)',
-    option: '120p / Italian Grain Brown',
-    image: '/images/products/premium-photo-album.png',
-    status: '인쇄 중',
-    statusClass: 'bg-order-status-pending/10 text-order-status-pending',
-  },
-  {
-    id: 'BC-2026-8430',
-    date: '2025.12.15',
-    title: 'Travel Journal (6x8in)',
-    option: '64p / Classic Cloth Green',
-    image: '/images/products/travel-journal.png',
-    status: '배송 완료',
-    statusClass: 'bg-order-status-done/10 text-order-status-done',
-  },
-] as const;
+const IN_PROGRESS_STATUSES = new Set<string>([
+  ORDER_STATUS.PAID,
+  ORDER_STATUS.PRINTING,
+  ORDER_STATUS.BINDING,
+  ORDER_STATUS.SHIPPING,
+]);
 
 export default async function MypagePage() {
   const locale = await getLocale();
   const t = locales[locale];
+  const consumer = await getCurrentConsumer();
+  const [orders, inquiries] = consumer
+    ? await Promise.all([getOrdersByConsumer(consumer.id), getInquiriesByConsumer(consumer.id)])
+    : [[], []];
+
+  const stats = [
+    {
+      key: 'completed',
+      value: String(orders.filter((order) => order.status === ORDER_STATUS.COMPLETED).length),
+      suffix: 'volumeSuffix',
+      tone: 'text-foreground',
+    },
+    {
+      key: 'inProgress',
+      value: String(orders.filter((order) => IN_PROGRESS_STATUSES.has(order.status)).length),
+      suffix: 'volumeSuffix',
+      tone: 'text-primary',
+    },
+    {
+      key: 'inquiries',
+      value: String(inquiries.length),
+      suffix: 'countSuffix',
+      tone: 'text-foreground',
+    },
+  ] as const;
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-10 py-10">
@@ -54,7 +63,7 @@ export default async function MypagePage() {
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        {MOCK_STATS.map((stat) => (
+        {stats.map((stat) => (
           <div
             key={stat.key}
             className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-6"
@@ -73,26 +82,60 @@ export default async function MypagePage() {
         <h2 className="font-heading text-2xl font-bold text-foreground">
           {t.consumer.mypage.recentOrdersTitle}
         </h2>
-        <div className="flex flex-col gap-4">
-          {MOCK_ORDERS.map((order) => (
-            <div
-              key={order.id}
-              className="flex items-center gap-4 rounded-lg border border-border bg-card p-4"
-            >
-              <div className="relative size-20 shrink-0 overflow-hidden rounded-md bg-muted">
-                <Image src={order.image} alt="" fill sizes="80px" className="object-cover" />
-              </div>
-              <div className="flex flex-1 flex-col gap-1">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="font-semibold">{order.id}</span>
-                  <span>{order.date}</span>
-                </div>
-                <p className="font-heading text-lg font-bold text-foreground">{order.title}</p>
-                <p className="text-sm text-muted-foreground">{order.option}</p>
-              </div>
-              <Badge className={order.statusClass}>{order.status}</Badge>
-            </div>
-          ))}
+        <div className="rounded-lg border border-border bg-card">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t.consumer.mypage.orders.columns.title}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.quantity}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.amount}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.status}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.createdAt}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.actions}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                    {t.consumer.mypage.orders.empty}
+                  </TableCell>
+                </TableRow>
+              ) : null}
+              {orders.map((order) => {
+                const status = isOrderStatus(order.status) ? order.status : null;
+
+                return (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-medium text-foreground">{order.title}</TableCell>
+                    <TableCell>
+                      {order.quantity}
+                      {t.consumer.mypage.orders.quantitySuffix}
+                    </TableCell>
+                    <TableCell>₩{order.amount.toLocaleString()}</TableCell>
+                    <TableCell>
+                      {status ? <OrderStatusBadge status={status} /> : order.status}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(order.created_at)}
+                    </TableCell>
+                    <TableCell>
+                      {status === ORDER_STATUS.COMPLETED ? (
+                        <Link
+                          href={`/mypage/orders/${order.id}/review`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {t.consumer.mypage.orders.reviewLink}
+                        </Link>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
