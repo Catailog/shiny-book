@@ -9,6 +9,8 @@ export const ADMIN_ROUTES = {
   FAQS: '/admin/faqs',
   FAQS_NEW: '/admin/faqs/new',
   INQUIRIES: '/admin/inquiries',
+  PRODUCTS: '/admin/products',
+  PRODUCTS_NEW: '/admin/products/new',
 } as const;
 
 export const CONSUMER_ROUTES = {

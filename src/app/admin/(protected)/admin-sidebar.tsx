@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageSquare,
+  Package,
   Tag,
   Volume2,
 } from 'lucide-react';
@@ -27,6 +28,7 @@ export function AdminSidebar({ signOutAction }: AdminSidebarProps) {
 
   const navItems = [
     { href: ADMIN_ROUTES.DASHBOARD, label: t.admin.nav.dashboard, icon: LayoutDashboard },
+    { href: ADMIN_ROUTES.PRODUCTS, label: t.admin.nav.products, icon: Package },
     { href: ADMIN_ROUTES.COUPONS, label: t.admin.nav.coupons, icon: Tag },
     { href: ADMIN_ROUTES.ANNOUNCEMENTS, label: t.admin.nav.announcements, icon: Volume2 },
     { href: ADMIN_ROUTES.FAQS, label: t.admin.nav.faqs, icon: HelpCircle },

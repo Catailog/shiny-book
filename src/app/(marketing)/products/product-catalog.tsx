@@ -9,7 +9,7 @@ import { ArrowRight } from 'lucide-react';
 
 import { FilterButton } from '@/components/filter-button';
 import { Card, CardContent } from '@/components/ui/card';
-import type { ProductCategory } from '@/constants/product-catalog';
+import type { ProductCategory } from '@/constants/product-category';
 import { PRODUCT_ROUTES } from '@/constants/routes';
 import type { CatalogProduct } from '@/lib/products/get-product-catalog';
 

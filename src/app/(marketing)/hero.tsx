@@ -6,20 +6,20 @@ import { ArrowRight } from 'lucide-react';
 import { PageSection } from '@/components/page-section';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { PREMIUM_PRODUCT_COUNT } from '@/constants/product-catalog';
 import { CONSUMER_ROUTES, PRODUCT_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
 interface HeroProps {
   soldBookCount: number;
+  premiumProductCount: number;
 }
 
-export async function Hero({ soldBookCount }: HeroProps) {
+export async function Hero({ soldBookCount, premiumProductCount }: HeroProps) {
   const locale = await getLocale();
   const t = locales[locale];
   const hero = t.site.home.hero;
-  const statValues = [100, PREMIUM_PRODUCT_COUNT, soldBookCount];
+  const statValues = [100, premiumProductCount, soldBookCount];
 
   return (
     <PageSection

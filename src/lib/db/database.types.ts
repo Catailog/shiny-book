@@ -318,6 +318,48 @@ export type Database = {
           },
         ];
       };
+      products: {
+        Row: {
+          category: string;
+          created_at: string;
+          description: string;
+          id: string;
+          image_url: string;
+          is_active: boolean;
+          name: string;
+          price: number;
+          size: string;
+          slug: string;
+          updated_at: string;
+        };
+        Insert: {
+          category: string;
+          created_at?: string;
+          description: string;
+          id?: string;
+          image_url: string;
+          is_active?: boolean;
+          name: string;
+          price: number;
+          size: string;
+          slug: string;
+          updated_at?: string;
+        };
+        Update: {
+          category?: string;
+          created_at?: string;
+          description?: string;
+          id?: string;
+          image_url?: string;
+          is_active?: boolean;
+          name?: string;
+          price?: number;
+          size?: string;
+          slug?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       reviews: {
         Row: {
           consumer_id: string;

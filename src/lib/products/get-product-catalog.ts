@@ -1,5 +1,10 @@
-import { PRODUCT_CATALOG, type ProductCategory } from '@/constants/product-catalog';
-import { defaultLocale, locales } from '@/locales';
+import {
+  PRODUCT_CATEGORY,
+  type ProductCategory,
+  isProductCategory,
+} from '@/constants/product-category';
+
+import { getProducts } from './get-products';
 
 export interface CatalogProduct {
   slug: string;
@@ -11,12 +16,16 @@ export interface CatalogProduct {
   price: string;
 }
 
-export function getProductCatalog(): CatalogProduct[] {
-  const t = locales[defaultLocale];
-  const items = t.site.home.products.items;
+export async function getProductCatalog(): Promise<CatalogProduct[]> {
+  const products = await getProducts();
 
-  return PRODUCT_CATALOG.map((product, index) => {
-    const copy = items[index];
-    return copy ? { ...product, ...copy } : null;
-  }).filter((item): item is NonNullable<typeof item> => item !== null);
+  return products.map((product) => ({
+    slug: product.slug,
+    image: product.image_url,
+    category: isProductCategory(product.category) ? product.category : PRODUCT_CATEGORY.CLASSIC,
+    name: product.name,
+    size: product.size,
+    description: product.description,
+    price: `₩${product.price.toLocaleString()}`,
+  }));
 }

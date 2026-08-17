@@ -16,7 +16,7 @@ const SPEC_ICONS = [FileText, ScrollText, LayoutGrid];
 
 export default async function ProductDetailPage(props: PageProps<'/products/[id]'>) {
   const { id } = await props.params;
-  const catalog = getProductCatalog();
+  const catalog = await getProductCatalog();
   const product = catalog.find((item) => item.slug === id);
 
   if (!product) {

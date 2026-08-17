@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { FilterButton } from '@/components/filter-button';
 import { ProductCard } from '@/components/product-card';
-import type { ProductCategory } from '@/constants/product-catalog';
+import type { ProductCategory } from '@/constants/product-category';
 import type { CatalogProduct } from '@/lib/products/get-product-catalog';
 
 interface ProductFilters {

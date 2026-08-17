@@ -10,7 +10,7 @@ export async function ProductShowcase() {
   const locale = await getLocale();
   const t = locales[locale];
   const products = t.site.home.products;
-  const items = getProductCatalog();
+  const items = await getProductCatalog();
 
   return (
     <PageSection
