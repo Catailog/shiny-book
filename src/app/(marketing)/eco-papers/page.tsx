@@ -100,6 +100,7 @@ export default async function EcoPapersPage() {
             {page.impact.eyebrow}
           </p>
           <h2 className="font-heading text-3xl font-normal text-foreground">{page.impact.title}</h2>
+          <p className="text-xs text-muted-foreground">{page.impact.asOfLabel}</p>
         </div>
         <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-3">
           {page.impact.stats.map((stat) => (

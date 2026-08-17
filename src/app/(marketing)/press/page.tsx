@@ -49,7 +49,7 @@ export default async function PressPage() {
               {page.features.items.map((feature) => (
                 <div
                   key={feature.headline}
-                  className="flex flex-col gap-2 rounded-md border border-border p-5"
+                  className="flex flex-col gap-2 rounded-md border border-border bg-input-background p-5"
                 >
                   <div className="flex items-center gap-3 text-xs">
                     <span className="font-semibold text-primary">{feature.date}</span>

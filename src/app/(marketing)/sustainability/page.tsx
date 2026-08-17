@@ -1,11 +1,8 @@
 import Image from 'next/image';
-import Link from 'next/link';
 
-import { ArrowRight, Leaf, Minimize2, Truck } from 'lucide-react';
+import { Leaf, Minimize2, Truck } from 'lucide-react';
 
 import { PageSection } from '@/components/page-section';
-import { Button } from '@/components/ui/button';
-import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
@@ -107,29 +104,6 @@ export default async function SustainabilityPage() {
             </div>
           ))}
         </div>
-      </PageSection>
-
-      <PageSection
-        sectionClassName="bg-inverted"
-        className="flex flex-col items-center gap-8 py-24 text-center"
-      >
-        <div className="flex max-w-2xl flex-col items-center gap-4">
-          <p className="text-[13px] font-semibold tracking-wide text-primary uppercase">
-            {page.cta.eyebrow}
-          </p>
-          <h2 className="font-heading text-4xl leading-tight font-normal text-inverted-foreground sm:text-5xl">
-            {page.cta.title}
-          </h2>
-          <p className="text-base text-inverted-foreground/80">{page.cta.description}</p>
-        </div>
-        <Button
-          render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
-          nativeButton={false}
-          className="h-auto gap-2 rounded bg-primary px-7 py-3.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-primary/90"
-        >
-          {page.cta.buttonLabel}
-          <ArrowRight aria-hidden="true" className="size-3.5" />
-        </Button>
       </PageSection>
     </>
   );
