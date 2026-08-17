@@ -6,7 +6,9 @@ import { SiteContainer } from '@/components/site-container';
 import {
   CONSUMER_ROUTES,
   FAQ_ROUTES,
+  LEGAL_ROUTES,
   MARKETING_ROUTES,
+  NOTICE_ROUTES,
   PRODUCT_ROUTES,
   REVIEW_ROUTES,
 } from '@/constants/routes';
@@ -26,7 +28,7 @@ export async function Footer() {
 
   const columns: Array<{ heading: string; links: Array<{ label: string; href: string }> }> = [
     {
-      heading: footer.productsTitle,
+      heading: t.site.nav.products,
       links: [
         { label: footer.links.viewProducts, href: PRODUCT_ROUTES.LIST },
         { label: t.site.nav.startOrder, href: CONSUMER_ROUTES.NEW_ORDER },
@@ -34,21 +36,30 @@ export async function Footer() {
       ],
     },
     {
-      heading: footer.customerServiceTitle,
-      links: [
-        { label: footer.links.layoutGuidelines, href: MARKETING_ROUTES.LAYOUT_GUIDELINES },
-        { label: footer.links.ecoPapers, href: MARKETING_ROUTES.ECO_PAPERS },
-        { label: footer.links.shippingPolicy, href: MARKETING_ROUTES.SHIPPING_POLICY },
-        { label: t.site.nav.faq, href: FAQ_ROUTES.LIST },
-      ],
-    },
-    {
-      heading: footer.companyTitle,
+      heading: t.site.nav.studioGroup,
       links: [
         { label: footer.links.ourStory, href: MARKETING_ROUTES.ABOUT },
         { label: footer.links.atelier, href: MARKETING_ROUTES.ATELIER },
+        { label: t.site.nav.gallery, href: MARKETING_ROUTES.GALLERY },
         { label: footer.links.sustainability, href: MARKETING_ROUTES.SUSTAINABILITY },
         { label: footer.links.press, href: MARKETING_ROUTES.PRESS },
+      ],
+    },
+    {
+      heading: t.site.nav.productionGroup,
+      links: [
+        { label: t.site.nav.pricing, href: MARKETING_ROUTES.PRICING },
+        { label: footer.links.layoutGuidelines, href: MARKETING_ROUTES.LAYOUT_GUIDELINES },
+        { label: footer.links.ecoPapers, href: MARKETING_ROUTES.ECO_PAPERS },
+        { label: footer.links.shippingPolicy, href: MARKETING_ROUTES.SHIPPING_POLICY },
+      ],
+    },
+    {
+      heading: t.site.nav.supportGroup,
+      links: [
+        { label: t.site.nav.notices, href: NOTICE_ROUTES.LIST },
+        { label: t.site.nav.faq, href: FAQ_ROUTES.LIST },
+        { label: footer.inquiries, href: CONSUMER_ROUTES.INQUIRIES },
       ],
     },
   ];
@@ -67,7 +78,7 @@ export async function Footer() {
             </p>
           </div>
           <nav
-            className="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-x-12 lg:gap-x-20"
+            className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-12 lg:grid-cols-4 lg:gap-x-16"
             aria-label="Footer navigation"
           >
             {columns.map((column) => (
@@ -94,7 +105,21 @@ export async function Footer() {
         <div className="flex w-full flex-col gap-6">
           <div className="h-px w-full bg-inverted-foreground/20" />
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-            <p className="text-xs text-inverted-foreground/60">{footer.copyright}</p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <p className="text-xs text-inverted-foreground/60">{footer.copyright}</p>
+              <Link
+                href={LEGAL_ROUTES.TERMS}
+                className="text-xs text-inverted-foreground/60 transition-opacity hover:text-inverted-foreground"
+              >
+                {footer.terms}
+              </Link>
+              <Link
+                href={LEGAL_ROUTES.PRIVACY}
+                className="text-xs text-inverted-foreground/60 transition-opacity hover:text-inverted-foreground"
+              >
+                {footer.privacy}
+              </Link>
+            </div>
             <ul className="flex items-center gap-6">
               {SOCIAL_LINKS.map((social) => (
                 <li key={social.label}>
