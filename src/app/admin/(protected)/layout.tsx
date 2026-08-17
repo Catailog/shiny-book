@@ -1,15 +1,14 @@
 import { redirect } from 'next/navigation';
 
-import { ROLE } from '@/constants/roles';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { getMockSessionRole } from '@/lib/mock/mock-session';
+import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
 
 import { signOutAdmin } from './actions';
 import { AdminSidebar } from './admin-sidebar';
 
 export default async function AdminLayout(props: LayoutProps<'/admin'>) {
-  const role = await getMockSessionRole();
-  if (role !== ROLE.ADMIN) {
+  const admin = await getCurrentAdmin();
+  if (!admin) {
     redirect(ADMIN_ROUTES.LOGIN);
   }
 

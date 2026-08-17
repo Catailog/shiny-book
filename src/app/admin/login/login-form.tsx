@@ -1,6 +1,10 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,20 +12,28 @@ import { Label } from '@/components/ui/label';
 import { useT } from '@/hooks/use-t';
 
 import { signInAdmin } from './actions';
+import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
 export function AdminLoginForm() {
   const t = useT();
   const [isPending, startTransition] = useTransition();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AdminLoginInput>({ resolver: zodResolver(adminLoginSchema) });
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function onSubmit(values: AdminLoginInput) {
     startTransition(async () => {
-      await signInAdmin();
+      const result = await signInAdmin(values);
+      if (result) {
+        toast.error(t.admin.login.errors[result.errorCode]);
+      }
     });
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-5" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email" className="text-xs font-semibold">
           {t.admin.login.emailLabel}
@@ -30,9 +42,12 @@ export function AdminLoginForm() {
           id="email"
           type="email"
           autoComplete="email"
-          defaultValue="admin@bookcraft.studio"
           className="bg-input-background"
+          {...register('email')}
         />
+        {errors.email ? (
+          <p className="text-sm text-destructive">{t.admin.login.errors.emailInvalid}</p>
+        ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
@@ -48,7 +63,11 @@ export function AdminLoginForm() {
           type="password"
           autoComplete="current-password"
           className="bg-input-background"
+          {...register('password')}
         />
+        {errors.password ? (
+          <p className="text-sm text-destructive">{t.admin.login.errors.passwordRequired}</p>
+        ) : null}
       </div>
       <Button
         type="submit"

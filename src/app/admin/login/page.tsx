@@ -2,17 +2,16 @@ import { redirect } from 'next/navigation';
 
 import { BookOpen } from 'lucide-react';
 
-import { ROLE } from '@/constants/roles';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
 import { getLocale } from '@/lib/i18n/get-locale';
-import { getMockSessionRole } from '@/lib/mock/mock-session';
 import { locales } from '@/locales';
 
 import { AdminLoginForm } from './login-form';
 
 export default async function AdminLoginPage() {
-  const role = await getMockSessionRole();
-  if (role === ROLE.ADMIN) {
+  const admin = await getCurrentAdmin();
+  if (admin) {
     redirect(ADMIN_ROUTES.DASHBOARD);
   }
 

@@ -1,8 +1,12 @@
 'use server';
 
+import { redirect } from 'next/navigation';
+
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { mockSignOut } from '@/lib/mock/mock-session-actions';
+import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 
 export async function signOutAdmin(): Promise<void> {
-  await mockSignOut(ADMIN_ROUTES.LOGIN);
+  const supabase = await createServerSupabaseClient();
+  await supabase.auth.signOut();
+  redirect(ADMIN_ROUTES.LOGIN);
 }
