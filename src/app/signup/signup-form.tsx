@@ -19,7 +19,11 @@ import { useT } from '@/hooks/use-t';
 import { signUpConsumer } from './actions';
 import { type ConsumerSignupInput, consumerSignupSchema } from './signup-schema';
 
-export function SignupForm() {
+interface SignupFormProps {
+  redirectTo: string;
+}
+
+export function SignupForm({ redirectTo }: SignupFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -32,7 +36,7 @@ export function SignupForm() {
 
   function onSubmit(values: ConsumerSignupInput) {
     startTransition(async () => {
-      const result = await signUpConsumer(values);
+      const result = await signUpConsumer(values, redirectTo);
       if (result) {
         toast.error(t.consumer.signup.errors[result.errorCode]);
       }
@@ -182,7 +186,10 @@ export function SignupForm() {
         </div>
         <p className="text-center text-sm text-muted-foreground">
           {t.consumer.signup.loginPrompt}{' '}
-          <Link href={CONSUMER_ROUTES.LOGIN} className="font-semibold text-primary underline">
+          <Link
+            href={`${CONSUMER_ROUTES.LOGIN}?redirectTo=${encodeURIComponent(redirectTo)}`}
+            className="font-semibold text-primary underline"
+          >
             {t.consumer.signup.loginLink}
           </Link>
         </p>

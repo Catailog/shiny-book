@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 
 import { type ConsumerSignupInput, consumerSignupSchema } from './signup-schema';
@@ -13,6 +14,7 @@ export interface ConsumerSignupActionResult {
 
 export async function signUpConsumer(
   input: ConsumerSignupInput,
+  redirectTo?: string,
 ): Promise<ConsumerSignupActionResult | undefined> {
   const parsed = consumerSignupSchema.safeParse(input);
   if (!parsed.success) {
@@ -37,5 +39,5 @@ export async function signUpConsumer(
     return { errorCode: 'unexpected_error' };
   }
 
-  redirect(CONSUMER_ROUTES.MYPAGE);
+  redirect(redirectTo && isSafeRedirectPath(redirectTo) ? redirectTo : CONSUMER_ROUTES.MYPAGE);
 }

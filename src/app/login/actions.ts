@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
+import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 
 import { type ConsumerLoginInput, consumerLoginSchema } from './login-schema';
@@ -14,6 +15,7 @@ export interface ConsumerLoginActionResult {
 
 export async function signInConsumer(
   input: ConsumerLoginInput,
+  redirectTo?: string,
 ): Promise<ConsumerLoginActionResult | undefined> {
   const parsed = consumerLoginSchema.safeParse(input);
   if (!parsed.success) {
@@ -35,5 +37,5 @@ export async function signInConsumer(
     return { errorCode: 'invalid_credentials' };
   }
 
-  redirect(CONSUMER_ROUTES.MYPAGE);
+  redirect(redirectTo && isSafeRedirectPath(redirectTo) ? redirectTo : CONSUMER_ROUTES.MYPAGE);
 }

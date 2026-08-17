@@ -53,7 +53,9 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith(CONSUMER_ROUTES.MYPAGE) || pathname.startsWith(CONSUMER_ROUTES.NEW_ORDER);
 
   if (isMypageRoute && !isAuthenticatedConsumer) {
-    return NextResponse.redirect(new URL(CONSUMER_ROUTES.LOGIN, request.url));
+    const loginUrl = new URL(CONSUMER_ROUTES.LOGIN, request.url);
+    loginUrl.searchParams.set('redirectTo', pathname + request.nextUrl.search);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (isConsumerAuthRoute && isAuthenticatedConsumer) {
