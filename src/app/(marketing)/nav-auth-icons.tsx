@@ -32,7 +32,7 @@ export function NavAuthIcons({
         <TooltipTrigger
           render={
             <Link
-              href={CONSUMER_ROUTES.LOGIN}
+              href={`${CONSUMER_ROUTES.LOGIN}?redirectTo=${encodeURIComponent(pathname)}`}
               aria-label={loginLabel}
               className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             />
