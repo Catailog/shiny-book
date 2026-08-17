@@ -5,6 +5,8 @@ import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
+import { ChangePasswordForm } from './password-form';
+
 export default async function MypageAccountPage() {
   const locale = await getLocale();
   const t = locales[locale];
@@ -20,14 +22,9 @@ export default async function MypageAccountPage() {
       </h1>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-xl font-bold text-foreground">
-            {t.consumer.account.personalInfo.title}
-          </h2>
-          <button type="button" className="text-sm font-semibold text-primary">
-            {t.consumer.account.personalInfo.editLink}
-          </button>
-        </div>
+        <h2 className="font-heading text-xl font-bold text-foreground">
+          {t.consumer.account.personalInfo.title}
+        </h2>
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2">
             <Label htmlFor="account-name" className="text-xs font-semibold tracking-wide uppercase">
@@ -55,54 +52,13 @@ export default async function MypageAccountPage() {
             />
           </div>
         </div>
-        <div className="w-80">
-          <div className="flex flex-col gap-2">
-            <Label
-              htmlFor="account-phone"
-              className="text-xs font-semibold tracking-wide uppercase"
-            >
-              {t.consumer.account.personalInfo.phoneLabel}
-            </Label>
-            <Input
-              id="account-phone"
-              defaultValue="010-1234-5678"
-              readOnly
-              className="h-auto rounded p-4"
-            />
-          </div>
-        </div>
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
         <h2 className="font-heading text-xl font-bold text-foreground">
           {t.consumer.account.changePassword.title}
         </h2>
-        <div className="grid grid-cols-3 gap-6">
-          <div className="flex flex-col gap-2">
-            <Label
-              htmlFor="current-password"
-              className="text-xs font-semibold tracking-wide uppercase"
-            >
-              {t.consumer.account.changePassword.currentPasswordLabel}
-            </Label>
-            <Input id="current-password" type="password" className="h-auto rounded p-4" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="new-password" className="text-xs font-semibold tracking-wide uppercase">
-              {t.consumer.account.changePassword.newPasswordLabel}
-            </Label>
-            <Input id="new-password" type="password" className="h-auto rounded p-4" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label
-              htmlFor="new-password-confirm"
-              className="text-xs font-semibold tracking-wide uppercase"
-            >
-              {t.consumer.account.changePassword.newPasswordConfirmLabel}
-            </Label>
-            <Input id="new-password-confirm" type="password" className="h-auto rounded p-4" />
-          </div>
-        </div>
+        <ChangePasswordForm />
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
