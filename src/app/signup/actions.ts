@@ -25,7 +25,14 @@ export async function signUpConsumer(
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
-    options: { data: { name: parsed.data.name } },
+    options: {
+      data: {
+        name: parsed.data.name,
+        phone: parsed.data.phone || null,
+        marketingEmailConsent: parsed.data.marketingEmailConsent,
+        marketingSmsConsent: parsed.data.marketingSmsConsent,
+      },
+    },
   });
 
   if (error) {

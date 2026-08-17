@@ -1,4 +1,3 @@
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
@@ -6,6 +5,7 @@ import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
 import { DeleteAccountButton } from './delete-account-button';
+import { NotificationPreferencesForm } from './notification-form';
 import { ChangePasswordForm } from './password-form';
 
 export default async function MypageAccountPage() {
@@ -15,6 +15,12 @@ export default async function MypageAccountPage() {
   const consumerName =
     typeof consumer?.user_metadata.name === 'string' ? consumer.user_metadata.name : '';
   const consumerEmail = consumer?.email ?? '';
+  const consumerPhone =
+    typeof consumer?.user_metadata.phone === 'string' ? consumer.user_metadata.phone : '';
+  const notificationDefaults = {
+    marketingEmailConsent: consumer?.user_metadata.marketingEmailConsent === true,
+    marketingSmsConsent: consumer?.user_metadata.marketingSmsConsent === true,
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-10 py-10">
@@ -52,6 +58,22 @@ export default async function MypageAccountPage() {
               className="h-auto rounded p-4"
             />
           </div>
+          {consumerPhone ? (
+            <div className="flex flex-col gap-2">
+              <Label
+                htmlFor="account-phone"
+                className="text-xs font-semibold tracking-wide uppercase"
+              >
+                {t.consumer.account.personalInfo.phoneLabel}
+              </Label>
+              <Input
+                id="account-phone"
+                defaultValue={consumerPhone}
+                readOnly
+                className="h-auto rounded p-4"
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -113,20 +135,7 @@ export default async function MypageAccountPage() {
         <h2 className="font-heading text-xl font-bold text-foreground">
           {t.consumer.account.notifications.title}
         </h2>
-        <div className="flex gap-8">
-          <div className="flex items-center gap-2">
-            <Checkbox id="notify-email" defaultChecked />
-            <Label htmlFor="notify-email" className="font-normal">
-              {t.consumer.account.notifications.emailMarketing}
-            </Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox id="notify-sms" defaultChecked />
-            <Label htmlFor="notify-sms" className="font-normal">
-              {t.consumer.account.notifications.smsUpdates}
-            </Label>
-          </div>
-        </div>
+        <NotificationPreferencesForm defaultValues={notificationDefaults} />
       </section>
 
       <div className="flex items-center justify-between">

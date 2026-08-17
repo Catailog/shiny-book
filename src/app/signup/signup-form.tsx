@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import Link from 'next/link';
 
@@ -30,9 +30,13 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ConsumerSignupInput>({ resolver: zodResolver(consumerSignupSchema) });
+  } = useForm<ConsumerSignupInput>({
+    resolver: zodResolver(consumerSignupSchema),
+    defaultValues: { marketingEmailConsent: false, marketingSmsConsent: false },
+  });
 
   function onSubmit(values: ConsumerSignupInput) {
     startTransition(async () => {
@@ -155,10 +159,54 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               </p>
             ) : null}
           </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="phone" className="text-xs font-semibold tracking-wide uppercase">
+              {t.consumer.signup.phoneLabel}
+            </Label>
+            <Input
+              id="phone"
+              type="tel"
+              autoComplete="tel"
+              className="h-auto rounded p-4"
+              {...register('phone')}
+            />
+          </div>
           <div className="flex items-center gap-2">
             <Checkbox id="agree-terms" />
             <Label htmlFor="agree-terms" className="font-normal text-muted-foreground">
               {t.consumer.signup.agreeTermsLabel}
+            </Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Controller
+              control={control}
+              name="marketingEmailConsent"
+              render={({ field }) => (
+                <Checkbox
+                  id="marketing-email-consent"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+            <Label htmlFor="marketing-email-consent" className="font-normal text-muted-foreground">
+              {t.consumer.signup.marketingEmailLabel}
+            </Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Controller
+              control={control}
+              name="marketingSmsConsent"
+              render={({ field }) => (
+                <Checkbox
+                  id="marketing-sms-consent"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+            <Label htmlFor="marketing-sms-consent" className="font-normal text-muted-foreground">
+              {t.consumer.signup.marketingSmsLabel}
             </Label>
           </div>
         </div>

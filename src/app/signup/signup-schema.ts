@@ -6,6 +6,9 @@ export const consumerSignupSchema = z
     email: z.string().email(),
     password: z.string().min(6),
     passwordConfirm: z.string().min(1),
+    phone: z.string().optional(),
+    marketingEmailConsent: z.boolean(),
+    marketingSmsConsent: z.boolean(),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     path: ['passwordConfirm'],
