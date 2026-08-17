@@ -188,34 +188,48 @@ export type Database = {
         Row: {
           answer: string | null;
           answered_at: string | null;
+          category: string;
           consumer_id: string;
           content: string;
           created_at: string;
           id: string;
+          order_id: string | null;
           title: string;
           updated_at: string;
         };
         Insert: {
           answer?: string | null;
           answered_at?: string | null;
+          category?: string;
           consumer_id: string;
           content: string;
           created_at?: string;
           id?: string;
+          order_id?: string | null;
           title: string;
           updated_at?: string;
         };
         Update: {
           answer?: string | null;
           answered_at?: string | null;
+          category?: string;
           consumer_id?: string;
           content?: string;
           created_at?: string;
           id?: string;
+          order_id?: string | null;
           title?: string;
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'inquiries_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       order_photos: {
         Row: {
@@ -251,6 +265,7 @@ export type Database = {
       };
       orders: {
         Row: {
+          address_id: string | null;
           amount: number;
           client_id: string | null;
           consumer_id: string | null;
@@ -260,12 +275,14 @@ export type Database = {
           id: string;
           manuscript_file_url: string | null;
           page_count: number | null;
+          product_id: string | null;
           quantity: number;
           status: string;
           title: string;
           updated_at: string;
         };
         Insert: {
+          address_id?: string | null;
           amount: number;
           client_id?: string | null;
           consumer_id?: string | null;
@@ -275,12 +292,14 @@ export type Database = {
           id?: string;
           manuscript_file_url?: string | null;
           page_count?: number | null;
+          product_id?: string | null;
           quantity: number;
           status?: string;
           title: string;
           updated_at?: string;
         };
         Update: {
+          address_id?: string | null;
           amount?: number;
           client_id?: string | null;
           consumer_id?: string | null;
@@ -290,12 +309,20 @@ export type Database = {
           id?: string;
           manuscript_file_url?: string | null;
           page_count?: number | null;
+          product_id?: string | null;
           quantity?: number;
           status?: string;
           title?: string;
           updated_at?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'orders_address_id_fkey';
+            columns: ['address_id'];
+            isOneToOne: false;
+            referencedRelation: 'addresses';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'orders_client_id_fkey';
             columns: ['client_id'];
@@ -308,6 +335,13 @@ export type Database = {
             columns: ['coupon_id'];
             isOneToOne: false;
             referencedRelation: 'coupons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'orders_product_id_fkey';
+            columns: ['product_id'];
+            isOneToOne: false;
+            referencedRelation: 'products';
             referencedColumns: ['id'];
           },
         ];
@@ -362,6 +396,7 @@ export type Database = {
           image_url: string;
           is_active: boolean;
           name: string;
+          name_en: string | null;
           price: number;
           size: string;
           slug: string;
@@ -375,6 +410,7 @@ export type Database = {
           image_url: string;
           is_active?: boolean;
           name: string;
+          name_en?: string | null;
           price: number;
           size: string;
           slug: string;
@@ -388,6 +424,7 @@ export type Database = {
           image_url?: string;
           is_active?: boolean;
           name?: string;
+          name_en?: string | null;
           price?: number;
           size?: string;
           slug?: string;
