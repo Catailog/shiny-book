@@ -13,43 +13,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
+import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { locales } from '@/locales';
-
-const MOCK_INQUIRIES = [
-  {
-    number: '04',
-    category: '배송 문의',
-    title: '배송지를 변경하고 싶습니다.',
-    status: 'answered',
-    date: '2026.02.15',
-  },
-  {
-    number: '03',
-    category: '제품 문의',
-    title: '인그레이빙 문구 폰트 종류가 무엇이 있나요?',
-    status: 'answered',
-    date: '2026.02.10',
-  },
-  {
-    number: '02',
-    category: '기타 문의',
-    title: '단체 주문(30권 이상) 할인 혜택이 적용되나요?',
-    status: 'pending',
-    date: '2026.02.04',
-  },
-  {
-    number: '01',
-    category: '제품 문의',
-    title: '표지 실크 자수 가공 마감에 대해 질문이 있습니다.',
-    status: 'answered',
-    date: '2026.01.20',
-  },
-] as const;
 
 export default async function MypageInquiriesPage() {
   const locale = await getLocale();
   const t = locales[locale];
+  const consumer = await getCurrentConsumer();
+  const inquiries = consumer ? await getInquiriesByConsumer(consumer.id) : [];
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-10 py-10">
@@ -70,36 +44,31 @@ export default async function MypageInquiriesPage() {
         </Button>
       </div>
 
-      <div className="flex gap-2">
-        <Button variant="outline" size="sm" className="border-primary bg-primary-soft text-primary">
-          {t.consumer.inquiries.filterTabs.all}
-        </Button>
-        <Button variant="outline" size="sm">
-          {t.consumer.inquiries.filterTabs.answered}
-        </Button>
-        <Button variant="outline" size="sm">
-          {t.consumer.inquiries.filterTabs.pending}
-        </Button>
-      </div>
-
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t.consumer.inquiries.table.number}</TableHead>
-            <TableHead>{t.consumer.inquiries.table.category}</TableHead>
             <TableHead>{t.consumer.inquiries.table.title}</TableHead>
             <TableHead>{t.consumer.inquiries.table.status}</TableHead>
             <TableHead>{t.consumer.inquiries.table.createdAt}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {MOCK_INQUIRIES.map((inquiry) => (
-            <TableRow key={inquiry.number}>
-              <TableCell className="text-muted-foreground">{inquiry.number}</TableCell>
-              <TableCell className="text-muted-foreground">{inquiry.category}</TableCell>
-              <TableCell className="font-semibold text-foreground">{inquiry.title}</TableCell>
+          {inquiries.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center text-muted-foreground">
+                {t.consumer.inquiries.empty}
+              </TableCell>
+            </TableRow>
+          ) : null}
+          {inquiries.map((inquiry) => (
+            <TableRow key={inquiry.id}>
+              <TableCell className="font-semibold text-foreground">
+                <Link href={`/mypage/inquiries/${inquiry.id}`} className="hover:underline">
+                  {inquiry.title}
+                </Link>
+              </TableCell>
               <TableCell>
-                {inquiry.status === 'answered' ? (
+                {inquiry.answer ? (
                   <Badge className="bg-order-status-done/10 text-order-status-done">
                     {t.consumer.inquiries.statusAnswered}
                   </Badge>
@@ -109,7 +78,9 @@ export default async function MypageInquiriesPage() {
                   </Badge>
                 )}
               </TableCell>
-              <TableCell className="text-muted-foreground">{inquiry.date}</TableCell>
+              <TableCell className="text-muted-foreground">
+                {formatDate(inquiry.created_at)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
