@@ -10,11 +10,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
+import { getReviewsByConsumer } from '@/lib/reviews/get-reviews-by-consumer';
 import { locales } from '@/locales';
 
 const IN_PROGRESS_STATUSES = new Set<string>([
@@ -28,9 +30,14 @@ export default async function MypagePage() {
   const locale = await getLocale();
   const t = locales[locale];
   const consumer = await getCurrentConsumer();
-  const [orders, inquiries] = consumer
-    ? await Promise.all([getOrdersByConsumer(consumer.id), getInquiriesByConsumer(consumer.id)])
-    : [[], []];
+  const [orders, inquiries, reviews] = consumer
+    ? await Promise.all([
+        getOrdersByConsumer(consumer.id),
+        getInquiriesByConsumer(consumer.id),
+        getReviewsByConsumer(consumer.id),
+      ])
+    : [[], [], []];
+  const reviewByOrderId = new Map(reviews.map((review) => [review.order_id, review]));
 
   const stats = [
     {
@@ -82,32 +89,41 @@ export default async function MypagePage() {
         <h2 className="font-heading text-2xl font-bold text-foreground">
           {t.consumer.mypage.recentOrdersTitle}
         </h2>
-        <div className="rounded-lg border border-border bg-card">
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.consumer.mypage.orders.columns.title}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.quantity}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.amount}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.status}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.createdAt}</TableHead>
                 <TableHead>{t.consumer.mypage.orders.columns.actions}</TableHead>
+                <TableHead>{t.consumer.mypage.orders.columns.inquiry}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {orders.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground">
                     {t.consumer.mypage.orders.empty}
                   </TableCell>
                 </TableRow>
               ) : null}
               {orders.map((order) => {
                 const status = isOrderStatus(order.status) ? order.status : null;
+                const review = reviewByOrderId.get(order.id) ?? null;
 
                 return (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium text-foreground">{order.title}</TableCell>
+                  <TableRow key={order.id} className="hover:bg-transparent">
+                    <TableCell className="font-medium text-foreground">
+                      <div className="flex flex-col gap-0.5">
+                        <span>{order.title}</span>
+                        <span className="text-xs font-normal text-muted-foreground">
+                          #{order.id.slice(0, 8)}
+                        </span>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       {order.quantity}
                       {t.consumer.mypage.orders.quantitySuffix}
@@ -125,11 +141,21 @@ export default async function MypagePage() {
                           href={`/mypage/orders/${order.id}/review`}
                           className="text-sm font-medium text-foreground underline"
                         >
-                          {t.consumer.mypage.orders.reviewLink}
+                          {review
+                            ? t.consumer.mypage.orders.reviewDoneLink
+                            : t.consumer.mypage.orders.reviewWriteLink}
                         </Link>
                       ) : (
                         <span className="text-muted-foreground">-</span>
                       )}
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        href={`${CONSUMER_ROUTES.NEW_INQUIRY}?orderId=${order.id}`}
+                        className="text-sm font-medium text-foreground underline"
+                      >
+                        {t.consumer.mypage.orders.inquiryLink}
+                      </Link>
                     </TableCell>
                   </TableRow>
                 );
