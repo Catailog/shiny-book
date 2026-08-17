@@ -27,3 +27,5 @@ export const PROCESSED_PHOTO_IMAGE = {
 } as const;
 
 export const SIGNED_FILE_URL_EXPIRY_SECONDS = 60 * 5;
+
+export const TEST_PHOTO_TEMPLATE_PATH = '_test-fixtures/sample.webp';

@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   FILE_UPLOAD_KIND,
   FILE_UPLOAD_RULES,
@@ -44,19 +45,21 @@ import {
   createConsumerOrderSchema,
   orderDetailsSchema,
 } from './order-schema';
+import { generateTestPhotos } from './test-photo-actions';
 
 type UploadStatus = 'uploading' | 'processing' | 'done' | 'error';
 type Phase = 'details' | 'photos';
 
 interface PhotoItem {
   id: string;
-  previewUrl: string;
+  previewUrl: string | null;
   path: string | null;
   status: UploadStatus;
 }
 
 interface NewOrderWizardProps {
   product: Tables<'products'>;
+  allowTestUpload: boolean;
 }
 
 async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string | null> {
@@ -83,9 +86,10 @@ async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string |
   return error ? null : signed.path;
 }
 
-export function NewOrderWizard({ product }: NewOrderWizardProps) {
+export function NewOrderWizard({ product, allowTestUpload }: NewOrderWizardProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
+  const [isGeneratingTestPhotos, startTestPhotosTransition] = useTransition();
   const [phase, setPhase] = useState<Phase>('details');
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const {
@@ -119,7 +123,11 @@ export function NewOrderWizard({ product }: NewOrderWizardProps) {
   }
 
   function handleEdit() {
-    photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+    photos.forEach((photo) => {
+      if (photo.previewUrl) {
+        URL.revokeObjectURL(photo.previewUrl);
+      }
+    });
     setPhotos([]);
     setPhase('details');
   }
@@ -175,10 +183,34 @@ export function NewOrderWizard({ product }: NewOrderWizardProps) {
   function handleRemovePhoto(id: string) {
     setPhotos((current) => {
       const target = current.find((photo) => photo.id === id);
-      if (target) {
+      if (target?.previewUrl) {
         URL.revokeObjectURL(target.previewUrl);
       }
       return current.filter((photo) => photo.id !== id);
+    });
+  }
+
+  function handleGenerateTestPhotos() {
+    startTestPhotosTransition(async () => {
+      const result = await generateTestPhotos(requiredPhotoCount);
+      if (!result.success) {
+        toast.error(t.consumer.orderNew.errors.uploadFailed);
+        return;
+      }
+
+      photos.forEach((photo) => {
+        if (photo.previewUrl) {
+          URL.revokeObjectURL(photo.previewUrl);
+        }
+      });
+      setPhotos(
+        result.paths.map((path) => ({
+          id: crypto.randomUUID(),
+          previewUrl: null,
+          path,
+          status: 'done',
+        })),
+      );
     });
   }
 
@@ -319,7 +351,26 @@ export function NewOrderWizard({ product }: NewOrderWizardProps) {
 
             <section className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <Label>{t.consumer.orderNew.photosLabel}</Label>
+                <div className="flex items-center gap-3">
+                  <Label>{t.consumer.orderNew.photosLabel}</Label>
+                  {allowTestUpload ? (
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <button
+                            type="button"
+                            disabled={isGeneratingTestPhotos}
+                            onClick={handleGenerateTestPhotos}
+                            className={buttonVariants({ variant: 'outline', size: 'xs' })}
+                          />
+                        }
+                      >
+                        {t.consumer.orderNew.testUploadButton}
+                      </TooltipTrigger>
+                      <TooltipContent>{t.consumer.orderNew.testUploadTooltip}</TooltipContent>
+                    </Tooltip>
+                  ) : null}
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {t.consumer.orderNew.photosHint
                     .replace('{count}', String(donePhotoCount))
@@ -332,14 +383,20 @@ export function NewOrderWizard({ product }: NewOrderWizardProps) {
                     key={photo.id}
                     className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted"
                   >
-                    <Image
-                      src={photo.previewUrl}
-                      alt=""
-                      fill
-                      sizes="160px"
-                      className="object-cover"
-                      unoptimized
-                    />
+                    {photo.previewUrl ? (
+                      <Image
+                        src={photo.previewUrl}
+                        alt=""
+                        fill
+                        sizes="160px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
+                        {t.consumer.orderNew.testUploadButton}
+                      </div>
+                    )}
                     {photo.status !== 'done' ? (
                       <div className="absolute inset-0 flex items-center justify-center bg-background/70 text-xs text-foreground">
                         {photo.status === 'error'

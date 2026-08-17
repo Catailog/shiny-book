@@ -851,6 +851,8 @@ export const en = {
       photosHint: '{count} / {required} uploaded',
       addPhotosButton: 'Add photos',
       removePhotoLabel: 'Remove photo',
+      testUploadButton: 'Auto-upload test photos',
+      testUploadTooltip: 'Automatically uploads photos so you can test the next screen.',
       couponLabel: 'Coupon code (optional)',
       submitting: 'Creating order...',
       status: {

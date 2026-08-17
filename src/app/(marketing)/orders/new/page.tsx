@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 
 import { PageSection } from '@/components/page-section';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { env } from '@/env';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getProducts } from '@/lib/products/get-products';
@@ -37,7 +38,7 @@ export default async function NewOrderPage(props: PageProps<'/orders/new'>) {
         </h1>
       </div>
 
-      <NewOrderWizard product={product} />
+      <NewOrderWizard product={product} allowTestUpload={env.NODE_ENV !== 'production'} />
     </PageSection>
   );
 }

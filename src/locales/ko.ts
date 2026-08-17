@@ -848,6 +848,8 @@ export const ko = {
       photosHint: '{count} / {required}장 업로드됨',
       addPhotosButton: '사진 추가',
       removePhotoLabel: '사진 삭제',
+      testUploadButton: '테스트 이미지 자동 업로드',
+      testUploadTooltip: '다음 화면 테스트를 위해 자동으로 업로드 됩니다.',
       couponLabel: '쿠폰 코드 (선택)',
       submitting: '주문 생성 중...',
       status: {
