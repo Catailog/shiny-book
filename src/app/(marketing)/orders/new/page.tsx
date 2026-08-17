@@ -12,7 +12,9 @@ import { NewOrderWizard } from './new-order-wizard';
 export default async function NewOrderPage() {
   const consumer = await getCurrentConsumer();
   if (!consumer) {
-    redirect(CONSUMER_ROUTES.LOGIN);
+    redirect(
+      `${CONSUMER_ROUTES.LOGIN}?redirectTo=${encodeURIComponent(CONSUMER_ROUTES.NEW_ORDER)}`,
+    );
   }
 
   const locale = await getLocale();

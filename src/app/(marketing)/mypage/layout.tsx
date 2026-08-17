@@ -8,7 +8,7 @@ import { MypageSidebar } from './mypage-sidebar';
 export default async function MypageLayout(props: LayoutProps<'/mypage'>) {
   const consumer = await getCurrentConsumer();
   if (!consumer) {
-    redirect(CONSUMER_ROUTES.LOGIN);
+    redirect(`${CONSUMER_ROUTES.LOGIN}?redirectTo=${encodeURIComponent(CONSUMER_ROUTES.MYPAGE)}`);
   }
 
   const consumerName =
