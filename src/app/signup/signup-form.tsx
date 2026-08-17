@@ -61,12 +61,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="name" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.nameLabel}
             </Label>
-            <Input
-              id="name"
-              autoComplete="name"
-              className="h-auto rounded p-4"
-              {...register('name')}
-            />
+            <Input id="name" autoComplete="name" {...register('name')} />
             {errors.name ? (
               <p className="text-sm text-destructive">{t.consumer.signup.errors.nameRequired}</p>
             ) : null}
@@ -75,13 +70,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="email" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.emailLabel}
             </Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              className="h-auto rounded p-4"
-              {...register('email')}
-            />
+            <Input id="email" type="email" autoComplete="email" {...register('email')} />
             {errors.email ? (
               <p className="text-sm text-destructive">{t.consumer.signup.errors.emailInvalid}</p>
             ) : null}
@@ -95,7 +84,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 id="password"
                 type={isPasswordVisible ? 'text' : 'password'}
                 autoComplete="new-password"
-                className="h-auto rounded p-4 pr-11"
+                className="pr-11"
                 {...register('password')}
               />
               <button
@@ -133,7 +122,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 id="password-confirm"
                 type={isConfirmVisible ? 'text' : 'password'}
                 autoComplete="new-password"
-                className="h-auto rounded p-4 pr-11"
+                className="pr-11"
                 {...register('passwordConfirm')}
               />
               <button
@@ -163,13 +152,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="phone" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.phoneLabel}
             </Label>
-            <Input
-              id="phone"
-              type="tel"
-              autoComplete="tel"
-              className="h-auto rounded p-4"
-              {...register('phone')}
-            />
+            <Input id="phone" type="tel" autoComplete="tel" {...register('phone')} />
           </div>
           <div className="flex items-center gap-2">
             <Checkbox id="agree-terms" />
@@ -212,8 +195,9 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
         </div>
         <Button
           type="submit"
+          variant="primary"
           disabled={isPending}
-          className="h-auto w-full rounded bg-primary p-4 text-sm font-semibold text-primary-foreground uppercase hover:bg-primary/90"
+          className="w-full text-sm font-semibold uppercase"
         >
           {isPending ? t.consumer.signup.submitting : t.consumer.signup.submitButton}
         </Button>

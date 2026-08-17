@@ -32,7 +32,7 @@ export default async function AdminProductsPage() {
           <Button
             render={<Link href={ADMIN_ROUTES.PRODUCTS_NEW} />}
             nativeButton={false}
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
+            variant="primary"
           >
             <Plus aria-hidden="true" className="size-4" />
             {t.admin.products.writeButton}

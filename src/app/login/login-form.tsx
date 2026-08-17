@@ -55,13 +55,7 @@ export function ConsumerLoginForm({ redirectTo }: ConsumerLoginFormProps) {
             <Label htmlFor="email" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.login.emailLabel}
             </Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              className="h-auto rounded p-4"
-              {...register('email')}
-            />
+            <Input id="email" type="email" autoComplete="email" {...register('email')} />
             {errors.email ? (
               <p className="text-sm text-destructive">{t.consumer.login.errors.emailInvalid}</p>
             ) : null}
@@ -75,7 +69,7 @@ export function ConsumerLoginForm({ redirectTo }: ConsumerLoginFormProps) {
                 id="password"
                 type={isPasswordVisible ? 'text' : 'password'}
                 autoComplete="current-password"
-                className="h-auto rounded p-4 pr-11"
+                className="pr-11"
                 {...register('password')}
               />
               <button
@@ -102,8 +96,9 @@ export function ConsumerLoginForm({ redirectTo }: ConsumerLoginFormProps) {
         </div>
         <Button
           type="submit"
+          variant="primary"
           disabled={isPending}
-          className="h-auto w-full rounded bg-primary p-4 text-sm font-semibold text-primary-foreground uppercase hover:bg-primary/90"
+          className="w-full text-sm font-semibold uppercase"
         >
           {isPending ? t.consumer.login.submitting : t.consumer.login.submitButton}
         </Button>

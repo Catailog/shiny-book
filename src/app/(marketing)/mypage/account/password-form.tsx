@@ -47,7 +47,6 @@ export function ChangePasswordForm() {
           id="new-password"
           type="password"
           autoComplete="new-password"
-          className="h-auto rounded p-4"
           {...register('password')}
         />
         {errors.password ? (
@@ -65,7 +64,6 @@ export function ChangePasswordForm() {
           id="new-password-confirm"
           type="password"
           autoComplete="new-password"
-          className="h-auto rounded p-4"
           {...register('passwordConfirm')}
         />
         {errors.passwordConfirm ? (

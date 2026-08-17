@@ -152,12 +152,7 @@ export default async function NoticesPage() {
             <ChevronLeft aria-hidden="true" className="size-4" />
           </Button>
           {[1, 2, 3, 4, 5].map((page) => (
-            <Button
-              key={page}
-              variant={page === 1 ? 'default' : 'outline'}
-              size="icon"
-              className={page === 1 ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}
-            >
+            <Button key={page} variant={page === 1 ? 'primary' : 'outline'} size="icon">
               {page}
             </Button>
           ))}

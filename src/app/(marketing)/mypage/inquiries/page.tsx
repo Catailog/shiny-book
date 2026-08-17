@@ -37,7 +37,7 @@ export default async function MypageInquiriesPage() {
         <Button
           render={<Link href={CONSUMER_ROUTES.NEW_INQUIRY} />}
           nativeButton={false}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
+          variant="primary"
         >
           <Plus aria-hidden="true" className="size-4" />
           {t.consumer.inquiries.newButton}

@@ -45,7 +45,7 @@ export default async function AdminAnnouncementsPage() {
             <Button
               render={<Link href={ADMIN_ROUTES.ANNOUNCEMENTS_NEW} />}
               nativeButton={false}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              variant="primary"
             >
               <Plus aria-hidden="true" className="size-4" />
               {t.admin.announcements.list.createButton}

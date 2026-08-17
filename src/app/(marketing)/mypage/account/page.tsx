@@ -40,12 +40,7 @@ export default async function MypageAccountPage() {
             <Label htmlFor="account-name" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.account.personalInfo.nameLabel}
             </Label>
-            <Input
-              id="account-name"
-              defaultValue={consumerName}
-              readOnly
-              className="h-auto rounded p-4"
-            />
+            <Input id="account-name" defaultValue={consumerName} readOnly />
           </div>
           <div className="flex flex-col gap-2">
             <Label
@@ -54,12 +49,7 @@ export default async function MypageAccountPage() {
             >
               {t.consumer.account.personalInfo.emailLabel}
             </Label>
-            <Input
-              id="account-email"
-              defaultValue={consumerEmail}
-              readOnly
-              className="h-auto rounded p-4"
-            />
+            <Input id="account-email" defaultValue={consumerEmail} readOnly />
           </div>
           {consumerPhone ? (
             <div className="flex flex-col gap-2">
@@ -69,12 +59,7 @@ export default async function MypageAccountPage() {
               >
                 {t.consumer.account.personalInfo.phoneLabel}
               </Label>
-              <Input
-                id="account-phone"
-                defaultValue={consumerPhone}
-                readOnly
-                className="h-auto rounded p-4"
-              />
+              <Input id="account-phone" defaultValue={consumerPhone} readOnly />
             </div>
           ) : null}
         </div>

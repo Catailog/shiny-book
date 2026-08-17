@@ -69,11 +69,7 @@ export function AdminLoginForm() {
           <p className="text-sm text-destructive">{t.admin.login.errors.passwordRequired}</p>
         ) : null}
       </div>
-      <Button
-        type="submit"
-        disabled={isPending}
-        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-      >
+      <Button type="submit" variant="primary" disabled={isPending} className="w-full">
         {isPending ? t.admin.login.submitting : t.admin.login.submitButton}
       </Button>
     </form>

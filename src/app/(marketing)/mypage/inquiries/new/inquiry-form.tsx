@@ -76,11 +76,7 @@ export function InquiryForm() {
         >
           {t.consumer.inquiries.form.cancelButton}
         </Button>
-        <Button
-          type="submit"
-          disabled={isPending}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
-        >
+        <Button type="submit" variant="primary" disabled={isPending}>
           {isPending
             ? t.consumer.inquiries.form.submitting
             : t.consumer.inquiries.form.submitButton}

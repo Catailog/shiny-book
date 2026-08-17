@@ -56,7 +56,7 @@ export default async function AdminCouponsPage() {
             <Button
               render={<Link href={ADMIN_ROUTES.COUPONS_NEW} />}
               nativeButton={false}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              variant="primary"
             >
               <Plus aria-hidden="true" className="size-4" />
               {t.admin.coupons.list.createButton}
