@@ -544,7 +544,7 @@ export const ko = {
         searchPlaceholder: 'Search questions...',
         allCategories: 'All Categories',
         allStatuses: 'All Statuses',
-        showingCount: '{shown}개 중 {total}개 표시',
+        showingCount: '{shown}개 표시',
         table: {
           title: 'QUESTION TITLE',
           category: 'CATEGORY',

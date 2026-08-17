@@ -545,7 +545,7 @@ export const en = {
         searchPlaceholder: 'Search questions...',
         allCategories: 'All Categories',
         allStatuses: 'All Statuses',
-        showingCount: 'Showing {shown} of {total} FAQs',
+        showingCount: 'Showing {shown} FAQs',
         table: {
           title: 'QUESTION TITLE',
           category: 'CATEGORY',
