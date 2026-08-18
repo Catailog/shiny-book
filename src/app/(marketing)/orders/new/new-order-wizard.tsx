@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ImagePlus, X } from 'lucide-react';
+import { ImagePlus, RefreshCw, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { TEST_COUPON_CODE } from '@/constants/coupon';
 import {
   FILE_UPLOAD_KIND,
   FILE_UPLOAD_RULES,
@@ -44,6 +45,7 @@ import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
 import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
 
 import { createConsumerOrder } from './actions';
+import { refreshAddresses } from './address-actions';
 import {
   type OrderDetailsInput,
   createConsumerOrderSchema,
@@ -91,17 +93,24 @@ async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string |
   return error ? null : signed.path;
 }
 
-export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrderWizardProps) {
+export function NewOrderWizard({
+  product,
+  addresses: initialAddresses,
+  allowTestUpload,
+}: NewOrderWizardProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [isGeneratingTestPhotos, startTestPhotosTransition] = useTransition();
+  const [isRefreshingAddresses, startAddressRefreshTransition] = useTransition();
   const [phase, setPhase] = useState<Phase>('details');
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
+  const [addresses, setAddresses] = useState(initialAddresses);
   const {
     register,
     control,
     trigger,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm<OrderDetailsInput>({
     resolver: zodResolver(orderDetailsSchema),
@@ -238,6 +247,26 @@ export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrder
         })),
       );
     });
+  }
+
+  function handleRefreshAddresses() {
+    startAddressRefreshTransition(async () => {
+      const nextAddresses = await refreshAddresses();
+      setAddresses(nextAddresses);
+
+      const currentAddressId = getValues('addressId');
+      const stillExists = nextAddresses.some((address) => address.id === currentAddressId);
+      if (!stillExists) {
+        setValue(
+          'addressId',
+          nextAddresses.find((address) => address.is_default)?.id ?? nextAddresses[0]?.id ?? '',
+        );
+      }
+    });
+  }
+
+  function handleFillTestCoupon() {
+    setValue('couponCode', TEST_COUPON_CODE);
   }
 
   function handleSubmit() {
@@ -470,19 +499,37 @@ export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrder
             </section>
 
             <section className="flex flex-col gap-3">
-              <Label>{t.consumer.orderNew.addressLabel}</Label>
-              {addresses.length === 0 ? (
-                <div className="flex flex-col gap-2 rounded-lg border border-dashed border-border p-5 text-sm text-muted-foreground">
-                  <p>{t.consumer.orderNew.addressEmpty}</p>
+              <div className="flex items-center justify-between">
+                <Label>{t.consumer.orderNew.addressLabel}</Label>
+                <div className="flex items-center gap-4">
                   <Link
                     href={CONSUMER_ROUTES.ACCOUNT}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-fit font-semibold text-primary underline"
+                    className="text-sm font-semibold text-primary underline"
                   >
-                    {t.consumer.orderNew.addAddressLink}
+                    {addresses.length === 0
+                      ? t.consumer.orderNew.addAddressLink
+                      : t.consumer.orderNew.manageAddressLink}
                   </Link>
+                  <button
+                    type="button"
+                    disabled={isRefreshingAddresses}
+                    onClick={handleRefreshAddresses}
+                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <RefreshCw
+                      aria-hidden="true"
+                      className={isRefreshingAddresses ? 'size-3.5 animate-spin' : 'size-3.5'}
+                    />
+                    {t.consumer.orderNew.refreshAddressesButton}
+                  </button>
                 </div>
+              </div>
+              {addresses.length === 0 ? (
+                <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted-foreground">
+                  {t.consumer.orderNew.addressEmpty}
+                </p>
               ) : (
                 <Controller
                   control={control}
@@ -521,7 +568,25 @@ export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrder
             </section>
 
             <section className="flex flex-col gap-2">
-              <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
+              <div className="flex items-center gap-3">
+                <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
+                {allowTestUpload ? (
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <button
+                          type="button"
+                          onClick={handleFillTestCoupon}
+                          className={buttonVariants({ variant: 'primary', size: 'xs' })}
+                        />
+                      }
+                    >
+                      {t.consumer.orderNew.testCouponButton}
+                    </TooltipTrigger>
+                    <TooltipContent>{t.consumer.orderNew.testCouponTooltip}</TooltipContent>
+                  </Tooltip>
+                ) : null}
+              </div>
               <Input id="couponCode" type="text" {...register('couponCode')} />
             </section>
 

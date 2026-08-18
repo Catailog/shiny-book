@@ -880,6 +880,8 @@ export const en = {
       testUploadButton: 'Auto-upload test photos',
       testUploadTooltip: 'Automatically uploads photos so you can test the next screen.',
       couponLabel: 'Coupon code (optional)',
+      testCouponButton: 'Fill test coupon code',
+      testCouponTooltip: 'Automatically fills in a 10% off test coupon code.',
       submitting: 'Creating order...',
       status: {
         uploading: 'Uploading...',
@@ -920,6 +922,8 @@ export const en = {
       addressLabel: 'Shipping address',
       addressEmpty: 'No saved addresses yet. Please add one from My Page first.',
       addAddressLink: 'Add a shipping address',
+      manageAddressLink: 'Add / edit addresses',
+      refreshAddressesButton: 'Refresh',
     },
     inquiries: {
       title: '1:1 Inquiry History',

@@ -876,6 +876,8 @@ export const ko = {
       testUploadButton: '테스트 이미지 자동 업로드',
       testUploadTooltip: '다음 화면 테스트를 위해 자동으로 업로드 됩니다.',
       couponLabel: '쿠폰 코드 (선택)',
+      testCouponButton: '테스트 쿠폰 코드 입력',
+      testCouponTooltip: '10% 할인 테스트 쿠폰 코드를 자동으로 입력합니다.',
       submitting: '주문 생성 중...',
       status: {
         uploading: '업로드 중...',
@@ -916,6 +918,8 @@ export const ko = {
       addressLabel: '배송지',
       addressEmpty: '등록된 배송지가 없습니다. 마이페이지에서 배송지를 먼저 등록해주세요.',
       addAddressLink: '배송지 추가하러 가기',
+      manageAddressLink: '배송지 추가/수정',
+      refreshAddressesButton: '새로고침',
     },
     inquiries: {
       title: '1:1 문의 내역',
