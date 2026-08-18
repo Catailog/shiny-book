@@ -27,6 +27,7 @@ export function ProductCard({ item, startingFromLabel, ctaLabel }: ProductCardPr
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover"
+            priority
           />
         </div>
         <CardContent className="flex flex-col gap-5 px-7 py-7">
