@@ -309,7 +309,7 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '개발 환경 전용 기능입니다. 테스트용 관리자 계정으로 바로 로그인합니다.',
+      testLoginTooltip: '관리자 테스트를 위해 자동으로 로그인 합니다.',
       errors: {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
@@ -706,7 +706,7 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '개발 환경 전용 기능입니다. 테스트용 계정으로 바로 로그인합니다.',
+      testLoginTooltip: '소비자 테스트를 위해 자동으로 로그인 합니다.',
       signupPrompt: '아직 계정이 없으신가요?',
       signupLink: '회원가입',
       errors: {
