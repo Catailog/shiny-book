@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import type { ChangeEvent } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,8 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { PRODUCT_IMAGE_UPLOAD_RULE, STORAGE_BUCKETS } from '@/constants/file-upload';
 import { LOCALE_LABELS, LOCALE_OPTIONS } from '@/constants/locale';
 import { PRODUCT_CATEGORY } from '@/constants/product-category';
+import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
+import { createProductImageSignedUploadUrl } from '@/lib/uploads/create-product-image-signed-upload-url';
 import { type Locale, defaultLocale, locales } from '@/locales';
 
 import type { ProductActionResult } from './actions';
@@ -56,6 +60,7 @@ export function ProductForm({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<ProductFormInput>({
     resolver: zodResolver(productFormSchema),
@@ -63,6 +68,51 @@ export function ProductForm({
   });
   const nameEnValue = useWatch({ control, name: 'nameEn' });
   const descriptionEnValue = useWatch({ control, name: 'descriptionEn' });
+  const imageUrlValue = useWatch({ control, name: 'imageUrl' });
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  function handleImageFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) {
+      return;
+    }
+
+    if (
+      !PRODUCT_IMAGE_UPLOAD_RULE.allowedMimeTypes.includes(file.type) ||
+      file.size > PRODUCT_IMAGE_UPLOAD_RULE.maxSizeBytes
+    ) {
+      toast.error(t.admin.products.errors.validation_failed);
+      return;
+    }
+
+    setIsUploadingImage(true);
+    startTransition(async () => {
+      const signed = await createProductImageSignedUploadUrl({
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+      });
+      if (!signed.success) {
+        toast.error(t.admin.products.errors[signed.errorCode]);
+        setIsUploadingImage(false);
+        return;
+      }
+
+      const supabase = createBrowserSupabaseClient();
+      const { error } = await supabase.storage
+        .from(STORAGE_BUCKETS.PRODUCT_IMAGES)
+        .uploadToSignedUrl(signed.path, signed.token, file);
+      setIsUploadingImage(false);
+      if (error) {
+        toast.error(t.admin.products.errors.unexpected_error);
+        return;
+      }
+
+      setValue('imageUrl', signed.publicUrl, { shouldValidate: true, shouldDirty: true });
+    });
+  }
 
   const isKorean = activeLanguage === defaultLocale;
   const nameFieldName = isKorean ? 'name' : 'nameEn';
@@ -170,7 +220,35 @@ export function ProductForm({
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="imageUrl">{t.admin.products.form.imageUrlLabel}</Label>
-        <Input id="imageUrl" type="text" {...register('imageUrl')} />
+        <input type="hidden" {...register('imageUrl')} />
+        <div className="flex items-center gap-3">
+          {imageUrlValue ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={imageUrlValue}
+              alt=""
+              className="h-16 w-16 rounded-md border border-border object-cover"
+            />
+          ) : null}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={isUploadingImage}
+            onClick={() => imageInputRef.current?.click()}
+          >
+            {isUploadingImage
+              ? t.admin.products.form.imageUploading
+              : t.admin.products.form.imageUploadButton}
+          </Button>
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="hidden"
+            onChange={handleImageFileChange}
+          />
+        </div>
         {errors.imageUrl ? (
           <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
         ) : null}

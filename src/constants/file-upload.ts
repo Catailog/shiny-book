@@ -7,9 +7,10 @@ export type FileUploadKind = (typeof FILE_UPLOAD_KIND)[keyof typeof FILE_UPLOAD_
 
 export const STORAGE_BUCKETS = {
   ORDER_UPLOADS: 'order-uploads',
+  PRODUCT_IMAGES: 'product-images',
 } as const;
 
-interface FileUploadRule {
+export interface FileUploadRule {
   allowedMimeTypes: readonly string[];
   maxSizeBytes: number;
 }
@@ -23,6 +24,11 @@ export const FILE_UPLOAD_RULES: Record<FileUploadKind, FileUploadRule> = {
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
     maxSizeBytes: 5 * 1024 * 1024,
   },
+};
+
+export const PRODUCT_IMAGE_UPLOAD_RULE: FileUploadRule = {
+  allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
+  maxSizeBytes: 5 * 1024 * 1024,
 };
 
 export const PROCESSED_PHOTO_IMAGE = {
