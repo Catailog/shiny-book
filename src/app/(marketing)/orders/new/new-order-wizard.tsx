@@ -426,6 +426,9 @@ export function NewOrderWizard({
                           />
                         }
                       >
+                        {isGeneratingTestPhotos ? (
+                          <RefreshCw aria-hidden="true" className="size-3.5 animate-spin" />
+                        ) : null}
                         {t.consumer.orderNew.testUploadButton}
                       </TooltipTrigger>
                       <TooltipContent>{t.consumer.orderNew.testUploadTooltip}</TooltipContent>
