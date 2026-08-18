@@ -119,7 +119,7 @@ export function NewOrderWizard({
       title: '',
       quantity: 1,
       pageCount: PHOTOBOOK_PAGE_COUNT_MIN,
-      addressId: addresses.find((address) => address.is_default)?.id ?? addresses[0]?.id ?? '',
+      addressId: addresses.find((address) => address.is_default)?.id ?? '',
       couponCode: '',
     },
   });
@@ -257,10 +257,7 @@ export function NewOrderWizard({
       const currentAddressId = getValues('addressId');
       const stillExists = nextAddresses.some((address) => address.id === currentAddressId);
       if (!stillExists) {
-        setValue(
-          'addressId',
-          nextAddresses.find((address) => address.is_default)?.id ?? nextAddresses[0]?.id ?? '',
-        );
+        setValue('addressId', nextAddresses.find((address) => address.is_default)?.id ?? '');
       }
     });
   }
