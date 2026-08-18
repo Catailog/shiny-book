@@ -608,6 +608,7 @@ export const ko = {
       },
       statusPending: '답변대기',
       statusAnswered: '답변완료',
+      newReplyBadge: '추가 문의',
       viewLink: '보기',
       answerButton: '답변 등록',
       answering: '등록 중...',
@@ -619,6 +620,7 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       list: {
+        filterAllLabel: '전체',
         statusTabs: {
           all: '전체 문의',
           new: '신규',

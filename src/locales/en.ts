@@ -609,6 +609,7 @@ export const en = {
       },
       statusPending: 'Pending',
       statusAnswered: 'Answered',
+      newReplyBadge: 'New reply',
       viewLink: 'View',
       answerButton: 'Submit answer',
       answering: 'Submitting...',
@@ -620,6 +621,7 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       list: {
+        filterAllLabel: 'All',
         statusTabs: {
           all: 'All Inquiries',
           new: 'New',

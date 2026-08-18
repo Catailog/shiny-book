@@ -1,4 +1,5 @@
 import { ClickableTableRow } from '@/components/clickable-table-row';
+import { FilterLink } from '@/components/filter-link';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -16,14 +17,51 @@ import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
-export default async function AdminInquiriesPage() {
+const FILTER_TABS = ['all', 'pending', 'answered'] as const;
+type InquiryFilter = (typeof FILTER_TABS)[number];
+
+function isInquiryFilter(value: string): value is InquiryFilter {
+  return (FILTER_TABS as readonly string[]).includes(value);
+}
+
+export default async function AdminInquiriesPage(props: PageProps<'/admin/inquiries'>) {
   const t = locales[defaultLocale];
-  const inquiries = await getInquiries();
+  const searchParams = await props.searchParams;
+  const filterParam = firstParam(searchParams.filter);
+  const activeFilter = isInquiryFilter(filterParam) ? filterParam : 'all';
+
+  const allInquiries = await getInquiries();
+  const inquiries = allInquiries.filter((inquiry) => {
+    if (activeFilter === 'pending') {
+      return inquiry.answered_at === null;
+    }
+    if (activeFilter === 'answered') {
+      return inquiry.answered_at !== null;
+    }
+    return true;
+  });
 
   return (
     <div className="flex flex-1 flex-col">
       <AdminTopbar title={t.admin.inquiries.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <div className="flex gap-2">
+          <FilterLink href={ADMIN_ROUTES.INQUIRIES} isActive={activeFilter === 'all'}>
+            {t.admin.inquiries.list.filterAllLabel}
+          </FilterLink>
+          <FilterLink
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=pending`}
+            isActive={activeFilter === 'pending'}
+          >
+            {t.admin.inquiries.statusPending}
+          </FilterLink>
+          <FilterLink
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=answered`}
+            isActive={activeFilter === 'answered'}
+          >
+            {t.admin.inquiries.statusAnswered}
+          </FilterLink>
+        </div>
         <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
             <TableHeader>
@@ -63,17 +101,24 @@ export default async function AdminInquiriesPage() {
                       {inquiry.title}
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        className={
-                          isAnswered
-                            ? 'bg-order-status-done/10 text-order-status-done'
-                            : 'bg-destructive/10 text-destructive'
-                        }
-                      >
-                        {isAnswered
-                          ? t.admin.inquiries.statusAnswered
-                          : t.admin.inquiries.statusPending}
-                      </Badge>
+                      <div className="flex flex-wrap gap-1">
+                        <Badge
+                          className={
+                            isAnswered
+                              ? 'bg-order-status-done/10 text-order-status-done'
+                              : 'bg-destructive/10 text-destructive'
+                          }
+                        >
+                          {isAnswered
+                            ? t.admin.inquiries.statusAnswered
+                            : t.admin.inquiries.statusPending}
+                        </Badge>
+                        {inquiry.hasNewConsumerReply ? (
+                          <Badge className="bg-destructive/10 text-destructive">
+                            {t.admin.inquiries.newReplyBadge}
+                          </Badge>
+                        ) : null}
+                      </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {formatDate(inquiry.created_at)}
@@ -87,4 +132,8 @@ export default async function AdminInquiriesPage() {
       </div>
     </div>
   );
+}
+
+function firstParam(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }
