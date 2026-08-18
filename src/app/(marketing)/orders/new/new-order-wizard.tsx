@@ -396,7 +396,7 @@ export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrder
                             type="button"
                             disabled={isGeneratingTestPhotos}
                             onClick={handleGenerateTestPhotos}
-                            className={buttonVariants({ variant: 'outline', size: 'xs' })}
+                            className={buttonVariants({ variant: 'primary', size: 'xs' })}
                           />
                         }
                       >
@@ -524,11 +524,21 @@ export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrder
               <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
               <Input id="couponCode" type="text" {...register('couponCode')} />
             </section>
+
+            <Button
+              type="button"
+              variant="primary"
+              disabled={isPending}
+              className="w-full"
+              onClick={handleSubmit}
+            >
+              {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.summary.payButton}
+            </Button>
           </>
         )}
       </div>
 
-      <div className="w-95 shrink-0 rounded-lg border border-border bg-muted p-6">
+      <div className="sticky top-24 h-fit w-95 shrink-0 rounded-lg border border-border bg-muted p-6">
         <div className="flex flex-col gap-4">
           <h2 className="font-heading text-2xl font-bold text-foreground">
             {t.consumer.orderNew.summary.title}
@@ -558,17 +568,6 @@ export function NewOrderWizard({ product, addresses, allowTestUpload }: NewOrder
               </span>
             </div>
           </div>
-          {phase === 'photos' ? (
-            <Button
-              type="button"
-              variant="primary"
-              disabled={isPending}
-              className="w-full"
-              onClick={handleSubmit}
-            >
-              {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.summary.payButton}
-            </Button>
-          ) : null}
         </div>
       </div>
     </div>
