@@ -65,14 +65,9 @@ export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password" className="text-xs font-semibold">
-            {t.admin.login.passwordLabel}
-          </Label>
-          <span className="text-xs font-medium text-primary">
-            {t.admin.login.forgotPasswordLink}
-          </span>
-        </div>
+        <Label htmlFor="password" className="text-xs font-semibold">
+          {t.admin.login.passwordLabel}
+        </Label>
         <Input
           id="password"
           type="password"

@@ -330,7 +330,6 @@ export const ko = {
       title: '관리자 로그인',
       emailLabel: '이메일',
       passwordLabel: '비밀번호',
-      forgotPasswordLink: '비밀번호를 잊으셨나요?',
       submitButton: '로그인',
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
