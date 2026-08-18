@@ -95,9 +95,9 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
-                <TableHead>{t.admin.announcements.list.table.category}</TableHead>
+                <TableHead className="w-32">{t.admin.announcements.list.table.category}</TableHead>
                 <TableHead>{t.admin.announcements.list.table.title}</TableHead>
-                <TableHead>{t.admin.announcements.list.table.date}</TableHead>
+                <TableHead className="w-28">{t.admin.announcements.list.table.date}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -116,7 +116,7 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
                   <TableCell>
                     <AnnouncementCategoryBadge category={announcement.category} />
                   </TableCell>
-                  <TableCell className="font-semibold text-foreground">
+                  <TableCell className="truncate font-semibold text-foreground">
                     {announcement.title}
                   </TableCell>
                   <TableCell className="text-muted-foreground">

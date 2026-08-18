@@ -49,10 +49,10 @@ export default async function MypageInquiriesPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted hover:bg-muted">
-              <TableHead>{t.consumer.inquiries.table.category}</TableHead>
+              <TableHead className="w-32">{t.consumer.inquiries.table.category}</TableHead>
               <TableHead>{t.consumer.inquiries.table.title}</TableHead>
-              <TableHead>{t.consumer.inquiries.table.status}</TableHead>
-              <TableHead>{t.consumer.inquiries.table.createdAt}</TableHead>
+              <TableHead className="w-28">{t.consumer.inquiries.table.status}</TableHead>
+              <TableHead className="w-28">{t.consumer.inquiries.table.createdAt}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -72,7 +72,7 @@ export default async function MypageInquiriesPage() {
                       : t.consumer.inquiries.form.categoryOptions.general}
                   </Badge>
                 </TableCell>
-                <TableCell className="font-semibold text-foreground">
+                <TableCell className="truncate font-semibold text-foreground">
                   <Link href={`/mypage/inquiries/${inquiry.id}`} className="hover:underline">
                     {inquiry.title}
                   </Link>

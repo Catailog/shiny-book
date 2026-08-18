@@ -28,11 +28,11 @@ export default async function AdminInquiriesPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
-                <TableHead>{t.admin.inquiries.list.table.customerName}</TableHead>
-                <TableHead>{t.admin.inquiries.list.table.category}</TableHead>
+                <TableHead className="w-40">{t.admin.inquiries.list.table.customerName}</TableHead>
+                <TableHead className="w-28">{t.admin.inquiries.list.table.category}</TableHead>
                 <TableHead>{t.admin.inquiries.list.table.subject}</TableHead>
-                <TableHead>{t.admin.inquiries.list.table.status}</TableHead>
-                <TableHead>{t.admin.inquiries.list.table.receivedDate}</TableHead>
+                <TableHead className="w-24">{t.admin.inquiries.list.table.status}</TableHead>
+                <TableHead className="w-28">{t.admin.inquiries.list.table.receivedDate}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -51,7 +51,7 @@ export default async function AdminInquiriesPage() {
                     key={inquiry.id}
                     href={`${ADMIN_ROUTES.INQUIRIES}/${inquiry.id}`}
                   >
-                    <TableCell>{inquiry.consumerEmail ?? '-'}</TableCell>
+                    <TableCell className="truncate">{inquiry.consumerEmail ?? '-'}</TableCell>
                     <TableCell>
                       <Badge className="bg-muted text-muted-foreground">
                         {inquiry.category === INQUIRY_CATEGORY.ORDER
@@ -59,7 +59,9 @@ export default async function AdminInquiriesPage() {
                           : t.consumer.inquiries.form.categoryOptions.general}
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-medium text-foreground">{inquiry.title}</TableCell>
+                    <TableCell className="truncate font-medium text-foreground">
+                      {inquiry.title}
+                    </TableCell>
                     <TableCell>
                       <Badge
                         className={

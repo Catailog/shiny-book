@@ -101,9 +101,9 @@ export default async function NoticesPage(props: PageProps<'/notices'>) {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
-                <TableHead>{t.notice.list.table.category}</TableHead>
+                <TableHead className="w-32">{t.notice.list.table.category}</TableHead>
                 <TableHead>{t.notice.list.table.title}</TableHead>
-                <TableHead className="text-right">{t.notice.list.table.date}</TableHead>
+                <TableHead className="w-28 text-right">{t.notice.list.table.date}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -119,7 +119,7 @@ export default async function NoticesPage(props: PageProps<'/notices'>) {
                   <TableCell>
                     <AnnouncementCategoryBadge category={notice.category} locale={locale} />
                   </TableCell>
-                  <TableCell className="font-medium text-foreground">
+                  <TableCell className="truncate font-medium text-foreground">
                     <Link href={`${NOTICE_ROUTES.LIST}/${notice.id}`} className="hover:underline">
                       {notice.title}
                     </Link>

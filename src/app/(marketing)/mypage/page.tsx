@@ -94,12 +94,12 @@ export default async function MypagePage() {
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.consumer.mypage.orders.columns.title}</TableHead>
-                <TableHead>{t.consumer.mypage.orders.columns.quantity}</TableHead>
-                <TableHead>{t.consumer.mypage.orders.columns.amount}</TableHead>
-                <TableHead>{t.consumer.mypage.orders.columns.status}</TableHead>
-                <TableHead>{t.consumer.mypage.orders.columns.createdAt}</TableHead>
-                <TableHead>{t.consumer.mypage.orders.columns.actions}</TableHead>
-                <TableHead>{t.consumer.mypage.orders.columns.inquiry}</TableHead>
+                <TableHead className="w-20">{t.consumer.mypage.orders.columns.quantity}</TableHead>
+                <TableHead className="w-28">{t.consumer.mypage.orders.columns.amount}</TableHead>
+                <TableHead className="w-24">{t.consumer.mypage.orders.columns.status}</TableHead>
+                <TableHead className="w-28">{t.consumer.mypage.orders.columns.createdAt}</TableHead>
+                <TableHead className="w-24">{t.consumer.mypage.orders.columns.actions}</TableHead>
+                <TableHead className="w-24">{t.consumer.mypage.orders.columns.inquiry}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -118,7 +118,7 @@ export default async function MypagePage() {
                   <TableRow key={order.id} className="hover:bg-transparent">
                     <TableCell className="font-medium text-foreground">
                       <div className="flex flex-col gap-0.5">
-                        <span>{order.title}</span>
+                        <span className="truncate">{order.title}</span>
                         <span className="text-xs font-normal text-muted-foreground">
                           #{order.id.slice(0, 8)}
                         </span>

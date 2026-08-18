@@ -98,13 +98,15 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
           <Table>
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
-                <TableHead>{t.admin.coupons.list.table.code}</TableHead>
-                <TableHead>{t.admin.coupons.list.table.type}</TableHead>
-                <TableHead>{t.admin.coupons.list.table.value}</TableHead>
-                <TableHead>{t.admin.coupons.list.table.usage}</TableHead>
+                <TableHead className="w-32">{t.admin.coupons.list.table.code}</TableHead>
+                <TableHead className="w-28">{t.admin.coupons.list.table.type}</TableHead>
+                <TableHead className="w-24">{t.admin.coupons.list.table.value}</TableHead>
+                <TableHead className="w-28">{t.admin.coupons.list.table.usage}</TableHead>
                 <TableHead>{t.admin.coupons.list.table.expiry}</TableHead>
-                <TableHead>{t.admin.coupons.list.table.status}</TableHead>
-                <TableHead className="text-right">{t.admin.coupons.list.table.actions}</TableHead>
+                <TableHead className="w-24">{t.admin.coupons.list.table.status}</TableHead>
+                <TableHead className="w-28 text-right">
+                  {t.admin.coupons.list.table.actions}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

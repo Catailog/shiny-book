@@ -84,10 +84,12 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.admin.products.columns.name}</TableHead>
-                <TableHead>{t.admin.products.columns.category}</TableHead>
-                <TableHead>{t.admin.products.columns.price}</TableHead>
-                <TableHead>{t.admin.products.columns.status}</TableHead>
-                <TableHead className="text-right">{t.admin.products.columns.actions}</TableHead>
+                <TableHead className="w-32">{t.admin.products.columns.category}</TableHead>
+                <TableHead className="w-28">{t.admin.products.columns.price}</TableHead>
+                <TableHead className="w-24">{t.admin.products.columns.status}</TableHead>
+                <TableHead className="w-32 text-right">
+                  {t.admin.products.columns.actions}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -111,7 +113,7 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
                         <span className="relative size-10 shrink-0 overflow-hidden rounded bg-muted">
                           <Image src={product.image_url} alt="" fill className="object-cover" />
                         </span>
-                        {product.name}
+                        <span className="truncate">{product.name}</span>
                       </div>
                     </TableCell>
                     <TableCell>

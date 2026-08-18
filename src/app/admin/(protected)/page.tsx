@@ -126,12 +126,12 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
               <TableHeader>
                 <TableRow className="bg-muted hover:bg-muted">
                   <TableHead>{t.admin.orders.columns.title}</TableHead>
-                  <TableHead>{t.admin.orders.columns.quantity}</TableHead>
-                  <TableHead>{t.admin.orders.columns.amount}</TableHead>
-                  <TableHead>{t.admin.orders.columns.status}</TableHead>
-                  <TableHead>{t.admin.orders.columns.files}</TableHead>
-                  <TableHead>{t.admin.orders.columns.createdAt}</TableHead>
-                  <TableHead>{t.admin.orders.columns.actions}</TableHead>
+                  <TableHead className="w-20">{t.admin.orders.columns.quantity}</TableHead>
+                  <TableHead className="w-28">{t.admin.orders.columns.amount}</TableHead>
+                  <TableHead className="w-24">{t.admin.orders.columns.status}</TableHead>
+                  <TableHead className="w-28">{t.admin.orders.columns.files}</TableHead>
+                  <TableHead className="w-28">{t.admin.orders.columns.createdAt}</TableHead>
+                  <TableHead className="w-56">{t.admin.orders.columns.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -152,7 +152,9 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
 
                   return (
                     <TableRow key={order.id}>
-                      <TableCell className="font-medium text-foreground">{order.title}</TableCell>
+                      <TableCell className="truncate font-medium text-foreground">
+                        {order.title}
+                      </TableCell>
                       <TableCell>
                         {order.quantity}
                         {t.admin.orders.quantitySuffix}
@@ -171,9 +173,9 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                       <TableCell className="text-muted-foreground">
                         {formatDate(order.created_at)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="whitespace-normal">
                         {status ? (
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-2">
                             <RevertOrderStatusButton
                               orderId={order.id}
                               from={status}

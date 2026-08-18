@@ -61,7 +61,7 @@ export default async function AdminFaqsPage() {
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.admin.faqs.list.table.title}</TableHead>
-                <TableHead>{t.admin.faqs.list.table.lastEdited}</TableHead>
+                <TableHead className="w-32">{t.admin.faqs.list.table.lastEdited}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -74,7 +74,9 @@ export default async function AdminFaqsPage() {
               ) : null}
               {faqs.map((faq) => (
                 <ClickableTableRow key={faq.id} href={`${ADMIN_ROUTES.FAQS}/${faq.id}/edit`}>
-                  <TableCell className="font-medium text-foreground">{faq.question}</TableCell>
+                  <TableCell className="truncate font-medium text-foreground">
+                    {faq.question}
+                  </TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(faq.updated_at)}
                   </TableCell>
