@@ -7,6 +7,8 @@ export const consumerSignupSchema = z
     password: z.string().min(6),
     passwordConfirm: z.string().min(1),
     phone: z.string().optional(),
+    agreeTerms: z.boolean().refine((value) => value === true),
+    agreePrivacy: z.boolean().refine((value) => value === true),
     marketingEmailConsent: z.boolean(),
     marketingSmsConsent: z.boolean(),
   })

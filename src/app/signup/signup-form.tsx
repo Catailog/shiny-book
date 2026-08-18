@@ -35,7 +35,12 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
     formState: { errors },
   } = useForm<ConsumerSignupInput>({
     resolver: zodResolver(consumerSignupSchema),
-    defaultValues: { marketingEmailConsent: false, marketingSmsConsent: false },
+    defaultValues: {
+      agreeTerms: false,
+      agreePrivacy: false,
+      marketingEmailConsent: false,
+      marketingSmsConsent: false,
+    },
   });
 
   function onSubmit(values: ConsumerSignupInput) {
@@ -154,11 +159,51 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             </Label>
             <Input id="phone" type="tel" autoComplete="tel" {...register('phone')} />
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox id="agree-terms" />
-            <Label htmlFor="agree-terms" className="font-normal text-muted-foreground">
-              {t.consumer.signup.agreeTermsLabel}
-            </Label>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <Controller
+                control={control}
+                name="agreeTerms"
+                render={({ field }) => (
+                  <Checkbox
+                    id="agree-terms"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <Label htmlFor="agree-terms" className="font-normal text-muted-foreground">
+                {t.consumer.signup.agreeTermsLabel}
+              </Label>
+            </div>
+            {errors.agreeTerms ? (
+              <p className="text-sm text-destructive">
+                {t.consumer.signup.errors.agreeTermsRequired}
+              </p>
+            ) : null}
+          </div>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <Controller
+                control={control}
+                name="agreePrivacy"
+                render={({ field }) => (
+                  <Checkbox
+                    id="agree-privacy"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <Label htmlFor="agree-privacy" className="font-normal text-muted-foreground">
+                {t.consumer.signup.agreePrivacyLabel}
+              </Label>
+            </div>
+            {errors.agreePrivacy ? (
+              <p className="text-sm text-destructive">
+                {t.consumer.signup.errors.agreePrivacyRequired}
+              </p>
+            ) : null}
           </div>
           <div className="flex items-center gap-2">
             <Controller
