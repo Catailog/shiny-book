@@ -227,6 +227,7 @@ export const ko = {
     quantitySuffix: '권',
     amountLabel: '결제 금액',
     payButton: '결제하기',
+    testPaymentButton: '자동 테스트 결제',
     payError: '결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.',
     payCancelled: '결제를 취소하셨습니다.',
     needAgreement: '필수 약관에 동의해주세요.',

@@ -227,6 +227,7 @@ export const en = {
     quantitySuffix: 'copies',
     amountLabel: 'Amount',
     payButton: 'Pay now',
+    testPaymentButton: 'Auto test payment',
     payError: 'Something went wrong while requesting payment. Please try again.',
     payCancelled: 'You cancelled the payment.',
     needAgreement: 'Please agree to the required terms.',

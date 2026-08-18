@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 
 import {
   ANONYMOUS,
@@ -15,10 +15,13 @@ import { TOSS_ERROR_CODES, getTossErrorCode } from '@/constants/toss-error-codes
 import { env } from '@/env';
 import { useT } from '@/hooks/use-t';
 
+import { confirmTestPayment } from './test-payment-actions';
+
 interface CheckoutWidgetProps {
   orderId: string;
   orderName: string;
   amount: number;
+  allowTestPayment: boolean;
 }
 
 interface PaymentNotice {
@@ -26,13 +29,19 @@ interface PaymentNotice {
   message: string;
 }
 
-export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetProps) {
+export function CheckoutWidget({
+  orderId,
+  orderName,
+  amount,
+  allowTestPayment,
+}: CheckoutWidgetProps) {
   const t = useT();
   const widgetsRef = useRef<TossPaymentsWidgets | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [hasAgreedRequiredTerms, setHasAgreedRequiredTerms] = useState(true);
   const [paymentNotice, setPaymentNotice] = useState<PaymentNotice | null>(null);
+  const [isTestPaymentPending, startTestPaymentTransition] = useTransition();
 
   useEffect(() => {
     let isCancelled = false;
@@ -134,6 +143,12 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
     }
   }
 
+  function handleTestPaymentClick() {
+    startTestPaymentTransition(async () => {
+      await confirmTestPayment(orderId);
+    });
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div id="toss-payment-methods" />
@@ -152,6 +167,17 @@ export function CheckoutWidget({ orderId, orderName, amount }: CheckoutWidgetPro
       <Button onClick={handlePayClick} disabled={!isReady || isRequesting} className="w-full">
         {t.checkout.payButton}
       </Button>
+      {allowTestPayment ? (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleTestPaymentClick}
+          disabled={isTestPaymentPending}
+          className="w-full"
+        >
+          {t.checkout.testPaymentButton}
+        </Button>
+      ) : null}
     </div>
   );
 }

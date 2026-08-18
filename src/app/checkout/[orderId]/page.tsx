@@ -38,7 +38,12 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
             <p className="font-medium text-foreground">{t.checkout.testNotice.title}</p>
             <p className="text-muted-foreground">{t.checkout.testNotice.body}</p>
           </div>
-          <CheckoutWidget orderId={order.id} orderName={order.title} amount={order.amount} />
+          <CheckoutWidget
+            orderId={order.id}
+            orderName={order.title}
+            amount={order.amount}
+            allowTestPayment
+          />
         </div>
       </div>
       <div className="flex w-full flex-col gap-6 rounded-xl border border-border bg-secondary p-8 lg:w-90">
