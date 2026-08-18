@@ -9,7 +9,7 @@ import { type Locale, defaultLocale, locales } from '@/locales';
 
 const TONE_CLASSES = {
   notice: 'bg-primary-soft text-primary',
-  event: 'bg-secondary text-secondary-foreground',
+  event: 'bg-order-status-in-progress/10 text-order-status-in-progress',
   winner: 'bg-order-status-done/10 text-order-status-done',
 } as const satisfies Record<AnnouncementCategory, string>;
 
