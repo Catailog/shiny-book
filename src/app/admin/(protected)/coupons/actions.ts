@@ -27,6 +27,11 @@ export async function createCoupon(
     return { errorCode: 'validation_failed' };
   }
 
+  const startsAt = parsed.data.startsAt ? new Date(parsed.data.startsAt) : null;
+  if (startsAt && Number.isNaN(startsAt.getTime())) {
+    return { errorCode: 'validation_failed' };
+  }
+
   const expiresAt = parsed.data.expiresAt ? new Date(parsed.data.expiresAt) : null;
   if (expiresAt && Number.isNaN(expiresAt.getTime())) {
     return { errorCode: 'validation_failed' };
@@ -38,6 +43,7 @@ export async function createCoupon(
     discount_type: parsed.data.discountType,
     discount_value: parsed.data.discountValue,
     max_uses: parsed.data.maxUses ?? null,
+    starts_at: startsAt ? startsAt.toISOString() : null,
     expires_at: expiresAt ? expiresAt.toISOString() : null,
   });
 

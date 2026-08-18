@@ -25,6 +25,7 @@ export interface ApplyCouponResult {
     | 'already_applied'
     | 'coupon_not_found'
     | 'coupon_inactive'
+    | 'coupon_not_started'
     | 'coupon_expired'
     | 'coupon_usage_limit_reached'
     | 'coupon_conflict'
@@ -70,6 +71,8 @@ export async function applyCouponToOrder(
       return { errorCode: 'coupon_not_found' };
     case 'inactive':
       return { errorCode: 'coupon_inactive' };
+    case 'not_started':
+      return { errorCode: 'coupon_not_started' };
     case 'expired':
       return { errorCode: 'coupon_expired' };
     case 'usage_limit_reached':

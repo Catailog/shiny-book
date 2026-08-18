@@ -7,6 +7,7 @@ export type RedeemCouponResult =
   | { outcome: 'redeemed'; coupon: Tables<'coupons'>; discountedAmount: number }
   | { outcome: 'not_found' }
   | { outcome: 'inactive' }
+  | { outcome: 'not_started' }
   | { outcome: 'expired' }
   | { outcome: 'usage_limit_reached' }
   | { outcome: 'conflict' };
@@ -33,6 +34,10 @@ export async function redeemCoupon(code: string, amount: number): Promise<Redeem
 
   if (!coupon.is_active) {
     return { outcome: 'inactive' };
+  }
+
+  if (coupon.starts_at && new Date(coupon.starts_at) > new Date()) {
+    return { outcome: 'not_started' };
   }
 
   if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) {

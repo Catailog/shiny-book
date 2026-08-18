@@ -8,13 +8,17 @@ export const couponFormSchema = z
     discountType: z.enum([DISCOUNT_TYPE.FIXED, DISCOUNT_TYPE.PERCENTAGE]),
     discountValue: z.coerce.number().int().positive(),
     maxUses: z.string().optional(),
+    startsAt: z.string().optional(),
     expiresAt: z.string().optional(),
   })
   .refine(
     (data) =>
       data.discountType !== DISCOUNT_TYPE.PERCENTAGE || data.discountValue <= COUPON_PERCENTAGE_MAX,
     { path: ['discountValue'] },
-  );
+  )
+  .refine((data) => !data.startsAt || !data.expiresAt || data.startsAt <= data.expiresAt, {
+    path: ['startsAt'],
+  });
 
 export type CouponFormInput = z.infer<typeof couponFormSchema>;
 
@@ -24,12 +28,16 @@ export const createCouponSchema = z
     discountType: z.enum([DISCOUNT_TYPE.FIXED, DISCOUNT_TYPE.PERCENTAGE]),
     discountValue: z.number().int().positive(),
     maxUses: z.number().int().positive().optional(),
+    startsAt: z.string().optional(),
     expiresAt: z.string().optional(),
   })
   .refine(
     (data) =>
       data.discountType !== DISCOUNT_TYPE.PERCENTAGE || data.discountValue <= COUPON_PERCENTAGE_MAX,
     { path: ['discountValue'] },
-  );
+  )
+  .refine((data) => !data.startsAt || !data.expiresAt || data.startsAt <= data.expiresAt, {
+    path: ['startsAt'],
+  });
 
 export type CreateCouponInput = z.infer<typeof createCouponSchema>;

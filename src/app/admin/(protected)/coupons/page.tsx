@@ -133,6 +133,7 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
                   ? formatDateTime(coupon.expires_at)
                   : t.admin.coupons.noExpiry;
                 const isExpired = coupon.expires_at !== null && new Date(coupon.expires_at) <= now;
+                const isScheduled = coupon.starts_at !== null && new Date(coupon.starts_at) > now;
 
                 return (
                   <TableRow key={coupon.id}>
@@ -150,16 +151,20 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
                         className={
                           isExpired
                             ? 'bg-destructive/10 text-destructive'
-                            : coupon.is_active
-                              ? 'bg-order-status-done/10 text-order-status-done'
-                              : 'bg-muted text-muted-foreground'
+                            : isScheduled
+                              ? 'bg-order-status-in-progress/10 text-order-status-in-progress'
+                              : coupon.is_active
+                                ? 'bg-order-status-done/10 text-order-status-done'
+                                : 'bg-muted text-muted-foreground'
                         }
                       >
                         {isExpired
                           ? t.admin.coupons.expiredLabel
-                          : coupon.is_active
-                            ? t.admin.coupons.activeLabel
-                            : t.admin.coupons.inactiveLabel}
+                          : isScheduled
+                            ? t.admin.coupons.scheduledLabel
+                            : coupon.is_active
+                              ? t.admin.coupons.activeLabel
+                              : t.admin.coupons.inactiveLabel}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">

@@ -1,14 +1,19 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import type { DateRange } from 'react-day-picker';
 import { Controller, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -17,10 +22,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DISCOUNT_TYPE } from '@/constants/coupon';
+import { cn } from '@/lib/utils';
 import { defaultLocale, locales } from '@/locales';
 
 import { createCoupon } from './actions';
 import { type CouponFormInput, couponFormSchema } from './coupon-schema';
+
+const DATE_ONLY_FORMAT = 'yyyy-MM-dd';
+const DATE_DISPLAY_FORMAT = 'yyyy.MM.dd';
 
 interface CouponFormProps {
   onSuccess?: () => void;
@@ -29,16 +38,24 @@ interface CouponFormProps {
 export function CouponForm({ onSuccess }: CouponFormProps) {
   const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
+  const [isRangeOpen, setIsRangeOpen] = useState(false);
+  const [range, setRange] = useState<DateRange | undefined>();
   const {
     register,
     control,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<CouponFormInput>({
     resolver: zodResolver(couponFormSchema),
     defaultValues: { discountType: DISCOUNT_TYPE.PERCENTAGE },
   });
+
+  useEffect(() => {
+    setValue('startsAt', range?.from ? format(range.from, DATE_ONLY_FORMAT) : undefined);
+    setValue('expiresAt', range?.to ? format(range.to, DATE_ONLY_FORMAT) : undefined);
+  }, [range, setValue]);
 
   function onSubmit(values: CouponFormInput) {
     startTransition(async () => {
@@ -47,6 +64,7 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
         discountType: values.discountType,
         discountValue: values.discountValue,
         maxUses: values.maxUses ? Number(values.maxUses) : undefined,
+        startsAt: values.startsAt || undefined,
         expiresAt: values.expiresAt || undefined,
       });
 
@@ -60,9 +78,17 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
         onSuccess();
       } else {
         reset();
+        setRange(undefined);
       }
     });
   }
+
+  const periodLabel =
+    range?.from && range.to
+      ? `${format(range.from, DATE_DISPLAY_FORMAT)} - ${format(range.to, DATE_DISPLAY_FORMAT)}`
+      : range?.from
+        ? format(range.from, DATE_DISPLAY_FORMAT)
+        : t.admin.coupons.form.periodPlaceholder;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap items-end gap-3" noValidate>
@@ -119,10 +145,39 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
         <Input id="maxUses" type="number" min={1} className="w-28" {...register('maxUses')} />
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="expiresAt">{t.admin.coupons.form.expiresAtLabel}</Label>
-        <Input id="expiresAt" type="date" className="w-40" {...register('expiresAt')} />
+        <Label htmlFor="period">{t.admin.coupons.form.periodLabel}</Label>
+        <Popover open={isRangeOpen} onOpenChange={setIsRangeOpen}>
+          <PopoverTrigger
+            render={
+              <Button
+                id="period"
+                type="button"
+                variant="outline"
+                className={cn(
+                  'w-56 justify-start font-normal',
+                  !range?.from && 'text-muted-foreground',
+                )}
+              />
+            }
+          >
+            <CalendarIcon aria-hidden="true" className="size-4" />
+            {periodLabel}
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="range"
+              selected={range}
+              onSelect={setRange}
+              numberOfMonths={2}
+              defaultMonth={range?.from}
+            />
+          </PopoverContent>
+        </Popover>
+        {errors.startsAt ? (
+          <p className="text-sm text-destructive">{t.admin.coupons.errors.validation_failed}</p>
+        ) : null}
       </div>
-      <Button type="submit" disabled={isPending}>
+      <Button type="submit" variant="primary" disabled={isPending}>
         {isPending ? t.admin.coupons.form.submitting : t.admin.coupons.form.submitButton}
       </Button>
     </form>
