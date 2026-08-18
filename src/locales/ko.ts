@@ -292,6 +292,8 @@ export const ko = {
   admin: {
     portalLabel: '관리자 포털',
     notificationsLabel: '알림',
+    notificationsEmptyLabel: '미답변 문의가 없습니다.',
+    notificationsViewAllLabel: '전체 문의 보기',
     nav: {
       dashboard: '대시보드',
       products: '상품 관리',

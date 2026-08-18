@@ -293,6 +293,8 @@ export const en = {
   admin: {
     portalLabel: 'Admin Portal',
     notificationsLabel: 'Notifications',
+    notificationsEmptyLabel: 'No unanswered inquiries.',
+    notificationsViewAllLabel: 'View all inquiries',
     nav: {
       dashboard: 'Dashboard',
       products: 'Products',
