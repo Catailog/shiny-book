@@ -222,6 +222,7 @@ export const en = {
   } satisfies Record<ApiErrorCode, string>,
   checkout: {
     title: 'Checkout',
+    backButton: 'Back',
     summaryTitle: 'Order Summary',
     paymentTitle: 'Payment Method',
     quantitySuffix: 'copies',

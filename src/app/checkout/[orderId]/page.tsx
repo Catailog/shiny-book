@@ -7,6 +7,7 @@ import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { getOrderPaymentSummary } from '@/lib/orders/get-order-payment-summary';
 import { locales } from '@/locales';
 
+import { BackButton } from './back-button';
 import { CheckoutWidget } from './checkout-widget';
 import { CouponForm } from './coupon-form';
 
@@ -34,6 +35,7 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-16 lg:flex-row lg:items-start lg:gap-16">
       <div className="flex flex-1 flex-col gap-8">
+        <BackButton />
         <h1 className="font-heading text-3xl font-bold text-foreground">{t.checkout.title}</h1>
         <div className="flex flex-col gap-4">
           <h2 className="text-sm font-semibold tracking-wide text-foreground uppercase">
