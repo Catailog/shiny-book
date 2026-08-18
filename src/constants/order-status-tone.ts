@@ -8,5 +8,3 @@ export const ORDER_STATUS_TONE = {
   [ORDER_STATUS.SHIPPING]: 'in_progress',
   [ORDER_STATUS.COMPLETED]: 'done',
 } as const satisfies Record<OrderStatus, string>;
-
-export type OrderStatusTone = (typeof ORDER_STATUS_TONE)[OrderStatus];
