@@ -28,7 +28,7 @@ export default async function CheckoutFailPage(props: PageProps<'/checkout/[orde
   const knownFailure = knownFailures[code];
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-12">
+    <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-4 py-12">
       <h1 className="text-2xl font-semibold text-foreground">
         {knownFailure?.title ?? t.checkout.fail.title}
       </h1>
@@ -45,7 +45,7 @@ export default async function CheckoutFailPage(props: PageProps<'/checkout/[orde
           <dd className="break-all">{message}</dd>
         </div>
       </dl>
-    </main>
+    </div>
   );
 }
 

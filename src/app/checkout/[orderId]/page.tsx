@@ -20,14 +20,14 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
 
   if (order.status !== ORDER_STATUS.AWAITING_PAYMENT) {
     return (
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-2 px-4 text-center">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-2 px-4 text-center">
         <p className="text-lg font-medium text-foreground">{t.checkout.alreadyProcessed}</p>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-16 lg:flex-row lg:items-start lg:gap-16">
+    <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-16 lg:flex-row lg:items-start lg:gap-16">
       <div className="flex flex-1 flex-col gap-8">
         <h1 className="font-heading text-3xl font-bold text-foreground">{t.checkout.title}</h1>
         <div className="flex flex-col gap-4">
@@ -69,6 +69,6 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
