@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { ORDER_STATUS } from '@/constants/order-status';
+import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { locales } from '@/locales';
@@ -59,7 +60,7 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
             {t.checkout.amountLabel}
           </p>
           <p className="font-heading text-xl font-bold text-primary">
-            {order.amount.toLocaleString()}
+            {formatCurrency(order.amount)}
           </p>
         </div>
       </div>

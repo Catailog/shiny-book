@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { finalizeOrderPayment } from '@/lib/orders/finalize-order-payment';
 import { locales } from '@/locales';
@@ -44,7 +45,7 @@ export default async function CheckoutSuccessPage(props: PageProps<'/checkout/[o
           </div>
           <div className="flex justify-between">
             <dt className="text-muted-foreground">{t.checkout.amountLabel}</dt>
-            <dd>{result.order.amount.toLocaleString()}</dd>
+            <dd>{formatCurrency(result.order.amount)}</dd>
           </div>
         </dl>
       </ResultCard>
