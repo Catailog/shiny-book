@@ -2,14 +2,19 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
+import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { formatDate } from '@/lib/format-date';
+import { formatDate, formatDateTime } from '@/lib/format-date';
+import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
-import { getOrderById } from '@/lib/orders/get-order-by-id';
+import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
+import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-context';
 import { locales } from '@/locales';
+
+import { ReplyForm } from './reply-form';
 
 export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/inquiries/[id]'>) {
   const { id } = await props.params;
@@ -22,10 +27,12 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
     notFound();
   }
 
-  const relatedOrder =
+  const [messages, relatedOrder] = await Promise.all([
+    getInquiryMessages(inquiry.id),
     inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
-      ? await getOrderById(inquiry.order_id)
-      : null;
+      ? getInquiryOrderContext(inquiry.order_id)
+      : Promise.resolve(null),
+  ]);
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-10 py-10">
@@ -35,12 +42,12 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
             <h1 className="font-heading text-2xl font-bold text-foreground">{inquiry.title}</h1>
             <Badge
               className={
-                inquiry.answer
+                inquiry.answered_at
                   ? 'bg-order-status-done/10 text-order-status-done'
                   : 'bg-primary-soft text-primary'
               }
             >
-              {inquiry.answer
+              {inquiry.answered_at
                 ? t.consumer.inquiries.statusAnswered
                 : t.consumer.inquiries.statusPending}
             </Badge>
@@ -54,20 +61,51 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
             <span className="text-sm text-muted-foreground">{formatDate(inquiry.created_at)}</span>
           </div>
           {relatedOrder ? (
-            <span className="text-sm text-muted-foreground">
-              {t.consumer.inquiries.form.relatedOrderLine}: {relatedOrder.title}
-            </span>
+            <div className="mt-2 flex flex-col gap-1 rounded-lg bg-muted p-3 text-sm">
+              <span className="font-semibold text-foreground">
+                {relatedOrder.productName ?? relatedOrder.title}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {relatedOrder.quantity}
+                {t.checkout.quantitySuffix} / {formatCurrency(relatedOrder.amount)} /{' '}
+                {formatDate(relatedOrder.createdAt)}
+              </span>
+            </div>
           ) : null}
         </div>
-        <p className="mt-6 whitespace-pre-wrap text-foreground">{inquiry.content}</p>
-        {inquiry.answer ? (
-          <div className="mt-6 flex flex-col gap-2 rounded-lg bg-muted p-4">
-            <span className="text-sm font-medium text-foreground">
-              {t.consumer.inquiries.answerLabel}
-            </span>
-            <p className="text-sm whitespace-pre-wrap text-foreground">{inquiry.answer}</p>
-          </div>
-        ) : null}
+
+        <div className="mt-6 flex flex-col gap-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={
+                message.author_type === INQUIRY_MESSAGE_AUTHOR.ADMIN
+                  ? 'flex flex-col gap-1 rounded-lg border border-primary/30 bg-primary-soft/40 p-4'
+                  : 'flex flex-col gap-1 rounded-lg bg-muted p-4'
+              }
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  {message.author_type === INQUIRY_MESSAGE_AUTHOR.ADMIN
+                    ? t.consumer.inquiries.adminAuthorLabel
+                    : t.consumer.inquiries.consumerAuthorLabel}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatDateTime(message.created_at)}
+                </span>
+              </div>
+              <p className="text-sm whitespace-pre-wrap text-foreground">{message.content}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-col gap-2">
+          <span className="text-sm font-medium text-foreground">
+            {t.consumer.inquiries.threadLabel}
+          </span>
+          <ReplyForm inquiryId={inquiry.id} />
+        </div>
+
         <Link
           href={CONSUMER_ROUTES.INQUIRIES}
           className="mt-6 inline-block text-sm font-medium text-foreground underline"

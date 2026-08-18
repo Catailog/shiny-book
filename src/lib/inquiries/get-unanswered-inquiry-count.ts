@@ -7,7 +7,7 @@ export async function getUnansweredInquiryCount(): Promise<number> {
   const { count } = await supabase
     .from('inquiries')
     .select('id', { count: 'exact', head: true })
-    .is('answer', null);
+    .is('answered_at', null);
 
   return count ?? 0;
 }

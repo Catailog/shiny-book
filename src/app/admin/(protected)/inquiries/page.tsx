@@ -44,7 +44,7 @@ export default async function AdminInquiriesPage() {
                 </TableRow>
               ) : null}
               {inquiries.map((inquiry) => {
-                const isAnswered = inquiry.answer !== null;
+                const isAnswered = inquiry.answered_at !== null;
 
                 return (
                   <ClickableTableRow

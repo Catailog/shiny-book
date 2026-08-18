@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
+import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
@@ -43,12 +44,22 @@ export async function createInquiry(
       category: parsed.data.category,
       order_id: orderId,
       title: parsed.data.title,
-      content: parsed.data.content,
     })
     .select('id')
     .single();
 
   if (error || !data) {
+    return { errorCode: 'unexpected_error' };
+  }
+
+  const { error: messageError } = await supabase.from('inquiry_messages').insert({
+    inquiry_id: data.id,
+    author_type: INQUIRY_MESSAGE_AUTHOR.CONSUMER,
+    author_id: consumer.id,
+    content: parsed.data.content,
+  });
+
+  if (messageError) {
     return { errorCode: 'unexpected_error' };
   }
 

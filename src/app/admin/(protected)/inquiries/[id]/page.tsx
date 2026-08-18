@@ -5,27 +5,33 @@ import { ArrowLeft } from 'lucide-react';
 
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
 import { formatDate } from '@/lib/format-date';
+import { formatCurrency } from '@/lib/format/currency';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
-import { getOrderById } from '@/lib/orders/get-order-by-id';
+import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
+import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-context';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../../admin-topbar';
-import { AnswerInquiryForm } from './answer-form';
+import { MessageThread } from './message-thread';
+import { ReplyForm } from './reply-form';
 
 export default async function AdminInquiryDetailPage(props: PageProps<'/admin/inquiries/[id]'>) {
   const { id } = await props.params;
-  const inquiry = await getInquiryById(id);
+  const [inquiry, admin] = await Promise.all([getInquiryById(id), getCurrentAdmin()]);
   const t = locales[defaultLocale];
 
-  if (!inquiry) {
+  if (!inquiry || !admin) {
     notFound();
   }
 
-  const relatedOrder =
+  const [messages, relatedOrder] = await Promise.all([
+    getInquiryMessages(inquiry.id),
     inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
-      ? await getOrderById(inquiry.order_id)
-      : null;
+      ? getInquiryOrderContext(inquiry.order_id)
+      : Promise.resolve(null),
+  ]);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -48,7 +54,6 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
               {inquiry.category === INQUIRY_CATEGORY.ORDER
                 ? t.consumer.inquiries.form.categoryOptions.order
                 : t.consumer.inquiries.form.categoryOptions.general}
-              {relatedOrder ? ` - ${relatedOrder.title}` : ''}
             </p>
           </div>
           <div className="flex flex-col gap-1">
@@ -57,18 +62,33 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
             </span>
             <p className="font-semibold text-foreground">{inquiry.title}</p>
           </div>
-          <div className="flex flex-col gap-1">
+          {relatedOrder ? (
+            <div className="flex flex-col gap-1 rounded-lg border border-border bg-muted p-4">
+              <span className="text-xs font-bold text-muted-foreground">
+                {t.admin.inquiries.detail.relatedOrderLabel}
+              </span>
+              <p className="text-sm font-semibold text-foreground">
+                {relatedOrder.productName ?? relatedOrder.title}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {t.admin.inquiries.detail.relatedOrderQuantity} {relatedOrder.quantity}
+                {t.admin.orders.quantitySuffix} / {t.admin.inquiries.detail.relatedOrderAmount}{' '}
+                {formatCurrency(relatedOrder.amount)} / {t.admin.inquiries.detail.relatedOrderDate}{' '}
+                {formatDate(relatedOrder.createdAt)}
+              </p>
+            </div>
+          ) : null}
+          <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-muted-foreground">
-              {t.admin.inquiries.detail.originalMessageLabel}
+              {t.admin.inquiries.detail.threadLabel}
             </span>
-            <p className="text-sm whitespace-pre-line text-muted-foreground">{inquiry.content}</p>
-            <span className="text-xs text-muted-foreground">{formatDate(inquiry.created_at)}</span>
+            <MessageThread inquiryId={inquiry.id} messages={messages} currentAdminId={admin.id} />
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-muted-foreground">
-              {t.admin.inquiries.answerLabel}
+              {t.admin.inquiries.detail.replyLabel}
             </span>
-            <AnswerInquiryForm id={inquiry.id} defaultAnswer={inquiry.answer ?? ''} />
+            <ReplyForm inquiryId={inquiry.id} />
           </div>
         </div>
       </div>

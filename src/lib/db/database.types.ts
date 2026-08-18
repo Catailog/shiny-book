@@ -186,11 +186,9 @@ export type Database = {
       };
       inquiries: {
         Row: {
-          answer: string | null;
           answered_at: string | null;
           category: string;
           consumer_id: string;
-          content: string;
           created_at: string;
           id: string;
           order_id: string | null;
@@ -198,11 +196,9 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
-          answer?: string | null;
           answered_at?: string | null;
           category?: string;
           consumer_id: string;
-          content: string;
           created_at?: string;
           id?: string;
           order_id?: string | null;
@@ -210,11 +206,9 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
-          answer?: string | null;
           answered_at?: string | null;
           category?: string;
           consumer_id?: string;
-          content?: string;
           created_at?: string;
           id?: string;
           order_id?: string | null;
@@ -227,6 +221,44 @@ export type Database = {
             columns: ['order_id'];
             isOneToOne: false;
             referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      inquiry_messages: {
+        Row: {
+          author_id: string | null;
+          author_type: string;
+          content: string;
+          created_at: string;
+          id: string;
+          inquiry_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          author_id?: string | null;
+          author_type: string;
+          content: string;
+          created_at?: string;
+          id?: string;
+          inquiry_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          author_id?: string | null;
+          author_type?: string;
+          content?: string;
+          created_at?: string;
+          id?: string;
+          inquiry_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'inquiry_messages_inquiry_id_fkey';
+            columns: ['inquiry_id'];
+            isOneToOne: false;
+            referencedRelation: 'inquiries';
             referencedColumns: ['id'];
           },
         ];
