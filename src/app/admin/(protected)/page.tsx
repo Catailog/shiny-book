@@ -1,5 +1,6 @@
 import { DollarSign, Settings, ShoppingCart, Tag } from 'lucide-react';
 
+import { FilterLink } from '@/components/filter-link';
 import { OrderStatusBadge } from '@/components/order-status-badge';
 import {
   Table,
@@ -9,15 +10,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
+import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDate } from '@/lib/format-date';
 import { getOrders } from '@/lib/orders/get-orders';
-import { getNextStatuses } from '@/lib/orders/order-state-machine';
+import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
+import { RevertOrderStatusButton } from './revert-order-status-button';
 import { ViewOrderPhotosButton } from './view-order-photos-button';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
@@ -27,15 +30,35 @@ const PENDING_PRODUCTION_STATUSES = new Set<string>([
   ORDER_STATUS.SHIPPING,
 ]);
 
-export default async function AdminDashboardPage() {
+const STATUS_FILTER_VALUES: readonly OrderStatus[] = [
+  ORDER_STATUS.AWAITING_PAYMENT,
+  ORDER_STATUS.PAID,
+  ORDER_STATUS.PRINTING,
+  ORDER_STATUS.BINDING,
+  ORDER_STATUS.SHIPPING,
+  ORDER_STATUS.COMPLETED,
+];
+
+export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
   const t = locales[defaultLocale];
-  const [orders, coupons] = await Promise.all([getOrders(), getCoupons()]);
+  const searchParams = await props.searchParams;
+  const filterParam = firstParam(searchParams.filter);
+  const activeFilter = isOrderStatus(filterParam) ? filterParam : null;
+
+  const [allOrders, coupons] = await Promise.all([getOrders(), getCoupons()]);
+  const orders = activeFilter
+    ? allOrders.filter((order) => order.status === activeFilter)
+    : allOrders;
 
   const today = new Date().toDateString();
-  const todayOrders = orders.filter((order) => new Date(order.created_at).toDateString() === today);
-  const pendingProduction = orders.filter((order) => PENDING_PRODUCTION_STATUSES.has(order.status));
+  const todayOrders = allOrders.filter(
+    (order) => new Date(order.created_at).toDateString() === today,
+  );
+  const pendingProduction = allOrders.filter((order) =>
+    PENDING_PRODUCTION_STATUSES.has(order.status),
+  );
   const now = new Date();
-  const revenueThisMonth = orders
+  const revenueThisMonth = allOrders
     .filter((order) => {
       const createdAt = new Date(order.created_at);
       return (
@@ -84,6 +107,20 @@ export default async function AdminDashboardPage() {
           <h2 className="font-heading text-xl font-bold text-foreground">
             {t.admin.dashboard.recentSubmissions.title}
           </h2>
+          <div className="flex flex-wrap gap-2">
+            <FilterLink href={ADMIN_ROUTES.DASHBOARD} isActive={activeFilter === null}>
+              {t.admin.orders.filterAllLabel}
+            </FilterLink>
+            {STATUS_FILTER_VALUES.map((status) => (
+              <FilterLink
+                key={status}
+                href={`${ADMIN_ROUTES.DASHBOARD}?filter=${status}`}
+                isActive={activeFilter === status}
+              >
+                {t.orderStatus[status]}
+              </FilterLink>
+            ))}
+          </div>
           <div className="overflow-hidden rounded-lg border border-border bg-input-background">
             <Table>
               <TableHeader>
@@ -111,6 +148,7 @@ export default async function AdminDashboardPage() {
                     status && status !== ORDER_STATUS.AWAITING_PAYMENT
                       ? getNextStatuses(status)[0]
                       : undefined;
+                  const previousStatus = status ? getPreviousStatus(status) : null;
 
                   return (
                     <TableRow key={order.id}>
@@ -134,12 +172,23 @@ export default async function AdminDashboardPage() {
                         {formatDate(order.created_at)}
                       </TableCell>
                       <TableCell>
-                        {status && nextStatus ? (
-                          <AdvanceOrderStatusButton
-                            orderId={order.id}
-                            from={status}
-                            to={nextStatus}
-                          />
+                        {status && (nextStatus || previousStatus) ? (
+                          <div className="flex gap-2">
+                            {previousStatus ? (
+                              <RevertOrderStatusButton
+                                orderId={order.id}
+                                from={status}
+                                to={previousStatus}
+                              />
+                            ) : null}
+                            {nextStatus ? (
+                              <AdvanceOrderStatusButton
+                                orderId={order.id}
+                                from={status}
+                                to={nextStatus}
+                              />
+                            ) : null}
+                          </div>
                         ) : (
                           <span className="text-muted-foreground">-</span>
                         )}
@@ -154,4 +203,8 @@ export default async function AdminDashboardPage() {
       </div>
     </div>
   );
+}
+
+function firstParam(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }
