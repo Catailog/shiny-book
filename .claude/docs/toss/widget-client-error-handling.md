@@ -1,11 +1,12 @@
 ---
-
 title: 결제위젯 클라이언트 에러 가이드
 description: 결제위젯 클라이언트 연동에서 만날 수 있는 에러와 대응 방법을 알려드릴게요.
 keyword: 에러, 결제위젯, 렌더 에러, 승인 에러
 publishedAt: 2024-04-30
 thumbnailSrc: https://static.tosspayments.com/docs/blog/error-handling.png
---------------------------------------------------------------------------
+---
+
+---
 
 # 결제위젯 클라이언트 에러 가이드
 
