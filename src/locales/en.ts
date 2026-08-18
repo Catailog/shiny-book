@@ -228,6 +228,7 @@ export const en = {
     amountLabel: 'Amount',
     payButton: 'Pay now',
     testPaymentButton: 'Auto test payment',
+    testPaymentTooltip: 'Skips the Toss payment widget and marks the order as paid instantly.',
     payError: 'Something went wrong while requesting payment. Please try again.',
     payCancelled: 'You cancelled the payment.',
     needAgreement: 'Please agree to the required terms.',

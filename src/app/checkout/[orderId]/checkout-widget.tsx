@@ -11,6 +11,7 @@ import {
 } from '@tosspayments/tosspayments-sdk';
 
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TOSS_ERROR_CODES, getTossErrorCode } from '@/constants/toss-error-codes';
 import { env } from '@/env';
 import { useT } from '@/hooks/use-t';
@@ -168,15 +169,22 @@ export function CheckoutWidget({
         {t.checkout.payButton}
       </Button>
       {allowTestPayment ? (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleTestPaymentClick}
-          disabled={isTestPaymentPending}
-          className="w-full"
-        >
-          {t.checkout.testPaymentButton}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleTestPaymentClick}
+                disabled={isTestPaymentPending}
+                className="w-full"
+              />
+            }
+          >
+            {t.checkout.testPaymentButton}
+          </TooltipTrigger>
+          <TooltipContent>{t.checkout.testPaymentTooltip}</TooltipContent>
+        </Tooltip>
       ) : null}
     </div>
   );
