@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -57,7 +56,9 @@ export function AdminNotificationBell({
         }
       />
       <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuLabel>{t.admin.notificationsLabel}</DropdownMenuLabel>
+        <div className="px-1.5 py-1 text-xs font-medium text-muted-foreground">
+          {t.admin.notificationsLabel}
+        </div>
         <DropdownMenuSeparator />
         {recentInquiries.length === 0 ? (
           <p className="px-1.5 py-3 text-center text-sm text-muted-foreground">
