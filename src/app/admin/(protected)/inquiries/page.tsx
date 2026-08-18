@@ -33,10 +33,10 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
   const allInquiries = await getInquiries();
   const inquiries = allInquiries.filter((inquiry) => {
     if (activeFilter === 'pending') {
-      return inquiry.answered_at === null;
+      return inquiry.answered_at === null || inquiry.hasNewConsumerReply;
     }
     if (activeFilter === 'answered') {
-      return inquiry.answered_at !== null;
+      return inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
     }
     return true;
   });
@@ -82,7 +82,7 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                 </TableRow>
               ) : null}
               {inquiries.map((inquiry) => {
-                const isAnswered = inquiry.answered_at !== null;
+                const isAnswered = inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
 
                 return (
                   <ClickableTableRow
@@ -101,7 +101,11 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                       {inquiry.title}
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-wrap gap-1">
+                      {inquiry.hasNewConsumerReply ? (
+                        <Badge className="bg-destructive/10 text-destructive">
+                          {t.admin.inquiries.newReplyBadge}
+                        </Badge>
+                      ) : (
                         <Badge
                           className={
                             isAnswered
@@ -113,12 +117,7 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                             ? t.admin.inquiries.statusAnswered
                             : t.admin.inquiries.statusPending}
                         </Badge>
-                        {inquiry.hasNewConsumerReply ? (
-                          <Badge className="bg-destructive/10 text-destructive">
-                            {t.admin.inquiries.newReplyBadge}
-                          </Badge>
-                        ) : null}
-                      </div>
+                      )}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {formatDate(inquiry.created_at)}
