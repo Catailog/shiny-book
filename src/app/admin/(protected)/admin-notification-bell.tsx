@@ -69,7 +69,7 @@ export function AdminNotificationBell({
             <DropdownMenuItem
               key={inquiry.id}
               render={<Link href={`${ADMIN_ROUTES.INQUIRIES}/${inquiry.id}`} />}
-              className="flex-col items-start gap-0.5 py-2"
+              className="cursor-pointer flex-col items-start gap-0.5 py-2"
             >
               <span className="w-full truncate font-medium text-foreground">{inquiry.title}</span>
               <span className="text-xs text-muted-foreground">
@@ -81,7 +81,7 @@ export function AdminNotificationBell({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           render={<Link href={ADMIN_ROUTES.INQUIRIES} />}
-          className="justify-center"
+          className="cursor-pointer justify-center"
         >
           {t.admin.notificationsViewAllLabel}
         </DropdownMenuItem>
