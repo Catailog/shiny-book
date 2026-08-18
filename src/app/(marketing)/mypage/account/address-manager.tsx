@@ -80,7 +80,7 @@ export function AddressManager({ addresses }: AddressManagerProps) {
               className={
                 address.is_default
                   ? 'flex flex-col gap-1 rounded-md border border-border bg-muted p-4'
-                  : 'flex flex-col gap-1 rounded-md border border-border p-4'
+                  : 'flex flex-col gap-1 rounded-md border border-border bg-card p-4'
               }
             >
               <div className="flex items-center justify-between">
