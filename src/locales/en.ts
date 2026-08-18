@@ -848,6 +848,16 @@ export const en = {
         emailLabel: 'Email',
         phoneLabel: 'Phone',
       },
+      profileImage: {
+        changeButton: 'Change image',
+        uploading: 'Uploading...',
+        updateSuccess: 'Profile image updated.',
+        errors: {
+          unauthorized: 'You do not have permission. Please sign in again.',
+          validation_failed: 'Please upload an image file (PNG, JPG, WEBP) up to 5MB.',
+          unexpected_error: 'Something went wrong. Please try again shortly.',
+        },
+      },
       changePassword: {
         title: 'Change Password',
         currentPasswordLabel: 'Current Password',

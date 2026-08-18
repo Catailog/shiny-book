@@ -846,6 +846,16 @@ export const ko = {
         emailLabel: '이메일',
         phoneLabel: '연락처',
       },
+      profileImage: {
+        changeButton: '이미지 변경',
+        uploading: '업로드 중...',
+        updateSuccess: '프로필 이미지가 변경됐습니다.',
+        errors: {
+          unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+          validation_failed: '이미지 파일(PNG, JPG, WEBP, 5MB 이하)만 업로드할 수 있습니다.',
+          unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        },
+      },
       changePassword: {
         title: '비밀번호 변경',
         currentPasswordLabel: '현재 비밀번호',

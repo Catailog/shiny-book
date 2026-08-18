@@ -1,5 +1,6 @@
 export const FILE_UPLOAD_KIND = {
   PHOTO: 'photo',
+  AVATAR: 'avatar',
 } as const;
 
 export type FileUploadKind = (typeof FILE_UPLOAD_KIND)[keyof typeof FILE_UPLOAD_KIND];
@@ -17,6 +18,10 @@ export const FILE_UPLOAD_RULES: Record<FileUploadKind, FileUploadRule> = {
   [FILE_UPLOAD_KIND.PHOTO]: {
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
     maxSizeBytes: 20 * 1024 * 1024,
+  },
+  [FILE_UPLOAD_KIND.AVATAR]: {
+    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
+    maxSizeBytes: 5 * 1024 * 1024,
   },
 };
 

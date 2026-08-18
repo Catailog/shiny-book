@@ -3,9 +3,11 @@ import { Label } from '@/components/ui/label';
 import { getAddressesByConsumer } from '@/lib/addresses/get-addresses-by-consumer';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
+import { getSignedFileUrl } from '@/lib/uploads/get-signed-file-url';
 import { locales } from '@/locales';
 
 import { AddressManager } from './address-manager';
+import { AvatarUploadForm } from './avatar-upload-form';
 import { DeleteAccountButton } from './delete-account-button';
 import { NotificationPreferencesForm } from './notification-form';
 import { ChangePasswordForm } from './password-form';
@@ -20,6 +22,12 @@ export default async function MypageAccountPage() {
   const consumerEmail = consumer?.email ?? '';
   const consumerPhone =
     typeof consumer?.user_metadata.phone === 'string' ? consumer.user_metadata.phone : '';
+  const avatarPath =
+    typeof consumer?.user_metadata.avatarPath === 'string'
+      ? consumer.user_metadata.avatarPath
+      : null;
+  const avatarUrl = avatarPath ? await getSignedFileUrl(avatarPath) : null;
+  const avatarInitials = (consumerName || consumerEmail).slice(0, 1).toUpperCase();
   const notificationDefaults = {
     marketingEmailConsent: consumer?.user_metadata.marketingEmailConsent === true,
     marketingSmsConsent: consumer?.user_metadata.marketingSmsConsent === true,
@@ -35,6 +43,7 @@ export default async function MypageAccountPage() {
         <h2 className="font-heading text-xl font-bold text-foreground">
           {t.consumer.account.personalInfo.title}
         </h2>
+        <AvatarUploadForm avatarUrl={avatarUrl} initials={avatarInitials} />
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2">
             <Label htmlFor="account-name" className="text-xs font-semibold tracking-wide uppercase">

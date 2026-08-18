@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
+import { FILE_UPLOAD_KIND } from '@/constants/file-upload';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
@@ -62,6 +63,31 @@ export async function updateNotificationPreferences(
       marketingSmsConsent: parsed.data.marketingSmsConsent,
     },
   });
+  if (error) {
+    return { errorCode: 'unexpected_error' };
+  }
+
+  return undefined;
+}
+
+export interface UpdateProfileImageResult {
+  errorCode: 'unauthorized' | 'validation_failed' | 'unexpected_error';
+}
+
+export async function updateProfileImage(
+  path: string,
+): Promise<UpdateProfileImageResult | undefined> {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return { errorCode: 'unauthorized' };
+  }
+
+  if (!path.startsWith(`${consumer.id}/${FILE_UPLOAD_KIND.AVATAR}/`)) {
+    return { errorCode: 'validation_failed' };
+  }
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.auth.updateUser({ data: { avatarPath: path } });
   if (error) {
     return { errorCode: 'unexpected_error' };
   }
