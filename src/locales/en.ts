@@ -661,10 +661,11 @@ export const en = {
       backToList: 'Back to Products list',
       form: {
         slugLabel: 'Slug (URL identifier)',
-        nameLabel: 'Product name',
-        nameEnLabel: 'Name (English, optional)',
         sizeLabel: 'Size',
+        languageLabel: 'Language',
+        nameLabel: 'Product name',
         descriptionLabel: 'Description',
+        fallbackNotice: 'If left empty, {fallbackLanguage} will be shown instead.',
         priceLabel: 'Price (KRW)',
         imageUrlLabel: 'Image URL',
         categoryLabel: 'Category',

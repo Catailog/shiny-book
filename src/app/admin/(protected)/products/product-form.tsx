@@ -1,7 +1,7 @@
 'use client';
 
-import { useTransition } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useState, useTransition } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -17,11 +17,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { LOCALE_LABELS, LOCALE_OPTIONS } from '@/constants/locale';
 import { PRODUCT_CATEGORY } from '@/constants/product-category';
-import { defaultLocale, locales } from '@/locales';
+import { type Locale, defaultLocale, locales } from '@/locales';
 
 import type { ProductActionResult } from './actions';
 import { type ProductFormInput, productFormSchema } from './product-schema';
+
+function getFallbackLocale(locale: Locale): Locale | null {
+  if (locale === defaultLocale) {
+    return null;
+  }
+  if (locale === 'en') {
+    return defaultLocale;
+  }
+  return 'en';
+}
 
 interface ProductFormProps {
   defaultValues?: ProductFormInput;
@@ -40,6 +51,7 @@ export function ProductForm({
 }: ProductFormProps) {
   const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
+  const [activeLanguage, setActiveLanguage] = useState<Locale>(defaultLocale);
   const {
     register,
     control,
@@ -49,6 +61,21 @@ export function ProductForm({
     resolver: zodResolver(productFormSchema),
     defaultValues: defaultValues ?? { category: PRODUCT_CATEGORY.CLASSIC, isActive: true },
   });
+  const nameEnValue = useWatch({ control, name: 'nameEn' });
+  const descriptionEnValue = useWatch({ control, name: 'descriptionEn' });
+
+  const isKorean = activeLanguage === defaultLocale;
+  const nameFieldName = isKorean ? 'name' : 'nameEn';
+  const descriptionFieldName = isKorean ? 'description' : 'descriptionEn';
+  const fallbackLocale = getFallbackLocale(activeLanguage);
+  const fallbackNotice = fallbackLocale
+    ? t.admin.products.form.fallbackNotice.replace(
+        '{fallbackLanguage}',
+        LOCALE_LABELS[fallbackLocale],
+      )
+    : null;
+  const showNameFallbackNotice = fallbackNotice !== null && !nameEnValue;
+  const showDescriptionFallbackNotice = fallbackNotice !== null && !descriptionEnValue;
 
   function onSubmit(values: ProductFormInput) {
     startTransition(async () => {
@@ -73,34 +100,66 @@ export function ProductForm({
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="name">{t.admin.products.form.nameLabel}</Label>
-        <Input id="name" type="text" {...register('name')} />
-        {errors.name ? (
-          <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
-        ) : null}
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="nameEn">{t.admin.products.form.nameEnLabel}</Label>
-        <Input id="nameEn" type="text" {...register('nameEn')} />
-      </div>
-      <div className="flex flex-col gap-1.5">
         <Label htmlFor="size">{t.admin.products.form.sizeLabel}</Label>
         <Input id="size" type="text" {...register('size')} />
         {errors.size ? (
           <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
         ) : null}
       </div>
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="description">{t.admin.products.form.descriptionLabel}</Label>
-        <textarea
-          id="description"
-          rows={4}
-          className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-          {...register('description')}
-        />
-        {errors.description ? (
-          <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
-        ) : null}
+      <div className="flex flex-col gap-4 rounded-lg border border-primary/30 bg-primary-soft/40 p-4">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="productLanguage">{t.admin.products.form.languageLabel}</Label>
+          <Select
+            value={activeLanguage}
+            onValueChange={(value) => setActiveLanguage(value as Locale)}
+          >
+            <SelectTrigger id="productLanguage" className="w-40">
+              <SelectValue>{LOCALE_LABELS[activeLanguage]}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {LOCALE_OPTIONS.map((locale) => (
+                <SelectItem key={locale} value={locale}>
+                  {LOCALE_LABELS[locale]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor={nameFieldName}>
+              {`${t.admin.products.form.nameLabel}(${LOCALE_LABELS[activeLanguage]})`}
+            </Label>
+            <Input id={nameFieldName} type="text" {...register(nameFieldName)} />
+            {isKorean && errors.name ? (
+              <p className="text-sm text-destructive">
+                {t.admin.products.errors.validation_failed}
+              </p>
+            ) : null}
+            {showNameFallbackNotice ? (
+              <p className="text-xs text-muted-foreground">{fallbackNotice}</p>
+            ) : null}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor={descriptionFieldName}>
+              {`${t.admin.products.form.descriptionLabel}(${LOCALE_LABELS[activeLanguage]})`}
+            </Label>
+            <textarea
+              id={descriptionFieldName}
+              rows={4}
+              className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              {...register(descriptionFieldName)}
+            />
+            {isKorean && errors.description ? (
+              <p className="text-sm text-destructive">
+                {t.admin.products.errors.validation_failed}
+              </p>
+            ) : null}
+            {showDescriptionFallbackNotice ? (
+              <p className="text-xs text-muted-foreground">{fallbackNotice}</p>
+            ) : null}
+          </div>
+        </div>
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="price">{t.admin.products.form.priceLabel}</Label>

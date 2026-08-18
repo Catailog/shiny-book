@@ -31,6 +31,7 @@ export default async function EditProductPage(props: PageProps<'/admin/products/
             nameEn: product.name_en ?? undefined,
             size: product.size,
             description: product.description,
+            descriptionEn: product.description_en ?? undefined,
             price: product.price,
             imageUrl: product.image_url,
             category,

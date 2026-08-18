@@ -660,10 +660,11 @@ export const ko = {
       backToList: '목록으로 돌아가기',
       form: {
         slugLabel: '슬러그 (URL 식별자)',
-        nameLabel: '상품명',
-        nameEnLabel: '상품명 (영문, 선택)',
         sizeLabel: '사이즈',
+        languageLabel: '언어',
+        nameLabel: '상품명',
         descriptionLabel: '설명',
+        fallbackNotice: '값을 비워두면 {fallbackLanguage}로 표시됩니다.',
         priceLabel: '가격 (원)',
         imageUrlLabel: '이미지 URL',
         categoryLabel: '카테고리',

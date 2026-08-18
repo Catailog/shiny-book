@@ -11,6 +11,7 @@ export const productFormSchema = z.object({
   nameEn: z.string().optional(),
   size: z.string().min(1),
   description: z.string().min(1),
+  descriptionEn: z.string().optional(),
   price: z.coerce.number().int().min(0),
   imageUrl: z.string().min(1),
   category: z.enum([PRODUCT_CATEGORY.CLASSIC, PRODUCT_CATEGORY.PREMIUM]),
