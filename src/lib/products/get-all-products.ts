@@ -10,6 +10,7 @@ export async function getAllProducts(): Promise<Tables<'products'>[]> {
     .from('products')
     .select()
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
     .limit(ADMIN_PRODUCT_LIST_LIMIT);
 
   return data ?? [];
