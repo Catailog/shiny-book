@@ -81,23 +81,28 @@ export interface ConsumerTestLoginResult {
   errorCode: 'unavailable' | 'unexpected_error';
 }
 
+const TEST_CONSUMER_ACCOUNTS = {
+  1: { email: env.CONSUMER_SEED_EMAIL, password: env.CONSUMER_SEED_PASSWORD },
+  2: { email: env.CONSUMER_SEED_EMAIL_2, password: env.CONSUMER_SEED_PASSWORD_2 },
+} as const;
+
 export async function signInTestConsumer(
+  accountNumber: 1 | 2,
   redirectTo?: string,
 ): Promise<ConsumerTestLoginResult | undefined> {
+  const { email, password } = TEST_CONSUMER_ACCOUNTS[accountNumber];
   const serviceClient = createServiceRoleClient();
   const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers();
   if (listError) {
     return { errorCode: 'unexpected_error' };
   }
 
-  const existingTestConsumer = existingUsers.users.find(
-    (user) => user.email === env.CONSUMER_SEED_EMAIL,
-  );
+  const existingTestConsumer = existingUsers.users.find((user) => user.email === email);
 
   if (!existingTestConsumer) {
     const { error: createError } = await serviceClient.auth.admin.createUser({
-      email: env.CONSUMER_SEED_EMAIL,
-      password: env.CONSUMER_SEED_PASSWORD,
+      email,
+      password,
       email_confirm: true,
     });
 
@@ -107,10 +112,7 @@ export async function signInTestConsumer(
   }
 
   const supabase = await createServerSupabaseClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: env.CONSUMER_SEED_EMAIL,
-    password: env.CONSUMER_SEED_PASSWORD,
-  });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data.user || isAdminRole(data.user.app_metadata.role)) {
     return { errorCode: 'unexpected_error' };

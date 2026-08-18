@@ -12,6 +12,8 @@ export const env = createEnv({
     ADMIN_SEED_PASSWORD: z.string().min(1).default('LocalAdmin1234!'),
     CONSUMER_SEED_EMAIL: z.string().min(1).default('consumer@shinybook.local'),
     CONSUMER_SEED_PASSWORD: z.string().min(1).default('LocalConsumer1234!'),
+    CONSUMER_SEED_EMAIL_2: z.string().min(1).default('consumer2@shinybook.local'),
+    CONSUMER_SEED_PASSWORD_2: z.string().min(1).default('LocalConsumer2_1234!'),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
