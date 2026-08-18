@@ -4,13 +4,18 @@ import { ORDER_STATUS } from '@/constants/order-status';
 import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
+import { getOrderPaymentSummary } from '@/lib/orders/get-order-payment-summary';
 import { locales } from '@/locales';
 
 import { CheckoutWidget } from './checkout-widget';
+import { CouponForm } from './coupon-form';
 
 export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]'>) {
   const { orderId } = await props.params;
-  const order = await getOrderById(orderId);
+  const [order, paymentSummary] = await Promise.all([
+    getOrderById(orderId),
+    getOrderPaymentSummary(orderId),
+  ]);
   const locale = await getLocale();
   const t = locales[locale];
 
@@ -59,6 +64,33 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
             </p>
           </div>
         </div>
+        <div className="h-px w-full bg-border" />
+        {paymentSummary ? (
+          <div className="flex flex-col gap-2 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">{t.checkout.merchandiseAmountLabel}</span>
+              <span className="text-foreground">
+                {formatCurrency(paymentSummary.merchandiseAmount)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">{t.checkout.shippingFeeLabel}</span>
+              <span className="text-foreground">{formatCurrency(paymentSummary.shippingFee)}</span>
+            </div>
+            {paymentSummary.discountAmount > 0 ? (
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  {t.checkout.coupon.discountLabel}
+                  {paymentSummary.couponCode ? ` (${paymentSummary.couponCode})` : ''}
+                </span>
+                <span className="text-primary">
+                  -{formatCurrency(paymentSummary.discountAmount)}
+                </span>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+        {paymentSummary && !paymentSummary.couponCode ? <CouponForm orderId={order.id} /> : null}
         <div className="h-px w-full bg-border" />
         <div className="flex items-center justify-between">
           <p className="font-heading text-base font-bold text-foreground">
