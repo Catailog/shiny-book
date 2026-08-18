@@ -4,7 +4,11 @@ import 'server-only';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 
-export async function getCurrentConsumer(): Promise<User | null> {
+export interface ConsumerUser extends User {
+  displayName: string;
+}
+
+export async function getCurrentConsumer(): Promise<ConsumerUser | null> {
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -14,5 +18,11 @@ export async function getCurrentConsumer(): Promise<User | null> {
     return null;
   }
 
-  return user;
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('display_name')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  return { ...user, displayName: profile?.display_name ?? '' };
 }

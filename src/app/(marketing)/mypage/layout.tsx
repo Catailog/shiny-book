@@ -11,8 +11,7 @@ export default async function MypageLayout(props: LayoutProps<'/mypage'>) {
     redirect(`${CONSUMER_ROUTES.LOGIN}?redirectTo=${encodeURIComponent(CONSUMER_ROUTES.MYPAGE)}`);
   }
 
-  const consumerName =
-    typeof consumer.user_metadata.name === 'string' ? consumer.user_metadata.name : '';
+  const consumerName = consumer.displayName;
 
   return (
     <div className="flex flex-1">

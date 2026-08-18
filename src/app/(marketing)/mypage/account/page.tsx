@@ -17,8 +17,7 @@ export default async function MypageAccountPage() {
   const t = locales[locale];
   const consumer = await getCurrentConsumer();
   const addresses = consumer ? await getAddressesByConsumer(consumer.id) : [];
-  const consumerName =
-    typeof consumer?.user_metadata.name === 'string' ? consumer.user_metadata.name : '';
+  const consumerName = consumer?.displayName ?? '';
   const consumerEmail = consumer?.email ?? '';
   const consumerPhone =
     typeof consumer?.user_metadata.phone === 'string' ? consumer.user_metadata.phone : '';
