@@ -688,6 +688,11 @@ export const en = {
         active: 'Visible',
         inactive: 'Hidden',
       },
+      filterTabs: {
+        all: 'All',
+        active: 'Visible',
+        inactive: 'Hidden',
+      },
       showButton: 'Show',
       hideButton: 'Hide',
       errors: {

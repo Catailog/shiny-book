@@ -687,6 +687,11 @@ export const ko = {
         active: '노출중',
         inactive: '숨김',
       },
+      filterTabs: {
+        all: '전체',
+        active: '노출중',
+        inactive: '숨김',
+      },
       showButton: '노출하기',
       hideButton: '숨기기',
       errors: {

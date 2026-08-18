@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
+import { FilterLink } from '@/components/filter-link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,15 +23,52 @@ import { defaultLocale, locales } from '@/locales';
 import { AdminTopbar } from '../admin-topbar';
 import { ToggleProductActiveButton } from './toggle-product-active-button';
 
-export default async function AdminProductsPage() {
+const FILTER_TABS = ['all', 'active', 'inactive'] as const;
+type ProductFilter = (typeof FILTER_TABS)[number];
+
+function isProductFilter(value: string): value is ProductFilter {
+  return (FILTER_TABS as readonly string[]).includes(value);
+}
+
+export default async function AdminProductsPage(props: PageProps<'/admin/products'>) {
   const t = locales[defaultLocale];
-  const products = await getAllProducts();
+  const searchParams = await props.searchParams;
+  const filterParam = firstParam(searchParams.filter);
+  const activeFilter = isProductFilter(filterParam) ? filterParam : 'all';
+
+  const allProducts = await getAllProducts();
+  const products = allProducts.filter((product) => {
+    if (activeFilter === 'active') {
+      return product.is_active;
+    }
+    if (activeFilter === 'inactive') {
+      return !product.is_active;
+    }
+    return true;
+  });
 
   return (
     <div className="flex flex-1 flex-col">
       <AdminTopbar title={t.admin.products.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            <FilterLink href={ADMIN_ROUTES.PRODUCTS} isActive={activeFilter === 'all'}>
+              {t.admin.products.filterTabs.all}
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.PRODUCTS}?filter=active`}
+              isActive={activeFilter === 'active'}
+            >
+              {t.admin.products.filterTabs.active}
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.PRODUCTS}?filter=inactive`}
+              isActive={activeFilter === 'inactive'}
+            >
+              {t.admin.products.filterTabs.inactive}
+            </FilterLink>
+          </div>
           <Button
             render={<Link href={ADMIN_ROUTES.PRODUCTS_NEW} />}
             nativeButton={false}
@@ -110,4 +148,8 @@ export default async function AdminProductsPage() {
       </div>
     </div>
   );
+}
+
+function firstParam(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }
