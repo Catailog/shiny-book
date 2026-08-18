@@ -248,7 +248,7 @@ export const ko = {
     },
     payButton: '결제하기',
     testPaymentButton: '자동 테스트 결제',
-    testPaymentTooltip: 'Toss 결제창을 거치지 않고 바로 결제완료 상태로 전환합니다.',
+    testPaymentTooltip: '결제창을 거치지 않고 바로 결제완료 상태로 전환합니다.',
     payError: '결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.',
     payCancelled: '결제를 취소하셨습니다.',
     needAgreement: '필수 약관에 동의해주세요.',
