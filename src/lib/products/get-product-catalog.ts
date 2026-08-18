@@ -6,6 +6,7 @@ import {
 import type { Locale } from '@/locales';
 
 import { getProducts } from './get-products';
+import { resolveProductDescription } from './resolve-product-description';
 import { resolveProductName } from './resolve-product-name';
 
 export interface CatalogProduct {
@@ -27,7 +28,7 @@ export async function getProductCatalog(locale: Locale): Promise<CatalogProduct[
     category: isProductCategory(product.category) ? product.category : PRODUCT_CATEGORY.CLASSIC,
     name: resolveProductName(product, locale),
     size: product.size,
-    description: product.description,
+    description: resolveProductDescription(product, locale),
     price: `₩${product.price.toLocaleString()}`,
   }));
 }

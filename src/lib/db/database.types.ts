@@ -392,6 +392,7 @@ export type Database = {
           category: string;
           created_at: string;
           description: string;
+          description_en: string | null;
           id: string;
           image_url: string;
           is_active: boolean;
@@ -406,6 +407,7 @@ export type Database = {
           category: string;
           created_at?: string;
           description: string;
+          description_en?: string | null;
           id?: string;
           image_url: string;
           is_active?: boolean;
@@ -420,6 +422,7 @@ export type Database = {
           category?: string;
           created_at?: string;
           description?: string;
+          description_en?: string | null;
           id?: string;
           image_url?: string;
           is_active?: boolean;
