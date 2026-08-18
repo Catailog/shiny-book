@@ -700,6 +700,7 @@ export const en = {
         category: 'Category',
         price: 'Price',
         status: 'Status',
+        createdAt: 'Registered',
         actions: 'Actions',
       },
       statusLabels: {

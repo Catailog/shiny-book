@@ -699,6 +699,7 @@ export const ko = {
         category: '카테고리',
         price: '가격',
         status: '상태',
+        createdAt: '등록일',
         actions: '관리',
       },
       statusLabels: {

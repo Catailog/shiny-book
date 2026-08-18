@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table';
 import { isProductCategory } from '@/constants/product-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { formatDate } from '@/lib/format-date';
 import { getAllProducts } from '@/lib/products/get-all-products';
 import { defaultLocale, locales } from '@/locales';
 
@@ -87,6 +88,7 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
                 <TableHead className="w-32">{t.admin.products.columns.category}</TableHead>
                 <TableHead className="w-28">{t.admin.products.columns.price}</TableHead>
                 <TableHead className="w-24">{t.admin.products.columns.status}</TableHead>
+                <TableHead className="w-28">{t.admin.products.columns.createdAt}</TableHead>
                 <TableHead className="w-32 text-right">
                   {t.admin.products.columns.actions}
                 </TableHead>
@@ -95,7 +97,7 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
             <TableBody>
               {products.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     {t.admin.products.empty}
                   </TableCell>
                 </TableRow>
@@ -132,6 +134,9 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
                           ? t.admin.products.statusLabels.active
                           : t.admin.products.statusLabels.inactive}
                       </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(product.created_at)}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end">

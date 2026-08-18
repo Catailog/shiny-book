@@ -9,7 +9,7 @@ export async function getAllProducts(): Promise<Tables<'products'>[]> {
   const { data } = await supabase
     .from('products')
     .select()
-    .order('created_at', { ascending: true })
+    .order('created_at', { ascending: false })
     .limit(ADMIN_PRODUCT_LIST_LIMIT);
 
   return data ?? [];
