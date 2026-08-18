@@ -33,7 +33,7 @@ export function ClickableTableRow({
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={handleKeyDown}
-      className={cn('cursor-pointer', className)}
+      className={cn('cursor-pointer hover:bg-muted/50', className)}
       {...props}
     />
   );
