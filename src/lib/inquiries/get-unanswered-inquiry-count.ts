@@ -1,13 +1,8 @@
 import 'server-only';
 
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { getInquiriesNeedingAttention } from '@/lib/inquiries/get-inquiries-needing-attention';
 
 export async function getUnansweredInquiryCount(): Promise<number> {
-  const supabase = createServiceRoleClient();
-  const { count } = await supabase
-    .from('inquiries')
-    .select('id', { count: 'exact', head: true })
-    .is('answered_at', null);
-
-  return count ?? 0;
+  const inquiries = await getInquiriesNeedingAttention();
+  return inquiries.length;
 }

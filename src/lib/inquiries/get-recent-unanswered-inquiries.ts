@@ -1,18 +1,10 @@
 import 'server-only';
 
-import type { Tables } from '@/lib/db/database.types';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { getInquiriesNeedingAttention } from '@/lib/inquiries/get-inquiries-needing-attention';
 
 export async function getRecentUnansweredInquiries(
   limit: number,
-): Promise<Pick<Tables<'inquiries'>, 'id' | 'title' | 'created_at'>[]> {
-  const supabase = createServiceRoleClient();
-  const { data } = await supabase
-    .from('inquiries')
-    .select('id, title, created_at')
-    .is('answered_at', null)
-    .order('created_at', { ascending: false })
-    .limit(limit);
-
-  return data ?? [];
+): Promise<{ id: string; title: string; created_at: string }[]> {
+  const inquiries = await getInquiriesNeedingAttention();
+  return inquiries.slice(0, limit).map(({ id, title, created_at }) => ({ id, title, created_at }));
 }
