@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { BookOpen } from 'lucide-react';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { env } from '@/env';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
 import { defaultLocale, locales } from '@/locales';
 
@@ -28,7 +27,7 @@ export default async function AdminLoginPage() {
             </div>
             <p className="text-sm text-muted-foreground">{t.admin.portalLabel}</p>
           </div>
-          <AdminLoginForm allowTestLogin={env.NODE_ENV !== 'production'} />
+          <AdminLoginForm allowTestLogin />
         </div>
       </main>
     </div>

@@ -42,6 +42,41 @@ export async function signInConsumer(
   redirect(redirectTo && isSafeRedirectPath(redirectTo) ? redirectTo : CONSUMER_ROUTES.MYPAGE);
 }
 
+async function seedTestConsumerAddresses(consumerId: string): Promise<void> {
+  const serviceClient = createServiceRoleClient();
+  const { count } = await serviceClient
+    .from('addresses')
+    .select('id', { count: 'exact', head: true })
+    .eq('consumer_id', consumerId);
+
+  if (count) {
+    return;
+  }
+
+  await serviceClient.from('addresses').insert([
+    {
+      consumer_id: consumerId,
+      label: '집',
+      recipient_name: '테스트 사용자',
+      phone: '010-1234-5678',
+      postal_code: '06236',
+      address_line1: '서울특별시 강남구 테헤란로 123',
+      address_line2: '101동 1001호',
+      is_default: true,
+    },
+    {
+      consumer_id: consumerId,
+      label: '회사',
+      recipient_name: '테스트 사용자',
+      phone: '010-9876-5432',
+      postal_code: '04524',
+      address_line1: '서울특별시 중구 세종대로 110',
+      address_line2: '5층',
+      is_default: false,
+    },
+  ]);
+}
+
 export interface ConsumerTestLoginResult {
   errorCode: 'unavailable' | 'unexpected_error';
 }
@@ -49,10 +84,6 @@ export interface ConsumerTestLoginResult {
 export async function signInTestConsumer(
   redirectTo?: string,
 ): Promise<ConsumerTestLoginResult | undefined> {
-  if (env.NODE_ENV === 'production') {
-    return { errorCode: 'unavailable' };
-  }
-
   const serviceClient = createServiceRoleClient();
   const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers();
   if (listError) {
@@ -84,6 +115,8 @@ export async function signInTestConsumer(
   if (error || !data.user || isAdminRole(data.user.app_metadata.role)) {
     return { errorCode: 'unexpected_error' };
   }
+
+  await seedTestConsumerAddresses(data.user.id);
 
   redirect(redirectTo && isSafeRedirectPath(redirectTo) ? redirectTo : CONSUMER_ROUTES.MYPAGE);
 }

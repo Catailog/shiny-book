@@ -2,7 +2,6 @@ import { notFound, redirect } from 'next/navigation';
 
 import { PageSection } from '@/components/page-section';
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { env } from '@/env';
 import { getAddressesByConsumer } from '@/lib/addresses/get-addresses-by-consumer';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
@@ -46,7 +45,7 @@ export default async function NewOrderPage(props: PageProps<'/orders/new'>) {
       <NewOrderWizard
         product={{ ...product, name: resolveProductName(product, locale) }}
         addresses={addresses}
-        allowTestUpload={env.NODE_ENV !== 'production'}
+        allowTestUpload
       />
     </PageSection>
   );

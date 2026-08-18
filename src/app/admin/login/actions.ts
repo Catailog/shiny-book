@@ -46,10 +46,6 @@ export interface AdminTestLoginResult {
 }
 
 export async function signInTestAdmin(): Promise<AdminTestLoginResult | undefined> {
-  if (env.NODE_ENV === 'production') {
-    return { errorCode: 'unavailable' };
-  }
-
   const serviceClient = createServiceRoleClient();
   const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers();
   if (listError) {

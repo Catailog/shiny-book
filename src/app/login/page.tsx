@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 
 import { CONSUMER_ROUTES } from '@/constants/routes';
-import { env } from '@/env';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 
@@ -24,10 +23,7 @@ export default async function ConsumerLoginPage(props: PageProps<'/login'>) {
     <div className="flex min-h-full flex-1 flex-col bg-background lg:flex-row">
       <LoginVisual />
       <div className="flex flex-1 items-center justify-center p-8 sm:p-12 xl:p-16">
-        <ConsumerLoginForm
-          redirectTo={destination}
-          allowTestLogin={env.NODE_ENV !== 'production'}
-        />
+        <ConsumerLoginForm redirectTo={destination} allowTestLogin />
       </div>
     </div>
   );
