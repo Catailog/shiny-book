@@ -496,6 +496,7 @@ export const ko = {
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       list: {
+        filterAllLabel: '전체',
         categoryTabs: {
           all: '전체 카테고리',
           service: '서비스',

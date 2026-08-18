@@ -4,6 +4,7 @@ import { Plus, Search } from 'lucide-react';
 
 import { AnnouncementCategoryBadge } from '@/components/announcement-category-badge';
 import { ClickableTableRow } from '@/components/clickable-table-row';
+import { FilterLink } from '@/components/filter-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,6 +16,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ADMIN_ANNOUNCEMENT_LIST_LIMIT } from '@/constants/announcement';
+import {
+  ANNOUNCEMENT_CATEGORY,
+  type AnnouncementCategory,
+  isAnnouncementCategory,
+} from '@/constants/announcement-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { formatDate } from '@/lib/format-date';
@@ -22,15 +28,46 @@ import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
-export default async function AdminAnnouncementsPage() {
+const CATEGORY_TABS: Array<AnnouncementCategory | 'all'> = [
+  'all',
+  ANNOUNCEMENT_CATEGORY.NOTICE,
+  ANNOUNCEMENT_CATEGORY.EVENT,
+  ANNOUNCEMENT_CATEGORY.WINNER,
+];
+
+export default async function AdminAnnouncementsPage(props: PageProps<'/admin/announcements'>) {
   const t = locales[defaultLocale];
-  const announcements = await getAnnouncements(ADMIN_ANNOUNCEMENT_LIST_LIMIT);
+  const searchParams = await props.searchParams;
+  const categoryParam = firstParam(searchParams.category);
+  const activeCategory = isAnnouncementCategory(categoryParam) ? categoryParam : 'all';
+
+  const allAnnouncements = await getAnnouncements(ADMIN_ANNOUNCEMENT_LIST_LIMIT);
+  const announcements = allAnnouncements.filter(
+    (announcement) => activeCategory === 'all' || announcement.category === activeCategory,
+  );
 
   return (
     <div className="flex flex-1 flex-col">
       <AdminTopbar title={t.admin.announcements.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            {CATEGORY_TABS.map((category) => (
+              <FilterLink
+                key={category}
+                href={
+                  category === 'all'
+                    ? ADMIN_ROUTES.ANNOUNCEMENTS
+                    : `${ADMIN_ROUTES.ANNOUNCEMENTS}?category=${category}`
+                }
+                isActive={category === activeCategory}
+              >
+                {category === 'all'
+                  ? t.admin.announcements.list.filterAllLabel
+                  : t.announcementCategories[category]}
+              </FilterLink>
+            ))}
+          </div>
           <div className="flex items-center gap-3">
             <div className="relative">
               <Search
@@ -93,4 +130,8 @@ export default async function AdminAnnouncementsPage() {
       </div>
     </div>
   );
+}
+
+function firstParam(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

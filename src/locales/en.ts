@@ -497,6 +497,7 @@ export const en = {
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       list: {
+        filterAllLabel: 'All',
         categoryTabs: {
           all: 'All Categories',
           service: 'Service',
