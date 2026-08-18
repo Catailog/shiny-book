@@ -391,6 +391,7 @@ export const ko = {
       noExpiry: '기한 없음',
       activeLabel: '활성',
       inactiveLabel: '비활성',
+      expiredLabel: '만료됨',
       activateButton: '활성화',
       deactivateButton: '비활성화',
       form: {
@@ -463,6 +464,7 @@ export const ko = {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         code_taken: '이미 존재하는 쿠폰 코드입니다.',
+        expired: '만료된 쿠폰은 상태를 변경할 수 없습니다.',
         conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },

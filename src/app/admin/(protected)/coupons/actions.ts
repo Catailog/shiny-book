@@ -50,7 +50,7 @@ export async function createCoupon(
 }
 
 export interface ToggleCouponState {
-  error: 'unauthorized' | 'conflict' | null;
+  error: 'unauthorized' | 'expired' | 'conflict' | null;
 }
 
 export async function toggleCouponActive(
@@ -63,6 +63,16 @@ export async function toggleCouponActive(
   }
 
   const supabase = createServiceRoleClient();
+  const { data: coupon } = await supabase
+    .from('coupons')
+    .select('expires_at')
+    .eq('id', couponId)
+    .maybeSingle();
+
+  if (coupon?.expires_at && new Date(coupon.expires_at) <= new Date()) {
+    return { error: 'expired' };
+  }
+
   const { data } = await supabase
     .from('coupons')
     .update({ is_active: !currentlyActive })

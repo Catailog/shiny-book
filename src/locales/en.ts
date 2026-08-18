@@ -392,6 +392,7 @@ export const en = {
       noExpiry: 'No expiry',
       activeLabel: 'Active',
       inactiveLabel: 'Inactive',
+      expiredLabel: 'Expired',
       activateButton: 'Activate',
       deactivateButton: 'Deactivate',
       form: {
@@ -464,6 +465,7 @@ export const en = {
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         code_taken: 'This coupon code is already in use.',
+        expired: 'Expired coupons cannot change status.',
         conflict: 'This was already changed elsewhere. Please refresh and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },

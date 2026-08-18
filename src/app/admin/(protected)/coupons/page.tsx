@@ -148,20 +148,28 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
                     <TableCell>
                       <Badge
                         className={
-                          coupon.is_active && !isExpired
-                            ? 'bg-order-status-done/10 text-order-status-done'
-                            : 'bg-muted text-muted-foreground'
+                          isExpired
+                            ? 'bg-destructive/10 text-destructive'
+                            : coupon.is_active
+                              ? 'bg-order-status-done/10 text-order-status-done'
+                              : 'bg-muted text-muted-foreground'
                         }
                       >
-                        {coupon.is_active && !isExpired
-                          ? t.admin.coupons.activeLabel
-                          : t.admin.coupons.inactiveLabel}
+                        {isExpired
+                          ? t.admin.coupons.expiredLabel
+                          : coupon.is_active
+                            ? t.admin.coupons.activeLabel
+                            : t.admin.coupons.inactiveLabel}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end">
-                        <ToggleCouponButton couponId={coupon.id} isActive={coupon.is_active} />
-                      </div>
+                      {isExpired ? (
+                        <span className="text-muted-foreground">-</span>
+                      ) : (
+                        <div className="flex justify-end">
+                          <ToggleCouponButton couponId={coupon.id} isActive={coupon.is_active} />
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 );
