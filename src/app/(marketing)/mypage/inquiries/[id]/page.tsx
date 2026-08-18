@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
+import { DISCOUNT_TYPE } from '@/constants/coupon';
 import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
@@ -33,6 +34,11 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
   ]);
+  const couponDiscountLabel = relatedOrder?.coupon
+    ? relatedOrder.coupon.discountType === DISCOUNT_TYPE.PERCENTAGE
+      ? `${relatedOrder.coupon.discountValue}%`
+      : formatCurrency(relatedOrder.coupon.discountValue)
+    : null;
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-10 py-10">
@@ -62,13 +68,23 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
           </div>
           {relatedOrder ? (
             <div className="mt-2 flex flex-col gap-1 rounded-lg bg-muted p-3 text-sm">
-              <span className="font-semibold text-foreground">
-                {relatedOrder.productName ?? relatedOrder.title}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-foreground">
+                  {relatedOrder.productName ?? relatedOrder.title}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  #{relatedOrder.id.slice(0, 8)}
+                </span>
+              </div>
               <span className="text-xs text-muted-foreground">
                 {relatedOrder.quantity}
                 {t.checkout.quantitySuffix} / {formatCurrency(relatedOrder.amount)} /{' '}
                 {formatDate(relatedOrder.createdAt)}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {relatedOrder.coupon && couponDiscountLabel
+                  ? `${t.consumer.inquiries.couponUsedLabel}: ${relatedOrder.coupon.code} (${couponDiscountLabel})`
+                  : t.consumer.inquiries.couponNotUsedLabel}
               </span>
             </div>
           ) : null}

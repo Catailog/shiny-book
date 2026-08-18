@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { ArrowLeft } from 'lucide-react';
 
+import { DISCOUNT_TYPE } from '@/constants/coupon';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
@@ -32,6 +33,11 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
   ]);
+  const couponDiscountLabel = relatedOrder?.coupon
+    ? relatedOrder.coupon.discountType === DISCOUNT_TYPE.PERCENTAGE
+      ? `${relatedOrder.coupon.discountValue}%`
+      : formatCurrency(relatedOrder.coupon.discountValue)
+    : null;
 
   return (
     <div className="flex flex-1 flex-col">
@@ -67,14 +73,24 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
               <span className="text-xs font-bold text-muted-foreground">
                 {t.admin.inquiries.detail.relatedOrderLabel}
               </span>
-              <p className="text-sm font-semibold text-foreground">
-                {relatedOrder.productName ?? relatedOrder.title}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold text-foreground">
+                  {relatedOrder.productName ?? relatedOrder.title}
+                </p>
+                <span className="text-xs text-muted-foreground">
+                  #{relatedOrder.id.slice(0, 8)}
+                </span>
+              </div>
               <p className="text-xs text-muted-foreground">
                 {t.admin.inquiries.detail.relatedOrderQuantity} {relatedOrder.quantity}
                 {t.admin.orders.quantitySuffix} / {t.admin.inquiries.detail.relatedOrderAmount}{' '}
                 {formatCurrency(relatedOrder.amount)} / {t.admin.inquiries.detail.relatedOrderDate}{' '}
                 {formatDate(relatedOrder.createdAt)}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {relatedOrder.coupon && couponDiscountLabel
+                  ? `${t.admin.inquiries.detail.couponUsedLabel}: ${relatedOrder.coupon.code} (${couponDiscountLabel})`
+                  : t.admin.inquiries.detail.couponNotUsedLabel}
               </p>
             </div>
           ) : null}
