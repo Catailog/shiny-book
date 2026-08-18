@@ -24,7 +24,7 @@ import { revertOrderStatusAction } from './order-status-actions';
 interface RevertOrderStatusButtonProps {
   orderId: string;
   from: OrderStatus;
-  to: OrderStatus;
+  to: OrderStatus | null;
 }
 
 export function RevertOrderStatusButton({ orderId, from, to }: RevertOrderStatusButtonProps) {
@@ -32,12 +32,24 @@ export function RevertOrderStatusButton({ orderId, from, to }: RevertOrderStatus
   const [isPending, startTransition] = useTransition();
 
   function handleConfirm() {
+    if (!to) {
+      return;
+    }
+
     startTransition(async () => {
       const result = await revertOrderStatusAction(orderId, from, to);
       if (result.error) {
         toast.error(t.admin.orders.statusChangeErrors[result.error]);
       }
     });
+  }
+
+  if (to === null) {
+    return (
+      <Button type="button" variant="outline" size="sm" disabled>
+        {t.admin.orders.revertButton}
+      </Button>
+    );
   }
 
   return (

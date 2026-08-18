@@ -13,7 +13,7 @@ import { type AdvanceOrderStatusState, advanceOrderStatus } from './order-status
 interface AdvanceOrderStatusButtonProps {
   orderId: string;
   from: OrderStatus;
-  to: OrderStatus;
+  to: OrderStatus | null;
 }
 
 const initialState: AdvanceOrderStatusState = { error: null };
@@ -21,7 +21,7 @@ const initialState: AdvanceOrderStatusState = { error: null };
 export function AdvanceOrderStatusButton({ orderId, from, to }: AdvanceOrderStatusButtonProps) {
   const t = locales[defaultLocale];
   const [state, formAction, isPending] = useActionState(
-    advanceOrderStatus.bind(null, orderId, from, to),
+    advanceOrderStatus.bind(null, orderId, from, to ?? from),
     initialState,
   );
 
@@ -30,6 +30,14 @@ export function AdvanceOrderStatusButton({ orderId, from, to }: AdvanceOrderStat
       toast.error(t.admin.orders.statusChangeErrors[state.error]);
     }
   }, [state.error, t]);
+
+  if (to === null) {
+    return (
+      <Button type="button" variant="outline" size="sm" disabled>
+        {t.admin.orders.advanceButton}
+      </Button>
+    );
+  }
 
   return (
     <form action={formAction}>

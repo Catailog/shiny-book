@@ -172,22 +172,18 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                         {formatDate(order.created_at)}
                       </TableCell>
                       <TableCell>
-                        {status && (nextStatus || previousStatus) ? (
+                        {status ? (
                           <div className="flex gap-2">
-                            {previousStatus ? (
-                              <RevertOrderStatusButton
-                                orderId={order.id}
-                                from={status}
-                                to={previousStatus}
-                              />
-                            ) : null}
-                            {nextStatus ? (
-                              <AdvanceOrderStatusButton
-                                orderId={order.id}
-                                from={status}
-                                to={nextStatus}
-                              />
-                            ) : null}
+                            <RevertOrderStatusButton
+                              orderId={order.id}
+                              from={status}
+                              to={previousStatus}
+                            />
+                            <AdvanceOrderStatusButton
+                              orderId={order.id}
+                              from={status}
+                              to={nextStatus ?? null}
+                            />
                           </div>
                         ) : (
                           <span className="text-muted-foreground">-</span>
