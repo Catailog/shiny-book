@@ -28,10 +28,11 @@
 *.pem
 
 # local-only scratch docs
-/.claude/tmp
+/.claude/.temp
 
 # Claude Code session runtime state
 .claude/*.lock
+.mcp.json
 
 # debug
 npm-debug.log*
@@ -44,6 +45,12 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Supabase Studio local scratch state
+/supabase/snippets
+
+# Figma extraction scratch output
+/figma_data
 
 # typescript
 *.tsbuildinfo

@@ -1,0 +1,1 @@
+export const CONSUMER_ORDER_LIST_LIMIT = 50;

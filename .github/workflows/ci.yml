@@ -3,12 +3,28 @@ name: CI
 on:
   pull_request:
     branches: [main, dev]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.vscode/**'
   push:
     branches: [dev]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.vscode/**'
 
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+      KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+      TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_TOSS_CLIENT_KEY: ${{ secrets.NEXT_PUBLIC_TOSS_CLIENT_KEY }}
     steps:
       - uses: actions/checkout@v4
 

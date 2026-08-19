@@ -1,0 +1,169 @@
+import Link from 'next/link';
+
+import { OrderStatusBadge } from '@/components/order-status-badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import { CONSUMER_ROUTES } from '@/constants/routes';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { formatDate } from '@/lib/format-date';
+import { getLocale } from '@/lib/i18n/get-locale';
+import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
+import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
+import { getReviewsByConsumer } from '@/lib/reviews/get-reviews-by-consumer';
+import { locales } from '@/locales';
+
+const IN_PROGRESS_STATUSES = new Set<string>([
+  ORDER_STATUS.PAID,
+  ORDER_STATUS.PRINTING,
+  ORDER_STATUS.BINDING,
+  ORDER_STATUS.SHIPPING,
+]);
+
+export default async function MypagePage() {
+  const locale = await getLocale();
+  const t = locales[locale];
+  const consumer = await getCurrentConsumer();
+  const [orders, inquiries, reviews] = consumer
+    ? await Promise.all([
+        getOrdersByConsumer(consumer.id),
+        getInquiriesByConsumer(consumer.id),
+        getReviewsByConsumer(consumer.id),
+      ])
+    : [[], [], []];
+  const reviewByOrderId = new Map(reviews.map((review) => [review.order_id, review]));
+
+  const stats = [
+    {
+      key: 'completed',
+      value: String(orders.filter((order) => order.status === ORDER_STATUS.COMPLETED).length),
+      suffix: 'volumeSuffix',
+      tone: 'text-foreground',
+    },
+    {
+      key: 'inProgress',
+      value: String(orders.filter((order) => IN_PROGRESS_STATUSES.has(order.status)).length),
+      suffix: 'volumeSuffix',
+      tone: 'text-primary',
+    },
+    {
+      key: 'inquiries',
+      value: String(inquiries.length),
+      suffix: 'countSuffix',
+      tone: 'text-foreground',
+    },
+  ] as const;
+
+  return (
+    <div className="flex flex-1 flex-col gap-8 px-10 py-10">
+      <div>
+        <h1 className="font-heading text-4xl font-bold text-foreground">
+          {t.consumer.mypage.title}
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t.consumer.mypage.subtitle}</p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-6">
+        {stats.map((stat) => (
+          <div
+            key={stat.key}
+            className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-6"
+          >
+            <span className="text-sm font-semibold text-muted-foreground">
+              {t.consumer.mypage.stats[stat.key]}
+            </span>
+            <span className={`font-heading text-4xl font-bold ${stat.tone}`}>
+              {stat.value} {t.consumer.mypage.stats[stat.suffix]}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h2 className="font-heading text-2xl font-bold text-foreground">
+          {t.consumer.mypage.recentOrdersTitle}
+        </h2>
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted hover:bg-muted">
+                <TableHead>{t.consumer.mypage.orders.columns.title}</TableHead>
+                <TableHead className="w-20">{t.consumer.mypage.orders.columns.quantity}</TableHead>
+                <TableHead className="w-28">{t.consumer.mypage.orders.columns.amount}</TableHead>
+                <TableHead className="w-24">{t.consumer.mypage.orders.columns.status}</TableHead>
+                <TableHead className="w-28">{t.consumer.mypage.orders.columns.createdAt}</TableHead>
+                <TableHead className="w-24">{t.consumer.mypage.orders.columns.actions}</TableHead>
+                <TableHead className="w-24">{t.consumer.mypage.orders.columns.inquiry}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={7} className="text-center text-muted-foreground">
+                    {t.consumer.mypage.orders.empty}
+                  </TableCell>
+                </TableRow>
+              ) : null}
+              {orders.map((order) => {
+                const status = isOrderStatus(order.status) ? order.status : null;
+                const review = reviewByOrderId.get(order.id) ?? null;
+
+                return (
+                  <TableRow key={order.id} className="hover:bg-transparent">
+                    <TableCell className="font-medium text-foreground">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="truncate">{order.title}</span>
+                        <span className="text-xs font-normal text-muted-foreground">
+                          #{order.id.slice(0, 8)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {order.quantity}
+                      {t.consumer.mypage.orders.quantitySuffix}
+                    </TableCell>
+                    <TableCell>₩{order.amount.toLocaleString()}</TableCell>
+                    <TableCell>
+                      {status ? <OrderStatusBadge status={status} /> : order.status}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(order.created_at)}
+                    </TableCell>
+                    <TableCell>
+                      {status === ORDER_STATUS.COMPLETED ? (
+                        <Link
+                          href={`/mypage/orders/${order.id}/review`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {review
+                            ? t.consumer.mypage.orders.reviewDoneLink
+                            : t.consumer.mypage.orders.reviewWriteLink}
+                        </Link>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        href={`${CONSUMER_ROUTES.NEW_INQUIRY}?orderId=${order.id}`}
+                        className="text-sm font-medium text-foreground underline"
+                      >
+                        {t.consumer.mypage.orders.inquiryLink}
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </div>
+  );
+}
