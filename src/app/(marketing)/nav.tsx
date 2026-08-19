@@ -1,8 +1,13 @@
+import Link from 'next/link';
+
+import { Shield } from 'lucide-react';
+
 import { LanguageToggle } from '@/components/language-toggle';
 import { SiteContainer } from '@/components/site-container';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
+  ADMIN_ROUTES,
   FAQ_ROUTES,
   MARKETING_ROUTES,
   NOTICE_ROUTES,
@@ -73,6 +78,20 @@ export async function Nav() {
               switchToLightLabel={t.site.nav.switchToLightMode}
               switchToDarkLabel={t.site.nav.switchToDarkMode}
             />
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Link
+                    href={ADMIN_ROUTES.DASHBOARD}
+                    aria-label={t.site.nav.goToAdmin}
+                    className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  />
+                }
+              >
+                <Shield aria-hidden="true" className="size-5" />
+              </TooltipTrigger>
+              <TooltipContent>{t.site.nav.goToAdminTooltip}</TooltipContent>
+            </Tooltip>
             <NavAuthIcons
               isConsumer={isConsumer}
               loginLabel={t.site.nav.login}

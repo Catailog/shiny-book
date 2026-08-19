@@ -28,6 +28,8 @@ export const en = {
       changeLanguage: 'Change language',
       switchToLightMode: 'Switch to light mode',
       switchToDarkMode: 'Switch to dark mode',
+      goToAdmin: 'Go to admin page',
+      goToAdminTooltip: 'Go to admin page - added for testing purposes.',
     },
     footer: {
       productsTitle: 'Products',

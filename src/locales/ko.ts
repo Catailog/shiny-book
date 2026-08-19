@@ -28,6 +28,8 @@ export const ko = {
       changeLanguage: '언어 변경',
       switchToLightMode: '라이트 모드로 전환',
       switchToDarkMode: '다크 모드로 전환',
+      goToAdmin: '관리자 페이지 가기',
+      goToAdminTooltip: '관리자 페이지 가기 - 테스트를 위해 추가된 버튼입니다.',
     },
     footer: {
       productsTitle: '제품',
