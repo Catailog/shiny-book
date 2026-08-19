@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import path from 'node:path';
 
 const localEnv = dotenv.config({ path: path.resolve(process.cwd(), '.env.local') }).parsed || {};
-const prodEnv = dotenv.config({ path: path.resolve(process.cwd(), '.env.production') }).parsed || {};
+const prodEnv =
+  dotenv.config({ path: path.resolve(process.cwd(), '.env.production') }).parsed || {};
 
 const LOCAL_URL = localEnv.LOCAL_SUPABASE_URL || localEnv.NEXT_PUBLIC_SUPABASE_URL;
 const LOCAL_SERVICE_KEY = localEnv.LOCAL_SUPABASE_SECRET_KEY || localEnv.SUPABASE_SECRET_KEY;
@@ -28,7 +29,7 @@ const report = {
   total: 0,
   success: 0,
   skipped: 0,
-  failures: []
+  failures: [],
 };
 
 async function ensureBucketExists(bucketName) {
@@ -58,7 +59,12 @@ async function processSingleFile(bucket, item, itemPath, prodFileSet) {
     .download(itemPath);
 
   if (downloadError) {
-    report.failures.push({ bucket, path: itemPath, stage: '다운로드', message: downloadError.message });
+    report.failures.push({
+      bucket,
+      path: itemPath,
+      stage: '다운로드',
+      message: downloadError.message,
+    });
     console.log(`[FAIL] ${bucket}/${itemPath}`);
     return;
   }
@@ -80,13 +86,17 @@ async function processSingleFile(bucket, item, itemPath, prodFileSet) {
 }
 
 async function processPath(bucket, pathStr = '') {
-  const { data: localItems, error } = await localSupabase.storage.from(bucket).list(pathStr, { limit: 1000 });
+  const { data: localItems, error } = await localSupabase.storage
+    .from(bucket)
+    .list(pathStr, { limit: 1000 });
 
   if (error || !localItems) return;
 
   let prodFileSet = new Set();
   if (SKIP_EXISTING) {
-    const { data: prodItems } = await prodSupabase.storage.from(bucket).list(pathStr, { limit: 1000 });
+    const { data: prodItems } = await prodSupabase.storage
+      .from(bucket)
+      .list(pathStr, { limit: 1000 });
     prodFileSet = new Set(prodItems?.map((item) => item.name) || []);
   }
 
@@ -109,13 +119,15 @@ async function processPath(bucket, pathStr = '') {
   for (let i = 0; i < files.length; i += CONCURRENCY_LIMIT) {
     const chunk = files.slice(i, i + CONCURRENCY_LIMIT);
     await Promise.all(
-      chunk.map(({ item, itemPath }) => processSingleFile(bucket, item, itemPath, prodFileSet))
+      chunk.map(({ item, itemPath }) => processSingleFile(bucket, item, itemPath, prodFileSet)),
     );
   }
 }
 
 async function main() {
-  console.log(`[MODE] 중복 처리: ${SKIP_EXISTING ? '건너뛰기' : '덮어쓰기'} | 동시 처리: ${CONCURRENCY_LIMIT}개씩`);
+  console.log(
+    `[MODE] 중복 처리: ${SKIP_EXISTING ? '건너뛰기' : '덮어쓰기'} | 동시 처리: ${CONCURRENCY_LIMIT}개씩`,
+  );
 
   for (const bucket of BUCKETS) {
     console.log(`\n[START] [${bucket}] 이전 작업 시작...`);
@@ -124,7 +136,9 @@ async function main() {
   }
 
   console.log('\n========================================');
-  console.log(`[최종 결과] 총 파일: ${report.total}개 | 신규 이전: ${report.success}개 | 건너뜀: ${report.skipped}개 | 실패: ${report.failures.length}개`);
+  console.log(
+    `[최종 결과] 총 파일: ${report.total}개 | 신규 이전: ${report.success}개 | 건너뜀: ${report.skipped}개 | 실패: ${report.failures.length}개`,
+  );
   console.log('========================================');
 
   if (report.failures.length > 0) {
