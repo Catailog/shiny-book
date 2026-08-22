@@ -5,6 +5,8 @@ import { ArrowRight } from 'lucide-react';
 
 import { SiteContainer } from '@/components/site-container';
 import { Button } from '@/components/ui/button';
+import { TextAnimate } from '@/components/ui/text-animate';
+import { TypingAnimation } from '@/components/ui/typing-animation';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
@@ -23,10 +25,27 @@ export async function FinalCta() {
           <p className="text-[13px] font-semibold tracking-wide text-primary uppercase">
             {cta.eyebrow}
           </p>
-          <h2 className="font-heading text-4xl leading-tight font-normal text-inverted-foreground sm:text-5xl">
+          <TextAnimate
+            as="h2"
+            by="word"
+            animation="slideUp"
+            once
+            className="font-heading text-4xl leading-tight font-normal text-balance break-keep text-inverted-foreground sm:text-5xl"
+          >
             {cta.title}
-          </h2>
-          <p className="text-base text-inverted-foreground/80">{cta.description}</p>
+          </TextAnimate>
+          <div className="grid w-full">
+            <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-base">
+              {cta.description}
+            </p>
+            <TypingAnimation
+              as="p"
+              duration={30}
+              className="col-start-1 row-start-1 text-base font-normal tracking-normal text-inverted-foreground/80"
+            >
+              {cta.description}
+            </TypingAnimation>
+          </div>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Button

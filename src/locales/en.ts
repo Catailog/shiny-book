@@ -183,8 +183,6 @@ export const en = {
         more: 'View all reviews',
         ratingLabel: 'Rating',
         purchasedLabel: 'Purchased',
-        prevLabel: 'Previous review',
-        nextLabel: 'Next review',
       },
       cta: {
         eyebrow: 'Get Started Now',
@@ -278,10 +276,6 @@ export const en = {
       confirmed: {
         title: 'Payment complete',
         description: 'The order has moved to the paid status.',
-      },
-      alreadyProcessed: {
-        title: 'Payment already processed',
-        description: 'This order has already been confirmed.',
       },
       amountMismatch: {
         title: 'Payment amount mismatch',

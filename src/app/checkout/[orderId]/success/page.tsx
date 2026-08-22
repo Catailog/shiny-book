@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { Confetti } from '@/components/ui/confetti';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
@@ -31,24 +32,25 @@ export default async function CheckoutSuccessPage(props: PageProps<'/checkout/[o
   const result = await finalizeOrderPayment(orderId, paymentKey, amount);
 
   if (result.outcome === 'confirmed' || result.outcome === 'already_processed') {
-    const copy =
-      result.outcome === 'confirmed'
-        ? t.checkout.confirm.confirmed
-        : t.checkout.confirm.alreadyProcessed;
-
     return (
-      <ResultCard title={copy.title} description={copy.description}>
-        <dl className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 text-sm shadow-sm">
-          <div className="flex justify-between">
-            <dt className="text-muted-foreground">{t.checkout.orderIdLabel}</dt>
-            <dd>{result.order.id}</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt className="text-muted-foreground">{t.checkout.amountLabel}</dt>
-            <dd>{formatCurrency(result.order.amount)}</dd>
-          </div>
-        </dl>
-      </ResultCard>
+      <>
+        <Confetti className="pointer-events-none fixed inset-0 z-50 h-full w-full" />
+        <ResultCard
+          title={t.checkout.confirm.confirmed.title}
+          description={t.checkout.confirm.confirmed.description}
+        >
+          <dl className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 text-sm shadow-sm">
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">{t.checkout.orderIdLabel}</dt>
+              <dd>{result.order.id}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">{t.checkout.amountLabel}</dt>
+              <dd>{formatCurrency(result.order.amount)}</dd>
+            </div>
+          </dl>
+        </ResultCard>
+      </>
     );
   }
 
