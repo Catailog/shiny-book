@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Menu } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +14,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 export interface NavLinkEntry {
@@ -32,11 +34,14 @@ export type NavEntry = NavLinkEntry | NavGroupEntry;
 interface NavLinksProps {
   brandName: string;
   entries: NavEntry[];
+  openMenuLabel: string;
+  menuTitle: string;
 }
 
 const NAV_ITEM_CLASSNAME = 'rounded-none bg-transparent px-3 py-1.5 text-sm font-medium';
+const SHEET_LINK_CLASSNAME = 'rounded-md px-3 py-2 text-sm font-medium';
 
-export function NavLinks({ brandName, entries }: NavLinksProps) {
+export function NavLinks({ brandName, entries, openMenuLabel, menuTitle }: NavLinksProps) {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
@@ -46,21 +51,80 @@ export function NavLinks({ brandName, entries }: NavLinksProps) {
 
   return (
     <>
-      <Link href="/" className="flex items-center gap-2">
-        <BookOpen
-          aria-hidden="true"
-          strokeWidth={1.8}
-          className={cn('size-5', isHome ? 'text-primary' : 'text-foreground')}
-        />
-        <span
-          className={cn(
-            'font-heading text-lg font-semibold',
-            isHome ? 'text-primary' : 'text-foreground',
-          )}
-        >
-          {brandName}
-        </span>
-      </Link>
+      <div className="flex items-center gap-2">
+        <Sheet>
+          <SheetTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={openMenuLabel}
+                className="md:hidden"
+              />
+            }
+          >
+            <Menu aria-hidden="true" className="size-5" />
+          </SheetTrigger>
+          <SheetContent title={menuTitle}>
+            <nav className="flex flex-col gap-1 pt-8">
+              {entries.map((entry) => {
+                if (entry.type === 'link') {
+                  const isActive = isPathActive(entry.href);
+                  return (
+                    <SheetClose
+                      key={entry.label}
+                      render={<Link href={entry.href} />}
+                      className={cn(
+                        SHEET_LINK_CLASSNAME,
+                        isActive ? 'text-primary' : 'text-foreground hover:bg-muted',
+                      )}
+                    >
+                      {entry.label}
+                    </SheetClose>
+                  );
+                }
+
+                return (
+                  <div key={entry.label} className="flex flex-col gap-1 py-2">
+                    <p className="px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                      {entry.label}
+                    </p>
+                    {entry.items.map((item) => (
+                      <SheetClose
+                        key={item.label}
+                        render={<Link href={item.href} />}
+                        className={cn(
+                          SHEET_LINK_CLASSNAME,
+                          isPathActive(item.href)
+                            ? 'text-primary'
+                            : 'text-foreground hover:bg-muted',
+                        )}
+                      >
+                        {item.label}
+                      </SheetClose>
+                    ))}
+                  </div>
+                );
+              })}
+            </nav>
+          </SheetContent>
+        </Sheet>
+        <Link href="/" className="flex items-center gap-2">
+          <BookOpen
+            aria-hidden="true"
+            strokeWidth={1.8}
+            className={cn('size-5', isHome ? 'text-primary' : 'text-foreground')}
+          />
+          <span
+            className={cn(
+              'hidden font-heading text-lg font-semibold md:inline',
+              isHome ? 'text-primary' : 'text-foreground',
+            )}
+          >
+            {brandName}
+          </span>
+        </Link>
+      </div>
       <NavigationMenu className="hidden md:flex" align="start">
         <NavigationMenuList className="gap-0 text-muted-foreground">
           {entries.map((entry) => {
