@@ -6,7 +6,6 @@ import {
   TEST_PHOTO_TEMPLATE_PATH,
 } from '@/constants/file-upload';
 import { PHOTOBOOK_PAGE_COUNT_MAX, PHOTOBOOK_PHOTOS_PER_PAGE } from '@/constants/photobook';
-import { env } from '@/env';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
@@ -18,10 +17,6 @@ export interface GenerateTestPhotosResult {
 const MAX_TEST_PHOTO_COUNT = PHOTOBOOK_PAGE_COUNT_MAX * PHOTOBOOK_PHOTOS_PER_PAGE;
 
 export async function generateTestPhotos(count: number): Promise<GenerateTestPhotosResult> {
-  if (env.NODE_ENV === 'production') {
-    return { success: false, paths: [] };
-  }
-
   if (!Number.isInteger(count) || count <= 0 || count > MAX_TEST_PHOTO_COUNT) {
     return { success: false, paths: [] };
   }
