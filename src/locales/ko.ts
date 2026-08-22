@@ -183,8 +183,6 @@ export const ko = {
         more: '모든 후기 보기',
         ratingLabel: '평점',
         purchasedLabel: '구매 상품',
-        prevLabel: '이전 후기',
-        nextLabel: '다음 후기',
       },
       cta: {
         eyebrow: '지금 바로 시작하기',
@@ -278,10 +276,6 @@ export const ko = {
       confirmed: {
         title: '결제가 완료됐습니다',
         description: '주문이 결제완료 상태로 전환됐습니다.',
-      },
-      alreadyProcessed: {
-        title: '이미 처리된 결제입니다',
-        description: '이 주문은 이미 결제 처리가 완료됐습니다.',
       },
       amountMismatch: {
         title: '결제 금액이 일치하지 않습니다',
