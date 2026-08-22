@@ -1,8 +1,9 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
+import { flushSync } from 'react-dom';
 
-import { Moon, Sun } from 'lucide-react';
+import { Moon, SunDim } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -11,14 +12,43 @@ interface ThemeToggleProps {
   switchToDarkLabel: string;
 }
 
+const THEME_TRANSITION_DURATION_MS = 700;
+
 export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeToggleProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const isDark = useSyncExternalStore(subscribeToThemeChange, getIsDarkSnapshot, getServerSnapshot);
   const label = isDark ? switchToLightLabel : switchToDarkLabel;
 
-  function toggleTheme() {
-    const nextIsDark = !isDark;
-    document.documentElement.classList.toggle('dark', nextIsDark);
-    localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
+  async function toggleTheme() {
+    const applyTheme = () => {
+      const nextIsDark = !document.documentElement.classList.contains('dark');
+      document.documentElement.classList.toggle('dark', nextIsDark);
+      localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
+    };
+
+    if (!buttonRef.current || !document.startViewTransition) {
+      applyTheme();
+      return;
+    }
+
+    await document.startViewTransition(() => flushSync(applyTheme)).ready;
+
+    const { top, left, width, height } = buttonRef.current.getBoundingClientRect();
+    const x = left + width / 2;
+    const y = top + height / 2;
+    const maxRadius = Math.hypot(
+      Math.max(left, window.innerWidth - left),
+      Math.max(top, window.innerHeight - top),
+    );
+
+    document.documentElement.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${maxRadius}px at ${x}px ${y}px)`] },
+      {
+        duration: THEME_TRANSITION_DURATION_MS,
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
+      },
+    );
   }
 
   return (
@@ -26,6 +56,7 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
       <TooltipTrigger
         render={
           <button
+            ref={buttonRef}
             type="button"
             onClick={toggleTheme}
             aria-label={label}
@@ -34,7 +65,7 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
         }
       >
         {isDark ? (
-          <Sun aria-hidden="true" className="size-5" />
+          <SunDim aria-hidden="true" className="size-5" />
         ) : (
           <Moon aria-hidden="true" className="size-5" />
         )}
