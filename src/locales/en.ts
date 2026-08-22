@@ -30,6 +30,8 @@ export const en = {
       switchToDarkMode: 'Switch to dark mode',
       goToAdmin: 'Go to admin page',
       goToAdminTooltip: 'Go to admin page - added for testing purposes.',
+      openMenu: 'Open menu',
+      menuTitle: 'Site menu',
     },
     footer: {
       productsTitle: 'Products',

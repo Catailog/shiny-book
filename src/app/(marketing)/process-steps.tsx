@@ -24,7 +24,7 @@ export async function ProcessSteps() {
         </p>
         <h2 className="font-heading text-4xl font-normal text-foreground">{steps.title}</h2>
       </div>
-      <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-3">
+      <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-3">
         {steps.items.map((step, index) => {
           const StepIcon = STEP_ICONS[index];
           return (

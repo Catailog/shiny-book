@@ -30,6 +30,8 @@ const HERO_MARQUEE_COLUMN_B = [
   '/images/press/hero.png',
 ];
 
+const HERO_MARQUEE_ALL = [...HERO_MARQUEE_COLUMN_A, ...HERO_MARQUEE_COLUMN_B];
+
 interface HeroProps {
   soldBookCount: number;
   premiumProductCount: number;
@@ -106,39 +108,55 @@ export async function Hero({ soldBookCount, premiumProductCount }: HeroProps) {
           ))}
         </dl>
       </div>
-      <div className="relative aspect-7/8 w-full shrink-0 lg:w-135">
-        <div className="flex h-full w-full gap-2 p-2">
-          <Marquee vertical pauseOnHover className="h-full flex-1 [--duration:28s] [--gap:0.5rem]">
-            {HERO_MARQUEE_COLUMN_A.map((src) => (
-              <div key={src} className="relative aspect-3/4 w-full overflow-hidden rounded-lg">
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 260px, 45vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </Marquee>
-          <Marquee
-            vertical
-            reverse
-            pauseOnHover
-            className="h-full flex-1 [--duration:28s] [--gap:0.5rem]"
-          >
-            {HERO_MARQUEE_COLUMN_B.map((src) => (
-              <div key={src} className="relative aspect-3/4 w-full overflow-hidden rounded-lg">
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 260px, 45vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </Marquee>
+      <div className="w-full shrink-0 lg:w-135">
+        <Marquee pauseOnHover className="[--duration:28s] [--gap:0.5rem] lg:hidden">
+          {HERO_MARQUEE_ALL.map((src) => (
+            <div
+              key={src}
+              className="relative aspect-3/4 h-44 shrink-0 overflow-hidden rounded-lg sm:h-56"
+            >
+              <Image src={src} alt="" fill sizes="200px" className="object-cover" />
+            </div>
+          ))}
+        </Marquee>
+        <div className="relative hidden aspect-7/8 w-full lg:block">
+          <div className="flex h-full w-full gap-2 p-2">
+            <Marquee
+              vertical
+              pauseOnHover
+              className="h-full flex-1 [--duration:28s] [--gap:0.5rem]"
+            >
+              {HERO_MARQUEE_COLUMN_A.map((src) => (
+                <div key={src} className="relative aspect-3/4 w-full overflow-hidden rounded-lg">
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 260px, 45vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <Marquee
+              vertical
+              reverse
+              pauseOnHover
+              className="h-full flex-1 [--duration:28s] [--gap:0.5rem]"
+            >
+              {HERO_MARQUEE_COLUMN_B.map((src) => (
+                <div key={src} className="relative aspect-3/4 w-full overflow-hidden rounded-lg">
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 260px, 45vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </Marquee>
+          </div>
         </div>
       </div>
     </PageSection>
