@@ -7,12 +7,6 @@ on:
       - '**.md'
       - '.gitignore'
       - '.vscode/**'
-  push:
-    branches: [dev]
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - '.vscode/**'
 
 jobs:
   verify:
