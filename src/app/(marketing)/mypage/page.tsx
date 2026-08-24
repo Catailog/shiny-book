@@ -31,13 +31,14 @@ export default async function MypagePage() {
   const locale = await getLocale();
   const t = locales[locale];
   const consumer = await getCurrentConsumer();
-  const [orders, inquiries, reviews] = consumer
+  const [allOrders, inquiries, reviews] = consumer
     ? await Promise.all([
         getOrdersByConsumer(consumer.id),
         getInquiriesByConsumer(consumer.id),
         getReviewsByConsumer(consumer.id),
       ])
     : [[], [], []];
+  const orders = allOrders.filter((order) => order.status !== ORDER_STATUS.CANCELLED);
   const reviewByOrderId = new Map(reviews.map((review) => [review.order_id, review]));
 
   const stats = [
