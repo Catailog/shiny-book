@@ -27,9 +27,15 @@ interface MessageThreadProps {
   inquiryId: string;
   messages: Tables<'inquiry_messages'>[];
   currentAdminId: string;
+  adminAuthorEmails: Record<string, string>;
 }
 
-export function MessageThread({ inquiryId, messages, currentAdminId }: MessageThreadProps) {
+export function MessageThread({
+  inquiryId,
+  messages,
+  currentAdminId,
+  adminAuthorEmails,
+}: MessageThreadProps) {
   const t = locales[defaultLocale];
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingContent, setEditingContent] = useState('');
@@ -71,6 +77,9 @@ export function MessageThread({ inquiryId, messages, currentAdminId }: MessageTh
         const isAdminMessage = message.author_type === INQUIRY_MESSAGE_AUTHOR.ADMIN;
         const isOwnMessage = isAdminMessage && message.author_id === currentAdminId;
         const isEditing = editingMessageId === message.id;
+        const adminAuthorEmail = message.author_id
+          ? adminAuthorEmails[message.author_id]
+          : undefined;
 
         return (
           <div
@@ -84,7 +93,7 @@ export function MessageThread({ inquiryId, messages, currentAdminId }: MessageTh
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs font-bold text-muted-foreground">
                 {isAdminMessage
-                  ? t.admin.inquiries.detail.adminAuthorLabel
+                  ? (adminAuthorEmail ?? t.admin.inquiries.detail.adminAuthorLabel)
                   : t.admin.inquiries.detail.consumerAuthorLabel}
               </span>
               <div className="flex items-center gap-3">

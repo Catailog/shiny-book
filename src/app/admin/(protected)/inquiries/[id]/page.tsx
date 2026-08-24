@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
 import { DISCOUNT_TYPE } from '@/constants/coupon';
+import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
@@ -12,6 +13,7 @@ import { formatCurrency } from '@/lib/format/currency';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
 import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
 import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-context';
+import { getProfileEmailsByIds } from '@/lib/profiles/get-profile-emails-by-ids';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../../admin-topbar';
@@ -33,6 +35,15 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
   ]);
+  const adminAuthorIds = [
+    ...new Set(
+      messages
+        .filter((message) => message.author_type === INQUIRY_MESSAGE_AUTHOR.ADMIN)
+        .map((message) => message.author_id)
+        .filter((authorId): authorId is string => authorId !== null),
+    ),
+  ];
+  const adminAuthorEmails = await getProfileEmailsByIds(adminAuthorIds);
   const couponDiscountLabel = relatedOrder?.coupon
     ? relatedOrder.coupon.discountType === DISCOUNT_TYPE.PERCENTAGE
       ? `${relatedOrder.coupon.discountValue}%`
@@ -98,7 +109,12 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
             <span className="text-xs font-bold text-muted-foreground">
               {t.admin.inquiries.detail.threadLabel}
             </span>
-            <MessageThread inquiryId={inquiry.id} messages={messages} currentAdminId={admin.id} />
+            <MessageThread
+              inquiryId={inquiry.id}
+              messages={messages}
+              currentAdminId={admin.id}
+              adminAuthorEmails={adminAuthorEmails}
+            />
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-muted-foreground">

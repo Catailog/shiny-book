@@ -27,8 +27,7 @@ interface ConsumerLoginFormProps {
 export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
-  const [isTestLoginPending1, startTestLoginTransition1] = useTransition();
-  const [isTestLoginPending2, startTestLoginTransition2] = useTransition();
+  const [isTestLoginPending, startTestLoginTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     register,
@@ -45,18 +44,9 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
     });
   }
 
-  function handleTestLogin1() {
-    startTestLoginTransition1(async () => {
-      const result = await signInTestConsumer(1, redirectTo);
-      if (result) {
-        toast.error(t.consumer.login.testLoginErrors[result.errorCode]);
-      }
-    });
-  }
-
-  function handleTestLogin2() {
-    startTestLoginTransition2(async () => {
-      const result = await signInTestConsumer(2, redirectTo);
+  function handleTestLogin() {
+    startTestLoginTransition(async () => {
+      const result = await signInTestConsumer(redirectTo);
       if (result) {
         toast.error(t.consumer.login.testLoginErrors[result.errorCode]);
       }
@@ -125,44 +115,24 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
           {isPending ? t.consumer.login.submitting : t.consumer.login.submitButton}
         </Button>
         {allowTestLogin ? (
-          <div className="flex flex-col gap-2">
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isTestLoginPending1}
-                    onClick={handleTestLogin1}
-                    className="w-full text-sm font-semibold uppercase"
-                  />
-                }
-              >
-                {isTestLoginPending1
-                  ? t.consumer.login.testLoginSubmitting
-                  : t.consumer.login.testLoginButton1}
-              </TooltipTrigger>
-              <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isTestLoginPending2}
-                    onClick={handleTestLogin2}
-                    className="w-full text-sm font-semibold uppercase"
-                  />
-                }
-              >
-                {isTestLoginPending2
-                  ? t.consumer.login.testLoginSubmitting
-                  : t.consumer.login.testLoginButton2}
-              </TooltipTrigger>
-              <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
-            </Tooltip>
-          </div>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isTestLoginPending}
+                  onClick={handleTestLogin}
+                  className="w-full text-sm font-semibold uppercase"
+                />
+              }
+            >
+              {isTestLoginPending
+                ? t.consumer.login.testLoginSubmitting
+                : t.consumer.login.testLoginButton}
+            </TooltipTrigger>
+            <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
+          </Tooltip>
         ) : null}
         <p className="text-center text-sm text-muted-foreground">
           {t.consumer.login.signupPrompt}{' '}

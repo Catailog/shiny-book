@@ -2,12 +2,17 @@
 
 import { redirect } from 'next/navigation';
 
-import { ROLE } from '@/constants/roles';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { env } from '@/env';
+import { TEST_ACCOUNT_ROLE_PREFIX } from '@/constants/test-account';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
+import { createTestAccountPair } from '@/lib/auth/test-account-pair';
+import {
+  buildTestAccountEmail,
+  persistTestAccountPairToken,
+  readTestAccountPairToken,
+  signInWithExistingTestAccount,
+} from '@/lib/auth/test-account-session';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
@@ -46,31 +51,26 @@ export interface AdminTestLoginResult {
 }
 
 export async function signInTestAdmin(): Promise<AdminTestLoginResult | undefined> {
-  const serviceClient = createServiceRoleClient();
-  const { data: existingUsers, error: listError } = await serviceClient.auth.admin.listUsers();
-  if (listError) {
-    return { errorCode: 'unexpected_error' };
+  const existingToken = await readTestAccountPairToken();
+
+  if (existingToken) {
+    const adminEmail = buildTestAccountEmail(TEST_ACCOUNT_ROLE_PREFIX.ADMIN, existingToken);
+
+    if (await signInWithExistingTestAccount(adminEmail, isAdminRole)) {
+      await persistTestAccountPairToken(existingToken);
+      redirect(ADMIN_ROUTES.DASHBOARD);
+    }
   }
 
-  const existingTestAdmin = existingUsers.users.find((user) => user.email === env.ADMIN_SEED_EMAIL);
-
-  if (!existingTestAdmin) {
-    const { error: createError } = await serviceClient.auth.admin.createUser({
-      email: env.ADMIN_SEED_EMAIL,
-      password: env.ADMIN_SEED_PASSWORD,
-      email_confirm: true,
-      app_metadata: { role: ROLE.ADMIN },
-    });
-
-    if (createError) {
-      return { errorCode: 'unexpected_error' };
-    }
+  const pair = await createTestAccountPair();
+  if (!pair) {
+    return { errorCode: 'unexpected_error' };
   }
 
   const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: env.ADMIN_SEED_EMAIL,
-    password: env.ADMIN_SEED_PASSWORD,
+    email: pair.adminEmail,
+    password: pair.adminPassword,
   });
 
   if (error || !data.user || !isAdminRole(data.user.app_metadata.role)) {

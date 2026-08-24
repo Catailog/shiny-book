@@ -333,7 +333,7 @@ export const en = {
       submitting: 'Signing in...',
       testLoginButton: 'Instant test account login',
       testLoginSubmitting: 'Signing in...',
-      testLoginTooltip: 'Automatically signs you in for admin testing.',
+      testLoginTooltip: 'Automatically signs you in with a fresh account for admin testing.',
       errors: {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
@@ -770,10 +770,9 @@ export const en = {
       hidePasswordLabel: 'Hide password',
       submitButton: 'Sign in',
       submitting: 'Signing in...',
-      testLoginButton1: 'Instant login as test account 1',
-      testLoginButton2: 'Instant login as test account 2',
+      testLoginButton: 'Instant test account login',
       testLoginSubmitting: 'Signing in...',
-      testLoginTooltip: 'Automatically signs you in for consumer testing.',
+      testLoginTooltip: 'Automatically signs you in with a fresh account for consumer testing.',
       signupPrompt: "Don't have an account yet?",
       signupLink: 'Sign up',
       errors: {
