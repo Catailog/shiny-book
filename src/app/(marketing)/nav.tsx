@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Shield } from 'lucide-react';
 
+import { Coachmark, CoachmarkSpot } from '@/components/coachmark';
 import { LanguageToggle } from '@/components/language-toggle';
 import { SiteContainer } from '@/components/site-container';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -83,26 +84,69 @@ export async function Nav() {
               switchToLightLabel={t.site.nav.switchToLightMode}
               switchToDarkLabel={t.site.nav.switchToDarkMode}
             />
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Link
-                    href={ADMIN_ROUTES.DASHBOARD}
-                    aria-label={t.site.nav.goToAdmin}
-                    className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  />
-                }
+            {isConsumer ? (
+              <>
+                <NavAuthIcons
+                  isConsumer={isConsumer}
+                  loginLabel={t.site.nav.login}
+                  mypageLabel={t.site.nav.mypage}
+                  logoutLabel={t.site.nav.logout}
+                />
+                <div aria-hidden="true" className="mx-1 h-5 w-px bg-border" />
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Link
+                        href={ADMIN_ROUTES.DASHBOARD}
+                        aria-label={t.site.nav.goToAdmin}
+                        className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                      />
+                    }
+                  >
+                    <Shield aria-hidden="true" className="size-5" />
+                  </TooltipTrigger>
+                  <TooltipContent>{t.site.nav.goToAdminTooltip}</TooltipContent>
+                </Tooltip>
+              </>
+            ) : (
+              <Coachmark
+                id="nav-test-features"
+                title={t.site.nav.coachmarkTestFeaturesTitle}
+                description={t.site.nav.coachmarkTestFeaturesDescription}
+                closeLabel={t.common.coachmarkClose}
+                side="bottom"
+                align="center"
+                highlightMode="children"
               >
-                <Shield aria-hidden="true" className="size-5" />
-              </TooltipTrigger>
-              <TooltipContent>{t.site.nav.goToAdminTooltip}</TooltipContent>
-            </Tooltip>
-            <NavAuthIcons
-              isConsumer={isConsumer}
-              loginLabel={t.site.nav.login}
-              mypageLabel={t.site.nav.mypage}
-              logoutLabel={t.site.nav.logout}
-            />
+                <div className="flex items-center gap-1">
+                  <CoachmarkSpot>
+                    <NavAuthIcons
+                      isConsumer={isConsumer}
+                      loginLabel={t.site.nav.login}
+                      mypageLabel={t.site.nav.mypage}
+                      logoutLabel={t.site.nav.logout}
+                    />
+                  </CoachmarkSpot>
+                  <div aria-hidden="true" className="mx-1 h-5 w-px bg-border" />
+                  <CoachmarkSpot>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Link
+                            href={ADMIN_ROUTES.DASHBOARD}
+                            aria-label={t.site.nav.goToAdmin}
+                            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          />
+                        }
+                      >
+                        <Shield aria-hidden="true" className="size-5" />
+                      </TooltipTrigger>
+                      <TooltipContent>{t.site.nav.goToAdminTooltip}</TooltipContent>
+                    </Tooltip>
+                  </CoachmarkSpot>
+                </div>
+              </Coachmark>
+            )}
           </div>
         </TooltipProvider>
       </SiteContainer>

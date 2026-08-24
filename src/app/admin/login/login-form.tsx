@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { Coachmark } from '@/components/coachmark';
 import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -87,24 +88,31 @@ export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
       {allowTestLogin ? (
         <div className="flex flex-col gap-2">
           <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isTestLoginPending || !turnstileToken}
-                  onClick={handleTestLogin}
-                  className="w-full"
-                />
-              }
-            >
-              {isTestLoginPending
-                ? t.admin.login.testLoginSubmitting
-                : t.admin.login.testLoginButton}
-            </TooltipTrigger>
-            <TooltipContent>{t.admin.login.testLoginTooltip}</TooltipContent>
-          </Tooltip>
+          <Coachmark
+            id="test-login-admin"
+            title={t.admin.login.coachmarkTestLoginTitle}
+            description={t.admin.login.coachmarkTestLoginDescription}
+            closeLabel={t.common.coachmarkClose}
+          >
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isTestLoginPending || !turnstileToken}
+                    onClick={handleTestLogin}
+                    className="w-full"
+                  />
+                }
+              >
+                {isTestLoginPending
+                  ? t.admin.login.testLoginSubmitting
+                  : t.admin.login.testLoginButton}
+              </TooltipTrigger>
+              <TooltipContent>{t.admin.login.testLoginTooltip}</TooltipContent>
+            </Tooltip>
+          </Coachmark>
         </div>
       ) : null}
     </form>

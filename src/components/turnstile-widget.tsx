@@ -5,9 +5,11 @@ import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 
 import { env } from '@/env';
+import { useHtmlClassPresent } from '@/hooks/use-html-class-present';
 
 interface TurnstileRenderOptions {
   sitekey: string;
+  theme: 'light' | 'dark';
   callback: (token: string) => void;
   'expired-callback'?: () => void;
 }
@@ -32,6 +34,7 @@ export function TurnstileWidget({ onVerify, onExpire }: TurnstileWidgetProps) {
   const [isScriptReady, setIsScriptReady] = useState(
     () => typeof window !== 'undefined' && Boolean(window.turnstile),
   );
+  const isDark = useHtmlClassPresent('dark');
 
   useEffect(() => {
     callbacksRef.current = { onVerify, onExpire };
@@ -44,6 +47,7 @@ export function TurnstileWidget({ onVerify, onExpire }: TurnstileWidgetProps) {
 
     const widgetId = window.turnstile.render(containerRef.current, {
       sitekey: env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+      theme: isDark ? 'dark' : 'light',
       callback: (token) => callbacksRef.current.onVerify(token),
       'expired-callback': () => callbacksRef.current.onExpire?.(),
     });
@@ -51,7 +55,7 @@ export function TurnstileWidget({ onVerify, onExpire }: TurnstileWidgetProps) {
     return () => {
       window.turnstile?.remove(widgetId);
     };
-  }, [isScriptReady]);
+  }, [isScriptReady, isDark]);
 
   return (
     <>
