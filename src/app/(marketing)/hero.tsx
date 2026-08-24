@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { ArrowRight } from 'lucide-react';
 
+import { Coachmark } from '@/components/coachmark';
 import { PageSection } from '@/components/page-section';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -35,9 +36,14 @@ const HERO_MARQUEE_ALL = [...HERO_MARQUEE_COLUMN_A, ...HERO_MARQUEE_COLUMN_B];
 interface HeroProps {
   soldBookCount: number;
   premiumProductCount: number;
+  showNewOrderCoachmark: boolean;
 }
 
-export async function Hero({ soldBookCount, premiumProductCount }: HeroProps) {
+export async function Hero({
+  soldBookCount,
+  premiumProductCount,
+  showNewOrderCoachmark,
+}: HeroProps) {
   const locale = await getLocale();
   const t = locales[locale];
   const hero = t.site.home.hero;
@@ -79,14 +85,32 @@ export async function Hero({ soldBookCount, premiumProductCount }: HeroProps) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <Button
-            render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
-            nativeButton={false}
-            className="h-auto gap-2 rounded bg-primary px-7 py-3.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-primary/90"
-          >
-            {hero.primaryCtaLabel}
-            <ArrowRight aria-hidden="true" className="size-3.5" />
-          </Button>
+          {showNewOrderCoachmark ? (
+            <Coachmark
+              id="hero-new-order"
+              title={hero.coachmarkNewOrderTitle}
+              description={hero.coachmarkNewOrderDescription}
+              closeLabel={t.common.coachmarkClose}
+            >
+              <Button
+                render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
+                nativeButton={false}
+                className="h-auto gap-2 rounded bg-primary px-7 py-3.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-primary/90"
+              >
+                {hero.primaryCtaLabel}
+                <ArrowRight aria-hidden="true" className="size-3.5" />
+              </Button>
+            </Coachmark>
+          ) : (
+            <Button
+              render={<Link href={CONSUMER_ROUTES.NEW_ORDER} />}
+              nativeButton={false}
+              className="h-auto gap-2 rounded bg-primary px-7 py-3.5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-primary/90"
+            >
+              {hero.primaryCtaLabel}
+              <ArrowRight aria-hidden="true" className="size-3.5" />
+            </Button>
+          )}
           <Button
             render={<Link href={PRODUCT_ROUTES.LIST} />}
             nativeButton={false}

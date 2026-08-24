@@ -8,6 +8,7 @@ const TONE_CLASSES = {
   pending: 'bg-order-status-pending/10 text-order-status-pending',
   in_progress: 'bg-order-status-in-progress/10 text-order-status-in-progress',
   done: 'bg-order-status-done/10 text-order-status-done',
+  cancelled: 'bg-muted text-muted-foreground',
 } as const;
 
 interface OrderStatusBadgeProps {

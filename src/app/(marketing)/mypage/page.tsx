@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { CancelOrderButton } from '@/components/cancel-order-button';
 import { OrderStatusBadge } from '@/components/order-status-badge';
 import {
   Table,
@@ -145,6 +146,19 @@ export default async function MypagePage() {
                             ? t.consumer.mypage.orders.reviewDoneLink
                             : t.consumer.mypage.orders.reviewWriteLink}
                         </Link>
+                      ) : status === ORDER_STATUS.AWAITING_PAYMENT ? (
+                        <div className="flex flex-col items-start gap-1">
+                          <Link
+                            href={`/checkout/${order.id}`}
+                            className="text-sm font-medium text-primary underline"
+                          >
+                            {t.consumer.mypage.orders.payLink}
+                          </Link>
+                          <CancelOrderButton
+                            orderId={order.id}
+                            className="text-sm text-muted-foreground underline"
+                          />
+                        </div>
                       ) : (
                         <span className="text-muted-foreground">-</span>
                       )}

@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ImagePlus, RefreshCw, X } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { Coachmark } from '@/components/coachmark';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -40,6 +41,7 @@ import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
+import type { OrderEditPrefill } from '@/lib/orders/get-order-edit-prefill';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
 import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
@@ -52,6 +54,7 @@ import {
   orderDetailsSchema,
 } from './order-schema';
 import { generateTestPhotos } from './test-photo-actions';
+import { updateConsumerOrder } from './update-order-actions';
 
 type UploadStatus = 'uploading' | 'processing' | 'done' | 'error';
 type Phase = 'details' | 'photos';
@@ -67,6 +70,7 @@ interface NewOrderWizardProps {
   product: Tables<'products'>;
   addresses: Tables<'addresses'>[];
   allowTestUpload: boolean;
+  initialValues: OrderEditPrefill | null;
 }
 
 async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string | null> {
@@ -97,13 +101,21 @@ export function NewOrderWizard({
   product,
   addresses: initialAddresses,
   allowTestUpload,
+  initialValues,
 }: NewOrderWizardProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [isGeneratingTestPhotos, startTestPhotosTransition] = useTransition();
   const [isRefreshingAddresses, startAddressRefreshTransition] = useTransition();
-  const [phase, setPhase] = useState<Phase>('details');
-  const [photos, setPhotos] = useState<PhotoItem[]>([]);
+  const [phase, setPhase] = useState<Phase>(initialValues ? 'photos' : 'details');
+  const [photos, setPhotos] = useState<PhotoItem[]>(() =>
+    (initialValues?.photos ?? []).map((photo) => ({
+      id: crypto.randomUUID(),
+      previewUrl: photo.previewUrl,
+      path: photo.path,
+      status: 'done',
+    })),
+  );
   const [addresses, setAddresses] = useState(initialAddresses);
   const {
     register,
@@ -116,10 +128,11 @@ export function NewOrderWizard({
     resolver: zodResolver(orderDetailsSchema),
     defaultValues: {
       productId: product.id,
-      title: '',
-      quantity: 1,
-      pageCount: PHOTOBOOK_PAGE_COUNT_MIN,
-      addressId: addresses.find((address) => address.is_default)?.id ?? '',
+      title: initialValues?.title ?? '',
+      quantity: initialValues?.quantity ?? 1,
+      pageCount: initialValues?.pageCount ?? PHOTOBOOK_PAGE_COUNT_MIN,
+      addressId:
+        initialValues?.addressId ?? addresses.find((address) => address.is_default)?.id ?? '',
       couponCode: '',
     },
   });
@@ -144,6 +157,9 @@ export function NewOrderWizard({
       : `₩${shippingFee.toLocaleString()}`;
   const totalAmount = merchandiseAmount + (isShippingFree ? 0 : (shippingFee ?? 0));
   const donePhotoCount = photos.filter((photo) => photo.status === 'done').length;
+  const isUploadingPhotos = photos.some(
+    (photo) => photo.status === 'uploading' || photo.status === 'processing',
+  );
 
   async function handleNext() {
     const isValid = await trigger(['title', 'quantity', 'pageCount']);
@@ -239,10 +255,10 @@ export function NewOrderWizard({
         }
       });
       setPhotos(
-        result.paths.map((path) => ({
+        result.photos.map((photo) => ({
           id: crypto.randomUUID(),
-          previewUrl: null,
-          path,
+          previewUrl: photo.previewUrl,
+          path: photo.path,
           status: 'done',
         })),
       );
@@ -290,7 +306,9 @@ export function NewOrderWizard({
     }
 
     startTransition(async () => {
-      const result = await createConsumerOrder(parsed.data);
+      const result = initialValues
+        ? await updateConsumerOrder(initialValues.orderId, parsed.data)
+        : await createConsumerOrder(parsed.data);
       if (result) {
         toast.error(t.consumer.orderNew.errors[result.errorCode]);
       }
@@ -415,24 +433,31 @@ export function NewOrderWizard({
                 <div className="flex items-center gap-3">
                   <Label>{t.consumer.orderNew.photosLabel}</Label>
                   {allowTestUpload ? (
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <button
-                            type="button"
-                            disabled={isGeneratingTestPhotos}
-                            onClick={handleGenerateTestPhotos}
-                            className={buttonVariants({ variant: 'primary', size: 'xs' })}
-                          />
-                        }
-                      >
-                        {isGeneratingTestPhotos ? (
-                          <RefreshCw aria-hidden="true" className="size-3.5 animate-spin" />
-                        ) : null}
-                        {t.consumer.orderNew.testUploadButton}
-                      </TooltipTrigger>
-                      <TooltipContent>{t.consumer.orderNew.testUploadTooltip}</TooltipContent>
-                    </Tooltip>
+                    <Coachmark
+                      id="test-upload-photos"
+                      title={t.consumer.orderNew.coachmarkTestUploadTitle}
+                      description={t.consumer.orderNew.coachmarkTestUploadDescription}
+                      closeLabel={t.common.coachmarkClose}
+                    >
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <button
+                              type="button"
+                              disabled={isGeneratingTestPhotos}
+                              onClick={handleGenerateTestPhotos}
+                              className={buttonVariants({ variant: 'primary', size: 'xs' })}
+                            />
+                          }
+                        >
+                          {isGeneratingTestPhotos ? (
+                            <RefreshCw aria-hidden="true" className="size-3.5 animate-spin" />
+                          ) : null}
+                          {t.consumer.orderNew.testUploadButton}
+                        </TooltipTrigger>
+                        <TooltipContent>{t.consumer.orderNew.testUploadTooltip}</TooltipContent>
+                      </Tooltip>
+                    </Coachmark>
                   ) : null}
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -567,38 +592,68 @@ export function NewOrderWizard({
               )}
             </section>
 
-            <section className="flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
-                {allowTestUpload ? (
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <button
-                          type="button"
-                          onClick={handleFillTestCoupon}
-                          className={buttonVariants({ variant: 'primary', size: 'xs' })}
-                        />
-                      }
+            {initialValues?.couponApplied ? (
+              <p className="text-sm text-muted-foreground">
+                {t.consumer.orderNew.couponLockedNote}
+              </p>
+            ) : (
+              <section className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <Label htmlFor="couponCode">{t.consumer.orderNew.couponLabel}</Label>
+                  {allowTestUpload ? (
+                    <Coachmark
+                      id="test-fill-coupon"
+                      title={t.consumer.orderNew.coachmarkTestCouponTitle}
+                      description={t.consumer.orderNew.coachmarkTestCouponDescription}
+                      closeLabel={t.common.coachmarkClose}
                     >
-                      {t.consumer.orderNew.testCouponButton}
-                    </TooltipTrigger>
-                    <TooltipContent>{t.consumer.orderNew.testCouponTooltip}</TooltipContent>
-                  </Tooltip>
-                ) : null}
-              </div>
-              <Input id="couponCode" type="text" {...register('couponCode')} />
-            </section>
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <button
+                              type="button"
+                              onClick={handleFillTestCoupon}
+                              className={buttonVariants({ variant: 'primary', size: 'xs' })}
+                            />
+                          }
+                        >
+                          {t.consumer.orderNew.testCouponButton}
+                        </TooltipTrigger>
+                        <TooltipContent>{t.consumer.orderNew.testCouponTooltip}</TooltipContent>
+                      </Tooltip>
+                    </Coachmark>
+                  ) : null}
+                </div>
+                <Input id="couponCode" type="text" {...register('couponCode')} />
+              </section>
+            )}
 
-            <Button
-              type="button"
-              variant="primary"
-              disabled={isPending}
-              className="w-full"
-              onClick={handleSubmit}
-            >
-              {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.summary.payButton}
-            </Button>
+            {isUploadingPhotos ? (
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      type="button"
+                      variant="primary"
+                      className="pointer-events-auto w-full cursor-not-allowed opacity-50"
+                    />
+                  }
+                >
+                  {t.consumer.orderNew.summary.payButton}
+                </TooltipTrigger>
+                <TooltipContent>{t.consumer.orderNew.uploadingTooltip}</TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button
+                type="button"
+                variant="primary"
+                disabled={isPending}
+                className="w-full"
+                onClick={handleSubmit}
+              >
+                {isPending ? t.consumer.orderNew.submitting : t.consumer.orderNew.summary.payButton}
+              </Button>
+            )}
           </>
         )}
       </div>

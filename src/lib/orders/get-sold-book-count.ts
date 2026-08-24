@@ -8,7 +8,8 @@ export async function getSoldBookCount(): Promise<number> {
   const { data } = await supabase
     .from('orders')
     .select('quantity')
-    .neq('status', ORDER_STATUS.AWAITING_PAYMENT);
+    .neq('status', ORDER_STATUS.AWAITING_PAYMENT)
+    .neq('status', ORDER_STATUS.CANCELLED);
 
   if (!data) {
     return 0;

@@ -63,6 +63,15 @@ export default async function CheckoutSuccessPage(props: PageProps<'/checkout/[o
     );
   }
 
+  if (result.outcome === 'coupon_unavailable') {
+    return (
+      <ResultCard
+        title={t.checkout.confirm.couponUnavailable.title}
+        description={t.checkout.confirm.couponUnavailable.description}
+      />
+    );
+  }
+
   if (result.outcome === 'confirm_failed') {
     return (
       <ResultCard

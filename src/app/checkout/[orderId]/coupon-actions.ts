@@ -8,7 +8,7 @@ import { COUPON_CODE_MAX_LENGTH } from '@/constants/coupon';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRICING } from '@/constants/pricing';
 import { getAddressById } from '@/lib/addresses/get-address-by-id';
-import { redeemCoupon } from '@/lib/coupons/redeem-coupon';
+import { validateCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { getProductById } from '@/lib/products/get-product-by-id';
@@ -28,7 +28,6 @@ export interface ApplyCouponResult {
     | 'coupon_not_started'
     | 'coupon_expired'
     | 'coupon_usage_limit_reached'
-    | 'coupon_conflict'
     | 'unexpected_error';
 }
 
@@ -65,8 +64,8 @@ export async function applyCouponToOrder(
   const merchandiseAmount =
     (product.price + order.page_count * PRICING.PRICE_PER_PAGE_KRW) * order.quantity;
 
-  const redemption = await redeemCoupon(parsed.data.code.trim().toUpperCase(), merchandiseAmount);
-  switch (redemption.outcome) {
+  const validation = await validateCoupon(parsed.data.code.trim().toUpperCase(), merchandiseAmount);
+  switch (validation.outcome) {
     case 'not_found':
       return { errorCode: 'coupon_not_found' };
     case 'inactive':
@@ -77,17 +76,15 @@ export async function applyCouponToOrder(
       return { errorCode: 'coupon_expired' };
     case 'usage_limit_reached':
       return { errorCode: 'coupon_usage_limit_reached' };
-    case 'conflict':
-      return { errorCode: 'coupon_conflict' };
   }
 
   const shippingFee = calculateShippingFee(address.postal_code, merchandiseAmount);
-  const amount = redemption.discountedAmount + shippingFee;
+  const amount = validation.discountedAmount + shippingFee;
 
   const supabase = createServiceRoleClient();
   const { error } = await supabase
     .from('orders')
-    .update({ coupon_id: redemption.coupon.id, amount })
+    .update({ coupon_id: validation.coupon.id, amount })
     .eq('id', orderId)
     .is('coupon_id', null);
 
