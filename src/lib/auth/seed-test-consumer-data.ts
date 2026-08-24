@@ -5,12 +5,12 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ORDER_STATUS, type OrderStatus } from '@/constants/order-status';
 import { PHOTOBOOK_PAGE_COUNT_OPTIONS, PHOTOBOOK_PHOTOS_PER_PAGE } from '@/constants/photobook';
 import { PRICING } from '@/constants/pricing';
-import { TEST_METRO_CITY_HALL_ADDRESSES } from '@/constants/test-account';
+import { TEST_HOME_ADDRESS, TEST_METRO_CITY_HALL_ADDRESSES } from '@/constants/test-account';
 import { generateRandomBookTitle } from '@/lib/auth/generate-random-book-title';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { getAllProducts } from '@/lib/products/get-all-products';
-import { pick, randomInt } from '@/lib/random';
+import { pick, randomInt, sampleUnique } from '@/lib/random';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { getRandomTestPhotoPath } from '@/lib/uploads/random-test-photo-path';
 
@@ -88,26 +88,28 @@ export async function seedTestConsumerData(
 ): Promise<void> {
   const serviceClient = createServiceRoleClient();
   const locale = await getLocale();
-  const address = pick(TEST_METRO_CITY_HALL_ADDRESSES);
+  const addressesToSeed = [TEST_HOME_ADDRESS, ...sampleUnique(TEST_METRO_CITY_HALL_ADDRESSES, 2)];
 
-  const { data: insertedAddress } = await serviceClient
+  const { data: insertedAddresses } = await serviceClient
     .from('addresses')
-    .insert({
-      consumer_id: consumerId,
-      label: address.label,
-      recipient_name: '테스트 사용자',
-      phone: '010-1234-5678',
-      postal_code: address.postalCode,
-      address_line1: address.addressLine1,
-      address_line2: address.addressLine2,
-      is_default: true,
-    })
-    .select('id')
-    .single();
+    .insert(
+      addressesToSeed.map((address, index) => ({
+        consumer_id: consumerId,
+        label: address.label,
+        recipient_name: '테스트 사용자',
+        phone: '010-1234-5678',
+        postal_code: address.postalCode,
+        address_line1: address.addressLine1,
+        address_line2: address.addressLine2,
+        is_default: index === 0,
+      })),
+    )
+    .select('id');
 
+  const homeAddress = insertedAddresses?.[0];
   const products = await getAllProducts();
 
-  if (!insertedAddress || products.length === 0) {
+  if (!homeAddress || products.length === 0) {
     return;
   }
 
@@ -116,13 +118,13 @@ export async function seedTestConsumerData(
     const pageCount = pick(PHOTOBOOK_PAGE_COUNT_OPTIONS);
     const quantity = randomInt(1, 3);
     const merchandiseAmount = (product.price + pageCount * PRICING.PRICE_PER_PAGE_KRW) * quantity;
-    const shippingFee = calculateShippingFee(address.postalCode, merchandiseAmount);
+    const shippingFee = calculateShippingFee(TEST_HOME_ADDRESS.postalCode, merchandiseAmount);
 
     const { data: insertedOrder } = await serviceClient
       .from('orders')
       .insert({
         consumer_id: consumerId,
-        address_id: insertedAddress.id,
+        address_id: homeAddress.id,
         product_id: product.id,
         status: plan.status,
         title: generateRandomBookTitle(locale),

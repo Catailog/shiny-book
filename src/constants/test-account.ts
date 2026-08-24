@@ -18,6 +18,13 @@ export interface TestSeedAddress {
   addressLine2: string;
 }
 
+export const TEST_HOME_ADDRESS: TestSeedAddress = {
+  label: '집',
+  postalCode: '21554',
+  addressLine1: '인천광역시 남동구 정각로 29',
+  addressLine2: '인천광역시청',
+};
+
 export const TEST_METRO_CITY_HALL_ADDRESSES: readonly TestSeedAddress[] = [
   {
     label: '서울특별시청',
@@ -36,12 +43,6 @@ export const TEST_METRO_CITY_HALL_ADDRESSES: readonly TestSeedAddress[] = [
     postalCode: '41909',
     addressLine1: '대구광역시 중구 공평로 88',
     addressLine2: '대구광역시청',
-  },
-  {
-    label: '인천광역시청',
-    postalCode: '21554',
-    addressLine1: '인천광역시 남동구 정각로 29',
-    addressLine2: '인천광역시청',
   },
   {
     label: '광주광역시청',
