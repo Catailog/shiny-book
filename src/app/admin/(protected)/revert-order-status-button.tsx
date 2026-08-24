@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 
 import { toast } from 'sonner';
 
@@ -30,12 +30,14 @@ interface RevertOrderStatusButtonProps {
 export function RevertOrderStatusButton({ orderId, from, to }: RevertOrderStatusButtonProps) {
   const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
+  const [isOpen, setIsOpen] = useState(false);
 
   function handleConfirm() {
     if (!to) {
       return;
     }
 
+    setIsOpen(false);
     startTransition(async () => {
       const result = await revertOrderStatusAction(orderId, from, to);
       if (result.error) {
@@ -53,7 +55,7 @@ export function RevertOrderStatusButton({ orderId, from, to }: RevertOrderStatus
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger
         render={<Button type="button" variant="outline" size="sm" disabled={isPending} />}
       >

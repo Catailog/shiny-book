@@ -423,7 +423,7 @@ export const en = {
       revertConfirmTitle: 'Revert to the previous stage?',
       revertConfirmDescription:
         'This will move the order status back to the previous stage. If work has already progressed, it may no longer match reality, so proceed carefully.',
-      revertConfirmButton: 'Revert',
+      revertConfirmButton: 'Force revert',
       revertCancelButton: 'Cancel',
       viewPhotosButton: 'View uploaded photos',
       photosLoading: 'Loading...',
