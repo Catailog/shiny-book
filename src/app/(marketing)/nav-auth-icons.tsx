@@ -3,12 +3,37 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { LogIn, LogOut, User } from 'lucide-react';
+import { LogIn, LogOut, User, UserPlus } from 'lucide-react';
 
 import { signOutConsumer } from '@/app/(marketing)/actions';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils';
+
+interface NavSignupIconProps {
+  signupLabel: string;
+}
+
+export function NavSignupIcon({ signupLabel }: NavSignupIconProps) {
+  const pathname = usePathname();
+
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Link
+            href={`${CONSUMER_ROUTES.SIGNUP}?redirectTo=${encodeURIComponent(pathname)}`}
+            aria-label={signupLabel}
+            className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          />
+        }
+      >
+        <UserPlus aria-hidden="true" className="size-5" />
+      </TooltipTrigger>
+      <TooltipContent>{signupLabel}</TooltipContent>
+    </Tooltip>
+  );
+}
 
 interface NavAuthIconsProps {
   isConsumer: boolean;

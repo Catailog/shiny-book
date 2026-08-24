@@ -4,7 +4,7 @@ import { BookOpen } from 'lucide-react';
 
 import { SiteContainer } from '@/components/site-container';
 
-export function CheckoutHeader() {
+export function SimpleHeader() {
   return (
     <header className="h-20 w-full border-b border-border bg-background">
       <SiteContainer className="flex h-full items-center">

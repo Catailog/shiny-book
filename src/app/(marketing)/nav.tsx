@@ -19,7 +19,7 @@ import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { locales } from '@/locales';
 
-import { NavAuthIcons } from './nav-auth-icons';
+import { NavAuthIcons, NavSignupIcon } from './nav-auth-icons';
 import { type NavEntry, NavLinks } from './nav-links';
 
 export async function Nav() {
@@ -119,6 +119,7 @@ export async function Nav() {
                 highlightMode="children"
               >
                 <div className="flex items-center gap-1">
+                  <NavSignupIcon signupLabel={t.site.nav.signup} />
                   <CoachmarkSpot>
                     <NavAuthIcons
                       isConsumer={isConsumer}
