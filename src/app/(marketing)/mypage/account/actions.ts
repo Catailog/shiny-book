@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 
 import { FILE_UPLOAD_KIND } from '@/constants/file-upload';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 import {
   type NotificationPreferencesInput,
@@ -105,9 +105,8 @@ export async function deleteConsumerAccount(): Promise<DeleteAccountResult | und
     return { errorCode: 'unauthorized' };
   }
 
-  const serviceRoleClient = createServiceRoleClient();
-  const { error } = await serviceRoleClient.auth.admin.deleteUser(consumer.id);
-  if (error) {
+  const isDeleted = await deleteConsumerAndData(consumer.id);
+  if (!isDeleted) {
     return { errorCode: 'unexpected_error' };
   }
 

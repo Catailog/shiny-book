@@ -46,6 +46,9 @@ TOSS_SECRET_KEY=
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET_KEY=
 
+# Vercel Cron 인증 (테스트 계정 정리 엔드포인트, 선택, 기본값 있음)
+CRON_SECRET=
+
 # 로컬 테스트 관리자 계정 (선택, 기본값 있음)
 ADMIN_SEED_EMAIL=
 ADMIN_SEED_PASSWORD=

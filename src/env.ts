@@ -9,6 +9,7 @@ export const env = createEnv({
     KV_REST_API_TOKEN: z.string().min(1),
     TOSS_SECRET_KEY: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1).default('1x0000000000000000000000000000000AA'),
+    CRON_SECRET: z.string().min(1).default('local-only-cron-secret-change-in-production'),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
