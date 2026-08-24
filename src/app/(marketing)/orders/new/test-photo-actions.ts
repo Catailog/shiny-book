@@ -1,13 +1,8 @@
 'use server';
 
-import {
-  FILE_UPLOAD_KIND,
-  STORAGE_BUCKETS,
-  TEST_PHOTO_TEMPLATE_PATH,
-} from '@/constants/file-upload';
 import { PHOTOBOOK_PAGE_COUNT_MAX, PHOTOBOOK_PHOTOS_PER_PAGE } from '@/constants/photobook';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { getRandomTestPhotoPath } from '@/lib/uploads/random-test-photo-path';
 
 export interface GenerateTestPhotosResult {
   success: boolean;
@@ -26,21 +21,7 @@ export async function generateTestPhotos(count: number): Promise<GenerateTestPho
     return { success: false, paths: [] };
   }
 
-  const supabase = createServiceRoleClient();
-  const paths: string[] = [];
-
-  for (let index = 0; index < count; index += 1) {
-    const destinationPath = `${consumer.id}/${FILE_UPLOAD_KIND.PHOTO}/processed-test-${crypto.randomUUID()}.webp`;
-    const { error } = await supabase.storage
-      .from(STORAGE_BUCKETS.ORDER_UPLOADS)
-      .copy(TEST_PHOTO_TEMPLATE_PATH, destinationPath);
-
-    if (error) {
-      return { success: false, paths: [] };
-    }
-
-    paths.push(destinationPath);
-  }
+  const paths = Array.from({ length: count }, () => getRandomTestPhotoPath());
 
   return { success: true, paths };
 }

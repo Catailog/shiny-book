@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation';
 
-import { FILE_UPLOAD_KIND } from '@/constants/file-upload';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRICING } from '@/constants/pricing';
 import { getAddressById } from '@/lib/addresses/get-address-by-id';
@@ -11,6 +10,7 @@ import { redeemCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { getProductById } from '@/lib/products/get-product-by-id';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { isValidOrderPhotoPath } from '@/lib/uploads/is-valid-order-photo-path';
 
 import { type CreateConsumerOrderInput, createConsumerOrderSchema } from './order-schema';
 
@@ -42,10 +42,10 @@ export async function createConsumerOrder(
     return { errorCode: 'validation_failed' };
   }
 
-  const areOwnPhotos = parsed.data.photoPaths.every((path) =>
-    path.startsWith(`${consumer.id}/${FILE_UPLOAD_KIND.PHOTO}/`),
+  const areValidPhotoPaths = parsed.data.photoPaths.every((path) =>
+    isValidOrderPhotoPath(path, consumer.id),
   );
-  if (!areOwnPhotos) {
+  if (!areValidPhotoPaths) {
     return { errorCode: 'validation_failed' };
   }
 

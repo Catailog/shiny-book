@@ -19,7 +19,7 @@
     "e2e": "playwright test",
     "db:types": "supabase gen types typescript --local > src/lib/db/database.types.ts",
     "db:seed-admin": "node --env-file=.env.local scripts/seed-admin-account.mjs",
-    "db:seed-test-photo": "node --env-file=.env.local scripts/seed-test-photo.mjs",
+    "db:seed-test-photo-pool": "node --env-file=.env.local scripts/seed-test-photo-pool.mjs",
     "prepare": "husky"
   },
   "dependencies": {
