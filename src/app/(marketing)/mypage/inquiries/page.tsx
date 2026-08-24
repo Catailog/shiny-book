@@ -78,7 +78,7 @@ export default async function MypageInquiriesPage() {
                   </Link>
                 </TableCell>
                 <TableCell>
-                  {inquiry.answered_at ? (
+                  {inquiry.answered_at && !inquiry.hasNewConsumerReply ? (
                     <Badge className="bg-order-status-done/10 text-order-status-done">
                       {t.consumer.inquiries.statusAnswered}
                     </Badge>

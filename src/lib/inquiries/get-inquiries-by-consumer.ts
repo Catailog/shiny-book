@@ -2,9 +2,16 @@ import 'server-only';
 
 import { CONSUMER_INQUIRY_LIST_LIMIT } from '@/constants/inquiry';
 import type { Tables } from '@/lib/db/database.types';
+import { getHasNewConsumerReplyMap } from '@/lib/inquiries/get-has-new-consumer-reply-map';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
-export async function getInquiriesByConsumer(consumerId: string): Promise<Tables<'inquiries'>[]> {
+export interface InquiryWithNewReplyFlag extends Tables<'inquiries'> {
+  hasNewConsumerReply: boolean;
+}
+
+export async function getInquiriesByConsumer(
+  consumerId: string,
+): Promise<InquiryWithNewReplyFlag[]> {
   const supabase = createServiceRoleClient();
   const { data } = await supabase
     .from('inquiries')
@@ -13,5 +20,20 @@ export async function getInquiriesByConsumer(consumerId: string): Promise<Tables
     .order('created_at', { ascending: false })
     .limit(CONSUMER_INQUIRY_LIST_LIMIT);
 
-  return data ?? [];
+  if (!data) {
+    return [];
+  }
+
+  const inquiryIds = data.map((inquiry) => inquiry.id);
+  const answeredAtByInquiryId = new Map(data.map((inquiry) => [inquiry.id, inquiry.answered_at]));
+  const hasNewConsumerReplyByInquiryId = await getHasNewConsumerReplyMap(
+    supabase,
+    inquiryIds,
+    answeredAtByInquiryId,
+  );
+
+  return data.map((inquiry) => ({
+    ...inquiry,
+    hasNewConsumerReply: hasNewConsumerReplyByInquiryId.get(inquiry.id) ?? false,
+  }));
 }

@@ -34,6 +34,10 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
   ]);
+  const lastMessage = messages[messages.length - 1];
+  const hasNewConsumerReply =
+    inquiry.answered_at !== null && lastMessage?.author_type === INQUIRY_MESSAGE_AUTHOR.CONSUMER;
+  const isAnswered = inquiry.answered_at !== null && !hasNewConsumerReply;
   const couponDiscountLabel = relatedOrder?.coupon
     ? relatedOrder.coupon.discountType === DISCOUNT_TYPE.PERCENTAGE
       ? `${relatedOrder.coupon.discountValue}%`
@@ -48,12 +52,12 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
             <h1 className="font-heading text-2xl font-bold text-foreground">{inquiry.title}</h1>
             <Badge
               className={
-                inquiry.answered_at
+                isAnswered
                   ? 'bg-order-status-done/10 text-order-status-done'
                   : 'bg-primary-soft text-primary'
               }
             >
-              {inquiry.answered_at
+              {isAnswered
                 ? t.consumer.inquiries.statusAnswered
                 : t.consumer.inquiries.statusPending}
             </Badge>
