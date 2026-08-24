@@ -1,12 +1,16 @@
 'use client';
 
 import type { MouseEvent } from 'react';
-import { useRef, useSyncExternalStore } from 'react';
+import { useRef } from 'react';
 import { flushSync } from 'react-dom';
 
 import { Moon, SunDim } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useHtmlClassPresent } from '@/hooks/use-html-class-present';
+import { pauseAnimations, resumeAnimations } from '@/lib/animation-pause';
+
+const THEME_TRANSITION_PAUSE_REASON = 'theme-transition';
 
 interface ThemeToggleProps {
   switchToLightLabel: string;
@@ -16,7 +20,7 @@ interface ThemeToggleProps {
 const THEME_TRANSITION_DURATION_MS = 700;
 
 export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeToggleProps) {
-  const isDark = useSyncExternalStore(subscribeToThemeChange, getIsDarkSnapshot, getServerSnapshot);
+  const isDark = useHtmlClassPresent('dark');
   const label = isDark ? switchToLightLabel : switchToDarkLabel;
   const isAnimatingRef = useRef(false);
 
@@ -57,6 +61,7 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
     const html = document.documentElement;
     const previousOverflow = html.style.overflow;
     html.style.overflow = 'hidden';
+    pauseAnimations(THEME_TRANSITION_PAUSE_REASON);
     isAnimatingRef.current = true;
 
     try {
@@ -75,6 +80,7 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
       await transition.finished;
     } finally {
       html.style.overflow = previousOverflow;
+      resumeAnimations(THEME_TRANSITION_PAUSE_REASON);
       isAnimatingRef.current = false;
     }
   }
@@ -100,18 +106,4 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
       <TooltipContent>{label}</TooltipContent>
     </Tooltip>
   );
-}
-
-function subscribeToThemeChange(onChange: () => void) {
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-  return () => observer.disconnect();
-}
-
-function getIsDarkSnapshot() {
-  return document.documentElement.classList.contains('dark');
-}
-
-function getServerSnapshot() {
-  return false;
 }

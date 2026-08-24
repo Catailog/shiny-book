@@ -3,6 +3,7 @@ import { Fraunces, Geist, Geist_Mono } from 'next/font/google';
 
 import { Toaster } from 'sonner';
 
+import { AnimationPauseObserver } from '@/components/animation-pause-observer';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import './globals.css';
@@ -32,11 +33,13 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
         <script>
           {`(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');}}catch(e){}})();`}
         </script>
+        <AnimationPauseObserver />
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster />
       </body>
