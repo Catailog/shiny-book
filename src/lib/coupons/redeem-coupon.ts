@@ -91,3 +91,17 @@ export async function redeemCoupon(code: string, amount: number): Promise<Redeem
     discountedAmount: calculateDiscountedAmount(amount, updated),
   };
 }
+
+// Undoes a specific redeemCoupon() call - used when the payment it was reserved for
+// ends up failing, so the usage slot doesn't stay consumed for a purchase that never
+// happened. Targets the exact used_count the redemption left behind (couponAfterRedeem
+// is redemption.coupon.used_count from that call), so it can't accidentally undo a
+// different redemption that happened in between.
+export async function releaseCoupon(couponId: string, usedCountAfterRedeem: number): Promise<void> {
+  const supabase = createServiceRoleClient();
+  await supabase
+    .from('coupons')
+    .update({ used_count: usedCountAfterRedeem - 1 })
+    .eq('id', couponId)
+    .eq('used_count', usedCountAfterRedeem);
+}
