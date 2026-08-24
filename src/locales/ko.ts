@@ -689,6 +689,7 @@ export const ko = {
           status: '상태',
           receivedDate: '접수일',
         },
+        deletedConsumerLabel: '탈퇴한 사용자',
       },
       detail: {
         backToList: '목록으로 돌아가기',

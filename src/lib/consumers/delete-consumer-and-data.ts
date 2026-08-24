@@ -27,6 +27,11 @@ async function deleteConsumerStorageFiles(
   }
 }
 
+// Orders, inquiries, and reviews are kept (not deleted) and merely unlinked from the
+// consumer - Korean e-commerce law (전자상거래법 시행령) requires retaining payment/supply
+// records for 5 years and dispute-related records for 3 years regardless of account
+// deletion. Only order photos (no independent retention need) and the consumer's own
+// storage files are actually removed.
 export async function deleteConsumerAndData(consumerId: string): Promise<boolean> {
   const supabase = createServiceRoleClient();
 
@@ -45,7 +50,7 @@ export async function deleteConsumerAndData(consumerId: string): Promise<boolean
 
   const { error: reviewsError } = await supabase
     .from('reviews')
-    .delete()
+    .update({ consumer_id: null })
     .eq('consumer_id', consumerId);
   if (reviewsError) {
     return false;
@@ -53,7 +58,7 @@ export async function deleteConsumerAndData(consumerId: string): Promise<boolean
 
   const { error: inquiriesError } = await supabase
     .from('inquiries')
-    .delete()
+    .update({ consumer_id: null })
     .eq('consumer_id', consumerId);
   if (inquiriesError) {
     return false;
@@ -61,7 +66,7 @@ export async function deleteConsumerAndData(consumerId: string): Promise<boolean
 
   const { error: ordersError } = await supabase
     .from('orders')
-    .delete()
+    .update({ consumer_id: null })
     .eq('consumer_id', consumerId);
   if (ordersError) {
     return false;
@@ -69,7 +74,7 @@ export async function deleteConsumerAndData(consumerId: string): Promise<boolean
 
   const { error: addressesError } = await supabase
     .from('addresses')
-    .delete()
+    .update({ consumer_id: null })
     .eq('consumer_id', consumerId);
   if (addressesError) {
     return false;

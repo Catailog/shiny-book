@@ -690,6 +690,7 @@ export const en = {
           status: 'STATUS BADGE',
           receivedDate: 'RECEIVED DATE',
         },
+        deletedConsumerLabel: 'Deleted user',
       },
       detail: {
         backToList: 'Back to Inquiries List',
