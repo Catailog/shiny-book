@@ -18,6 +18,7 @@ import {
   useInView,
 } from 'motion/react';
 
+import { useIsAnimationsPaused } from '@/hooks/use-is-animations-paused';
 import { cn } from '@/lib/utils';
 
 const motionElements = {
@@ -92,7 +93,8 @@ export function TypingAnimation({
   const typingSpeed = typeSpeed ?? duration;
   const deletingSpeed = deleteSpeed ?? typingSpeed / 2;
 
-  const shouldStart = startOnView ? isInView : true;
+  const isAnimationsPaused = useIsAnimationsPaused();
+  const shouldStart = (startOnView ? isInView : true) && !isAnimationsPaused;
   const animationSourceKey = useMemo(
     () => (words ? words.join('\u0000') : (children ?? '')),
     [words, children],

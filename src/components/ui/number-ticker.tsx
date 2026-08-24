@@ -2,8 +2,9 @@
 
 import { type ComponentPropsWithoutRef, useEffect, useRef } from 'react';
 
-import { useInView, useMotionValue, useSpring } from 'motion/react';
+import { animate, useInView, useMotionValue } from 'motion/react';
 
+import { useIsAnimationsPaused } from '@/hooks/use-is-animations-paused';
 import { cn } from '@/lib/utils';
 
 interface NumberTickerProps extends ComponentPropsWithoutRef<'span'> {
@@ -25,31 +26,40 @@ export function NumberTicker({
 }: NumberTickerProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(direction === 'down' ? value : startValue);
-  const springValue = useSpring(motionValue, {
-    damping: 60,
-    stiffness: 100,
-  });
+  const controlsRef = useRef<ReturnType<typeof animate> | null>(null);
   const isInView = useInView(ref, { once: true, margin: '0px' });
+  const isAnimationsPaused = useIsAnimationsPaused();
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-
-    if (isInView) {
-      timer = setTimeout(() => {
-        motionValue.set(direction === 'down' ? startValue : value);
-      }, delay * 1000);
+    if (!isInView) {
+      return;
     }
 
+    const timer = setTimeout(() => {
+      controlsRef.current = animate(motionValue, direction === 'down' ? startValue : value, {
+        type: 'spring',
+        damping: 60,
+        stiffness: 100,
+      });
+    }, delay * 1000);
+
     return () => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
+      clearTimeout(timer);
+      controlsRef.current?.stop();
     };
   }, [motionValue, isInView, delay, value, direction, startValue]);
 
+  useEffect(() => {
+    if (isAnimationsPaused) {
+      controlsRef.current?.pause();
+    } else {
+      controlsRef.current?.play();
+    }
+  }, [isAnimationsPaused]);
+
   useEffect(
     () =>
-      springValue.on('change', (latest) => {
+      motionValue.on('change', (latest) => {
         if (ref.current) {
           ref.current.textContent = Intl.NumberFormat('en-US', {
             minimumFractionDigits: decimalPlaces,
@@ -57,7 +67,7 @@ export function NumberTicker({
           }).format(Number(latest.toFixed(decimalPlaces)));
         }
       }),
-    [springValue, decimalPlaces],
+    [motionValue, decimalPlaces],
   );
 
   return (

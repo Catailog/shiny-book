@@ -1,12 +1,13 @@
 import { ORDER_STATUS, type OrderStatus } from '@/constants/order-status';
 
 const ALLOWED_TRANSITIONS: Record<OrderStatus, readonly OrderStatus[]> = {
-  [ORDER_STATUS.AWAITING_PAYMENT]: [ORDER_STATUS.PAID],
+  [ORDER_STATUS.AWAITING_PAYMENT]: [ORDER_STATUS.PAID, ORDER_STATUS.CANCELLED],
   [ORDER_STATUS.PAID]: [ORDER_STATUS.PRINTING],
   [ORDER_STATUS.PRINTING]: [ORDER_STATUS.BINDING],
   [ORDER_STATUS.BINDING]: [ORDER_STATUS.SHIPPING],
   [ORDER_STATUS.SHIPPING]: [ORDER_STATUS.COMPLETED],
   [ORDER_STATUS.COMPLETED]: [],
+  [ORDER_STATUS.CANCELLED]: [],
 };
 
 export function getNextStatuses(from: OrderStatus): readonly OrderStatus[] {
@@ -24,6 +25,7 @@ const REVERT_TRANSITIONS: Record<OrderStatus, OrderStatus | null> = {
   [ORDER_STATUS.BINDING]: ORDER_STATUS.PRINTING,
   [ORDER_STATUS.SHIPPING]: ORDER_STATUS.BINDING,
   [ORDER_STATUS.COMPLETED]: ORDER_STATUS.SHIPPING,
+  [ORDER_STATUS.CANCELLED]: null,
 };
 
 export function getPreviousStatus(from: OrderStatus): OrderStatus | null {

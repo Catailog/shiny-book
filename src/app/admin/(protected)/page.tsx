@@ -37,6 +37,7 @@ const STATUS_FILTER_VALUES: readonly OrderStatus[] = [
   ORDER_STATUS.BINDING,
   ORDER_STATUS.SHIPPING,
   ORDER_STATUS.COMPLETED,
+  ORDER_STATUS.CANCELLED,
 ];
 
 export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
@@ -63,6 +64,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
       const createdAt = new Date(order.created_at);
       return (
         order.status !== ORDER_STATUS.AWAITING_PAYMENT &&
+        order.status !== ORDER_STATUS.CANCELLED &&
         createdAt.getFullYear() === now.getFullYear() &&
         createdAt.getMonth() === now.getMonth()
       );

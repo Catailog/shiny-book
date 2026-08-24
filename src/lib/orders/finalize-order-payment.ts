@@ -1,6 +1,8 @@
 import 'server-only';
 
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import { getCouponById } from '@/lib/coupons/get-coupon-by-id';
+import { redeemCoupon, releaseCoupon } from '@/lib/coupons/redeem-coupon';
 import type { Tables } from '@/lib/db/database.types';
 import { canTransition } from '@/lib/orders/order-state-machine';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
@@ -11,6 +13,7 @@ export type FinalizeOrderPaymentResult =
   | { outcome: 'confirmed'; order: Tables<'orders'> }
   | { outcome: 'already_processed'; order: Tables<'orders'> }
   | { outcome: 'amount_mismatch' }
+  | { outcome: 'coupon_unavailable' }
   | { outcome: 'confirm_failed'; errorMessage: string }
   | { outcome: 'not_found' };
 
@@ -22,6 +25,7 @@ export async function finalizeOrderPayment(
   const supabase = createServiceRoleClient();
 
   const { data: order } = await supabase.from('orders').select().eq('id', orderId).maybeSingle();
+
   if (!order || !isOrderStatus(order.status)) {
     return { outcome: 'not_found' };
   }
@@ -34,6 +38,25 @@ export async function finalizeOrderPayment(
     return { outcome: 'amount_mismatch' };
   }
 
+  // A coupon is only actually spent here, right before money moves - not when the
+  // order was created or edited - so an order that never gets this far never
+  // occupied a limited coupon's usage slot. The discount itself was already locked
+  // into order.amount earlier; this call exists purely for its side effect
+  // (incrementing used_count), not for the returned discountedAmount.
+  let reservedCoupon: { id: string; usedCountAfterRedeem: number } | null = null;
+
+  if (order.coupon_id) {
+    const coupon = await getCouponById(order.coupon_id);
+    const redemption = coupon ? await redeemCoupon(coupon.code, order.amount) : null;
+    if (!redemption || redemption.outcome !== 'redeemed') {
+      return { outcome: 'coupon_unavailable' };
+    }
+    reservedCoupon = {
+      id: redemption.coupon.id,
+      usedCountAfterRedeem: redemption.coupon.used_count,
+    };
+  }
+
   const confirmResult = await confirmTossPayment({
     paymentKey,
     orderId,
@@ -41,6 +64,9 @@ export async function finalizeOrderPayment(
   });
 
   if (!confirmResult.isConfirmed) {
+    if (reservedCoupon) {
+      await releaseCoupon(reservedCoupon.id, reservedCoupon.usedCountAfterRedeem);
+    }
     return { outcome: 'confirm_failed', errorMessage: confirmResult.errorMessage };
   }
 

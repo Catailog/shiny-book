@@ -10,6 +10,7 @@ import {
   loadTossPayments,
 } from '@tosspayments/tosspayments-sdk';
 
+import { Coachmark } from '@/components/coachmark';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TOSS_ERROR_CODES, getTossErrorCode } from '@/constants/toss-error-codes';
@@ -152,8 +153,10 @@ export function CheckoutWidget({
 
   return (
     <div className="flex flex-col gap-6">
-      <div id="toss-payment-methods" />
-      <div id="toss-agreement" />
+      <div className="rounded-lg bg-surface-light p-1 text-surface-light-foreground">
+        <div id="toss-payment-methods" />
+        <div id="toss-agreement" />
+      </div>
       {paymentNotice ? (
         <p
           className={
@@ -165,26 +168,38 @@ export function CheckoutWidget({
           {paymentNotice.message}
         </p>
       ) : null}
-      <Button onClick={handlePayClick} disabled={!isReady || isRequesting} className="w-full">
+      <Button
+        onClick={handlePayClick}
+        variant="primary"
+        disabled={!isReady || isRequesting}
+        className="w-full"
+      >
         {t.checkout.payButton}
       </Button>
       {allowTestPayment ? (
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                type="button"
-                variant="primary"
-                onClick={handleTestPaymentClick}
-                disabled={isTestPaymentPending}
-                className="w-full"
-              />
-            }
-          >
-            {t.checkout.testPaymentButton}
-          </TooltipTrigger>
-          <TooltipContent>{t.checkout.testPaymentTooltip}</TooltipContent>
-        </Tooltip>
+        <Coachmark
+          id="checkout-test-payment"
+          title={t.checkout.coachmarkTestPaymentTitle}
+          description={t.checkout.coachmarkTestPaymentDescription}
+          closeLabel={t.common.coachmarkClose}
+        >
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={handleTestPaymentClick}
+                  disabled={isTestPaymentPending}
+                  className="w-full"
+                />
+              }
+            >
+              {t.checkout.testPaymentButton}
+            </TooltipTrigger>
+            <TooltipContent>{t.checkout.testPaymentTooltip}</TooltipContent>
+          </Tooltip>
+        </Coachmark>
       ) : null}
     </div>
   );

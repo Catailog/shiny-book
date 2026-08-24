@@ -37,14 +37,16 @@ export async function getInquiries(): Promise<InquiryWithConsumerEmail[]> {
 
   return Promise.all(
     data.map(async (inquiry) => {
-      const { data: userData } = await supabase.auth.admin.getUserById(inquiry.consumer_id);
+      const userData = inquiry.consumer_id
+        ? (await supabase.auth.admin.getUserById(inquiry.consumer_id)).data
+        : null;
       const lastMessageAuthor = lastMessageAuthorByInquiryId.get(inquiry.id) ?? null;
       const hasNewConsumerReply =
         inquiry.answered_at !== null && lastMessageAuthor === INQUIRY_MESSAGE_AUTHOR.CONSUMER;
 
       return {
         ...inquiry,
-        consumerEmail: userData.user?.email ?? null,
+        consumerEmail: userData?.user?.email ?? null,
         hasNewConsumerReply,
       };
     }),

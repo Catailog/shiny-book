@@ -356,45 +356,6 @@ async function ensureConsumer(email, password) {
   return data.user.id;
 }
 
-async function deleteExistingDemoData() {
-  console.log('기존 데이터 삭제 중...');
-
-  const tables = [
-    'inquiry_messages',
-    'inquiries',
-    'reviews',
-    'order_photos',
-    'print_jobs',
-    'shipment_jobs',
-    'orders',
-    'addresses',
-    'coupons',
-    'announcements',
-    'faqs',
-  ];
-
-  for (const table of tables) {
-    const { error } = await supabase.from(table).delete().not('id', 'is', null);
-    if (error) {
-      throw new Error(`${table} 삭제 실패: ${error.message}`);
-    }
-  }
-
-  const { data: existingUsers, error: listError } = await supabase.auth.admin.listUsers();
-  if (listError) {
-    throw new Error(listError.message);
-  }
-
-  for (const user of existingUsers.users) {
-    if (user.app_metadata?.role === 'admin') {
-      continue;
-    }
-    await supabase.auth.admin.deleteUser(user.id);
-  }
-
-  console.log('기존 데이터 삭제 완료');
-}
-
 async function seedCoupons() {
   console.log('쿠폰 시드 중...');
 
@@ -498,8 +459,6 @@ async function seedFaqs() {
 }
 
 async function main() {
-  await deleteExistingDemoData();
-
   const { data: products, error: productError } = await supabase
     .from('products')
     .select('id, price');

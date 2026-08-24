@@ -26,7 +26,7 @@ npm install
 
 ### 2. 환경 변수 설정
 
-`.env.local` 파일을 만들고 아래 값을 채워주세요. 실제 값은 Supabase 프로젝트, Toss Payments, Upstash 콘솔에서 발급받습니다.
+`.env.local` 파일을 만들고 아래 값을 채워주세요. 실제 값은 Supabase 프로젝트, Toss Payments, Upstash, Cloudflare 콘솔에서 발급받습니다.
 
 ```bash
 # Supabase
@@ -42,13 +42,16 @@ KV_REST_API_TOKEN=
 NEXT_PUBLIC_TOSS_CLIENT_KEY=
 TOSS_SECRET_KEY=
 
-# 로컬 테스트 계정 (선택, 기본값 있음)
+# Cloudflare Turnstile (봇 방지, 회원가입/테스트 로그인에 적용. 비워두면 항상 통과하는 테스트 키로 대체됨)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+
+# Vercel Cron 인증 (테스트 계정 정리 엔드포인트, 선택, 기본값 있음)
+CRON_SECRET=
+
+# 로컬 테스트 관리자 계정 (선택, 기본값 있음)
 ADMIN_SEED_EMAIL=
 ADMIN_SEED_PASSWORD=
-CONSUMER_SEED_EMAIL=
-CONSUMER_SEED_PASSWORD=
-CONSUMER_SEED_EMAIL_2=
-CONSUMER_SEED_PASSWORD_2=
 ```
 
 ### 3. 로컬 Supabase 실행
@@ -69,19 +72,19 @@ http://localhost:3000 에서 확인할 수 있습니다.
 
 ## 주요 스크립트
 
-| 명령어                       | 설명                               |
-| ---------------------------- | ---------------------------------- |
-| `npm run dev`                | 개발 서버 실행                     |
-| `npm run build`              | 프로덕션 빌드                      |
-| `npm run start`              | 빌드 결과 실행                     |
-| `npm run lint`               | ESLint 검사                        |
-| `npm run type-check`         | 타입 체크                          |
-| `npm run format`             | Prettier로 포맷팅                  |
-| `npm run test`               | Vitest 단위 테스트 실행            |
-| `npm run e2e`                | Playwright E2E 테스트 실행         |
-| `npm run db:types`           | 로컬 Supabase 스키마로 타입 재생성 |
-| `npm run db:seed-admin`      | 로컬 관리자 계정 시드              |
-| `npm run db:seed-test-photo` | 로컬 테스트 사진 시드              |
+| 명령어                            | 설명                                         |
+| --------------------------------- | -------------------------------------------- |
+| `npm run dev`                     | 개발 서버 실행                               |
+| `npm run build`                   | 프로덕션 빌드                                |
+| `npm run start`                   | 빌드 결과 실행                               |
+| `npm run lint`                    | ESLint 검사                                  |
+| `npm run type-check`              | 타입 체크                                    |
+| `npm run format`                  | Prettier로 포맷팅                            |
+| `npm run test`                    | Vitest 단위 테스트 실행                      |
+| `npm run e2e`                     | Playwright E2E 테스트 실행                   |
+| `npm run db:types`                | 로컬 Supabase 스키마로 타입 재생성           |
+| `npm run db:seed-admin`           | 로컬 관리자 계정 시드                        |
+| `npm run db:seed-test-photo-pool` | 테스트 로그인/사진 채우기용 이미지 풀 업로드 |
 
 ## 브랜치 전략
 

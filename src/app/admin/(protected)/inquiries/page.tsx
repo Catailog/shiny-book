@@ -89,7 +89,11 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                     key={inquiry.id}
                     href={`${ADMIN_ROUTES.INQUIRIES}/${inquiry.id}`}
                   >
-                    <TableCell className="truncate">{inquiry.consumerEmail ?? '-'}</TableCell>
+                    <TableCell className="truncate">
+                      {inquiry.consumer_id === null
+                        ? t.admin.inquiries.list.deletedConsumerLabel
+                        : (inquiry.consumerEmail ?? '-')}
+                    </TableCell>
                     <TableCell>
                       <Badge className="bg-muted text-muted-foreground">
                         {inquiry.category === INQUIRY_CATEGORY.ORDER

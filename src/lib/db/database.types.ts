@@ -32,7 +32,7 @@ export type Database = {
         Row: {
           address_line1: string;
           address_line2: string | null;
-          consumer_id: string;
+          consumer_id: string | null;
           created_at: string;
           id: string;
           is_default: boolean;
@@ -45,7 +45,7 @@ export type Database = {
         Insert: {
           address_line1: string;
           address_line2?: string | null;
-          consumer_id: string;
+          consumer_id?: string | null;
           created_at?: string;
           id?: string;
           is_default?: boolean;
@@ -58,7 +58,7 @@ export type Database = {
         Update: {
           address_line1?: string;
           address_line2?: string | null;
-          consumer_id?: string;
+          consumer_id?: string | null;
           created_at?: string;
           id?: string;
           is_default?: boolean;
@@ -191,7 +191,7 @@ export type Database = {
         Row: {
           answered_at: string | null;
           category: string;
-          consumer_id: string;
+          consumer_id: string | null;
           created_at: string;
           id: string;
           order_id: string | null;
@@ -201,7 +201,7 @@ export type Database = {
         Insert: {
           answered_at?: string | null;
           category?: string;
-          consumer_id: string;
+          consumer_id?: string | null;
           created_at?: string;
           id?: string;
           order_id?: string | null;
@@ -211,7 +211,7 @@ export type Database = {
         Update: {
           answered_at?: string | null;
           category?: string;
-          consumer_id?: string;
+          consumer_id?: string | null;
           created_at?: string;
           id?: string;
           order_id?: string | null;
@@ -502,7 +502,7 @@ export type Database = {
       };
       reviews: {
         Row: {
-          consumer_id: string;
+          consumer_id: string | null;
           content: string;
           created_at: string;
           id: string;
@@ -511,7 +511,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
-          consumer_id: string;
+          consumer_id?: string | null;
           content: string;
           created_at?: string;
           id?: string;
@@ -520,7 +520,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
-          consumer_id?: string;
+          consumer_id?: string | null;
           content?: string;
           created_at?: string;
           id?: string;

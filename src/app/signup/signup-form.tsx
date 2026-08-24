@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
   const [isPending, startTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
   const {
     register,
     control,
@@ -45,7 +47,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
 
   function onSubmit(values: ConsumerSignupInput) {
     startTransition(async () => {
-      const result = await signUpConsumer(values, redirectTo);
+      const result = await signUpConsumer(values, redirectTo, turnstileToken);
       if (result) {
         toast.error(t.consumer.signup.errors[result.errorCode]);
       }
@@ -238,10 +240,11 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             </Label>
           </div>
         </div>
+        <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
         <Button
           type="submit"
           variant="primary"
-          disabled={isPending}
+          disabled={isPending || !turnstileToken}
           className="w-full text-sm font-semibold uppercase"
         >
           {isPending ? t.consumer.signup.submitting : t.consumer.signup.submitButton}

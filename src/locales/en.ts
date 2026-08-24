@@ -6,6 +6,7 @@ export const en = {
   common: {
     loading: 'Loading...',
     error: 'Something went wrong.',
+    coachmarkClose: 'Close',
   },
   site: {
     nav: {
@@ -32,6 +33,9 @@ export const en = {
       goToAdminTooltip: 'Go to admin page - added for testing purposes.',
       openMenu: 'Open menu',
       menuTitle: 'Site menu',
+      coachmarkTestFeaturesTitle: 'Test features',
+      coachmarkTestFeaturesDescription:
+        'Sign in instantly to test things out, or check out the admin page - no sign-up needed.',
     },
     footer: {
       productsTitle: 'Products',
@@ -62,6 +66,8 @@ export const en = {
           'Preserve your most treasured moments in a form that lasts. Shiny Book prints on carefully chosen premium paper with durable binding to create a book that is truly yours.',
         primaryCtaLabel: 'Make my book',
         secondaryCtaLabel: 'View products',
+        coachmarkNewOrderTitle: 'You can order now',
+        coachmarkNewOrderDescription: 'Tap here to start making your own book.',
         stats: [
           { label: 'Premium paper usage', suffix: '%' },
           { label: 'Premium collections', suffix: '' },
@@ -208,6 +214,7 @@ export const en = {
     binding: 'Binding',
     shipping: 'Shipping',
     completed: 'Completed',
+    cancelled: 'Cancelled',
   } satisfies Record<OrderStatus, string>,
   announcementCategories: {
     notice: 'Notice',
@@ -225,6 +232,19 @@ export const en = {
   checkout: {
     title: 'Checkout',
     backButton: 'Back',
+    cancelOrder: {
+      button: 'Cancel order',
+      confirmTitle: 'Cancel this order?',
+      confirmDescription:
+        'Cancelling takes it out of awaiting-payment status and cannot be undone.',
+      cancelButton: 'Close',
+      confirmButton: 'Cancel order',
+      success: 'The order has been cancelled.',
+      errors: {
+        unauthorized: 'You are not authorized. Please sign in again.',
+        order_not_cancellable: 'This order was already processed and can no longer be cancelled.',
+      },
+    },
     summaryTitle: 'Order Summary',
     paymentTitle: 'Payment Method',
     quantitySuffix: 'copies',
@@ -253,6 +273,8 @@ export const en = {
     payButton: 'Pay now',
     testPaymentButton: 'Auto test payment',
     testPaymentTooltip: 'Skips the payment widget and marks the order as paid instantly.',
+    coachmarkTestPaymentTitle: 'Test payment',
+    coachmarkTestPaymentDescription: 'Mark this order as paid instantly, no real payment needed.',
     payError: 'Something went wrong while requesting payment. Please try again.',
     payCancelled: 'You cancelled the payment.',
     needAgreement: 'Please agree to the required terms.',
@@ -273,6 +295,7 @@ export const en = {
     testNotice: {
       title: 'This is a test payment environment',
       body: 'This integration uses a test API key, so no real charge will ever occur. That said, the payment flow itself works exactly like a real payment. The "test environment" banner below is shown by Toss Payments itself, not by this site, and during authentication you can also check the browser address bar for a sandbox domain such as payment-gateway-sandbox.tosspayments.com to verify it\'s a test.',
+      darkThemeNote: 'The test payment widget does not support dark theme.',
     },
     confirm: {
       confirmed: {
@@ -282,6 +305,11 @@ export const en = {
       amountMismatch: {
         title: 'Payment amount mismatch',
         description: 'We could not confirm this payment. Please contact support.',
+      },
+      couponUnavailable: {
+        title: 'This coupon is no longer available',
+        description:
+          'The coupon on this order expired or was used by another order in the meantime. No payment was taken. Please contact support.',
       },
       confirmFailed: {
         title: 'Payment confirmation failed',
@@ -333,7 +361,9 @@ export const en = {
       submitting: 'Signing in...',
       testLoginButton: 'Instant test account login',
       testLoginSubmitting: 'Signing in...',
-      testLoginTooltip: 'Automatically signs you in for admin testing.',
+      testLoginTooltip: 'Automatically signs you in with a fresh account for admin testing.',
+      coachmarkTestLoginTitle: 'Instant admin test login',
+      coachmarkTestLoginDescription: 'One click gets you into the admin screens.',
       errors: {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
@@ -342,6 +372,7 @@ export const en = {
       },
       testLoginErrors: {
         unavailable: 'This feature is not available right now.',
+        bot_verification_failed: "We couldn't verify this is a genuine request. Please try again.",
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -659,6 +690,7 @@ export const en = {
           status: 'STATUS BADGE',
           receivedDate: 'RECEIVED DATE',
         },
+        deletedConsumerLabel: 'Deleted user',
       },
       detail: {
         backToList: 'Back to Inquiries List',
@@ -770,10 +802,11 @@ export const en = {
       hidePasswordLabel: 'Hide password',
       submitButton: 'Sign in',
       submitting: 'Signing in...',
-      testLoginButton1: 'Instant login as test account 1',
-      testLoginButton2: 'Instant login as test account 2',
+      testLoginButton: 'Instant test account login',
       testLoginSubmitting: 'Signing in...',
-      testLoginTooltip: 'Automatically signs you in for consumer testing.',
+      testLoginTooltip: 'Automatically signs you in with a fresh account for consumer testing.',
+      coachmarkTestLoginTitle: 'Instant consumer test login',
+      coachmarkTestLoginDescription: 'You can also sign up yourself to test that flow.',
       signupPrompt: "Don't have an account yet?",
       signupLink: 'Sign up',
       errors: {
@@ -784,6 +817,7 @@ export const en = {
       },
       testLoginErrors: {
         unavailable: 'This feature is not available right now.',
+        bot_verification_failed: "We couldn't verify this is a genuine request. Please try again.",
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -815,6 +849,7 @@ export const en = {
         agreePrivacyRequired:
           'Please agree to the collection and use of your personal information.',
         email_taken: 'This email is already registered.',
+        bot_verification_failed: "We couldn't verify this is a genuine request. Please try again.",
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -843,13 +878,14 @@ export const en = {
           amount: 'Amount',
           status: 'Status',
           createdAt: 'Created at',
-          actions: 'Review',
+          actions: 'Manage',
           inquiry: 'Inquiry',
         },
         quantitySuffix: 'copies',
         reviewWriteLink: 'Write',
         reviewDoneLink: 'Done',
         inquiryLink: 'Ask',
+        payLink: 'Pay now',
       },
     },
     account: {
@@ -955,9 +991,15 @@ export const en = {
       removePhotoLabel: 'Remove photo',
       testUploadButton: 'Auto-upload test photos',
       testUploadTooltip: 'Automatically uploads photos so you can test the next screen.',
+      coachmarkTestUploadTitle: 'Test image upload',
+      coachmarkTestUploadDescription: 'Sample photos get uploaded automatically for you.',
       couponLabel: 'Coupon code (optional)',
       testCouponButton: 'Fill test coupon code',
       testCouponTooltip: 'Automatically fills in a 10% off test coupon code.',
+      coachmarkTestCouponTitle: 'Test coupon entry',
+      coachmarkTestCouponDescription: 'An unlimited-use test coupon gets filled in automatically.',
+      couponLockedNote: "A coupon already applied to this order can't be changed here.",
+      uploadingTooltip: "You can't continue while images are still uploading.",
       submitting: 'Creating order...',
       status: {
         uploading: 'Uploading...',
@@ -988,6 +1030,8 @@ export const en = {
         validation_failed: 'Please check your input and try again.',
         product_not_found: 'Product not found.',
         address_not_found: 'The selected address could not be found. Please choose again.',
+        order_not_editable:
+          'This order was already processed and can no longer be edited. Check My Page.',
         coupon_not_found: 'This coupon code does not exist.',
         coupon_inactive: 'This coupon is not available.',
         coupon_not_started: 'This coupon is not available yet.',

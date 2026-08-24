@@ -6,6 +6,7 @@ export const ko = {
   common: {
     loading: '로딩 중...',
     error: '오류가 발생했습니다.',
+    coachmarkClose: '닫기',
   },
   site: {
     nav: {
@@ -32,6 +33,9 @@ export const ko = {
       goToAdminTooltip: '관리자 페이지 가기 - 테스트를 위해 추가된 버튼입니다.',
       openMenu: '메뉴 열기',
       menuTitle: '사이트 메뉴',
+      coachmarkTestFeaturesTitle: '테스트 기능',
+      coachmarkTestFeaturesDescription:
+        '회원가입 없이 테스트 로그인을 할 수 있고, 관리자 페이지도 둘러볼 수 있어요.',
     },
     footer: {
       productsTitle: '제품',
@@ -62,6 +66,8 @@ export const ko = {
           '소중한 순간들을 바래지 않는 가치로 보존하세요. Shiny Book은 정성껏 고른 고급 용지와 견고한 제본 기술로 단 하나뿐인 나만의 책을 만들어드립니다.',
         primaryCtaLabel: '내 책 만들기',
         secondaryCtaLabel: '상품 보기',
+        coachmarkNewOrderTitle: '이제 주문할 수 있어요',
+        coachmarkNewOrderDescription: '여기를 눌러 나만의 책 만들기를 시작해보세요.',
         stats: [
           { label: '고급 용지 사용률', suffix: '%' },
           { label: '프리미엄 상품 종류', suffix: '개' },
@@ -208,6 +214,7 @@ export const ko = {
     binding: '제본중',
     shipping: '배송중',
     completed: '완료',
+    cancelled: '취소됨',
   } satisfies Record<OrderStatus, string>,
   announcementCategories: {
     notice: '공지사항',
@@ -225,6 +232,18 @@ export const ko = {
   checkout: {
     title: '결제하기',
     backButton: '이전 단계로',
+    cancelOrder: {
+      button: '주문 취소',
+      confirmTitle: '이 주문을 취소할까요?',
+      confirmDescription: '취소하면 결제대기 상태에서 벗어나며, 다시 되돌릴 수 없습니다.',
+      cancelButton: '닫기',
+      confirmButton: '주문 취소',
+      success: '주문이 취소됐습니다.',
+      errors: {
+        unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
+        order_not_cancellable: '이미 처리된 주문이라 취소할 수 없습니다.',
+      },
+    },
     summaryTitle: '주문 요약',
     paymentTitle: '결제 방식',
     quantitySuffix: '권',
@@ -253,6 +272,8 @@ export const ko = {
     payButton: '결제하기',
     testPaymentButton: '자동 테스트 결제',
     testPaymentTooltip: '결제창을 거치지 않고 바로 결제완료 상태로 전환합니다.',
+    coachmarkTestPaymentTitle: '테스트 결제',
+    coachmarkTestPaymentDescription: '실제 결제 없이 바로 결제완료 상태로 바꿀 수 있어요.',
     payError: '결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.',
     payCancelled: '결제를 취소하셨습니다.',
     needAgreement: '필수 약관에 동의해주세요.',
@@ -273,6 +294,7 @@ export const ko = {
     testNotice: {
       title: '테스트 결제 환경입니다',
       body: '테스트 API 키로 연동돼 있어 실제 결제나 청구는 절대 발생하지 않습니다. 다만 결제 진행 과정 자체는 실제 결제와 완전히 동일하게 동작합니다. 아래 결제창에 뜨는 "테스트 환경이에요" 안내는 본 사이트가 아니라 토스페이먼츠가 직접 표시하는 문구이며, 인증 단계에서 주소창에 나타나는 payment-gateway-sandbox.tosspayments.com 같은 sandbox 도메인으로도 테스트 여부를 직접 확인하실 수 있습니다.',
+      darkThemeNote: '테스트 결제 위젯은 다크 테마가 적용되지 않습니다.',
     },
     confirm: {
       confirmed: {
@@ -282,6 +304,11 @@ export const ko = {
       amountMismatch: {
         title: '결제 금액이 일치하지 않습니다',
         description: '결제 승인을 진행할 수 없습니다. 고객센터에 문의해주세요.',
+      },
+      couponUnavailable: {
+        title: '쿠폰을 더 이상 사용할 수 없습니다',
+        description:
+          '적용하신 쿠폰이 그 사이 만료되었거나 다른 주문에서 먼저 사용됐어요. 결제는 진행되지 않았습니다. 고객센터에 문의해주세요.',
       },
       confirmFailed: {
         title: '결제 승인에 실패했습니다',
@@ -332,7 +359,9 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '관리자 테스트를 위해 자동으로 로그인 합니다.',
+      testLoginTooltip: '관리자 테스트를 위해 매번 새 계정으로 자동 로그인 합니다.',
+      coachmarkTestLoginTitle: '관리자 테스트 계정으로 즉시 로그인',
+      coachmarkTestLoginDescription: '클릭 한 번으로 관리자 화면을 확인할 수 있어요.',
       errors: {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
@@ -341,6 +370,8 @@ export const ko = {
       },
       testLoginErrors: {
         unavailable: '지금은 사용할 수 없는 기능입니다.',
+        bot_verification_failed:
+          '정상적인 접근인지 확인하지 못했습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -658,6 +689,7 @@ export const ko = {
           status: '상태',
           receivedDate: '접수일',
         },
+        deletedConsumerLabel: '탈퇴한 사용자',
       },
       detail: {
         backToList: '목록으로 돌아가기',
@@ -769,10 +801,11 @@ export const ko = {
       hidePasswordLabel: '비밀번호 숨기기',
       submitButton: '로그인',
       submitting: '로그인 중...',
-      testLoginButton1: '테스트 계정 1 즉시 로그인',
-      testLoginButton2: '테스트 계정 2 즉시 로그인',
+      testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '소비자 테스트를 위해 자동으로 로그인 합니다.',
+      testLoginTooltip: '소비자 테스트를 위해 매번 새 계정으로 자동 로그인 합니다.',
+      coachmarkTestLoginTitle: '소비자 테스트 계정으로 즉시 로그인',
+      coachmarkTestLoginDescription: '직접 회원가입 해서 테스트 할 수도 있어요.',
       signupPrompt: '아직 계정이 없으신가요?',
       signupLink: '회원가입',
       errors: {
@@ -783,6 +816,8 @@ export const ko = {
       },
       testLoginErrors: {
         unavailable: '지금은 사용할 수 없는 기능입니다.',
+        bot_verification_failed:
+          '정상적인 접근인지 확인하지 못했습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -813,6 +848,8 @@ export const ko = {
         agreeTermsRequired: '이용약관에 동의해주세요.',
         agreePrivacyRequired: '개인정보 수집 및 이용에 동의해주세요.',
         email_taken: '이미 가입된 이메일입니다.',
+        bot_verification_failed:
+          '정상적인 접근인지 확인하지 못했습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -841,13 +878,14 @@ export const ko = {
           amount: '결제 금액',
           status: '상태',
           createdAt: '주문일시',
-          actions: '후기',
+          actions: '관리',
           inquiry: '문의',
         },
         quantitySuffix: '권',
         reviewWriteLink: '작성',
         reviewDoneLink: '완료',
         inquiryLink: '문의하기',
+        payLink: '결제하기',
       },
     },
     account: {
@@ -951,9 +989,15 @@ export const ko = {
       removePhotoLabel: '사진 삭제',
       testUploadButton: '테스트 이미지 자동 업로드',
       testUploadTooltip: '다음 화면 테스트를 위해 자동으로 업로드 됩니다.',
+      coachmarkTestUploadTitle: '테스트 이미지 업로드',
+      coachmarkTestUploadDescription: '예시 이미지들이 자동으로 업로드 돼요.',
       couponLabel: '쿠폰 코드 (선택)',
       testCouponButton: '테스트 쿠폰 코드 입력',
       testCouponTooltip: '10% 할인 테스트 쿠폰 코드를 자동으로 입력합니다.',
+      coachmarkTestCouponTitle: '테스트 쿠폰 입력',
+      coachmarkTestCouponDescription: '사용 제한 없는 테스트 쿠폰이 자동으로 입력돼요.',
+      couponLockedNote: '이미 적용된 쿠폰은 이 화면에서 변경할 수 없어요.',
+      uploadingTooltip: '이미지 업로드 중에는 진행할 수 없어요.',
       submitting: '주문 생성 중...',
       status: {
         uploading: '업로드 중...',
@@ -984,6 +1028,7 @@ export const ko = {
         validation_failed: '입력값을 다시 확인해주세요.',
         product_not_found: '상품을 찾을 수 없습니다.',
         address_not_found: '선택한 배송지를 찾을 수 없습니다. 다시 선택해주세요.',
+        order_not_editable: '이미 처리된 주문이라 수정할 수 없습니다. 마이페이지에서 확인해주세요.',
         coupon_not_found: '존재하지 않는 쿠폰 코드입니다.',
         coupon_inactive: '사용할 수 없는 쿠폰입니다.',
         coupon_not_started: '아직 사용할 수 없는 쿠폰입니다.',

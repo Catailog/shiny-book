@@ -21,12 +21,12 @@ export async function LoginVisual() {
         className="object-cover"
         priority
       />
-      <div className="absolute inset-0 bg-ink/65" />
-      <Link href="/" className="relative flex items-center gap-3 text-ink-foreground">
+      <div className="absolute inset-0 bg-inverted/85" />
+      <Link href="/" className="relative flex items-center gap-3 text-inverted-foreground">
         <BookOpen aria-hidden="true" strokeWidth={1.8} className="size-6" />
         <span className="font-heading text-2xl font-bold">Shiny Book</span>
       </Link>
-      <div className="relative flex flex-col gap-5 text-ink-foreground">
+      <div className="relative flex flex-col gap-5 text-inverted-foreground">
         <p className="font-heading text-4xl leading-tight font-normal">{`"${quote.text}"`}</p>
         <p className="text-base font-medium opacity-80">— {quote.author}</p>
       </div>

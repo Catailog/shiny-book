@@ -9,6 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { Coachmark } from '@/components/coachmark';
+import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,9 +29,9 @@ interface ConsumerLoginFormProps {
 export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
-  const [isTestLoginPending1, startTestLoginTransition1] = useTransition();
-  const [isTestLoginPending2, startTestLoginTransition2] = useTransition();
+  const [isTestLoginPending, startTestLoginTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
   const {
     register,
     handleSubmit,
@@ -45,18 +47,9 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
     });
   }
 
-  function handleTestLogin1() {
-    startTestLoginTransition1(async () => {
-      const result = await signInTestConsumer(1, redirectTo);
-      if (result) {
-        toast.error(t.consumer.login.testLoginErrors[result.errorCode]);
-      }
-    });
-  }
-
-  function handleTestLogin2() {
-    startTestLoginTransition2(async () => {
-      const result = await signInTestConsumer(2, redirectTo);
+  function handleTestLogin() {
+    startTestLoginTransition(async () => {
+      const result = await signInTestConsumer(redirectTo, turnstileToken);
       if (result) {
         toast.error(t.consumer.login.testLoginErrors[result.errorCode]);
       }
@@ -126,42 +119,32 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
         </Button>
         {allowTestLogin ? (
           <div className="flex flex-col gap-2">
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isTestLoginPending1}
-                    onClick={handleTestLogin1}
-                    className="w-full text-sm font-semibold uppercase"
-                  />
-                }
-              >
-                {isTestLoginPending1
-                  ? t.consumer.login.testLoginSubmitting
-                  : t.consumer.login.testLoginButton1}
-              </TooltipTrigger>
-              <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isTestLoginPending2}
-                    onClick={handleTestLogin2}
-                    className="w-full text-sm font-semibold uppercase"
-                  />
-                }
-              >
-                {isTestLoginPending2
-                  ? t.consumer.login.testLoginSubmitting
-                  : t.consumer.login.testLoginButton2}
-              </TooltipTrigger>
-              <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
-            </Tooltip>
+            <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
+            <Coachmark
+              id="test-login-consumer"
+              title={t.consumer.login.coachmarkTestLoginTitle}
+              description={t.consumer.login.coachmarkTestLoginDescription}
+              closeLabel={t.common.coachmarkClose}
+            >
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={isTestLoginPending || !turnstileToken}
+                      onClick={handleTestLogin}
+                      className="w-full text-sm font-semibold uppercase"
+                    />
+                  }
+                >
+                  {isTestLoginPending
+                    ? t.consumer.login.testLoginSubmitting
+                    : t.consumer.login.testLoginButton}
+                </TooltipTrigger>
+                <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
+              </Tooltip>
+            </Coachmark>
           </div>
         ) : null}
         <p className="text-center text-sm text-muted-foreground">

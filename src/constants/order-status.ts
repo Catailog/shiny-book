@@ -5,6 +5,7 @@ export const ORDER_STATUS = {
   BINDING: 'binding',
   SHIPPING: 'shipping',
   COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
 } as const;
 
 export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];

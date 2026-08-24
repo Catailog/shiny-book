@@ -1,46 +1,37 @@
 'use server';
 
-import {
-  FILE_UPLOAD_KIND,
-  STORAGE_BUCKETS,
-  TEST_PHOTO_TEMPLATE_PATH,
-} from '@/constants/file-upload';
 import { PHOTOBOOK_PAGE_COUNT_MAX, PHOTOBOOK_PHOTOS_PER_PAGE } from '@/constants/photobook';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { getSignedOrderPhotoUrl } from '@/lib/uploads/get-signed-order-photo-url';
+import { getRandomTestPhotoPath } from '@/lib/uploads/random-test-photo-path';
+
+export interface GeneratedTestPhoto {
+  path: string;
+  previewUrl: string | null;
+}
 
 export interface GenerateTestPhotosResult {
   success: boolean;
-  paths: string[];
+  photos: GeneratedTestPhoto[];
 }
 
 const MAX_TEST_PHOTO_COUNT = PHOTOBOOK_PAGE_COUNT_MAX * PHOTOBOOK_PHOTOS_PER_PAGE;
 
 export async function generateTestPhotos(count: number): Promise<GenerateTestPhotosResult> {
   if (!Number.isInteger(count) || count <= 0 || count > MAX_TEST_PHOTO_COUNT) {
-    return { success: false, paths: [] };
+    return { success: false, photos: [] };
   }
 
   const consumer = await getCurrentConsumer();
   if (!consumer) {
-    return { success: false, paths: [] };
+    return { success: false, photos: [] };
   }
 
-  const supabase = createServiceRoleClient();
-  const paths: string[] = [];
+  const paths = Array.from({ length: count }, () => getRandomTestPhotoPath());
 
-  for (let index = 0; index < count; index += 1) {
-    const destinationPath = `${consumer.id}/${FILE_UPLOAD_KIND.PHOTO}/processed-test-${crypto.randomUUID()}.webp`;
-    const { error } = await supabase.storage
-      .from(STORAGE_BUCKETS.ORDER_UPLOADS)
-      .copy(TEST_PHOTO_TEMPLATE_PATH, destinationPath);
+  const photos = await Promise.all(
+    paths.map(async (path) => ({ path, previewUrl: await getSignedOrderPhotoUrl(path) })),
+  );
 
-    if (error) {
-      return { success: false, paths: [] };
-    }
-
-    paths.push(destinationPath);
-  }
-
-  return { success: true, paths };
+  return { success: true, photos };
 }
