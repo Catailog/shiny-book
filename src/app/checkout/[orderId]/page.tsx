@@ -35,26 +35,6 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-6 py-16 lg:flex-row lg:items-start lg:gap-16">
-      <div className="flex flex-1 flex-col gap-8">
-        <BackButton orderId={order.id} />
-        <h1 className="font-heading text-3xl font-bold text-foreground">{t.checkout.title}</h1>
-        <div className="flex flex-col gap-4">
-          <h2 className="text-sm font-semibold tracking-wide text-foreground uppercase">
-            {t.checkout.paymentTitle}
-          </h2>
-          <div className="flex flex-col gap-2 rounded-lg bg-secondary p-4 text-sm">
-            <p className="font-medium text-foreground">{t.checkout.testNotice.title}</p>
-            <p className="text-muted-foreground">{t.checkout.testNotice.body}</p>
-            <p className="text-muted-foreground">{t.checkout.testNotice.darkThemeNote}</p>
-          </div>
-          <CheckoutWidget
-            orderId={order.id}
-            orderName={order.title}
-            amount={order.amount}
-            allowTestPayment
-          />
-        </div>
-      </div>
       <div className="flex w-full flex-col gap-6 rounded-xl border border-border bg-secondary p-8 lg:w-90">
         <h2 className="font-heading text-xl font-bold text-foreground">
           {t.checkout.summaryTitle}
@@ -105,6 +85,26 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
           </p>
         </div>
         <CancelOrderButton orderId={order.id} className="text-sm text-muted-foreground underline" />
+      </div>
+      <div className="flex flex-1 flex-col gap-8">
+        <BackButton orderId={order.id} />
+        <h1 className="font-heading text-3xl font-bold text-foreground">{t.checkout.title}</h1>
+        <div className="flex flex-col gap-4">
+          <h2 className="text-sm font-semibold tracking-wide text-foreground uppercase">
+            {t.checkout.paymentTitle}
+          </h2>
+          <div className="flex flex-col gap-2 rounded-lg bg-secondary p-4 text-sm">
+            <p className="font-medium text-foreground">{t.checkout.testNotice.title}</p>
+            <p className="text-muted-foreground">{t.checkout.testNotice.body}</p>
+            <p className="text-muted-foreground">{t.checkout.testNotice.darkThemeNote}</p>
+          </div>
+          <CheckoutWidget
+            orderId={order.id}
+            orderName={order.title}
+            amount={order.amount}
+            allowTestPayment
+          />
+        </div>
       </div>
     </div>
   );
