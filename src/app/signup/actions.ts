@@ -5,17 +5,24 @@ import { redirect } from 'next/navigation';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
+import { verifyTurnstileToken } from '@/lib/turnstile/verify-turnstile-token';
 
 import { type ConsumerSignupInput, consumerSignupSchema } from './signup-schema';
 
 export interface ConsumerSignupActionResult {
-  errorCode: 'email_taken' | 'unexpected_error';
+  errorCode: 'email_taken' | 'bot_verification_failed' | 'unexpected_error';
 }
 
 export async function signUpConsumer(
   input: ConsumerSignupInput,
-  redirectTo?: string,
+  redirectTo: string | undefined,
+  turnstileToken: string,
 ): Promise<ConsumerSignupActionResult | undefined> {
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return { errorCode: 'bot_verification_failed' };
+  }
+
   const parsed = consumerSignupSchema.safeParse(input);
   if (!parsed.success) {
     return { errorCode: 'unexpected_error' };

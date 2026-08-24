@@ -341,6 +341,8 @@ export const ko = {
       },
       testLoginErrors: {
         unavailable: '지금은 사용할 수 없는 기능입니다.',
+        bot_verification_failed:
+          '정상적인 접근인지 확인하지 못했습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -782,6 +784,8 @@ export const ko = {
       },
       testLoginErrors: {
         unavailable: '지금은 사용할 수 없는 기능입니다.',
+        bot_verification_failed:
+          '정상적인 접근인지 확인하지 못했습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -812,6 +816,8 @@ export const ko = {
         agreeTermsRequired: '이용약관에 동의해주세요.',
         agreePrivacyRequired: '개인정보 수집 및 이용에 동의해주세요.',
         email_taken: '이미 가입된 이메일입니다.',
+        bot_verification_failed:
+          '정상적인 접근인지 확인하지 못했습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },

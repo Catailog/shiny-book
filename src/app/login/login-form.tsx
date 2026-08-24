@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,6 +30,7 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
   const [isPending, startTransition] = useTransition();
   const [isTestLoginPending, startTestLoginTransition] = useTransition();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
   const {
     register,
     handleSubmit,
@@ -46,7 +48,7 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
 
   function handleTestLogin() {
     startTestLoginTransition(async () => {
-      const result = await signInTestConsumer(redirectTo);
+      const result = await signInTestConsumer(redirectTo, turnstileToken);
       if (result) {
         toast.error(t.consumer.login.testLoginErrors[result.errorCode]);
       }
@@ -115,24 +117,27 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
           {isPending ? t.consumer.login.submitting : t.consumer.login.submitButton}
         </Button>
         {allowTestLogin ? (
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isTestLoginPending}
-                  onClick={handleTestLogin}
-                  className="w-full text-sm font-semibold uppercase"
-                />
-              }
-            >
-              {isTestLoginPending
-                ? t.consumer.login.testLoginSubmitting
-                : t.consumer.login.testLoginButton}
-            </TooltipTrigger>
-            <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
-          </Tooltip>
+          <div className="flex flex-col gap-2">
+            <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isTestLoginPending || !turnstileToken}
+                    onClick={handleTestLogin}
+                    className="w-full text-sm font-semibold uppercase"
+                  />
+                }
+              >
+                {isTestLoginPending
+                  ? t.consumer.login.testLoginSubmitting
+                  : t.consumer.login.testLoginButton}
+              </TooltipTrigger>
+              <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
+            </Tooltip>
+          </div>
         ) : null}
         <p className="text-center text-sm text-muted-foreground">
           {t.consumer.login.signupPrompt}{' '}

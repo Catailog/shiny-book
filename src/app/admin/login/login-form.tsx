@@ -1,11 +1,12 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,6 +24,7 @@ export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
   const t = locales[defaultLocale];
   const [isPending, startTransition] = useTransition();
   const [isTestLoginPending, startTestLoginTransition] = useTransition();
+  const [turnstileToken, setTurnstileToken] = useState('');
   const {
     register,
     handleSubmit,
@@ -40,7 +42,7 @@ export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
 
   function handleTestLogin() {
     startTestLoginTransition(async () => {
-      const result = await signInTestAdmin();
+      const result = await signInTestAdmin(turnstileToken);
       if (result) {
         toast.error(t.admin.login.testLoginErrors[result.errorCode]);
       }
@@ -83,22 +85,27 @@ export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
         {isPending ? t.admin.login.submitting : t.admin.login.submitButton}
       </Button>
       {allowTestLogin ? (
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                type="button"
-                variant="outline"
-                disabled={isTestLoginPending}
-                onClick={handleTestLogin}
-                className="w-full"
-              />
-            }
-          >
-            {isTestLoginPending ? t.admin.login.testLoginSubmitting : t.admin.login.testLoginButton}
-          </TooltipTrigger>
-          <TooltipContent>{t.admin.login.testLoginTooltip}</TooltipContent>
-        </Tooltip>
+        <div className="flex flex-col gap-2">
+          <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isTestLoginPending || !turnstileToken}
+                  onClick={handleTestLogin}
+                  className="w-full"
+                />
+              }
+            >
+              {isTestLoginPending
+                ? t.admin.login.testLoginSubmitting
+                : t.admin.login.testLoginButton}
+            </TooltipTrigger>
+            <TooltipContent>{t.admin.login.testLoginTooltip}</TooltipContent>
+          </Tooltip>
+        </div>
       ) : null}
     </form>
   );

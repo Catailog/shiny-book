@@ -26,7 +26,7 @@ npm install
 
 ### 2. 환경 변수 설정
 
-`.env.local` 파일을 만들고 아래 값을 채워주세요. 실제 값은 Supabase 프로젝트, Toss Payments, Upstash 콘솔에서 발급받습니다.
+`.env.local` 파일을 만들고 아래 값을 채워주세요. 실제 값은 Supabase 프로젝트, Toss Payments, Upstash, Cloudflare 콘솔에서 발급받습니다.
 
 ```bash
 # Supabase
@@ -41,6 +41,10 @@ KV_REST_API_TOKEN=
 # 토스페이먼츠
 NEXT_PUBLIC_TOSS_CLIENT_KEY=
 TOSS_SECRET_KEY=
+
+# Cloudflare Turnstile (봇 방지, 회원가입/테스트 로그인에 적용. 비워두면 항상 통과하는 테스트 키로 대체됨)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
 
 # 로컬 테스트 관리자 계정 (선택, 기본값 있음)
 ADMIN_SEED_EMAIL=

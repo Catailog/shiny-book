@@ -13,6 +13,7 @@ import {
   signInWithExistingTestAccount,
 } from '@/lib/auth/test-account-session';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
+import { verifyTurnstileToken } from '@/lib/turnstile/verify-turnstile-token';
 
 import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
@@ -47,10 +48,17 @@ export async function signInAdmin(
 }
 
 export interface AdminTestLoginResult {
-  errorCode: 'unavailable' | 'unexpected_error';
+  errorCode: 'unavailable' | 'bot_verification_failed' | 'unexpected_error';
 }
 
-export async function signInTestAdmin(): Promise<AdminTestLoginResult | undefined> {
+export async function signInTestAdmin(
+  turnstileToken: string,
+): Promise<AdminTestLoginResult | undefined> {
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return { errorCode: 'bot_verification_failed' };
+  }
+
   const existingToken = await readTestAccountPairToken();
 
   if (existingToken) {

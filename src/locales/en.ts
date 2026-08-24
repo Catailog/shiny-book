@@ -342,6 +342,7 @@ export const en = {
       },
       testLoginErrors: {
         unavailable: 'This feature is not available right now.',
+        bot_verification_failed: "We couldn't verify this is a genuine request. Please try again.",
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -783,6 +784,7 @@ export const en = {
       },
       testLoginErrors: {
         unavailable: 'This feature is not available right now.',
+        bot_verification_failed: "We couldn't verify this is a genuine request. Please try again.",
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -814,6 +816,7 @@ export const en = {
         agreePrivacyRequired:
           'Please agree to the collection and use of your personal information.',
         email_taken: 'This email is already registered.',
+        bot_verification_failed: "We couldn't verify this is a genuine request. Please try again.",
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
