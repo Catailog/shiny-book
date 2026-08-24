@@ -142,7 +142,11 @@ export function ConsumerLoginForm({ redirectTo, allowTestLogin }: ConsumerLoginF
                     ? t.consumer.login.testLoginSubmitting
                     : t.consumer.login.testLoginButton}
                 </TooltipTrigger>
-                <TooltipContent>{t.consumer.login.testLoginTooltip}</TooltipContent>
+                <TooltipContent>
+                  {!turnstileToken
+                    ? t.common.turnstilePendingTooltip
+                    : t.consumer.login.testLoginTooltip}
+                </TooltipContent>
               </Tooltip>
             </Coachmark>
           </div>

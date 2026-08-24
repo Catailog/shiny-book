@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 
@@ -241,14 +242,23 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
           </div>
         </div>
         <TurnstileWidget onVerify={setTurnstileToken} onExpire={() => setTurnstileToken('')} />
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={isPending || !turnstileToken}
-          className="w-full text-sm font-semibold uppercase"
-        >
-          {isPending ? t.consumer.signup.submitting : t.consumer.signup.submitButton}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={isPending || !turnstileToken}
+                className="w-full text-sm font-semibold uppercase"
+              />
+            }
+          >
+            {isPending ? t.consumer.signup.submitting : t.consumer.signup.submitButton}
+          </TooltipTrigger>
+          {!turnstileToken ? (
+            <TooltipContent>{t.common.turnstilePendingTooltip}</TooltipContent>
+          ) : null}
+        </Tooltip>
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-border" />
           <span className="text-xs text-muted-foreground uppercase">

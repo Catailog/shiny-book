@@ -7,6 +7,7 @@ export const en = {
     loading: 'Loading...',
     error: 'Something went wrong.',
     coachmarkClose: 'Close',
+    turnstilePendingTooltip: 'Please wait until security verification finishes.',
   },
   site: {
     nav: {
