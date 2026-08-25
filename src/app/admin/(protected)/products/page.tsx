@@ -6,6 +6,7 @@ import { Plus } from 'lucide-react';
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +20,6 @@ import {
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { isProductCategory } from '@/constants/product-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { formatDate } from '@/lib/format-date';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { getAllProducts } from '@/lib/products/get-all-products';
 import { defaultLocale, locales } from '@/locales';
@@ -150,7 +150,7 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(product.created_at)}
+                      <RelativeDate value={product.created_at} locale={defaultLocale} />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end">
