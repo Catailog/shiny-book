@@ -1065,7 +1065,7 @@ export const ko = {
       couponUsedLabel: '사용 쿠폰',
       couponNotUsedLabel: '쿠폰 미사용',
       replyPlaceholder: '추가로 문의할 내용을 입력해주세요.',
-      replyButton: '답변 등록',
+      replyButton: '문의 등록',
       replying: '등록 중...',
       filterTabs: {
         all: '전체보기',
