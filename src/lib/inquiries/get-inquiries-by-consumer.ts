@@ -2,7 +2,7 @@ import 'server-only';
 
 import { CONSUMER_INQUIRY_LIST_LIMIT } from '@/constants/inquiry';
 import type { Tables } from '@/lib/db/database.types';
-import { getHasNewConsumerReplyMap } from '@/lib/inquiries/get-has-new-consumer-reply-map';
+import { getInquiryMessageSummaryMap } from '@/lib/inquiries/get-inquiry-message-summary';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 export interface InquiryWithNewReplyFlag extends Tables<'inquiries'> {
@@ -27,7 +27,7 @@ export async function getInquiriesByConsumer(
 
   const inquiryIds = data.map((inquiry) => inquiry.id);
   const answeredAtByInquiryId = new Map(data.map((inquiry) => [inquiry.id, inquiry.answered_at]));
-  const hasNewConsumerReplyByInquiryId = await getHasNewConsumerReplyMap(
+  const summaryByInquiryId = await getInquiryMessageSummaryMap(
     supabase,
     inquiryIds,
     answeredAtByInquiryId,
@@ -35,7 +35,7 @@ export async function getInquiriesByConsumer(
 
   return data.map(({ orders, ...inquiry }) => ({
     ...inquiry,
-    hasNewConsumerReply: hasNewConsumerReplyByInquiryId.get(inquiry.id) ?? false,
+    hasNewConsumerReply: summaryByInquiryId.get(inquiry.id)?.hasNewConsumerReply ?? false,
     orderTitle: orders?.title ?? null,
   }));
 }

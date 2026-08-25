@@ -107,12 +107,15 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                 <TableHead>{t.admin.inquiries.list.table.subject}</TableHead>
                 <TableHead className="w-24">{t.admin.inquiries.list.table.status}</TableHead>
                 <TableHead className="w-28">{t.admin.inquiries.list.table.receivedDate}</TableHead>
+                <TableHead className="w-28">
+                  {t.admin.inquiries.list.table.lastMessageDate}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {inquiries.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     {t.admin.inquiries.empty}
                   </TableCell>
                 </TableRow>
@@ -161,6 +164,9 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {formatDate(inquiry.created_at)}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(inquiry.lastMessageAt)}
                     </TableCell>
                   </ClickableTableRow>
                 );
