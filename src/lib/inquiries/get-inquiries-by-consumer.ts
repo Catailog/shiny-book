@@ -7,6 +7,7 @@ import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 export interface InquiryWithNewReplyFlag extends Tables<'inquiries'> {
   hasNewConsumerReply: boolean;
+  orderTitle: string | null;
 }
 
 export async function getInquiriesByConsumer(
@@ -15,7 +16,7 @@ export async function getInquiriesByConsumer(
   const supabase = createServiceRoleClient();
   const { data } = await supabase
     .from('inquiries')
-    .select()
+    .select('*, orders(title)')
     .eq('consumer_id', consumerId)
     .order('created_at', { ascending: false })
     .limit(CONSUMER_INQUIRY_LIST_LIMIT);
@@ -32,8 +33,9 @@ export async function getInquiriesByConsumer(
     answeredAtByInquiryId,
   );
 
-  return data.map((inquiry) => ({
+  return data.map(({ orders, ...inquiry }) => ({
     ...inquiry,
     hasNewConsumerReply: hasNewConsumerReplyByInquiryId.get(inquiry.id) ?? false,
+    orderTitle: orders?.title ?? null,
   }));
 }

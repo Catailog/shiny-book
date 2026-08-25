@@ -49,8 +49,10 @@ export default async function MypageInquiriesPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted hover:bg-muted">
+              <TableHead className="w-28">{t.consumer.inquiries.table.inquiryId}</TableHead>
               <TableHead className="w-32">{t.consumer.inquiries.table.category}</TableHead>
               <TableHead>{t.consumer.inquiries.table.title}</TableHead>
+              <TableHead className="w-40">{t.consumer.inquiries.table.orderTitle}</TableHead>
               <TableHead className="w-28">{t.consumer.inquiries.table.status}</TableHead>
               <TableHead className="w-28">{t.consumer.inquiries.table.createdAt}</TableHead>
             </TableRow>
@@ -58,13 +60,14 @@ export default async function MypageInquiriesPage() {
           <TableBody>
             {inquiries.length === 0 ? (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
                   {t.consumer.inquiries.empty}
                 </TableCell>
               </TableRow>
             ) : null}
             {inquiries.map((inquiry) => (
               <TableRow key={inquiry.id} className="hover:bg-transparent">
+                <TableCell className="text-muted-foreground">#{inquiry.id.slice(0, 8)}</TableCell>
                 <TableCell>
                   <Badge className="bg-muted text-muted-foreground">
                     {inquiry.category === INQUIRY_CATEGORY.ORDER
@@ -76,6 +79,9 @@ export default async function MypageInquiriesPage() {
                   <Link href={`/mypage/inquiries/${inquiry.id}`} className="hover:underline">
                     {inquiry.title}
                   </Link>
+                </TableCell>
+                <TableCell className="truncate text-muted-foreground">
+                  {inquiry.orderTitle ?? '-'}
                 </TableCell>
                 <TableCell>
                   {inquiry.answered_at && !inquiry.hasNewConsumerReply ? (

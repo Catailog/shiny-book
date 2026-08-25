@@ -1071,6 +1071,8 @@ export const en = {
       },
       table: {
         number: 'No.',
+        inquiryId: 'Inquiry ID',
+        orderTitle: 'Related book',
         category: 'Category',
         title: 'Title',
         status: 'Status',

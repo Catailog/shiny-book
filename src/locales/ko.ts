@@ -1068,6 +1068,8 @@ export const ko = {
       },
       table: {
         number: '번호',
+        inquiryId: '문의 ID',
+        orderTitle: '문의 도서',
         category: '분류',
         title: '제목',
         status: '상태',
