@@ -44,9 +44,6 @@ async function main() {
   }
 
   for (const user of existingUsers.users) {
-    if (user.app_metadata?.role === 'admin') {
-      continue;
-    }
     await supabase.auth.admin.deleteUser(user.id);
   }
 
