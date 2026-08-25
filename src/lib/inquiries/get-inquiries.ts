@@ -1,12 +1,14 @@
 import 'server-only';
 
-import { ADMIN_INQUIRY_LIST_LIMIT, INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
+import { ADMIN_INQUIRY_LIST_LIMIT } from '@/constants/inquiry';
 import type { Tables } from '@/lib/db/database.types';
+import { getInquiryMessageSummaryMap } from '@/lib/inquiries/get-inquiry-message-summary';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 export interface InquiryWithConsumerEmail extends Tables<'inquiries'> {
   consumerEmail: string | null;
   hasNewConsumerReply: boolean;
+  lastMessageAt: string;
 }
 
 export async function getInquiries(): Promise<InquiryWithConsumerEmail[]> {
@@ -22,32 +24,25 @@ export async function getInquiries(): Promise<InquiryWithConsumerEmail[]> {
   }
 
   const inquiryIds = data.map((inquiry) => inquiry.id);
-  const { data: messages } = await supabase
-    .from('inquiry_messages')
-    .select('inquiry_id, author_type, created_at')
-    .in('inquiry_id', inquiryIds)
-    .order('created_at', { ascending: false });
-
-  const lastMessageAuthorByInquiryId = new Map<string, string>();
-  for (const message of messages ?? []) {
-    if (!lastMessageAuthorByInquiryId.has(message.inquiry_id)) {
-      lastMessageAuthorByInquiryId.set(message.inquiry_id, message.author_type);
-    }
-  }
+  const answeredAtByInquiryId = new Map(data.map((inquiry) => [inquiry.id, inquiry.answered_at]));
+  const summaryByInquiryId = await getInquiryMessageSummaryMap(
+    supabase,
+    inquiryIds,
+    answeredAtByInquiryId,
+  );
 
   return Promise.all(
     data.map(async (inquiry) => {
       const userData = inquiry.consumer_id
         ? (await supabase.auth.admin.getUserById(inquiry.consumer_id)).data
         : null;
-      const lastMessageAuthor = lastMessageAuthorByInquiryId.get(inquiry.id) ?? null;
-      const hasNewConsumerReply =
-        inquiry.answered_at !== null && lastMessageAuthor === INQUIRY_MESSAGE_AUTHOR.CONSUMER;
+      const summary = summaryByInquiryId.get(inquiry.id);
 
       return {
         ...inquiry,
         consumerEmail: userData?.user?.email ?? null,
-        hasNewConsumerReply,
+        hasNewConsumerReply: summary?.hasNewConsumerReply ?? false,
+        lastMessageAt: summary?.lastMessageCreatedAt ?? inquiry.created_at,
       };
     }),
   );

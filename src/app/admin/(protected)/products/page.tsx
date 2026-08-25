@@ -5,6 +5,8 @@ import { Plus } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,12 +17,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { isProductCategory } from '@/constants/product-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { formatDate } from '@/lib/format-date';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { getAllProducts } from '@/lib/products/get-all-products';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 import { ToggleProductActiveButton } from './toggle-product-active-button';
 
@@ -34,11 +38,11 @@ function isProductFilter(value: string): value is ProductFilter {
 export default async function AdminProductsPage(props: PageProps<'/admin/products'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const filterParam = firstParam(searchParams.filter);
+  const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isProductFilter(filterParam) ? filterParam : 'all';
 
   const allProducts = await getAllProducts();
-  const products = allProducts.filter((product) => {
+  const filteredProducts = allProducts.filter((product) => {
     if (activeFilter === 'active') {
       return product.is_active;
     }
@@ -47,10 +51,20 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
     }
     return true;
   });
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
+  const {
+    items: products,
+    page,
+    totalPages,
+  } = paginate(filteredProducts, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.products.title} />
+      <AdminTopbar title={t.admin.products.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
@@ -136,7 +150,7 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(product.created_at)}
+                      <RelativeDate value={product.created_at} locale={defaultLocale} />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end">
@@ -152,11 +166,13 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.PRODUCTS}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

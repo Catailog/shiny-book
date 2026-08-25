@@ -7,6 +7,7 @@ export const en = {
     loading: 'Loading...',
     error: 'Something went wrong.',
     coachmarkClose: 'Close',
+    turnstilePendingTooltip: 'Please wait until security verification finishes.',
   },
   site: {
     nav: {
@@ -343,6 +344,10 @@ export const en = {
     notificationsLabel: 'Notifications',
     notificationsEmptyLabel: 'No unanswered inquiries.',
     notificationsViewAllLabel: 'View all inquiries',
+    pagination: {
+      pageSizeLabel: 'Rows per page',
+      pageSizeOption: '{count} / page',
+    },
     nav: {
       dashboard: 'Dashboard',
       products: 'Products',
@@ -423,7 +428,7 @@ export const en = {
       revertConfirmTitle: 'Revert to the previous stage?',
       revertConfirmDescription:
         'This will move the order status back to the previous stage. If work has already progressed, it may no longer match reality, so proceed carefully.',
-      revertConfirmButton: 'Revert',
+      revertConfirmButton: 'Force revert',
       revertCancelButton: 'Cancel',
       viewPhotosButton: 'View uploaded photos',
       photosLoading: 'Loading...',
@@ -675,6 +680,7 @@ export const en = {
       },
       list: {
         filterAllLabel: 'All',
+        unresolvedFilterLabel: 'Unresolved',
         statusTabs: {
           all: 'All Inquiries',
           new: 'New',
@@ -688,7 +694,8 @@ export const en = {
           category: 'CATEGORY BADGE',
           subject: 'SUBJECT',
           status: 'STATUS BADGE',
-          receivedDate: 'RECEIVED DATE',
+          receivedDate: 'FIRST RECEIVED',
+          lastMessageDate: 'LAST MESSAGE',
         },
         deletedConsumerLabel: 'Deleted user',
       },
@@ -882,8 +889,8 @@ export const en = {
           inquiry: 'Inquiry',
         },
         quantitySuffix: 'copies',
-        reviewWriteLink: 'Write',
-        reviewDoneLink: 'Done',
+        reviewWriteLink: 'Write review',
+        reviewDoneLink: 'Review done',
         inquiryLink: 'Ask',
         payLink: 'Pay now',
       },
@@ -1056,6 +1063,8 @@ export const en = {
       statusAnswered: 'Answered',
       backToList: 'Back to list',
       threadLabel: 'Conversation',
+      loadOlderMessages: 'Load older messages',
+      loadingOlderMessages: 'Loading...',
       adminAuthorLabel: 'Support',
       consumerAuthorLabel: 'Me',
       couponUsedLabel: 'Coupon used',
@@ -1070,10 +1079,13 @@ export const en = {
       },
       table: {
         number: 'No.',
+        inquiryId: 'Inquiry ID',
+        orderTitle: 'Related book',
         category: 'Category',
         title: 'Title',
         status: 'Status',
-        createdAt: 'Date',
+        createdAt: 'First received',
+        lastMessageDate: 'Last message',
       },
       form: {
         categoryLabel: 'Inquiry Category',

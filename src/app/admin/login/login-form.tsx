@@ -110,7 +110,11 @@ export function AdminLoginForm({ allowTestLogin }: AdminLoginFormProps) {
                   ? t.admin.login.testLoginSubmitting
                   : t.admin.login.testLoginButton}
               </TooltipTrigger>
-              <TooltipContent>{t.admin.login.testLoginTooltip}</TooltipContent>
+              <TooltipContent>
+                {!turnstileToken
+                  ? t.common.turnstilePendingTooltip
+                  : t.admin.login.testLoginTooltip}
+              </TooltipContent>
             </Tooltip>
           </Coachmark>
         </div>

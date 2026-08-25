@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { CancelOrderButton } from '@/components/cancel-order-button';
 import { OrderStatusBadge } from '@/components/order-status-badge';
+import { RelativeDate } from '@/components/relative-date';
 import {
   Table,
   TableBody,
@@ -13,7 +14,6 @@ import {
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
@@ -40,6 +40,7 @@ export default async function MypagePage() {
     : [[], [], []];
   const orders = allOrders.filter((order) => order.status !== ORDER_STATUS.CANCELLED);
   const reviewByOrderId = new Map(reviews.map((review) => [review.order_id, review]));
+  const inquiryByOrderId = new Map(inquiries.map((inquiry) => [inquiry.order_id, inquiry]));
 
   const stats = [
     {
@@ -115,6 +116,7 @@ export default async function MypagePage() {
               {orders.map((order) => {
                 const status = isOrderStatus(order.status) ? order.status : null;
                 const review = reviewByOrderId.get(order.id) ?? null;
+                const inquiry = inquiryByOrderId.get(order.id) ?? null;
 
                 return (
                   <TableRow key={order.id} className="hover:bg-transparent">
@@ -135,7 +137,7 @@ export default async function MypagePage() {
                       {status ? <OrderStatusBadge status={status} /> : order.status}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(order.created_at)}
+                      <RelativeDate value={order.created_at} locale={locale} />
                     </TableCell>
                     <TableCell>
                       {status === ORDER_STATUS.COMPLETED ? (
@@ -165,12 +167,23 @@ export default async function MypagePage() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Link
-                        href={`${CONSUMER_ROUTES.NEW_INQUIRY}?orderId=${order.id}`}
-                        className="text-sm font-medium text-foreground underline"
-                      >
-                        {t.consumer.mypage.orders.inquiryLink}
-                      </Link>
+                      {inquiry ? (
+                        <Link
+                          href={`${CONSUMER_ROUTES.INQUIRIES}/${inquiry.id}`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {inquiry.answered_at && !inquiry.hasNewConsumerReply
+                            ? t.consumer.inquiries.statusAnswered
+                            : t.consumer.inquiries.statusPending}
+                        </Link>
+                      ) : (
+                        <Link
+                          href={`${CONSUMER_ROUTES.NEW_INQUIRY}?orderId=${order.id}`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {t.consumer.mypage.orders.inquiryLink}
+                        </Link>
+                      )}
                     </TableCell>
                   </TableRow>
                 );

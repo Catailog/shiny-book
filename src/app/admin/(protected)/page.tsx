@@ -1,7 +1,9 @@
 import { DollarSign, Settings, ShoppingCart, Tag } from 'lucide-react';
 
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
 import { OrderStatusBadge } from '@/components/order-status-badge';
+import { RelativeDate } from '@/components/relative-date';
 import {
   Table,
   TableBody,
@@ -11,13 +13,15 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
-import { formatDate } from '@/lib/format-date';
 import { getOrders } from '@/lib/orders/get-orders';
 import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
 import { RevertOrderStatusButton } from './revert-order-status-button';
@@ -43,13 +47,23 @@ const STATUS_FILTER_VALUES: readonly OrderStatus[] = [
 export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const filterParam = firstParam(searchParams.filter);
+  const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isOrderStatus(filterParam) ? filterParam : null;
 
   const [allOrders, coupons] = await Promise.all([getOrders(), getCoupons()]);
-  const orders = activeFilter
+  const filteredOrders = activeFilter
     ? allOrders.filter((order) => order.status === activeFilter)
     : allOrders;
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
+  const {
+    items: orders,
+    page,
+    totalPages,
+  } = paginate(filteredOrders, parsePageParam(searchParams.page), pageSize);
 
   const today = new Date().toDateString();
   const todayOrders = allOrders.filter(
@@ -81,7 +95,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.dashboard.title} />
+      <AdminTopbar title={t.admin.dashboard.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="grid grid-cols-4 gap-6">
           {kpis.map((kpi) => {
@@ -173,7 +187,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                         )}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {formatDate(order.created_at)}
+                        <RelativeDate value={order.created_at} locale={defaultLocale} />
                       </TableCell>
                       <TableCell className="whitespace-normal">
                         {status ? (
@@ -199,12 +213,14 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
               </TableBody>
             </Table>
           </div>
+          <ListPagination
+            basePath={ADMIN_ROUTES.DASHBOARD}
+            searchParams={searchParams}
+            page={page}
+            totalPages={totalPages}
+          />
         </div>
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

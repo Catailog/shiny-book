@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { SimpleHeader } from '@/components/simple-header';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
@@ -20,10 +21,15 @@ export default async function ConsumerLoginPage(props: PageProps<'/login'>) {
   }
 
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-background lg:flex-row">
-      <LoginVisual />
-      <div className="flex flex-1 items-center justify-center p-8 sm:p-12 xl:p-16">
-        <ConsumerLoginForm redirectTo={destination} allowTestLogin />
+    <div className="flex min-h-full flex-1 flex-col">
+      <div className="lg:hidden">
+        <SimpleHeader />
+      </div>
+      <div className="flex flex-1 flex-col bg-background lg:flex-row">
+        <LoginVisual />
+        <div className="flex flex-1 items-center justify-center p-8 sm:p-12 xl:p-16">
+          <ConsumerLoginForm redirectTo={destination} allowTestLogin />
+        </div>
       </div>
     </div>
   );

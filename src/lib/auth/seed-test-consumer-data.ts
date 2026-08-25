@@ -20,6 +20,7 @@ interface TestOrderPlanItem {
   status: OrderStatus;
   threadInquiry: boolean;
   simpleInquiry: boolean;
+  answeredInquiry: boolean;
   review: boolean;
 }
 
@@ -153,13 +154,44 @@ const TEST_ORDER_PLAN: readonly TestOrderPlanItem[] = [
     status: ORDER_STATUS.AWAITING_PAYMENT,
     threadInquiry: false,
     simpleInquiry: false,
+    answeredInquiry: false,
     review: false,
   },
-  { status: ORDER_STATUS.PRINTING, threadInquiry: true, simpleInquiry: false, review: false },
-  { status: ORDER_STATUS.BINDING, threadInquiry: false, simpleInquiry: false, review: false },
-  { status: ORDER_STATUS.SHIPPING, threadInquiry: false, simpleInquiry: false, review: false },
-  { status: ORDER_STATUS.COMPLETED, threadInquiry: false, simpleInquiry: true, review: false },
-  { status: ORDER_STATUS.COMPLETED, threadInquiry: false, simpleInquiry: false, review: true },
+  {
+    status: ORDER_STATUS.PRINTING,
+    threadInquiry: true,
+    simpleInquiry: false,
+    answeredInquiry: false,
+    review: false,
+  },
+  {
+    status: ORDER_STATUS.BINDING,
+    threadInquiry: false,
+    simpleInquiry: false,
+    answeredInquiry: true,
+    review: false,
+  },
+  {
+    status: ORDER_STATUS.SHIPPING,
+    threadInquiry: false,
+    simpleInquiry: false,
+    answeredInquiry: false,
+    review: false,
+  },
+  {
+    status: ORDER_STATUS.COMPLETED,
+    threadInquiry: false,
+    simpleInquiry: true,
+    answeredInquiry: false,
+    review: false,
+  },
+  {
+    status: ORDER_STATUS.COMPLETED,
+    threadInquiry: false,
+    simpleInquiry: false,
+    answeredInquiry: false,
+    review: true,
+  },
 ];
 
 interface SeedMessageSpec {
@@ -299,6 +331,27 @@ export async function seedTestConsumerData(
       });
     }
 
+    if (plan.answeredInquiry) {
+      const inquiry = pick(TEST_INQUIRY_WITH_ANSWER);
+      await seedInquiryThread(serviceClient, {
+        consumerId,
+        title: inquiry.title,
+        orderId: insertedOrder.id,
+        messages: [
+          {
+            authorType: INQUIRY_MESSAGE_AUTHOR.CONSUMER,
+            authorId: consumerId,
+            content: inquiry.content,
+          },
+          {
+            authorType: INQUIRY_MESSAGE_AUTHOR.ADMIN,
+            authorId: adminAuthorId,
+            content: inquiry.reply,
+          },
+        ],
+      });
+    }
+
     if (plan.threadInquiry) {
       const inquiry = pick(TEST_INQUIRY_WITH_ANSWER);
       await seedInquiryThread(serviceClient, {
@@ -319,7 +372,8 @@ export async function seedTestConsumerData(
           {
             authorType: INQUIRY_MESSAGE_AUTHOR.CONSUMER,
             authorId: consumerId,
-            content: '답변 감사합니다. 궁금증이 해결됐어요!',
+            content:
+              '그런데 실제로 인쇄되기 전에 완성된 모습을 미리 확인해볼 수 있는 방법이 있을까요? 직접 보고 안심하고 싶어서요.',
           },
         ],
       });

@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { Plus } from 'lucide-react';
 
+import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,18 +15,25 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
+import { paginate, parsePageParam } from '@/lib/pagination';
 import { locales } from '@/locales';
 
-export default async function MypageInquiriesPage() {
+export default async function MypageInquiriesPage(props: PageProps<'/mypage/inquiries'>) {
   const locale = await getLocale();
   const t = locales[locale];
+  const searchParams = await props.searchParams;
   const consumer = await getCurrentConsumer();
-  const inquiries = consumer ? await getInquiriesByConsumer(consumer.id) : [];
+  const allInquiries = consumer ? await getInquiriesByConsumer(consumer.id) : [];
+  const {
+    items: inquiries,
+    page,
+    totalPages,
+  } = paginate(allInquiries, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-10 py-10">
@@ -49,22 +58,26 @@ export default async function MypageInquiriesPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted hover:bg-muted">
+              <TableHead className="w-28">{t.consumer.inquiries.table.inquiryId}</TableHead>
               <TableHead className="w-32">{t.consumer.inquiries.table.category}</TableHead>
               <TableHead>{t.consumer.inquiries.table.title}</TableHead>
+              <TableHead className="w-40">{t.consumer.inquiries.table.orderTitle}</TableHead>
               <TableHead className="w-28">{t.consumer.inquiries.table.status}</TableHead>
               <TableHead className="w-28">{t.consumer.inquiries.table.createdAt}</TableHead>
+              <TableHead className="w-28">{t.consumer.inquiries.table.lastMessageDate}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {inquiries.length === 0 ? (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                <TableCell colSpan={7} className="text-center text-muted-foreground">
                   {t.consumer.inquiries.empty}
                 </TableCell>
               </TableRow>
             ) : null}
             {inquiries.map((inquiry) => (
               <TableRow key={inquiry.id} className="hover:bg-transparent">
+                <TableCell className="text-muted-foreground">#{inquiry.id.slice(0, 8)}</TableCell>
                 <TableCell>
                   <Badge className="bg-muted text-muted-foreground">
                     {inquiry.category === INQUIRY_CATEGORY.ORDER
@@ -77,8 +90,11 @@ export default async function MypageInquiriesPage() {
                     {inquiry.title}
                   </Link>
                 </TableCell>
+                <TableCell className="truncate text-muted-foreground">
+                  {inquiry.orderTitle ?? '-'}
+                </TableCell>
                 <TableCell>
-                  {inquiry.answered_at ? (
+                  {inquiry.answered_at && !inquiry.hasNewConsumerReply ? (
                     <Badge className="bg-order-status-done/10 text-order-status-done">
                       {t.consumer.inquiries.statusAnswered}
                     </Badge>
@@ -89,13 +105,22 @@ export default async function MypageInquiriesPage() {
                   )}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {formatDate(inquiry.created_at)}
+                  <RelativeDate value={inquiry.created_at} locale={locale} />
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  <RelativeDate value={inquiry.lastMessageAt} locale={locale} />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+      <ListPagination
+        basePath={CONSUMER_ROUTES.INQUIRIES}
+        searchParams={searchParams}
+        page={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

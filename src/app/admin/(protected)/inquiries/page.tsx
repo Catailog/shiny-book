@@ -1,5 +1,7 @@
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -10,14 +12,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { formatDate } from '@/lib/format-date';
 import { getInquiries } from '@/lib/inquiries/get-inquiries';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 
-const FILTER_TABS = ['all', 'pending', 'answered'] as const;
+const FILTER_TABS = ['all', 'new', 'followup', 'unresolved', 'answered'] as const;
 type InquiryFilter = (typeof FILTER_TABS)[number];
 
 function isInquiryFilter(value: string): value is InquiryFilter {
@@ -27,33 +31,65 @@ function isInquiryFilter(value: string): value is InquiryFilter {
 export default async function AdminInquiriesPage(props: PageProps<'/admin/inquiries'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const filterParam = firstParam(searchParams.filter);
+  const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isInquiryFilter(filterParam) ? filterParam : 'all';
 
   const allInquiries = await getInquiries();
-  const inquiries = allInquiries.filter((inquiry) => {
-    if (activeFilter === 'pending') {
-      return inquiry.answered_at === null || inquiry.hasNewConsumerReply;
+  const filteredInquiries = allInquiries.filter((inquiry) => {
+    const isNew = inquiry.answered_at === null;
+    const isFollowUp = inquiry.answered_at !== null && inquiry.hasNewConsumerReply;
+    const isAnswered = inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
+
+    if (activeFilter === 'new') {
+      return isNew;
+    }
+    if (activeFilter === 'followup') {
+      return isFollowUp;
+    }
+    if (activeFilter === 'unresolved') {
+      return isNew || isFollowUp;
     }
     if (activeFilter === 'answered') {
-      return inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
+      return isAnswered;
     }
     return true;
   });
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
+  const {
+    items: inquiries,
+    page,
+    totalPages,
+  } = paginate(filteredInquiries, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.inquiries.title} />
+      <AdminTopbar title={t.admin.inquiries.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex gap-2">
           <FilterLink href={ADMIN_ROUTES.INQUIRIES} isActive={activeFilter === 'all'}>
             {t.admin.inquiries.list.filterAllLabel}
           </FilterLink>
           <FilterLink
-            href={`${ADMIN_ROUTES.INQUIRIES}?filter=pending`}
-            isActive={activeFilter === 'pending'}
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=new`}
+            isActive={activeFilter === 'new'}
           >
             {t.admin.inquiries.statusPending}
+          </FilterLink>
+          <FilterLink
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=followup`}
+            isActive={activeFilter === 'followup'}
+          >
+            {t.admin.inquiries.newReplyBadge}
+          </FilterLink>
+          <FilterLink
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=unresolved`}
+            isActive={activeFilter === 'unresolved'}
+          >
+            {t.admin.inquiries.list.unresolvedFilterLabel}
           </FilterLink>
           <FilterLink
             href={`${ADMIN_ROUTES.INQUIRIES}?filter=answered`}
@@ -71,12 +107,15 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                 <TableHead>{t.admin.inquiries.list.table.subject}</TableHead>
                 <TableHead className="w-24">{t.admin.inquiries.list.table.status}</TableHead>
                 <TableHead className="w-28">{t.admin.inquiries.list.table.receivedDate}</TableHead>
+                <TableHead className="w-28">
+                  {t.admin.inquiries.list.table.lastMessageDate}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {inquiries.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     {t.admin.inquiries.empty}
                   </TableCell>
                 </TableRow>
@@ -124,7 +163,10 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                       )}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(inquiry.created_at)}
+                      <RelativeDate value={inquiry.created_at} locale={defaultLocale} />
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      <RelativeDate value={inquiry.lastMessageAt} locale={defaultLocale} />
                     </TableCell>
                   </ClickableTableRow>
                 );
@@ -132,11 +174,13 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.INQUIRIES}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

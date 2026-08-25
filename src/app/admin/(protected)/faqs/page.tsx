@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Plus, Search } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
+import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,20 +16,34 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ADMIN_FAQ_LIST_LIMIT } from '@/constants/faq';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getFaqs } from '@/lib/faqs/get-faqs';
-import { formatDate } from '@/lib/format-date';
+import { paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 
-export default async function AdminFaqsPage() {
+export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
   const t = locales[defaultLocale];
-  const faqs = await getFaqs(ADMIN_FAQ_LIST_LIMIT);
+  const searchParams = await props.searchParams;
+  const allFaqs = await getFaqs(ADMIN_FAQ_LIST_LIMIT);
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
+  const {
+    items: faqs,
+    page,
+    totalPages,
+    totalItems,
+  } = paginate(allFaqs, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.faqs.title} />
+      <AdminTopbar title={t.admin.faqs.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
           <div className="relative">
@@ -43,7 +59,7 @@ export default async function AdminFaqsPage() {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
-              {t.admin.faqs.list.showingCount.replace('{shown}', String(faqs.length))}
+              {t.admin.faqs.list.showingCount.replace('{shown}', String(totalItems))}
             </span>
             <Button
               render={<Link href={ADMIN_ROUTES.FAQS_NEW} />}
@@ -78,13 +94,19 @@ export default async function AdminFaqsPage() {
                     {faq.question}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDate(faq.updated_at)}
+                    <RelativeDate value={faq.updated_at} locale={defaultLocale} />
                   </TableCell>
                 </ClickableTableRow>
               ))}
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.FAQS}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

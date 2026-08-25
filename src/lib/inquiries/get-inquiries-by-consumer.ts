@@ -2,16 +2,46 @@ import 'server-only';
 
 import { CONSUMER_INQUIRY_LIST_LIMIT } from '@/constants/inquiry';
 import type { Tables } from '@/lib/db/database.types';
+import { getInquiryMessageSummaryMap } from '@/lib/inquiries/get-inquiry-message-summary';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
-export async function getInquiriesByConsumer(consumerId: string): Promise<Tables<'inquiries'>[]> {
+export interface InquiryWithNewReplyFlag extends Tables<'inquiries'> {
+  hasNewConsumerReply: boolean;
+  orderTitle: string | null;
+  lastMessageAt: string;
+}
+
+export async function getInquiriesByConsumer(
+  consumerId: string,
+): Promise<InquiryWithNewReplyFlag[]> {
   const supabase = createServiceRoleClient();
   const { data } = await supabase
     .from('inquiries')
-    .select()
+    .select('*, orders(title)')
     .eq('consumer_id', consumerId)
     .order('created_at', { ascending: false })
     .limit(CONSUMER_INQUIRY_LIST_LIMIT);
 
-  return data ?? [];
+  if (!data) {
+    return [];
+  }
+
+  const inquiryIds = data.map((inquiry) => inquiry.id);
+  const answeredAtByInquiryId = new Map(data.map((inquiry) => [inquiry.id, inquiry.answered_at]));
+  const summaryByInquiryId = await getInquiryMessageSummaryMap(
+    supabase,
+    inquiryIds,
+    answeredAtByInquiryId,
+  );
+
+  return data.map(({ orders, ...inquiry }) => {
+    const summary = summaryByInquiryId.get(inquiry.id);
+
+    return {
+      ...inquiry,
+      hasNewConsumerReply: summary?.hasNewConsumerReply ?? false,
+      orderTitle: orders?.title ?? null,
+      lastMessageAt: summary?.lastMessageCreatedAt ?? inquiry.created_at,
+    };
+  });
 }

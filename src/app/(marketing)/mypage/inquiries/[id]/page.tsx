@@ -7,15 +7,15 @@ import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { formatDate, formatDateTime } from '@/lib/format-date';
+import { formatDate } from '@/lib/format-date';
 import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
-import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
+import { getInquiryMessagesPage } from '@/lib/inquiries/get-inquiry-messages-page';
 import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-context';
 import { locales } from '@/locales';
 
-import { ReplyForm } from './reply-form';
+import { InquiryMessageThread } from './message-thread';
 
 export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/inquiries/[id]'>) {
   const { id } = await props.params;
@@ -28,12 +28,17 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
     notFound();
   }
 
-  const [messages, relatedOrder] = await Promise.all([
-    getInquiryMessages(inquiry.id),
+  const [messagesPage, relatedOrder] = await Promise.all([
+    getInquiryMessagesPage(inquiry.id),
     inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
   ]);
+  const { messages, hasMore } = messagesPage;
+  const lastMessage = messages[messages.length - 1];
+  const hasNewConsumerReply =
+    inquiry.answered_at !== null && lastMessage?.author_type === INQUIRY_MESSAGE_AUTHOR.CONSUMER;
+  const isAnswered = inquiry.answered_at !== null && !hasNewConsumerReply;
   const couponDiscountLabel = relatedOrder?.coupon
     ? relatedOrder.coupon.discountType === DISCOUNT_TYPE.PERCENTAGE
       ? `${relatedOrder.coupon.discountValue}%`
@@ -48,12 +53,12 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
             <h1 className="font-heading text-2xl font-bold text-foreground">{inquiry.title}</h1>
             <Badge
               className={
-                inquiry.answered_at
+                isAnswered
                   ? 'bg-order-status-done/10 text-order-status-done'
                   : 'bg-primary-soft text-primary'
               }
             >
-              {inquiry.answered_at
+              {isAnswered
                 ? t.consumer.inquiries.statusAnswered
                 : t.consumer.inquiries.statusPending}
             </Badge>
@@ -90,37 +95,11 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
           ) : null}
         </div>
 
-        <div className="mt-6 flex flex-col gap-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={
-                message.author_type === INQUIRY_MESSAGE_AUTHOR.ADMIN
-                  ? 'flex flex-col gap-1 rounded-lg border border-primary/30 bg-primary-soft/40 p-4'
-                  : 'flex flex-col gap-1 rounded-lg bg-muted p-4'
-              }
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-xs font-semibold text-muted-foreground">
-                  {message.author_type === INQUIRY_MESSAGE_AUTHOR.ADMIN
-                    ? t.consumer.inquiries.adminAuthorLabel
-                    : t.consumer.inquiries.consumerAuthorLabel}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {formatDateTime(message.created_at)}
-                </span>
-              </div>
-              <p className="text-sm whitespace-pre-wrap text-foreground">{message.content}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 flex flex-col gap-2">
-          <span className="text-sm font-medium text-foreground">
-            {t.consumer.inquiries.threadLabel}
-          </span>
-          <ReplyForm inquiryId={inquiry.id} />
-        </div>
+        <InquiryMessageThread
+          inquiryId={inquiry.id}
+          initialMessages={messages}
+          initialHasMore={hasMore}
+        />
 
         <Link
           href={CONSUMER_ROUTES.INQUIRIES}
