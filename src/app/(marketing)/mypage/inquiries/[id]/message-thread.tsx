@@ -2,12 +2,16 @@
 
 import { useLayoutEffect, useRef, useState, useTransition } from 'react';
 
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { formatDateTime } from '@/lib/format-date';
 
-import { loadOlderInquiryMessages } from './actions';
+import { addConsumerMessage, loadOlderInquiryMessages } from './actions';
 
 interface InquiryMessageThreadProps {
   inquiryId: string;
@@ -23,7 +27,9 @@ export function InquiryMessageThread({
   const t = useT();
   const [messages, setMessages] = useState(initialMessages);
   const [hasMore, setHasMore] = useState(initialHasMore);
-  const [isPending, startTransition] = useTransition();
+  const [content, setContent] = useState('');
+  const [isLoadingOlder, startLoadOlderTransition] = useTransition();
+  const [isSending, startSendTransition] = useTransition();
   const scrollHeightBeforeLoadRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
@@ -44,10 +50,27 @@ export function InquiryMessageThread({
     }
 
     scrollHeightBeforeLoadRef.current = document.documentElement.scrollHeight;
-    startTransition(async () => {
+    startLoadOlderTransition(async () => {
       const page = await loadOlderInquiryMessages(inquiryId, oldestMessage.created_at);
       setMessages((current) => [...page.messages, ...current]);
       setHasMore(page.hasMore);
+    });
+  }
+
+  function handleSend() {
+    if (content.trim().length === 0) {
+      return;
+    }
+
+    startSendTransition(async () => {
+      const result = await addConsumerMessage(inquiryId, { content });
+      if ('errorCode' in result) {
+        toast.error(t.consumer.inquiries.errors[result.errorCode]);
+        return;
+      }
+
+      setMessages((current) => [...current, result.message]);
+      setContent('');
     });
   }
 
@@ -57,10 +80,10 @@ export function InquiryMessageThread({
         <button
           type="button"
           onClick={handleLoadOlder}
-          disabled={isPending}
+          disabled={isLoadingOlder}
           className="self-center text-sm font-medium text-muted-foreground underline disabled:opacity-50"
         >
-          {isPending
+          {isLoadingOlder
             ? t.consumer.inquiries.loadingOlderMessages
             : t.consumer.inquiries.loadOlderMessages}
         </button>
@@ -87,6 +110,27 @@ export function InquiryMessageThread({
           <p className="text-sm whitespace-pre-wrap text-foreground">{message.content}</p>
         </div>
       ))}
+
+      <div className="mt-2 flex flex-col gap-2">
+        <span className="text-sm font-medium text-foreground">
+          {t.consumer.inquiries.threadLabel}
+        </span>
+        <Textarea
+          rows={4}
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
+          placeholder={t.consumer.inquiries.replyPlaceholder}
+        />
+        <Button
+          type="button"
+          variant="primary"
+          disabled={isSending}
+          className="w-fit"
+          onClick={handleSend}
+        >
+          {isSending ? t.consumer.inquiries.replying : t.consumer.inquiries.replyButton}
+        </Button>
+      </div>
     </div>
   );
 }

@@ -16,7 +16,6 @@ import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-contex
 import { locales } from '@/locales';
 
 import { InquiryMessageThread } from './message-thread';
-import { ReplyForm } from './reply-form';
 
 export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/inquiries/[id]'>) {
   const { id } = await props.params;
@@ -101,13 +100,6 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
           initialMessages={messages}
           initialHasMore={hasMore}
         />
-
-        <div className="mt-6 flex flex-col gap-2">
-          <span className="text-sm font-medium text-foreground">
-            {t.consumer.inquiries.threadLabel}
-          </span>
-          <ReplyForm inquiryId={inquiry.id} />
-        </div>
 
         <Link
           href={CONSUMER_ROUTES.INQUIRIES}
