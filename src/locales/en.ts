@@ -344,6 +344,10 @@ export const en = {
     notificationsLabel: 'Notifications',
     notificationsEmptyLabel: 'No unanswered inquiries.',
     notificationsViewAllLabel: 'View all inquiries',
+    pagination: {
+      pageSizeLabel: 'Rows per page',
+      pageSizeOption: '{count} / page',
+    },
     nav: {
       dashboard: 'Dashboard',
       products: 'Products',

@@ -342,6 +342,10 @@ export const ko = {
     notificationsLabel: '알림',
     notificationsEmptyLabel: '미답변 문의가 없습니다.',
     notificationsViewAllLabel: '전체 문의 보기',
+    pagination: {
+      pageSizeLabel: '페이지당 표시 개수',
+      pageSizeOption: '{count}개씩',
+    },
     nav: {
       dashboard: '대시보드',
       products: '상품 관리',

@@ -15,29 +15,35 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ADMIN_FAQ_LIST_LIMIT } from '@/constants/faq';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { formatDate } from '@/lib/format-date';
-import { paginate, parsePageParam } from '@/lib/pagination';
+import { paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 
 export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
   const allFaqs = await getFaqs(ADMIN_FAQ_LIST_LIMIT);
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
   const {
     items: faqs,
     page,
     totalPages,
     totalItems,
-  } = paginate(allFaqs, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
+  } = paginate(allFaqs, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.faqs.title} />
+      <AdminTopbar title={t.admin.faqs.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
           <div className="relative">

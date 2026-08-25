@@ -11,13 +11,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { formatDate } from '@/lib/format-date';
 import { getInquiries } from '@/lib/inquiries/get-inquiries';
-import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 
 const FILTER_TABS = ['all', 'pending', 'answered'] as const;
@@ -43,15 +44,20 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
     }
     return true;
   });
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
   const {
     items: inquiries,
     page,
     totalPages,
-  } = paginate(filteredInquiries, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
+  } = paginate(filteredInquiries, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.inquiries.title} />
+      <AdminTopbar title={t.admin.inquiries.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex gap-2">
           <FilterLink href={ADMIN_ROUTES.INQUIRIES} isActive={activeFilter === 'all'}>

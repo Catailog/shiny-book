@@ -12,15 +12,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDate } from '@/lib/format-date';
 import { getOrders } from '@/lib/orders/get-orders';
 import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
-import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
 import { RevertOrderStatusButton } from './revert-order-status-button';
@@ -53,11 +54,16 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
   const filteredOrders = activeFilter
     ? allOrders.filter((order) => order.status === activeFilter)
     : allOrders;
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
   const {
     items: orders,
     page,
     totalPages,
-  } = paginate(filteredOrders, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
+  } = paginate(filteredOrders, parsePageParam(searchParams.page), pageSize);
 
   const today = new Date().toDateString();
   const todayOrders = allOrders.filter(
@@ -89,7 +95,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.dashboard.title} />
+      <AdminTopbar title={t.admin.dashboard.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="grid grid-cols-4 gap-6">
           {kpis.map((kpi) => {

@@ -14,6 +14,15 @@ export function parsePageParam(value: string | string[] | undefined): number {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
 }
 
+export function parsePageSizeParam(
+  value: string | string[] | undefined,
+  allowedSizes: readonly number[],
+  defaultSize: number,
+): number {
+  const parsed = Number(firstSearchParam(value));
+  return allowedSizes.includes(parsed) ? parsed : defaultSize;
+}
+
 export function paginate<T>(items: T[], page: number, pageSize: number): PaginationResult<T> {
   const totalItems = items.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));

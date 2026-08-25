@@ -16,13 +16,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { DISCOUNT_TYPE, isDiscountType } from '@/constants/coupon';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDateTime } from '@/lib/format-date';
-import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 import { ToggleCouponButton } from './toggle-coupon-button';
 
@@ -51,15 +52,20 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
     }
     return true;
   });
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
   const {
     items: filteredCoupons,
     page,
     totalPages,
-  } = paginate(allFilteredCoupons, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
+  } = paginate(allFilteredCoupons, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.coupons.title} />
+      <AdminTopbar title={t.admin.coupons.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">

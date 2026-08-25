@@ -22,13 +22,14 @@ import {
   type AnnouncementCategory,
   isAnnouncementCategory,
 } from '@/constants/announcement-category';
-import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { formatDate } from '@/lib/format-date';
-import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
+import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
+import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 
 const CATEGORY_TABS: Array<AnnouncementCategory | 'all'> = [
@@ -48,15 +49,20 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
   const filteredAnnouncements = allAnnouncements.filter(
     (announcement) => activeCategory === 'all' || announcement.category === activeCategory,
   );
+  const pageSize = parsePageSizeParam(
+    searchParams.pageSize,
+    ADMIN_PAGE_SIZE_OPTIONS,
+    DEFAULT_LIST_PAGE_SIZE,
+  );
   const {
     items: announcements,
     page,
     totalPages,
-  } = paginate(filteredAnnouncements, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
+  } = paginate(filteredAnnouncements, parsePageParam(searchParams.page), pageSize);
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.announcements.title} />
+      <AdminTopbar title={t.admin.announcements.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
