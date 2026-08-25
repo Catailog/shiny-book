@@ -679,6 +679,7 @@ export const ko = {
       },
       list: {
         filterAllLabel: '전체',
+        unresolvedFilterLabel: '미답변',
         statusTabs: {
           all: '전체 문의',
           new: '신규',

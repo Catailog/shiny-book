@@ -21,7 +21,7 @@ import { defaultLocale, locales } from '@/locales';
 import { AdminPageSizeSelect } from '../admin-page-size-select';
 import { AdminTopbar } from '../admin-topbar';
 
-const FILTER_TABS = ['all', 'pending', 'answered'] as const;
+const FILTER_TABS = ['all', 'new', 'followup', 'unresolved', 'answered'] as const;
 type InquiryFilter = (typeof FILTER_TABS)[number];
 
 function isInquiryFilter(value: string): value is InquiryFilter {
@@ -36,11 +36,21 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
 
   const allInquiries = await getInquiries();
   const filteredInquiries = allInquiries.filter((inquiry) => {
-    if (activeFilter === 'pending') {
-      return inquiry.answered_at === null || inquiry.hasNewConsumerReply;
+    const isNew = inquiry.answered_at === null;
+    const isFollowUp = inquiry.answered_at !== null && inquiry.hasNewConsumerReply;
+    const isAnswered = inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
+
+    if (activeFilter === 'new') {
+      return isNew;
+    }
+    if (activeFilter === 'followup') {
+      return isFollowUp;
+    }
+    if (activeFilter === 'unresolved') {
+      return isNew || isFollowUp;
     }
     if (activeFilter === 'answered') {
-      return inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
+      return isAnswered;
     }
     return true;
   });
@@ -64,10 +74,22 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
             {t.admin.inquiries.list.filterAllLabel}
           </FilterLink>
           <FilterLink
-            href={`${ADMIN_ROUTES.INQUIRIES}?filter=pending`}
-            isActive={activeFilter === 'pending'}
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=new`}
+            isActive={activeFilter === 'new'}
           >
             {t.admin.inquiries.statusPending}
+          </FilterLink>
+          <FilterLink
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=followup`}
+            isActive={activeFilter === 'followup'}
+          >
+            {t.admin.inquiries.newReplyBadge}
+          </FilterLink>
+          <FilterLink
+            href={`${ADMIN_ROUTES.INQUIRIES}?filter=unresolved`}
+            isActive={activeFilter === 'unresolved'}
+          >
+            {t.admin.inquiries.list.unresolvedFilterLabel}
           </FilterLink>
           <FilterLink
             href={`${ADMIN_ROUTES.INQUIRIES}?filter=answered`}

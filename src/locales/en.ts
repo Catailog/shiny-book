@@ -680,6 +680,7 @@ export const en = {
       },
       list: {
         filterAllLabel: 'All',
+        unresolvedFilterLabel: 'Unresolved',
         statusTabs: {
           all: 'All Inquiries',
           new: 'New',
