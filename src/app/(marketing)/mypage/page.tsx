@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { CancelOrderButton } from '@/components/cancel-order-button';
 import { OrderStatusBadge } from '@/components/order-status-badge';
+import { RelativeDate } from '@/components/relative-date';
 import {
   Table,
   TableBody,
@@ -13,7 +14,6 @@ import {
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
@@ -137,7 +137,7 @@ export default async function MypagePage() {
                       {status ? <OrderStatusBadge status={status} /> : order.status}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(order.created_at)}
+                      <RelativeDate value={order.created_at} locale={locale} />
                     </TableCell>
                     <TableCell>
                       {status === ORDER_STATUS.COMPLETED ? (
