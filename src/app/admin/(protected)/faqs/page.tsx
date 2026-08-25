@@ -4,6 +4,7 @@ import { Plus, Search } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -18,7 +19,6 @@ import { ADMIN_FAQ_LIST_LIMIT } from '@/constants/faq';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getFaqs } from '@/lib/faqs/get-faqs';
-import { formatDate } from '@/lib/format-date';
 import { paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
@@ -94,7 +94,7 @@ export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
                     {faq.question}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDate(faq.updated_at)}
+                    <RelativeDate value={faq.updated_at} locale={defaultLocale} />
                   </TableCell>
                 </ClickableTableRow>
               ))}
