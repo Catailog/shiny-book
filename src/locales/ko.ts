@@ -1054,6 +1054,8 @@ export const ko = {
       statusAnswered: '답변완료',
       backToList: '목록으로 돌아가기',
       threadLabel: '대화 내역',
+      loadOlderMessages: '이전 대화 더 보기',
+      loadingOlderMessages: '불러오는 중...',
       adminAuthorLabel: '담당자',
       consumerAuthorLabel: '나',
       couponUsedLabel: '사용 쿠폰',

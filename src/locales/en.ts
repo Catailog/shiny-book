@@ -1057,6 +1057,8 @@ export const en = {
       statusAnswered: 'Answered',
       backToList: 'Back to list',
       threadLabel: 'Conversation',
+      loadOlderMessages: 'Load older messages',
+      loadingOlderMessages: 'Loading...',
       adminAuthorLabel: 'Support',
       consumerAuthorLabel: 'Me',
       couponUsedLabel: 'Coupon used',

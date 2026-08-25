@@ -7,6 +7,10 @@ import { z } from 'zod';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import {
+  type InquiryMessagesPage,
+  getInquiryMessagesPage,
+} from '@/lib/inquiries/get-inquiry-messages-page';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 const replySchema = z.object({
@@ -55,4 +59,28 @@ export async function addConsumerMessage(
 
   revalidatePath(`${CONSUMER_ROUTES.INQUIRIES}/${inquiryId}`);
   return undefined;
+}
+
+export async function loadOlderInquiryMessages(
+  inquiryId: string,
+  before: string,
+): Promise<InquiryMessagesPage> {
+  const emptyPage: InquiryMessagesPage = { messages: [], hasMore: false };
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return emptyPage;
+  }
+
+  const supabase = createServiceRoleClient();
+  const { data: inquiry } = await supabase
+    .from('inquiries')
+    .select('consumer_id')
+    .eq('id', inquiryId)
+    .maybeSingle();
+
+  if (!inquiry || inquiry.consumer_id !== consumer.id) {
+    return emptyPage;
+  }
+
+  return getInquiryMessagesPage(inquiryId, { before });
 }
