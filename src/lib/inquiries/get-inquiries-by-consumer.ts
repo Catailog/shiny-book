@@ -8,6 +8,7 @@ import { createServiceRoleClient } from '@/lib/supabase/service-role';
 export interface InquiryWithNewReplyFlag extends Tables<'inquiries'> {
   hasNewConsumerReply: boolean;
   orderTitle: string | null;
+  lastMessageAt: string;
 }
 
 export async function getInquiriesByConsumer(
@@ -33,9 +34,14 @@ export async function getInquiriesByConsumer(
     answeredAtByInquiryId,
   );
 
-  return data.map(({ orders, ...inquiry }) => ({
-    ...inquiry,
-    hasNewConsumerReply: summaryByInquiryId.get(inquiry.id)?.hasNewConsumerReply ?? false,
-    orderTitle: orders?.title ?? null,
-  }));
+  return data.map(({ orders, ...inquiry }) => {
+    const summary = summaryByInquiryId.get(inquiry.id);
+
+    return {
+      ...inquiry,
+      hasNewConsumerReply: summary?.hasNewConsumerReply ?? false,
+      orderTitle: orders?.title ?? null,
+      lastMessageAt: summary?.lastMessageCreatedAt ?? inquiry.created_at,
+    };
+  });
 }

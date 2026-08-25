@@ -1084,7 +1084,8 @@ export const en = {
         category: 'Category',
         title: 'Title',
         status: 'Status',
-        createdAt: 'Date',
+        createdAt: 'First received',
+        lastMessageDate: 'Last message',
       },
       form: {
         categoryLabel: 'Inquiry Category',

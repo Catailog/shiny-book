@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 
 import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +18,6 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
-import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { paginate, parsePageParam } from '@/lib/pagination';
@@ -64,12 +64,13 @@ export default async function MypageInquiriesPage(props: PageProps<'/mypage/inqu
               <TableHead className="w-40">{t.consumer.inquiries.table.orderTitle}</TableHead>
               <TableHead className="w-28">{t.consumer.inquiries.table.status}</TableHead>
               <TableHead className="w-28">{t.consumer.inquiries.table.createdAt}</TableHead>
+              <TableHead className="w-28">{t.consumer.inquiries.table.lastMessageDate}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {inquiries.length === 0 ? (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={6} className="text-center text-muted-foreground">
+                <TableCell colSpan={7} className="text-center text-muted-foreground">
                   {t.consumer.inquiries.empty}
                 </TableCell>
               </TableRow>
@@ -104,7 +105,10 @@ export default async function MypageInquiriesPage(props: PageProps<'/mypage/inqu
                   )}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {formatDate(inquiry.created_at)}
+                  <RelativeDate value={inquiry.created_at} locale={locale} />
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  <RelativeDate value={inquiry.lastMessageAt} locale={locale} />
                 </TableCell>
               </TableRow>
             ))}

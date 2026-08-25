@@ -1081,7 +1081,8 @@ export const ko = {
         category: '분류',
         title: '제목',
         status: '상태',
-        createdAt: '등록일',
+        createdAt: '최초 접수일',
+        lastMessageDate: '마지막 문의일',
       },
       form: {
         categoryLabel: '문의 카테고리',
