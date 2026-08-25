@@ -6,6 +6,7 @@ import { AnnouncementCategoryBadge } from '@/components/announcement-category-ba
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -25,7 +26,6 @@ import {
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
-import { formatDate } from '@/lib/format-date';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
@@ -134,7 +134,7 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
                     {announcement.title}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDate(announcement.created_at)}
+                    <RelativeDate value={announcement.created_at} locale={defaultLocale} />
                   </TableCell>
                 </ClickableTableRow>
               ))}
