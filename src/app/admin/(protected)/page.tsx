@@ -3,6 +3,7 @@ import { DollarSign, Settings, ShoppingCart, Tag } from 'lucide-react';
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
 import { OrderStatusBadge } from '@/components/order-status-badge';
+import { RelativeDate } from '@/components/relative-date';
 import {
   Table,
   TableBody,
@@ -15,7 +16,6 @@ import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
-import { formatDate } from '@/lib/format-date';
 import { getOrders } from '@/lib/orders/get-orders';
 import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
@@ -187,7 +187,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                         )}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {formatDate(order.created_at)}
+                        <RelativeDate value={order.created_at} locale={defaultLocale} />
                       </TableCell>
                       <TableCell className="whitespace-normal">
                         {status ? (
