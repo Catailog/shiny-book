@@ -40,6 +40,7 @@ export default async function MypagePage() {
     : [[], [], []];
   const orders = allOrders.filter((order) => order.status !== ORDER_STATUS.CANCELLED);
   const reviewByOrderId = new Map(reviews.map((review) => [review.order_id, review]));
+  const inquiryByOrderId = new Map(inquiries.map((inquiry) => [inquiry.order_id, inquiry]));
 
   const stats = [
     {
@@ -115,6 +116,7 @@ export default async function MypagePage() {
               {orders.map((order) => {
                 const status = isOrderStatus(order.status) ? order.status : null;
                 const review = reviewByOrderId.get(order.id) ?? null;
+                const inquiry = inquiryByOrderId.get(order.id) ?? null;
 
                 return (
                   <TableRow key={order.id} className="hover:bg-transparent">
@@ -165,12 +167,23 @@ export default async function MypagePage() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Link
-                        href={`${CONSUMER_ROUTES.NEW_INQUIRY}?orderId=${order.id}`}
-                        className="text-sm font-medium text-foreground underline"
-                      >
-                        {t.consumer.mypage.orders.inquiryLink}
-                      </Link>
+                      {inquiry ? (
+                        <Link
+                          href={`${CONSUMER_ROUTES.INQUIRIES}/${inquiry.id}`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {inquiry.answered_at
+                            ? t.consumer.inquiries.statusAnswered
+                            : t.consumer.inquiries.statusPending}
+                        </Link>
+                      ) : (
+                        <Link
+                          href={`${CONSUMER_ROUTES.NEW_INQUIRY}?orderId=${order.id}`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {t.consumer.mypage.orders.inquiryLink}
+                        </Link>
+                      )}
                     </TableCell>
                   </TableRow>
                 );
