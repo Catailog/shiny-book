@@ -1,6 +1,7 @@
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
+import { RelativeDate } from '@/components/relative-date';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -13,7 +14,6 @@ import {
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
-import { formatDate } from '@/lib/format-date';
 import { getInquiries } from '@/lib/inquiries/get-inquiries';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
@@ -163,10 +163,10 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                       )}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(inquiry.created_at)}
+                      <RelativeDate value={inquiry.created_at} locale={defaultLocale} />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(inquiry.lastMessageAt)}
+                      <RelativeDate value={inquiry.lastMessageAt} locale={defaultLocale} />
                     </TableCell>
                   </ClickableTableRow>
                 );
