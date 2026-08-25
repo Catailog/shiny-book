@@ -172,7 +172,7 @@ export default async function MypagePage() {
                           href={`${CONSUMER_ROUTES.INQUIRIES}/${inquiry.id}`}
                           className="text-sm font-medium text-foreground underline"
                         >
-                          {inquiry.answered_at
+                          {inquiry.answered_at && !inquiry.hasNewConsumerReply
                             ? t.consumer.inquiries.statusAnswered
                             : t.consumer.inquiries.statusPending}
                         </Link>
