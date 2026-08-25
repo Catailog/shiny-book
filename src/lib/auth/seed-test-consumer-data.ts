@@ -319,7 +319,8 @@ export async function seedTestConsumerData(
           {
             authorType: INQUIRY_MESSAGE_AUTHOR.CONSUMER,
             authorId: consumerId,
-            content: '답변 감사합니다. 궁금증이 해결됐어요!',
+            content:
+              '그런데 실제로 인쇄되기 전에 완성된 모습을 미리 확인해볼 수 있는 방법이 있을까요? 직접 보고 안심하고 싶어서요.',
           },
         ],
       });
