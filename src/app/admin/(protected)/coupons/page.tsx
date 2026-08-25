@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Plus, Search } from 'lucide-react';
 
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,9 +16,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { DISCOUNT_TYPE, isDiscountType } from '@/constants/coupon';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDateTime } from '@/lib/format-date';
+import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
@@ -33,12 +36,12 @@ function isCouponFilter(value: string): value is CouponFilter {
 export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const filterParam = firstParam(searchParams.filter);
+  const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isCouponFilter(filterParam) ? filterParam : 'all';
 
   const coupons = await getCoupons();
   const now = new Date();
-  const filteredCoupons = coupons.filter((coupon) => {
+  const allFilteredCoupons = coupons.filter((coupon) => {
     const isExpired = coupon.expires_at !== null && new Date(coupon.expires_at) <= now;
     if (activeFilter === 'active') {
       return coupon.is_active && !isExpired;
@@ -48,6 +51,11 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
     }
     return true;
   });
+  const {
+    items: filteredCoupons,
+    page,
+    totalPages,
+  } = paginate(allFilteredCoupons, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -182,11 +190,13 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.COUPONS}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

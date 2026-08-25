@@ -1,6 +1,7 @@
 import { DollarSign, Settings, ShoppingCart, Tag } from 'lucide-react';
 
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
 import { OrderStatusBadge } from '@/components/order-status-badge';
 import {
   Table,
@@ -11,11 +12,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDate } from '@/lib/format-date';
 import { getOrders } from '@/lib/orders/get-orders';
 import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
+import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from './admin-topbar';
@@ -43,13 +46,18 @@ const STATUS_FILTER_VALUES: readonly OrderStatus[] = [
 export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const filterParam = firstParam(searchParams.filter);
+  const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isOrderStatus(filterParam) ? filterParam : null;
 
   const [allOrders, coupons] = await Promise.all([getOrders(), getCoupons()]);
-  const orders = activeFilter
+  const filteredOrders = activeFilter
     ? allOrders.filter((order) => order.status === activeFilter)
     : allOrders;
+  const {
+    items: orders,
+    page,
+    totalPages,
+  } = paginate(filteredOrders, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   const today = new Date().toDateString();
   const todayOrders = allOrders.filter(
@@ -199,12 +207,14 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
               </TableBody>
             </Table>
           </div>
+          <ListPagination
+            basePath={ADMIN_ROUTES.DASHBOARD}
+            searchParams={searchParams}
+            page={page}
+            totalPages={totalPages}
+          />
         </div>
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

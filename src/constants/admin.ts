@@ -1,1 +1,1 @@
-export const ADMIN_ORDER_LIST_LIMIT = 50;
+export const ADMIN_ORDER_LIST_LIMIT = 1000;

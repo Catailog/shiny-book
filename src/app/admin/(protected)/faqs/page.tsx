@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Plus, Search } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
+import { ListPagination } from '@/components/list-pagination';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,16 +15,25 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ADMIN_FAQ_LIST_LIMIT } from '@/constants/faq';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { formatDate } from '@/lib/format-date';
+import { paginate, parsePageParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
 
-export default async function AdminFaqsPage() {
+export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
   const t = locales[defaultLocale];
-  const faqs = await getFaqs(ADMIN_FAQ_LIST_LIMIT);
+  const searchParams = await props.searchParams;
+  const allFaqs = await getFaqs(ADMIN_FAQ_LIST_LIMIT);
+  const {
+    items: faqs,
+    page,
+    totalPages,
+    totalItems,
+  } = paginate(allFaqs, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -43,7 +53,7 @@ export default async function AdminFaqsPage() {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
-              {t.admin.faqs.list.showingCount.replace('{shown}', String(faqs.length))}
+              {t.admin.faqs.list.showingCount.replace('{shown}', String(totalItems))}
             </span>
             <Button
               render={<Link href={ADMIN_ROUTES.FAQS_NEW} />}
@@ -85,6 +95,12 @@ export default async function AdminFaqsPage() {
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.FAQS}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );

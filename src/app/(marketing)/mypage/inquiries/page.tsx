@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Plus } from 'lucide-react';
 
+import { ListPagination } from '@/components/list-pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,18 +14,26 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
+import { paginate, parsePageParam } from '@/lib/pagination';
 import { locales } from '@/locales';
 
-export default async function MypageInquiriesPage() {
+export default async function MypageInquiriesPage(props: PageProps<'/mypage/inquiries'>) {
   const locale = await getLocale();
   const t = locales[locale];
+  const searchParams = await props.searchParams;
   const consumer = await getCurrentConsumer();
-  const inquiries = consumer ? await getInquiriesByConsumer(consumer.id) : [];
+  const allInquiries = consumer ? await getInquiriesByConsumer(consumer.id) : [];
+  const {
+    items: inquiries,
+    page,
+    totalPages,
+  } = paginate(allInquiries, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-10 py-10">
@@ -102,6 +111,12 @@ export default async function MypageInquiriesPage() {
           </TableBody>
         </Table>
       </div>
+      <ListPagination
+        basePath={CONSUMER_ROUTES.INQUIRIES}
+        searchParams={searchParams}
+        page={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

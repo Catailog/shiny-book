@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,9 +16,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { isProductCategory } from '@/constants/product-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { formatDate } from '@/lib/format-date';
+import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
 import { getAllProducts } from '@/lib/products/get-all-products';
 import { defaultLocale, locales } from '@/locales';
 
@@ -34,11 +37,11 @@ function isProductFilter(value: string): value is ProductFilter {
 export default async function AdminProductsPage(props: PageProps<'/admin/products'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const filterParam = firstParam(searchParams.filter);
+  const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isProductFilter(filterParam) ? filterParam : 'all';
 
   const allProducts = await getAllProducts();
-  const products = allProducts.filter((product) => {
+  const filteredProducts = allProducts.filter((product) => {
     if (activeFilter === 'active') {
       return product.is_active;
     }
@@ -47,6 +50,11 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
     }
     return true;
   });
+  const {
+    items: products,
+    page,
+    totalPages,
+  } = paginate(filteredProducts, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -152,11 +160,13 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.PRODUCTS}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }

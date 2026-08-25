@@ -11,4 +11,4 @@ export function isProductCategory(value: string): value is ProductCategory {
   return PRODUCT_CATEGORY_VALUES.some((category) => category === value);
 }
 
-export const ADMIN_PRODUCT_LIST_LIMIT = 50;
+export const ADMIN_PRODUCT_LIST_LIMIT = 500;

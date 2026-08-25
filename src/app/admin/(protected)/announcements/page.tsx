@@ -5,6 +5,7 @@ import { Plus, Search } from 'lucide-react';
 import { AnnouncementCategoryBadge } from '@/components/announcement-category-badge';
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
+import { ListPagination } from '@/components/list-pagination';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -21,9 +22,11 @@ import {
   type AnnouncementCategory,
   isAnnouncementCategory,
 } from '@/constants/announcement-category';
+import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { formatDate } from '@/lib/format-date';
+import { firstSearchParam, paginate, parsePageParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminTopbar } from '../admin-topbar';
@@ -38,13 +41,18 @@ const CATEGORY_TABS: Array<AnnouncementCategory | 'all'> = [
 export default async function AdminAnnouncementsPage(props: PageProps<'/admin/announcements'>) {
   const t = locales[defaultLocale];
   const searchParams = await props.searchParams;
-  const categoryParam = firstParam(searchParams.category);
+  const categoryParam = firstSearchParam(searchParams.category);
   const activeCategory = isAnnouncementCategory(categoryParam) ? categoryParam : 'all';
 
   const allAnnouncements = await getAnnouncements(ADMIN_ANNOUNCEMENT_LIST_LIMIT);
-  const announcements = allAnnouncements.filter(
+  const filteredAnnouncements = allAnnouncements.filter(
     (announcement) => activeCategory === 'all' || announcement.category === activeCategory,
   );
+  const {
+    items: announcements,
+    page,
+    totalPages,
+  } = paginate(filteredAnnouncements, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -127,11 +135,13 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
             </TableBody>
           </Table>
         </div>
+        <ListPagination
+          basePath={ADMIN_ROUTES.ANNOUNCEMENTS}
+          searchParams={searchParams}
+          page={page}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   );
-}
-
-function firstParam(value: string | string[] | undefined): string {
-  return Array.isArray(value) ? (value[0] ?? '') : (value ?? '');
 }
