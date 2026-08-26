@@ -18,7 +18,7 @@ export interface FileUploadRule {
 export const FILE_UPLOAD_RULES: Record<FileUploadKind, FileUploadRule> = {
   [FILE_UPLOAD_KIND.PHOTO]: {
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
-    maxSizeBytes: 20 * 1024 * 1024,
+    maxSizeBytes: 1 * 1024 * 1024,
   },
   [FILE_UPLOAD_KIND.AVATAR]: {
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
