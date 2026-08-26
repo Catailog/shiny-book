@@ -4,3 +4,5 @@ export const PASSWORD_MAX_LENGTH = 72;
 
 // RFC 5321 기준 실무상 상한
 export const EMAIL_MAX_LENGTH = 254;
+
+export const DISPLAY_NAME_MAX_LENGTH = 20;

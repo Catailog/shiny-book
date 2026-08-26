@@ -9,6 +9,7 @@ import { locales } from '@/locales';
 import { AddressManager } from './address-manager';
 import { AvatarUploadForm } from './avatar-upload-form';
 import { DeleteAccountButton } from './delete-account-button';
+import { DisplayNameForm } from './display-name-form';
 import { NotificationPreferencesForm } from './notification-form';
 import { ChangePasswordForm } from './password-form';
 
@@ -45,9 +46,15 @@ export default async function MypageAccountPage() {
         <AvatarUploadForm avatarUrl={avatarUrl} initials={avatarInitials} />
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="account-name" className="text-xs font-semibold tracking-wide uppercase">
-              {t.consumer.account.personalInfo.nameLabel}
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="account-name"
+                className="text-xs font-semibold tracking-wide uppercase"
+              >
+                {t.consumer.account.personalInfo.nameLabel}
+              </Label>
+              <DisplayNameForm currentName={consumerName} />
+            </div>
             <Input id="account-name" defaultValue={consumerName} readOnly />
           </div>
           <div className="flex flex-col gap-2">

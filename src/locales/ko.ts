@@ -1,6 +1,10 @@
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/constants/auth';
+import {
+  DISPLAY_NAME_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from '@/constants/auth';
 import type { OrderStatus } from '@/constants/order-status';
 
 export const ko = {
@@ -934,6 +938,9 @@ export const ko = {
         nameLabel: '이름',
         emailLabel: '이메일',
         phoneLabel: '연락처',
+        editNameTitle: '이름 변경',
+        nameInvalid: `이름은 1자 이상 ${DISPLAY_NAME_MAX_LENGTH}자 이하여야 합니다.`,
+        updateSuccess: '이름이 변경됐습니다.',
       },
       profileImage: {
         changeButton: '이미지 변경',

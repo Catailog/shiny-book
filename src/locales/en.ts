@@ -1,6 +1,10 @@
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/constants/auth';
+import {
+  DISPLAY_NAME_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from '@/constants/auth';
 import type { OrderStatus } from '@/constants/order-status';
 
 export const en = {
@@ -934,6 +938,9 @@ export const en = {
         nameLabel: 'Name',
         emailLabel: 'Email',
         phoneLabel: 'Phone',
+        editNameTitle: 'Change name',
+        nameInvalid: `Name must be between 1 and ${DISPLAY_NAME_MAX_LENGTH} characters.`,
+        updateSuccess: 'Your name has been updated.',
       },
       profileImage: {
         changeButton: 'Change image',

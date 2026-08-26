@@ -1,12 +1,15 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { FILE_UPLOAD_KIND } from '@/constants/file-upload';
+import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 
+import { type DisplayNameInput, displayNameSchema } from './display-name-schema';
 import {
   type NotificationPreferencesInput,
   notificationPreferencesSchema,
@@ -67,6 +70,36 @@ export async function updateNotificationPreferences(
     return { errorCode: 'unexpected_error' };
   }
 
+  return undefined;
+}
+
+export interface UpdateDisplayNameResult {
+  errorCode: 'unauthorized' | 'validation_failed' | 'unexpected_error';
+}
+
+export async function updateDisplayName(
+  input: DisplayNameInput,
+): Promise<UpdateDisplayNameResult | undefined> {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return { errorCode: 'unauthorized' };
+  }
+
+  const parsed = displayNameSchema.safeParse(input);
+  if (!parsed.success) {
+    return { errorCode: 'validation_failed' };
+  }
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase
+    .from('profiles')
+    .update({ display_name: parsed.data.displayName })
+    .eq('id', consumer.id);
+  if (error) {
+    return { errorCode: 'unexpected_error' };
+  }
+
+  revalidatePath(CONSUMER_ROUTES.ACCOUNT);
   return undefined;
 }
 
