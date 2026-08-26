@@ -407,7 +407,12 @@ export function NewOrderWizard({
                 />
                 {errors.quantity ? (
                   <p className="text-sm text-destructive">
-                    {t.consumer.orderNew.errors.quantityInvalid}
+                    {errors.quantity.type === 'too_big'
+                      ? t.consumer.orderNew.errors.quantityTooLarge.replace(
+                          '{max}',
+                          String(ORDER_QUANTITY_MAX),
+                        )
+                      : t.consumer.orderNew.errors.quantityInvalid}
                   </p>
                 ) : null}
               </div>

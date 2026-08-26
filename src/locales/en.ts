@@ -1044,6 +1044,7 @@ export const en = {
       errors: {
         titleRequired: 'Please enter a book title.',
         quantityInvalid: 'Quantity must be at least 1.',
+        quantityTooLarge: 'Quantity cannot exceed {max}.',
         pageCountInvalid: 'Please select a page count.',
         photoCountMismatch: 'Please upload the exact number of interior photos required.',
         photoCountExceeded:

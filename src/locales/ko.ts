@@ -1042,6 +1042,7 @@ export const ko = {
       errors: {
         titleRequired: '도서명을 입력해주세요.',
         quantityInvalid: '수량은 1권 이상이어야 합니다.',
+        quantityTooLarge: '수량은 최대 {max}권까지 주문 가능합니다.',
         pageCountInvalid: '페이지 수를 선택해주세요.',
         photoCountMismatch: '내지 사진을 정확한 장수만큼 업로드해주세요.',
         photoCountExceeded:
