@@ -1,11 +1,9 @@
 import Link from 'next/link';
 
-import { Search } from 'lucide-react';
-
 import { AnnouncementCategoryBadge } from '@/components/announcement-category-badge';
 import { FilterLink } from '@/components/filter-link';
+import { SearchForm } from '@/components/search-form';
 import { SiteContainer } from '@/components/site-container';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -81,19 +79,12 @@ export default async function NoticesPage(props: PageProps<'/notices'>) {
               </FilterLink>
             ))}
           </div>
-          <form className="relative">
-            <Search
-              aria-hidden="true"
-              className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-            />
-            <Input
-              type="search"
-              name="q"
-              defaultValue={query}
-              placeholder={t.notice.list.searchPlaceholder}
-              className="w-70 pl-9"
-            />
-          </form>
+          <SearchForm
+            defaultValue={query}
+            placeholder={t.notice.list.searchPlaceholder}
+            submitLabel={t.common.searchLabel}
+            inputClassName="w-70"
+          />
         </div>
       </SiteContainer>
 

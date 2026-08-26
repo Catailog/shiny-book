@@ -9,6 +9,7 @@ export const ko = {
     error: '오류가 발생했습니다.',
     coachmarkClose: '닫기',
     turnstilePendingTooltip: '보안 인증 확인이 끝날 때까지 잠시 기다려주세요.',
+    searchLabel: '검색',
   },
   site: {
     nav: {

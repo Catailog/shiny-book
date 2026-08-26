@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { ListPagination } from '@/components/list-pagination';
 import { RelativeDate } from '@/components/relative-date';
+import { SearchForm } from '@/components/search-form';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -51,19 +51,12 @@ export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
       <AdminTopbar title={t.admin.faqs.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
-          <form className="relative">
-            <Search
-              aria-hidden="true"
-              className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-            />
-            <Input
-              type="search"
-              name="q"
-              defaultValue={query}
-              placeholder={t.admin.faqs.list.searchPlaceholder}
-              className="w-70 pl-9"
-            />
-          </form>
+          <SearchForm
+            defaultValue={query}
+            placeholder={t.admin.faqs.list.searchPlaceholder}
+            submitLabel={t.common.searchLabel}
+            inputClassName="w-70"
+          />
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
               {t.admin.faqs.list.showingCount.replace('{shown}', String(totalItems))}

@@ -9,6 +9,7 @@ export const en = {
     error: 'Something went wrong.',
     coachmarkClose: 'Close',
     turnstilePendingTooltip: 'Please wait until security verification finishes.',
+    searchLabel: 'Search',
   },
   site: {
     nav: {

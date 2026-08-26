@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
+import { SearchForm } from '@/components/search-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -90,19 +90,12 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
             </FilterLink>
           </div>
           <div className="flex items-center gap-3">
-            <form className="relative">
-              <Search
-                aria-hidden="true"
-                className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-              />
-              <Input
-                type="search"
-                name="q"
-                defaultValue={query}
-                placeholder={t.admin.coupons.list.searchPlaceholder}
-                className="w-60 pl-9"
-              />
-            </form>
+            <SearchForm
+              defaultValue={query}
+              placeholder={t.admin.coupons.list.searchPlaceholder}
+              submitLabel={t.common.searchLabel}
+              inputClassName="w-60"
+            />
             <Button
               render={<Link href={ADMIN_ROUTES.COUPONS_NEW} />}
               nativeButton={false}
