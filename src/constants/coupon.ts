@@ -11,7 +11,9 @@ export function isDiscountType(value: string): value is DiscountType {
   return DISCOUNT_TYPE_VALUES.some((type) => type === value);
 }
 
-export const COUPON_CODE_MAX_LENGTH = 40;
+export const COUPON_CODE_MAX_LENGTH = 20;
 export const COUPON_PERCENTAGE_MAX = 100;
+export const COUPON_DISCOUNT_VALUE_MAX = 1_000_000;
+export const COUPON_MAX_USES_MAX = 100_000;
 export const ADMIN_COUPON_LIST_LIMIT = 500;
 export const TEST_COUPON_CODE = 'TEST10';
