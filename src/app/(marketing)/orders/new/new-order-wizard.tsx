@@ -55,6 +55,7 @@ import type { Tables } from '@/lib/db/database.types';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import type { OrderEditPrefill } from '@/lib/orders/get-order-edit-prefill';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
+import { toastImportant } from '@/lib/toast';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
 import { deleteOrderPhoto } from '@/lib/uploads/delete-order-photo';
 import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
@@ -198,7 +199,7 @@ export function NewOrderWizard({
     }
 
     if (isPhotoCountExceeded) {
-      toast.error(
+      toastImportant.error(
         t.consumer.orderNew.errors.photoCountExceeded
           .replace('{count}', String(photos.length))
           .replace('{required}', String(requiredPhotoCount)),
@@ -252,7 +253,7 @@ export function NewOrderWizard({
 
     const projectedCount = photos.length + files.length;
     if (projectedCount > requiredPhotoCount) {
-      toast.error(
+      toastImportant.error(
         t.consumer.orderNew.errors.photoCountExceeded
           .replace('{count}', String(projectedCount))
           .replace('{required}', String(requiredPhotoCount)),
