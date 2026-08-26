@@ -265,6 +265,7 @@ export const ko = {
         already_applied: '이미 쿠폰이 적용된 주문입니다.',
         coupon_invalid: '사용할 수 없는 쿠폰 코드입니다.',
         coupon_conflict: '다른 곳에서 먼저 사용된 쿠폰입니다. 다시 시도해주세요.',
+        rate_limited: '쿠폰 적용 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -369,6 +370,7 @@ export const ko = {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
         invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        rate_limited: '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       testLoginErrors: {
@@ -834,6 +836,7 @@ export const ko = {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
         invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        rate_limited: '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       testLoginErrors: {

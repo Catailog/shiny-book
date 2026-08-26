@@ -13,6 +13,7 @@ import { validateCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { getProductById } from '@/lib/products/get-product-by-id';
+import { checkAuthActionRateLimit } from '@/lib/rate-limit/auth-action-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 const applyCouponSchema = z.object({
@@ -21,7 +22,12 @@ const applyCouponSchema = z.object({
 
 export interface ApplyCouponResult {
   errorCode:
-    'validation_failed' | 'not_found' | 'already_applied' | 'coupon_invalid' | 'unexpected_error';
+    | 'validation_failed'
+    | 'not_found'
+    | 'already_applied'
+    | 'coupon_invalid'
+    | 'rate_limited'
+    | 'unexpected_error';
 }
 
 export async function applyCouponToOrder(
@@ -49,6 +55,14 @@ export async function applyCouponToOrder(
 
   if (order.coupon_id) {
     return { errorCode: 'already_applied' };
+  }
+
+  const rateLimit = await checkAuthActionRateLimit(
+    `coupon-apply:consumer:${consumer.id}`,
+    `coupon-apply:code:${parsed.data.code.trim().toUpperCase()}`,
+  );
+  if (!rateLimit.isAllowed) {
+    return { errorCode: 'rate_limited' };
   }
 
   if (!order.product_id || !order.address_id || order.page_count === null) {

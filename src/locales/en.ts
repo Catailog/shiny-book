@@ -266,6 +266,7 @@ export const en = {
         already_applied: 'A coupon has already been applied to this order.',
         coupon_invalid: "This coupon code can't be used.",
         coupon_conflict: 'This coupon was just used elsewhere. Please try again.',
+        rate_limited: 'Too many attempts. Please try again later.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -371,6 +372,7 @@ export const en = {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
         invalid_credentials: 'Please check your email and password.',
+        rate_limited: 'Too many login attempts. Please try again later.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       testLoginErrors: {
@@ -835,6 +837,7 @@ export const en = {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
         invalid_credentials: 'Please check your email and password.',
+        rate_limited: 'Too many login attempts. Please try again later.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       testLoginErrors: {

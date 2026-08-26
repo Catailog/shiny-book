@@ -13,13 +13,15 @@ import {
   readTestAccountPairToken,
   signInWithExistingTestAccount,
 } from '@/lib/auth/test-account-session';
+import { checkAuthActionRateLimit } from '@/lib/rate-limit/auth-action-rate-limit';
+import { getClientIp } from '@/lib/request/get-client-ip';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { verifyTurnstileToken } from '@/lib/turnstile/verify-turnstile-token';
 
 import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
 export interface AdminLoginActionResult {
-  errorCode: 'invalid_credentials' | 'unexpected_error';
+  errorCode: 'invalid_credentials' | 'rate_limited' | 'unexpected_error';
 }
 
 export async function signInAdmin(
@@ -28,6 +30,15 @@ export async function signInAdmin(
   const parsed = adminLoginSchema.safeParse(input);
   if (!parsed.success) {
     return { errorCode: 'invalid_credentials' };
+  }
+
+  const clientIp = await getClientIp();
+  const rateLimit = await checkAuthActionRateLimit(
+    `login-admin:ip:${clientIp}`,
+    `login-admin:email:${parsed.data.email.toLowerCase()}`,
+  );
+  if (!rateLimit.isAllowed) {
+    return { errorCode: 'rate_limited' };
   }
 
   const supabase = await createServerSupabaseClient();
