@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { timingSafeEqual } from 'node:crypto';
+
 import { ROLE } from '@/constants/roles';
 import { TEST_ACCOUNT } from '@/constants/test-account';
 import { env } from '@/env';
@@ -17,7 +19,17 @@ interface TestAccountEntry {
 
 function isRequestAuthorized(request: Request): boolean {
   const authHeader = request.headers.get('authorization');
-  return authHeader === `Bearer ${env.CRON_SECRET}`;
+  if (!authHeader) {
+    return false;
+  }
+
+  const expected = Buffer.from(`Bearer ${env.CRON_SECRET}`);
+  const actual = Buffer.from(authHeader);
+  if (expected.length !== actual.length) {
+    return false;
+  }
+
+  return timingSafeEqual(expected, actual);
 }
 
 export async function GET(request: Request): Promise<NextResponse> {

@@ -9,7 +9,7 @@ export const env = createEnv({
     KV_REST_API_TOKEN: z.string().min(1),
     TOSS_SECRET_KEY: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1).default('1x0000000000000000000000000000000AA'),
-    CRON_SECRET: z.string().min(1).default('local-only-cron-secret-change-in-production'),
+    CRON_SECRET: z.string().min(1),
     // z.coerce.boolean()은 'false' 문자열도 true로 취급하는 함정이 있어 문자열 비교로 직접 변환한다
     ALLOW_TEST_PAYMENT: z
       .string()
