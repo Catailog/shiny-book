@@ -46,7 +46,7 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
   const searchFieldParam = firstSearchParam(searchParams.searchField);
   const searchField = isInquirySearchField(searchFieldParam)
     ? searchFieldParam
-    : INQUIRY_SEARCH_FIELD.CUSTOMER_NAME;
+    : INQUIRY_SEARCH_FIELD.TITLE;
   const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
   const allInquiries = await getInquiries();
@@ -139,11 +139,11 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                 <SelectValueMap labels={t.admin.inquiries.list.search.fieldOptions} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={INQUIRY_SEARCH_FIELD.CUSTOMER_NAME}>
-                  {t.admin.inquiries.list.search.fieldOptions.customerName}
-                </SelectItem>
                 <SelectItem value={INQUIRY_SEARCH_FIELD.TITLE}>
                   {t.admin.inquiries.list.search.fieldOptions.title}
+                </SelectItem>
+                <SelectItem value={INQUIRY_SEARCH_FIELD.CUSTOMER_NAME}>
+                  {t.admin.inquiries.list.search.fieldOptions.customerName}
                 </SelectItem>
               </SelectContent>
             </Select>
