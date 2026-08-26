@@ -944,8 +944,11 @@ export const ko = {
       },
       profileImage: {
         changeButton: '이미지 변경',
+        deleteButton: '삭제',
         uploading: '업로드 중...',
+        deleting: '삭제 중...',
         updateSuccess: '프로필 이미지가 변경됐습니다.',
+        deleteSuccess: '프로필 이미지가 삭제됐습니다.',
         errors: {
           unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
           validation_failed: '이미지 파일(PNG, JPG, WEBP, 5MB 이하)만 업로드할 수 있습니다.',

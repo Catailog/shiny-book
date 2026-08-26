@@ -944,8 +944,11 @@ export const en = {
       },
       profileImage: {
         changeButton: 'Change image',
+        deleteButton: 'Remove',
         uploading: 'Uploading...',
+        deleting: 'Removing...',
         updateSuccess: 'Profile image updated.',
+        deleteSuccess: 'Profile image removed.',
         errors: {
           unauthorized: 'You do not have permission. Please sign in again.',
           validation_failed: 'Please upload an image file (PNG, JPG, WEBP) up to 5MB.',

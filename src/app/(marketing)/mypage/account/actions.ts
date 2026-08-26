@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { FILE_UPLOAD_KIND } from '@/constants/file-upload';
+import { FILE_UPLOAD_KIND, STORAGE_BUCKETS } from '@/constants/file-upload';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
@@ -125,6 +125,34 @@ export async function updateProfileImage(
     return { errorCode: 'unexpected_error' };
   }
 
+  revalidatePath(CONSUMER_ROUTES.ACCOUNT);
+  return undefined;
+}
+
+export async function deleteProfileImage(): Promise<UpdateProfileImageResult | undefined> {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return { errorCode: 'unauthorized' };
+  }
+
+  const avatarPath =
+    typeof consumer.user_metadata.avatarPath === 'string'
+      ? consumer.user_metadata.avatarPath
+      : null;
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.auth.updateUser({ data: { avatarPath: null } });
+  if (error) {
+    return { errorCode: 'unexpected_error' };
+  }
+
+  if (avatarPath) {
+    await createServiceRoleClient()
+      .storage.from(STORAGE_BUCKETS.ORDER_UPLOADS)
+      .remove([avatarPath]);
+  }
+
+  revalidatePath(CONSUMER_ROUTES.ACCOUNT);
   return undefined;
 }
 
