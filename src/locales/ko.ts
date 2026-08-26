@@ -7,6 +7,7 @@ import {
 } from '@/constants/auth';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
+import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 
 export const ko = {
   common: {
@@ -872,9 +873,10 @@ export const ko = {
       loginPrompt: '이미 계정이 있으신가요?',
       loginLink: '로그인',
       errors: {
-        nameRequired: '이름을 입력해주세요.',
+        nameRequired: `이름은 1자 이상 ${PERSON_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
+        passwordConfirmRequired: '비밀번호 확인을 입력해주세요.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
         agreeTermsRequired: '이용약관에 동의해주세요.',
         agreePrivacyRequired: '개인정보 수집 및 이용에 동의해주세요.',
@@ -928,6 +930,7 @@ export const ko = {
       success: '비밀번호가 변경됐습니다.',
       errors: {
         passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
+        passwordConfirmRequired: '새 비밀번호 확인을 입력해주세요.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',

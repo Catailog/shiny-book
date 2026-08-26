@@ -152,7 +152,9 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             </div>
             {errors.passwordConfirm ? (
               <p className="text-sm text-destructive">
-                {t.consumer.signup.errors.passwordMismatch}
+                {errors.passwordConfirm.type === 'too_small'
+                  ? t.consumer.signup.errors.passwordConfirmRequired
+                  : t.consumer.signup.errors.passwordMismatch}
               </p>
             ) : null}
           </div>

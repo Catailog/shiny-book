@@ -67,7 +67,11 @@ export function ChangePasswordForm() {
           {...register('passwordConfirm')}
         />
         {errors.passwordConfirm ? (
-          <p className="text-sm text-destructive">{t.consumer.account.errors.passwordMismatch}</p>
+          <p className="text-sm text-destructive">
+            {errors.passwordConfirm.type === 'too_small'
+              ? t.consumer.account.errors.passwordConfirmRequired
+              : t.consumer.account.errors.passwordMismatch}
+          </p>
         ) : null}
       </div>
       <Button type="submit" variant="primary" disabled={isPending} className="w-fit">

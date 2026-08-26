@@ -7,6 +7,7 @@ import {
 } from '@/constants/auth';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
+import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 
 export const en = {
   common: {
@@ -872,9 +873,10 @@ export const en = {
       loginPrompt: 'Already have an account?',
       loginLink: 'Sign in',
       errors: {
-        nameRequired: 'Please enter your name.',
+        nameRequired: `Name must be 1 to ${PERSON_NAME_MAX_LENGTH} characters.`,
         emailInvalid: 'Please enter a valid email.',
         passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
+        passwordConfirmRequired: 'Please confirm your password.',
         passwordMismatch: 'Passwords do not match.',
         agreeTermsRequired: 'Please agree to the Terms of Service.',
         agreePrivacyRequired:
@@ -928,6 +930,7 @@ export const en = {
       success: 'Your password has been changed.',
       errors: {
         passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
+        passwordConfirmRequired: 'Please confirm your new password.',
         passwordMismatch: 'Passwords do not match.',
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
