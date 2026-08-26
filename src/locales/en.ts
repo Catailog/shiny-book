@@ -5,6 +5,7 @@ import {
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
 } from '@/constants/auth';
+import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
 
 export const en = {
@@ -1054,6 +1055,8 @@ export const en = {
       },
       errors: {
         titleRequired: 'Please enter a book title.',
+        titleTooLong: `Title can be up to ${ORDER_TITLE_MAX_LENGTH} characters.`,
+        titleInvalidChars: 'Title contains characters that are not allowed.',
         quantityInvalid: 'Quantity must be at least 1.',
         quantityTooLarge: 'Quantity cannot exceed {max}.',
         pageCountInvalid: 'Please select a page count.',

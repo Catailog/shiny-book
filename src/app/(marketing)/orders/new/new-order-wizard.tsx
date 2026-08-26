@@ -413,7 +413,11 @@ export function NewOrderWizard({
               />
               {errors.title ? (
                 <p className="text-sm text-destructive">
-                  {t.consumer.orderNew.errors.titleRequired}
+                  {errors.title.type === 'too_big'
+                    ? t.consumer.orderNew.errors.titleTooLong
+                    : errors.title.type === 'invalid_string'
+                      ? t.consumer.orderNew.errors.titleInvalidChars
+                      : t.consumer.orderNew.errors.titleRequired}
                 </p>
               ) : null}
             </div>

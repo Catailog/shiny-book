@@ -5,6 +5,7 @@ import {
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
 } from '@/constants/auth';
+import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
 
 export const ko = {
@@ -1052,6 +1053,8 @@ export const ko = {
       },
       errors: {
         titleRequired: '도서명을 입력해주세요.',
+        titleTooLong: `도서명은 최대 ${ORDER_TITLE_MAX_LENGTH}자까지 입력할 수 있습니다.`,
+        titleInvalidChars: '도서명에 사용할 수 없는 문자가 포함되어 있습니다.',
         quantityInvalid: '수량은 1권 이상이어야 합니다.',
         quantityTooLarge: '수량은 최대 {max}권까지 주문 가능합니다.',
         pageCountInvalid: '페이지 수를 선택해주세요.',
