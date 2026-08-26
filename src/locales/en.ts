@@ -1,5 +1,6 @@
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/constants/auth';
 import type { OrderStatus } from '@/constants/order-status';
 
 export const en = {
@@ -850,7 +851,7 @@ export const en = {
       errors: {
         nameRequired: 'Please enter your name.',
         emailInvalid: 'Please enter a valid email.',
-        passwordTooShort: 'Password must be at least 6 characters.',
+        passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
         passwordMismatch: 'Passwords do not match.',
         agreeTermsRequired: 'Please agree to the Terms of Service.',
         agreePrivacyRequired:
@@ -903,7 +904,7 @@ export const en = {
       submitting: 'Changing...',
       success: 'Your password has been changed.',
       errors: {
-        passwordTooShort: 'Password must be at least 6 characters.',
+        passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
         passwordMismatch: 'Passwords do not match.',
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',

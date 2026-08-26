@@ -1,5 +1,6 @@
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/constants/auth';
 import type { OrderStatus } from '@/constants/order-status';
 
 export const ko = {
@@ -850,7 +851,7 @@ export const ko = {
       errors: {
         nameRequired: '이름을 입력해주세요.',
         emailInvalid: '올바른 이메일을 입력해주세요.',
-        passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
+        passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
         agreeTermsRequired: '이용약관에 동의해주세요.',
         agreePrivacyRequired: '개인정보 수집 및 이용에 동의해주세요.',
@@ -903,7 +904,7 @@ export const ko = {
       submitting: '변경 중...',
       success: '비밀번호가 변경됐습니다.',
       errors: {
-        passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
+        passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
