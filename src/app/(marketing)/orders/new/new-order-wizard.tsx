@@ -143,6 +143,7 @@ export function NewOrderWizard({
     formState: { errors },
   } = useForm<OrderDetailsInput>({
     resolver: zodResolver(orderDetailsSchema),
+    mode: 'onChange',
     defaultValues: {
       productId: product.id,
       title: initialValues?.title ?? '',
