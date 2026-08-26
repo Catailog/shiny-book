@@ -699,6 +699,13 @@ export const en = {
           answered: 'Answered',
           closed: 'Closed',
         },
+        search: {
+          placeholder: 'Search',
+          fieldOptions: {
+            customerName: 'Customer',
+            title: 'Title',
+          },
+        },
         table: {
           inquiryNo: 'INQUIRY #',
           customerName: 'CUSTOMER NAME',

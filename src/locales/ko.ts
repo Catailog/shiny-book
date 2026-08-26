@@ -698,6 +698,13 @@ export const ko = {
           answered: '답변 완료',
           closed: '종료',
         },
+        search: {
+          placeholder: '검색어 입력',
+          fieldOptions: {
+            customerName: '고객명',
+            title: '제목',
+          },
+        },
         table: {
           inquiryNo: '문의번호',
           customerName: '고객명',
