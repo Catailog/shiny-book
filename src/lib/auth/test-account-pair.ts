@@ -35,7 +35,7 @@ export async function createTestAccountPair(): Promise<TestAccountPairCredential
       [TEST_ACCOUNT.IS_TEST_ACCOUNT_METADATA_KEY]: true,
       [TEST_ACCOUNT.PAIR_TOKEN_METADATA_KEY]: token,
     },
-    user_metadata: { display_name: '테스트 관리자' },
+    user_metadata: { display_name: `관리자 ${token}` },
   });
 
   if (adminError || !adminUser.user) {
@@ -50,7 +50,7 @@ export async function createTestAccountPair(): Promise<TestAccountPairCredential
       [TEST_ACCOUNT.IS_TEST_ACCOUNT_METADATA_KEY]: true,
       [TEST_ACCOUNT.PAIR_TOKEN_METADATA_KEY]: token,
     },
-    user_metadata: { display_name: '테스트 사용자' },
+    user_metadata: { display_name: `사용자 ${token}` },
   });
 
   if (consumerError || !consumerUser.user) {
