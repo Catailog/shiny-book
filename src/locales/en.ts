@@ -426,6 +426,14 @@ export const en = {
       },
       quantitySuffix: 'copies',
       filterAllLabel: 'All',
+      search: {
+        placeholder: 'Search',
+        fieldOptions: {
+          title: 'Title',
+          id: 'Order ID',
+          customerName: 'Customer',
+        },
+      },
       advanceButton: 'Advance to next stage',
       revertButton: 'Revert to previous stage',
       revertConfirmTitle: 'Revert to the previous stage?',

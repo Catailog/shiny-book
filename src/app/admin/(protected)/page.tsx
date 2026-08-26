@@ -4,6 +4,14 @@ import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
 import { OrderStatusBadge } from '@/components/order-status-badge';
 import { RelativeDate } from '@/components/relative-date';
+import { SearchForm } from '@/components/search-form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -12,9 +20,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { ORDER_SEARCH_FIELD, isOrderSearchField } from '@/constants/order-search';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { getOrders } from '@/lib/orders/get-orders';
@@ -50,11 +60,30 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
   const searchParams = await props.searchParams;
   const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isOrderStatus(filterParam) ? filterParam : null;
+  const searchFieldParam = firstSearchParam(searchParams.searchField);
+  const searchField = isOrderSearchField(searchFieldParam)
+    ? searchFieldParam
+    : ORDER_SEARCH_FIELD.TITLE;
+  const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
   const [allOrders, coupons] = await Promise.all([getOrders(), getCoupons()]);
-  const filteredOrders = activeFilter
-    ? allOrders.filter((order) => order.status === activeFilter)
-    : allOrders;
+  const filteredOrders = allOrders.filter((order) => {
+    const matchesFilter = activeFilter === null || order.status === activeFilter;
+    if (!matchesFilter) {
+      return false;
+    }
+    if (query.length === 0) {
+      return true;
+    }
+    const normalizedQuery = query.toLowerCase();
+    if (searchField === ORDER_SEARCH_FIELD.ID) {
+      return order.id.toLowerCase().includes(normalizedQuery);
+    }
+    if (searchField === ORDER_SEARCH_FIELD.CUSTOMER_NAME) {
+      return (order.consumerName ?? '').toLowerCase().includes(normalizedQuery);
+    }
+    return order.title.toLowerCase().includes(normalizedQuery);
+  });
   const pageSize = parsePageSizeParam(
     searchParams.pageSize,
     ADMIN_PAGE_SIZE_OPTIONS,
@@ -124,19 +153,48 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
           <h2 className="font-heading text-xl font-bold text-foreground">
             {t.admin.dashboard.recentSubmissions.title}
           </h2>
-          <div className="flex flex-wrap gap-2">
-            <FilterLink href={ADMIN_ROUTES.DASHBOARD} isActive={activeFilter === null}>
-              {t.admin.orders.filterAllLabel}
-            </FilterLink>
-            {STATUS_FILTER_VALUES.map((status) => (
-              <FilterLink
-                key={status}
-                href={`${ADMIN_ROUTES.DASHBOARD}?filter=${status}`}
-                isActive={activeFilter === status}
-              >
-                {t.orderStatus[status]}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap gap-2">
+              <FilterLink href={ADMIN_ROUTES.DASHBOARD} isActive={activeFilter === null}>
+                {t.admin.orders.filterAllLabel}
               </FilterLink>
-            ))}
+              {STATUS_FILTER_VALUES.map((status) => (
+                <FilterLink
+                  key={status}
+                  href={`${ADMIN_ROUTES.DASHBOARD}?filter=${status}`}
+                  isActive={activeFilter === status}
+                >
+                  {t.orderStatus[status]}
+                </FilterLink>
+              ))}
+            </div>
+            <SearchForm
+              defaultValue={query}
+              placeholder={t.admin.orders.search.placeholder}
+              submitLabel={t.common.searchLabel}
+              inputClassName="w-48"
+            >
+              <Select name="searchField" defaultValue={searchField}>
+                <SelectTrigger size="sm" className="w-28">
+                  <SelectValue>
+                    {(value: string) =>
+                      isOrderSearchField(value) ? t.admin.orders.search.fieldOptions[value] : value
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ORDER_SEARCH_FIELD.TITLE}>
+                    {t.admin.orders.search.fieldOptions.title}
+                  </SelectItem>
+                  <SelectItem value={ORDER_SEARCH_FIELD.ID}>
+                    {t.admin.orders.search.fieldOptions.id}
+                  </SelectItem>
+                  <SelectItem value={ORDER_SEARCH_FIELD.CUSTOMER_NAME}>
+                    {t.admin.orders.search.fieldOptions.customerName}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </SearchForm>
           </div>
           <div className="overflow-hidden rounded-lg border border-border bg-input-background">
             <Table>

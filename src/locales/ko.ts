@@ -425,6 +425,14 @@ export const ko = {
       },
       quantitySuffix: '권',
       filterAllLabel: '전체',
+      search: {
+        placeholder: '검색어 입력',
+        fieldOptions: {
+          title: '도서명',
+          id: '주문번호',
+          customerName: '고객명',
+        },
+      },
       advanceButton: '다음 단계로 진행',
       revertButton: '이전 단계로',
       revertConfirmTitle: '이전 단계로 되돌릴까요?',
