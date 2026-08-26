@@ -238,6 +238,15 @@ export function NewOrderWizard({
       return;
     }
 
+    const projectedCount = photos.length + files.length;
+    if (projectedCount > requiredPhotoCount) {
+      toast.error(
+        t.consumer.orderNew.errors.photoCountExceeded
+          .replace('{count}', String(projectedCount))
+          .replace('{required}', String(requiredPhotoCount)),
+      );
+    }
+
     const pending = files.map((file) => ({
       id: crypto.randomUUID(),
       previewUrl: URL.createObjectURL(file),
