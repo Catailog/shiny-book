@@ -1118,7 +1118,7 @@ export const ko = {
       ratingLabel: '평점',
       form: {
         ratingLabel: '평점',
-        contentLabel: '후기 내용',
+        contentLabel: '후기 내용 (선택)',
         submitButton: '후기 등록',
         submitting: '등록 중...',
       },

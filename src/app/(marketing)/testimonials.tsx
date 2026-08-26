@@ -47,7 +47,9 @@ export async function Testimonials({ reviews }: TestimonialsProps) {
                   />
                 ))}
               </div>
-              <p className="text-[15px] leading-relaxed text-foreground">{review.content}</p>
+              {review.content ? (
+                <p className="text-[15px] leading-relaxed text-foreground">{review.content}</p>
+              ) : null}
               <p className="text-xs text-muted-foreground">
                 {copy.purchasedLabel}: {review.productName ?? review.orderTitle}
               </p>

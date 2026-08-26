@@ -96,7 +96,9 @@ export default async function ReviewsPage() {
                   </div>
                   <StarRating value={review.rating} readOnly />
                 </div>
-                <p className="text-sm leading-relaxed text-foreground">{review.content}</p>
+                {review.content ? (
+                  <p className="text-sm leading-relaxed text-foreground">{review.content}</p>
+                ) : null}
               </div>
             ))}
           </div>

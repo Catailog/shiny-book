@@ -1121,7 +1121,7 @@ export const en = {
       ratingLabel: 'Rating',
       form: {
         ratingLabel: 'Rating',
-        contentLabel: 'Review',
+        contentLabel: 'Review (optional)',
         submitButton: 'Submit review',
         submitting: 'Submitting...',
       },
