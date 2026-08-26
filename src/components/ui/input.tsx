@@ -4,7 +4,7 @@ import { Input as InputPrimitive } from '@base-ui/react/input';
 
 import { cn } from '@/lib/utils';
 
-function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
+function Input({ className, type, onWheel, ...props }: React.ComponentProps<'input'>) {
   return (
     <InputPrimitive
       type={type}
@@ -15,6 +15,16 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
           '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
         className,
       )}
+      onWheel={
+        type === 'number'
+          ? (event) => {
+              // Blur so a wheel scroll over a focused number input scrolls the page
+              // instead of the browser's default behavior of incrementing the value.
+              event.currentTarget.blur();
+              onWheel?.(event);
+            }
+          : onWheel
+      }
       {...props}
     />
   );
