@@ -14,6 +14,7 @@ import { formatCurrency } from '@/lib/format/currency';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
 import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
 import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-context';
+import { getConsumerProfileById } from '@/lib/profiles/get-consumer-profile-by-id';
 import { getProfileEmailsByIds } from '@/lib/profiles/get-profile-emails-by-ids';
 import { defaultLocale, locales } from '@/locales';
 
@@ -30,11 +31,12 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
     notFound();
   }
 
-  const [messages, relatedOrder] = await Promise.all([
+  const [messages, relatedOrder, consumer] = await Promise.all([
     getInquiryMessages(inquiry.id),
     inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
+    inquiry.consumer_id ? getConsumerProfileById(inquiry.consumer_id) : Promise.resolve(null),
   ]);
   const adminAuthorIds = [
     ...new Set(
@@ -64,6 +66,19 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
         </Link>
 
         <div className="flex flex-col gap-6 rounded-lg border border-border bg-card p-6">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-bold text-muted-foreground">
+              {t.admin.inquiries.detail.customerLabel}
+            </span>
+            <p className="text-sm text-foreground">
+              {inquiry.consumer_id === null
+                ? t.admin.inquiries.list.deletedConsumerLabel
+                : (consumer?.displayName ?? consumer?.email ?? '-')}
+            </p>
+            {inquiry.consumer_id !== null && consumer?.displayName && consumer.email ? (
+              <p className="text-xs text-muted-foreground">{consumer.email}</p>
+            ) : null}
+          </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs font-bold text-muted-foreground">
               {t.admin.inquiries.list.table.category}
