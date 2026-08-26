@@ -125,7 +125,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.dashboard.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.dashboard.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="grid grid-cols-4 gap-6">
           {kpis.map((kpi) => {
@@ -153,6 +153,9 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
           <h2 className="font-heading text-xl font-bold text-foreground">
             {t.admin.dashboard.recentSubmissions.title}
           </h2>
+          <div className="flex justify-end">
+            <AdminPageSizeSelect />
+          </div>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap gap-2">
               <FilterLink href={ADMIN_ROUTES.DASHBOARD} isActive={activeFilter === null}>

@@ -64,8 +64,11 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.products.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.products.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <div className="flex justify-end">
+          <AdminPageSizeSelect />
+        </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
             <FilterLink href={ADMIN_ROUTES.PRODUCTS} isActive={activeFilter === 'all'}>

@@ -48,8 +48,11 @@ export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.faqs.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.faqs.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <div className="flex justify-end">
+          <AdminPageSizeSelect />
+        </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">

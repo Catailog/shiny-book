@@ -67,8 +67,11 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.inquiries.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.inquiries.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <div className="flex justify-end">
+          <AdminPageSizeSelect />
+        </div>
         <div className="flex gap-2">
           <FilterLink href={ADMIN_ROUTES.INQUIRIES} isActive={activeFilter === 'all'}>
             {t.admin.inquiries.list.filterAllLabel}

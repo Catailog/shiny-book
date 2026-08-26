@@ -69,8 +69,11 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.coupons.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.coupons.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <div className="flex justify-end">
+          <AdminPageSizeSelect />
+        </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
             <FilterLink href={ADMIN_ROUTES.COUPONS} isActive={activeFilter === 'all'}>
