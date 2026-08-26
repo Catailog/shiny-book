@@ -7,6 +7,16 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import {
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { SortableContext, arrayMove, rectSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ImagePlus, RefreshCw, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -45,6 +55,7 @@ import type { OrderEditPrefill } from '@/lib/orders/get-order-edit-prefill';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
 import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
+import { cn } from '@/lib/utils';
 
 import { createConsumerOrder } from './actions';
 import { refreshAddresses } from './address-actions';
@@ -157,8 +168,14 @@ export function NewOrderWizard({
       : `₩${shippingFee.toLocaleString()}`;
   const totalAmount = merchandiseAmount + (isShippingFree ? 0 : (shippingFee ?? 0));
   const donePhotoCount = photos.filter((photo) => photo.status === 'done').length;
+  const [photosHintBefore, photosHintAfter] = t.consumer.orderNew.photosHint
+    .replace('{required}', String(requiredPhotoCount))
+    .split('{count}');
   const isUploadingPhotos = photos.some(
     (photo) => photo.status === 'uploading' || photo.status === 'processing',
+  );
+  const photoDragSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
 
   async function handleNext() {
@@ -183,6 +200,36 @@ export function NewOrderWizard({
     setPhase('details');
   }
 
+  async function uploadAndProcessPhoto(item: { id: string; file: File }) {
+    const rawPath = await uploadRawFile(FILE_UPLOAD_KIND.PHOTO, item.file);
+    if (!rawPath) {
+      setPhotos((current) =>
+        current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
+      );
+      toast.error(t.consumer.orderNew.errors.uploadFailed);
+      return;
+    }
+
+    setPhotos((current) =>
+      current.map((photo) => (photo.id === item.id ? { ...photo, status: 'processing' } : photo)),
+    );
+
+    const processed = await processOrderPhoto(rawPath);
+    if (!processed.success) {
+      setPhotos((current) =>
+        current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
+      );
+      toast.error(t.consumer.orderNew.errors.uploadFailed);
+      return;
+    }
+
+    setPhotos((current) =>
+      current.map((photo) =>
+        photo.id === item.id ? { ...photo, path: processed.path, status: 'done' } : photo,
+      ),
+    );
+  }
+
   async function handlePhotosChange(event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
     event.target.value = '';
@@ -200,35 +247,23 @@ export function NewOrderWizard({
 
     setPhotos((current) => [...current, ...pending]);
 
-    for (const item of pending) {
-      const rawPath = await uploadRawFile(FILE_UPLOAD_KIND.PHOTO, item.file);
-      if (!rawPath) {
-        setPhotos((current) =>
-          current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
-        );
-        toast.error(t.consumer.orderNew.errors.uploadFailed);
-        continue;
-      }
+    await Promise.all(pending.map((item) => uploadAndProcessPhoto(item)));
+  }
 
-      setPhotos((current) =>
-        current.map((photo) => (photo.id === item.id ? { ...photo, status: 'processing' } : photo)),
-      );
-
-      const processed = await processOrderPhoto(rawPath);
-      if (!processed.success) {
-        setPhotos((current) =>
-          current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
-        );
-        toast.error(t.consumer.orderNew.errors.uploadFailed);
-        continue;
-      }
-
-      setPhotos((current) =>
-        current.map((photo) =>
-          photo.id === item.id ? { ...photo, path: processed.path, status: 'done' } : photo,
-        ),
-      );
+  function handlePhotoDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) {
+      return;
     }
+
+    setPhotos((current) => {
+      const oldIndex = current.findIndex((photo) => photo.id === active.id);
+      const newIndex = current.findIndex((photo) => photo.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) {
+        return current;
+      }
+      return arrayMove(current, oldIndex, newIndex);
+    });
   }
 
   function handleRemovePhoto(id: string) {
@@ -461,66 +496,60 @@ export function NewOrderWizard({
                   ) : null}
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {t.consumer.orderNew.photosHint
-                    .replace('{count}', String(donePhotoCount))
-                    .replace('{required}', String(requiredPhotoCount))}
+                  {photosHintBefore}
+                  <span className={isPhotoCountExceeded ? 'text-destructive' : undefined}>
+                    {donePhotoCount}
+                  </span>
+                  {photosHintAfter}
                 </p>
               </div>
-              <div className="grid grid-cols-4 gap-4">
-                {photos.map((photo) => (
-                  <div
-                    key={photo.id}
-                    className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted"
-                  >
-                    {photo.previewUrl ? (
-                      <Image
-                        src={photo.previewUrl}
-                        alt=""
-                        fill
-                        sizes="160px"
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
-                        {t.consumer.orderNew.testUploadButton}
-                      </div>
-                    )}
-                    {photo.status !== 'done' ? (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/70 text-xs text-foreground">
-                        {photo.status === 'error'
-                          ? t.consumer.orderNew.errors.uploadFailed
-                          : t.consumer.orderNew.status[photo.status]}
-                      </div>
-                    ) : null}
-                    <button
-                      type="button"
-                      aria-label={t.consumer.orderNew.removePhotoLabel}
-                      onClick={() => handleRemovePhoto(photo.id)}
-                      className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-background/90 text-foreground"
-                    >
-                      <X aria-hidden="true" className="size-3.5" />
-                    </button>
-                  </div>
-                ))}
-                <label
-                  htmlFor="photos"
-                  className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed border-primary text-primary hover:bg-primary-soft"
+              <DndContext
+                sensors={photoDragSensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handlePhotoDragEnd}
+              >
+                <SortableContext
+                  items={photos.map((photo) => photo.id)}
+                  strategy={rectSortingStrategy}
                 >
-                  <ImagePlus aria-hidden="true" className="size-6" />
-                  <span className="text-xs font-semibold">
-                    {t.consumer.orderNew.addPhotosButton}
-                  </span>
-                </label>
-                <input
-                  id="photos"
-                  type="file"
-                  multiple
-                  accept="image/png,image/jpeg,image/webp"
-                  className="hidden"
-                  onChange={(event) => void handlePhotosChange(event)}
-                />
-              </div>
+                  <div className="grid grid-cols-4 gap-4">
+                    {photos.map((photo, index) => (
+                      <SortablePhotoItem
+                        key={photo.id}
+                        photo={photo}
+                        index={index}
+                        placeholderLabel={t.consumer.orderNew.testUploadButton}
+                        removeLabel={t.consumer.orderNew.removePhotoLabel}
+                        statusLabel={
+                          photo.status === 'done'
+                            ? null
+                            : photo.status === 'error'
+                              ? t.consumer.orderNew.errors.uploadFailed
+                              : t.consumer.orderNew.status[photo.status]
+                        }
+                        onRemove={handleRemovePhoto}
+                      />
+                    ))}
+                    <label
+                      htmlFor="photos"
+                      className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed border-primary text-primary hover:bg-primary-soft"
+                    >
+                      <ImagePlus aria-hidden="true" className="size-6" />
+                      <span className="text-xs font-semibold">
+                        {t.consumer.orderNew.addPhotosButton}
+                      </span>
+                    </label>
+                    <input
+                      id="photos"
+                      type="file"
+                      multiple
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      onChange={(event) => void handlePhotosChange(event)}
+                    />
+                  </div>
+                </SortableContext>
+              </DndContext>
             </section>
 
             <section className="flex flex-col gap-3">
@@ -690,6 +719,75 @@ export function NewOrderWizard({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+interface SortablePhotoItemProps {
+  photo: PhotoItem;
+  index: number;
+  placeholderLabel: string;
+  removeLabel: string;
+  statusLabel: string | null;
+  onRemove: (id: string) => void;
+}
+
+function SortablePhotoItem({
+  photo,
+  index,
+  placeholderLabel,
+  removeLabel,
+  statusLabel,
+  onRemove,
+}: SortablePhotoItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: photo.id,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      {...attributes}
+      {...listeners}
+      className={cn(
+        'relative aspect-square touch-none overflow-hidden rounded-md border border-border bg-muted',
+        isDragging ? 'opacity-50' : undefined,
+      )}
+    >
+      <span className="absolute top-1.5 left-1.5 z-10 flex size-6 items-center justify-center rounded-full bg-background/90 text-xs font-semibold text-foreground">
+        {index + 1}
+      </span>
+      {photo.previewUrl ? (
+        <Image
+          src={photo.previewUrl}
+          alt=""
+          fill
+          sizes="160px"
+          className="object-cover"
+          unoptimized
+        />
+      ) : (
+        <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
+          {placeholderLabel}
+        </div>
+      )}
+      {statusLabel ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/70 text-xs text-foreground">
+          {statusLabel}
+        </div>
+      ) : null}
+      <button
+        type="button"
+        aria-label={removeLabel}
+        onClick={(event) => {
+          event.stopPropagation();
+          onRemove(photo.id);
+        }}
+        className="absolute top-1.5 right-1.5 flex size-6 items-center justify-center rounded-full bg-background/90 text-foreground"
+      >
+        <X aria-hidden="true" className="size-3.5" />
+      </button>
     </div>
   );
 }
