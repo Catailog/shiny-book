@@ -177,8 +177,8 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
               submitLabel={t.common.searchLabel}
               inputClassName="w-48"
             >
-              <Select name="searchField" defaultValue={searchField}>
-                <SelectTrigger size="sm" className="w-28">
+              <Select size="sm" name="searchField" defaultValue={searchField}>
+                <SelectTrigger className="w-28">
                   <SelectValue>
                     {(value: string) =>
                       isOrderSearchField(value) ? t.admin.orders.search.fieldOptions[value] : value

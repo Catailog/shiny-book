@@ -32,8 +32,8 @@ export function AdminPageSizeSelect() {
   }
 
   return (
-    <Select value={currentPageSize} onValueChange={handleChange}>
-      <SelectTrigger size="sm" className="w-28" aria-label={t.admin.pagination.pageSizeLabel}>
+    <Select size="sm" value={currentPageSize} onValueChange={handleChange}>
+      <SelectTrigger className="w-28" aria-label={t.admin.pagination.pageSizeLabel}>
         <SelectValue>
           {(value: string) => t.admin.pagination.pageSizeOption.replace('{count}', value)}
         </SelectValue>
