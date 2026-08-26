@@ -25,6 +25,7 @@ import {
 } from '@/constants/announcement-category';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
@@ -44,11 +45,15 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
   const searchParams = await props.searchParams;
   const categoryParam = firstSearchParam(searchParams.category);
   const activeCategory = isAnnouncementCategory(categoryParam) ? categoryParam : 'all';
+  const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
   const allAnnouncements = await getAnnouncements(ADMIN_ANNOUNCEMENT_LIST_LIMIT);
-  const filteredAnnouncements = allAnnouncements.filter(
-    (announcement) => activeCategory === 'all' || announcement.category === activeCategory,
-  );
+  const filteredAnnouncements = allAnnouncements.filter((announcement) => {
+    const matchesCategory = activeCategory === 'all' || announcement.category === activeCategory;
+    const matchesQuery =
+      query.length === 0 || announcement.title.toLowerCase().includes(query.toLowerCase());
+    return matchesCategory && matchesQuery;
+  });
   const pageSize = parsePageSizeParam(
     searchParams.pageSize,
     ADMIN_PAGE_SIZE_OPTIONS,
@@ -83,17 +88,19 @@ export default async function AdminAnnouncementsPage(props: PageProps<'/admin/an
             ))}
           </div>
           <div className="flex items-center gap-3">
-            <div className="relative">
+            <form className="relative">
               <Search
                 aria-hidden="true"
                 className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
               />
               <Input
                 type="search"
+                name="q"
+                defaultValue={query}
                 placeholder={t.admin.announcements.list.searchPlaceholder}
                 className="w-60 bg-input-background pl-9"
               />
-            </div>
+            </form>
             <Button
               render={<Link href={ADMIN_ROUTES.ANNOUNCEMENTS_NEW} />}
               nativeButton={false}
