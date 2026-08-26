@@ -80,7 +80,7 @@
 - **UI 및 스타일링:**
   - Shadcn UI, Radix UI, Tailwind CSS를 사용하며, Mobile-first 반응형 디자인과 시맨틱 HTML 태그를 적용합니다.
   - **컴포넌트 소싱 우선순위:** UI 컴포넌트 작성 전 shadcn/ui 문서에서 동등한 컴포넌트나 유사 패턴이 있는지 먼저 확인합니다. 있으면 `npx shadcn add <name>`으로 설치(`src/components/ui/`에 추가), 컴포넌트는 없지만 관련 패턴/예제(Input with Icon, Form validation 등)가 있으면 그걸 기반으로 구현, 문서에도 없을 때만 처음부터 직접 작성합니다.
-  - **인라인 스타일(`style={{}}`) 및 임의 Tailwind 값(`w-[342px]`) 자제:** Tailwind 테마 토큰을 준수하며, 조건부 스타일링은 `cn()` 유틸리티(`clsx` + `tailwind-merge`)로 통합합니다.
+  - **인라인 스타일(`style={{}}`) 및 임의 Tailwind 값(`w-[342px]`) 자제:** Tailwind 테마 토큰을 준수하며, 여러 클래스를 합칠 때는 `cn()` 유틸리티(`clsx` + `tailwind-merge`)로 통합합니다. 둘 중에서는 `style` 속성을 더 피합니다 - 정적 문자열 클래스는 `cn()`으로 합쳐도 Tailwind가 빌드 타임에 정상 인식하지만, `style`은 그 경로를 완전히 벗어나 테마 토큰도 `cn()`의 충돌 제거도 적용받지 못합니다. `style`은 서드파티 라이브러리가 값 주입을 `style` prop으로만 강제하는 경우에만 예외적으로 씁니다. 임의값 자체를 금지하는 건 아닙니다 - 실무에서 흔히 쓰는 브래킷 표기(`min-h-[65px]`)처럼 값의 의미가 그대로 드러나는 형태를 우선하고, 매직 넘버로 방치하지 않을 정도로만 신경 씁니다.
   - **색상은 CSS 변수 기반 유틸리티만 사용:** `text-red-400`, `bg-gray-200` 같은 Tailwind 내장 팔레트 색상을 직접 쓰지 않고, `globals.css`의 CSS 변수 기반 유틸리티(`text-muted-foreground`, `bg-background` 등)만 사용합니다. 상태 뱃지처럼 기능적 구분이 꼭 필요한 색상 팔레트는 예외입니다. 새 색상이 필요하면 `globals.css`의 `:root`에 CSS 변수로 추가하고 `@theme inline`에 등록한 뒤 유틸리티로 사용합니다.
   - **접근성 최소 기준:** 이미지에는 `alt`, 아이콘 전용 버튼에는 `aria-label`을 붙이는 정도의 기본기만 지킵니다. WCAG 준수 등 엄격한 접근성 감사는 이 프로젝트 스코프에 포함하지 않습니다.
   - **알림(Toast):** 상태 변경, 에러 등 사용자 피드백은 커스텀 컴포넌트를 새로 만들지 않고 `sonner`를 사용합니다.
