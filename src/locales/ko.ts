@@ -368,7 +368,7 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '관리자 테스트를 위해 매번 새 계정으로 자동 로그인 합니다.',
+      testLoginTooltip: '관리자 테스트를 위해 새 계정으로 자동 로그인 합니다.',
       coachmarkTestLoginTitle: '관리자 테스트 계정으로 즉시 로그인',
       coachmarkTestLoginDescription: '클릭 한 번으로 관리자 화면을 확인할 수 있어요.',
       errors: {
@@ -832,7 +832,7 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '소비자 테스트를 위해 매번 새 계정으로 자동 로그인 합니다.',
+      testLoginTooltip: '소비자 테스트를 위해 새 계정으로 자동 로그인 합니다.',
       coachmarkTestLoginTitle: '소비자 테스트 계정으로 즉시 로그인',
       coachmarkTestLoginDescription: '직접 회원가입 해서 테스트 할 수도 있어요.',
       signupPrompt: '아직 계정이 없으신가요?',
