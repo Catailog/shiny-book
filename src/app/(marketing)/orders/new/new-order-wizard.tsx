@@ -291,16 +291,14 @@ export function NewOrderWizard({
   }
 
   function handleRemovePhoto(id: string) {
-    setPhotos((current) => {
-      const target = current.find((photo) => photo.id === id);
-      if (target?.previewUrl) {
-        URL.revokeObjectURL(target.previewUrl);
-      }
-      if (target?.path && !target.isExisting) {
-        void deleteOrderPhoto(target.path);
-      }
-      return current.filter((photo) => photo.id !== id);
-    });
+    const target = photos.find((photo) => photo.id === id);
+    if (target?.previewUrl) {
+      URL.revokeObjectURL(target.previewUrl);
+    }
+    if (target?.path && !target.isExisting) {
+      void deleteOrderPhoto(target.path);
+    }
+    setPhotos((current) => current.filter((photo) => photo.id !== id));
   }
 
   function handleGenerateTestPhotos() {
