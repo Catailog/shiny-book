@@ -21,6 +21,7 @@ import {
   isAnnouncementCategory,
 } from '@/constants/announcement-category';
 import { NOTICE_ROUTES } from '@/constants/routes';
+import { CONSUMER_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { formatDate } from '@/lib/format-date';
 import { getLocale } from '@/lib/i18n/get-locale';
@@ -40,7 +41,7 @@ export default async function NoticesPage(props: PageProps<'/notices'>) {
 
   const categoryParam = firstParam(searchParams.category);
   const activeCategory = isAnnouncementCategory(categoryParam) ? categoryParam : 'all';
-  const query = firstParam(searchParams.q).trim();
+  const query = firstParam(searchParams.q).trim().slice(0, CONSUMER_SEARCH_QUERY_MAX_LENGTH);
 
   const allNotices = await getAnnouncements(NOTICE_LIST_LIMIT);
   const notices = allNotices.filter((notice) => {

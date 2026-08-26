@@ -1,0 +1,1 @@
+export const CONSUMER_SEARCH_QUERY_MAX_LENGTH = 30;
