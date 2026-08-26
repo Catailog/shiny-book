@@ -16,6 +16,7 @@ import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCoupons } from '@/lib/coupons/get-coupons';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { getOrders } from '@/lib/orders/get-orders';
 import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
@@ -170,7 +171,12 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                   return (
                     <TableRow key={order.id}>
                       <TableCell className="truncate font-medium text-foreground">
-                        {order.title}
+                        <div className="flex flex-col gap-0.5">
+                          <span className="truncate">{order.title}</span>
+                          <span className="text-xs font-normal text-muted-foreground">
+                            {formatIdPrefix(order.id)}
+                          </span>
+                        </div>
                       </TableCell>
                       <TableCell className="truncate text-muted-foreground">
                         {order.consumerName ?? '-'}

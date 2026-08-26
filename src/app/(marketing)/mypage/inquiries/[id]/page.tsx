@@ -8,6 +8,7 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatDate } from '@/lib/format-date';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
@@ -78,7 +79,7 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
                   {relatedOrder.productName ?? relatedOrder.title}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  #{relatedOrder.id.slice(0, 8)}
+                  {formatIdPrefix(relatedOrder.id)}
                 </span>
               </div>
               <span className="text-xs text-muted-foreground">

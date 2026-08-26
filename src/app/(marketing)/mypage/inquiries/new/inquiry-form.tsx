@@ -24,6 +24,7 @@ import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { formatDate } from '@/lib/format-date';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 
 import { createInquiry } from './actions';
 import { type InquiryFormInput, inquiryFormSchema } from './inquiry-schema';
@@ -96,14 +97,14 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
                   <SelectValue placeholder={t.consumer.inquiries.form.relatedOrderPlaceholder}>
                     {(value: string) => {
                       const selected = orders.find((order) => order.id === value);
-                      return selected ? `${selected.title} (#${selected.id.slice(0, 8)})` : null;
+                      return selected ? `${selected.title} (${formatIdPrefix(selected.id)})` : null;
                     }}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {orders.map((order) => (
                     <SelectItem key={order.id} value={order.id}>
-                      {order.title} (#{order.id.slice(0, 8)}, {formatDate(order.created_at)})
+                      {order.title} ({formatIdPrefix(order.id)}, {formatDate(order.created_at)})
                     </SelectItem>
                   ))}
                 </SelectContent>

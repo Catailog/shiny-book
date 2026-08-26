@@ -14,6 +14,7 @@ import {
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
@@ -124,7 +125,7 @@ export default async function MypagePage() {
                       <div className="flex flex-col gap-0.5">
                         <span className="truncate">{order.title}</span>
                         <span className="text-xs font-normal text-muted-foreground">
-                          #{order.id.slice(0, 8)}
+                          {formatIdPrefix(order.id)}
                         </span>
                       </div>
                     </TableCell>

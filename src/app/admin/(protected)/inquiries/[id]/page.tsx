@@ -9,6 +9,7 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
 import { formatDate } from '@/lib/format-date';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { formatCurrency } from '@/lib/format/currency';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
 import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
@@ -89,7 +90,7 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
                   {relatedOrder.productName ?? relatedOrder.title}
                 </p>
                 <span className="text-xs text-muted-foreground">
-                  #{relatedOrder.id.slice(0, 8)}
+                  {formatIdPrefix(relatedOrder.id)}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">
