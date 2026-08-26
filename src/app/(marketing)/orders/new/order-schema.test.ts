@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createConsumerOrderSchema, orderDetailsSchema } from './order-schema';
 
 const validDetails = {
-  productId: 'product-1',
+  productId: '22222222-2222-2222-2222-222222222222',
   title: '나의 첫 포토북',
   quantity: 1,
   pageCount: 8,
@@ -22,6 +22,21 @@ describe('orderDetailsSchema', () => {
 
   it('rejects an empty title', () => {
     const result = orderDetailsSchema.safeParse({ ...validDetails, title: '' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a title with characters outside the allowed set', () => {
+    const result = orderDetailsSchema.safeParse({ ...validDetails, title: '나의 포토북 😀' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a quantity above the max', () => {
+    const result = orderDetailsSchema.safeParse({ ...validDetails, quantity: 101 });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a non-uuid productId', () => {
+    const result = orderDetailsSchema.safeParse({ ...validDetails, productId: 'product-1' });
     expect(result.success).toBe(false);
   });
 });
