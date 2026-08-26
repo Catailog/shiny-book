@@ -51,12 +51,6 @@ export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
       <AdminTopbar title={t.admin.faqs.title} actions={<AdminPageSizeSelect />} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="flex items-center justify-between">
-          <SearchForm
-            defaultValue={query}
-            placeholder={t.admin.faqs.list.searchPlaceholder}
-            submitLabel={t.common.searchLabel}
-            inputClassName="w-70"
-          />
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
               {t.admin.faqs.list.showingCount.replace('{shown}', String(totalItems))}
@@ -70,6 +64,12 @@ export default async function AdminFaqsPage(props: PageProps<'/admin/faqs'>) {
               {t.admin.faqs.writeButton}
             </Button>
           </div>
+          <SearchForm
+            defaultValue={query}
+            placeholder={t.admin.faqs.list.searchPlaceholder}
+            submitLabel={t.common.searchLabel}
+            inputClassName="w-70"
+          />
         </div>
 
         <div className="overflow-hidden rounded-lg border border-border bg-input-background">
