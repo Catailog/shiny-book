@@ -1,7 +1,7 @@
 'use client';
 
 import type { ChangeEvent } from 'react';
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import Image from 'next/image';
@@ -21,7 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ImagePlus, RefreshCw, TriangleAlert, X } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Coachmark } from '@/components/coachmark';
+import { Coachmark, CoachmarkHighlight } from '@/components/coachmark';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -49,6 +49,7 @@ import {
 } from '@/constants/photobook';
 import { PRICING, SHIPPING } from '@/constants/pricing';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { useErrorHighlight } from '@/hooks/use-error-highlight';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
@@ -129,6 +130,10 @@ export function NewOrderWizard({
     })),
   );
   const [addresses, setAddresses] = useState(initialAddresses);
+  const addressSectionRef = useRef<HTMLElement>(null);
+  const photosSectionRef = useRef<HTMLElement>(null);
+  const addressHighlight = useErrorHighlight();
+  const photosHighlight = useErrorHighlight();
   const {
     register,
     control,
@@ -245,6 +250,7 @@ export function NewOrderWizard({
           .replace('{count}', String(projectedCount))
           .replace('{required}', String(requiredPhotoCount)),
       );
+      photosHighlight.trigger(photosSectionRef.current);
     }
 
     const pending = files.map((file) => ({
@@ -344,8 +350,10 @@ export function NewOrderWizard({
         toast.error(t.consumer.orderNew.errors.pageCountInvalid);
       } else if (issueField === 'addressId') {
         toast.error(t.consumer.orderNew.errors.addressRequired);
+        addressHighlight.trigger(addressSectionRef.current);
       } else {
         toast.error(t.consumer.orderNew.errors.photoCountMismatch);
+        photosHighlight.trigger(photosSectionRef.current);
       }
       return;
     }
@@ -484,7 +492,10 @@ export function NewOrderWizard({
               </Button>
             </section>
 
-            <section className="flex flex-col gap-4">
+            <section ref={photosSectionRef} className="relative flex flex-col gap-4">
+              {photosHighlight.isHighlighted ? (
+                <CoachmarkHighlight radiusClassName="rounded-lg" autoBorderRadius={null} />
+              ) : null}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Label>{t.consumer.orderNew.photosLabel}</Label>
@@ -592,7 +603,10 @@ export function NewOrderWizard({
               </DndContext>
             </section>
 
-            <section className="flex flex-col gap-3">
+            <section ref={addressSectionRef} className="relative flex flex-col gap-3">
+              {addressHighlight.isHighlighted ? (
+                <CoachmarkHighlight radiusClassName="rounded-lg" autoBorderRadius={null} />
+              ) : null}
               <div className="flex items-center justify-between">
                 <Label>{t.consumer.orderNew.addressLabel}</Label>
                 <div className="flex items-center gap-4">
