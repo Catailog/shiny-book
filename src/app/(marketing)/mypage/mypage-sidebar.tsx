@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { MessageSquare, Package, User } from 'lucide-react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 import { cn } from '@/lib/utils';
@@ -13,9 +13,10 @@ import { cn } from '@/lib/utils';
 interface MypageSidebarProps {
   consumerName: string;
   consumerEmail: string;
+  avatarUrl: string | null;
 }
 
-export function MypageSidebar({ consumerName, consumerEmail }: MypageSidebarProps) {
+export function MypageSidebar({ consumerName, consumerEmail, avatarUrl }: MypageSidebarProps) {
   const t = useT();
   const pathname = usePathname();
 
@@ -33,6 +34,7 @@ export function MypageSidebar({ consumerName, consumerEmail }: MypageSidebarProp
     <aside className="flex w-70 shrink-0 flex-col gap-8 border-r border-border bg-muted px-6 py-8">
       <div className="flex items-center gap-3">
         <Avatar className="size-12">
+          {avatarUrl ? <AvatarImage src={avatarUrl} alt={consumerName} /> : null}
           <AvatarFallback>{consumerName.slice(0, 1)}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
