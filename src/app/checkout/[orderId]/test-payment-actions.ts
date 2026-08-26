@@ -3,16 +3,25 @@
 import { redirect } from 'next/navigation';
 
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
+import { env } from '@/env';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 const TEST_PAYMENT_KEY = 'test-payment';
 
 export async function confirmTestPayment(orderId: string): Promise<{ success: false } | undefined> {
-  const supabase = createServiceRoleClient();
-  const { data: order } = await supabase.from('orders').select().eq('id', orderId).maybeSingle();
+  if (!env.ALLOW_TEST_PAYMENT) {
+    return { success: false };
+  }
 
-  if (!order || !isOrderStatus(order.status)) {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return { success: false };
+  }
+
+  const order = await getOrderById(orderId);
+  if (!order || order.consumer_id !== consumer.id || !isOrderStatus(order.status)) {
     return { success: false };
   }
 

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { TEST_ACCOUNT_ROLE_PREFIX } from '@/constants/test-account';
+import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { createTestAccountPair } from '@/lib/auth/test-account-pair';
 import {
@@ -54,6 +55,10 @@ export interface AdminTestLoginResult {
 export async function signInTestAdmin(
   turnstileToken: string,
 ): Promise<AdminTestLoginResult | undefined> {
+  if (!env.ALLOW_TEST_LOGIN) {
+    return { errorCode: 'unavailable' };
+  }
+
   const isHuman = await verifyTurnstileToken(turnstileToken);
   if (!isHuman) {
     return { errorCode: 'bot_verification_failed' };

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { TEST_ACCOUNT_ROLE_PREFIX } from '@/constants/test-account';
+import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 import { createTestAccountPair } from '@/lib/auth/test-account-pair';
@@ -61,6 +62,10 @@ export async function signInTestConsumer(
   redirectTo: string | undefined,
   turnstileToken: string,
 ): Promise<ConsumerTestLoginResult | undefined> {
+  if (!env.ALLOW_TEST_LOGIN) {
+    return { errorCode: 'unavailable' };
+  }
+
   const isHuman = await verifyTurnstileToken(turnstileToken);
   if (!isHuman) {
     return { errorCode: 'bot_verification_failed' };

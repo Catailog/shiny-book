@@ -8,6 +8,7 @@ import { COUPON_CODE_MAX_LENGTH } from '@/constants/coupon';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRICING } from '@/constants/pricing';
 import { getAddressById } from '@/lib/addresses/get-address-by-id';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { validateCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
@@ -40,8 +41,17 @@ export async function applyCouponToOrder(
     return { errorCode: 'validation_failed' };
   }
 
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return { errorCode: 'not_found' };
+  }
+
   const order = await getOrderById(orderId);
-  if (!order || order.status !== ORDER_STATUS.AWAITING_PAYMENT) {
+  if (
+    !order ||
+    order.consumer_id !== consumer.id ||
+    order.status !== ORDER_STATUS.AWAITING_PAYMENT
+  ) {
     return { errorCode: 'not_found' };
   }
 
