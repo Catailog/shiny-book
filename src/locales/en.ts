@@ -416,6 +416,7 @@ export const en = {
       empty: 'No orders to show.',
       columns: {
         title: 'Title',
+        customerName: 'Customer',
         quantity: 'Quantity',
         amount: 'Amount',
         status: 'Status',

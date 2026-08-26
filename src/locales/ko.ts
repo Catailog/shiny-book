@@ -415,6 +415,7 @@ export const ko = {
       empty: '표시할 주문이 없습니다.',
       columns: {
         title: '도서명',
+        customerName: '고객명',
         quantity: '수량',
         amount: '결제 금액',
         status: '상태',

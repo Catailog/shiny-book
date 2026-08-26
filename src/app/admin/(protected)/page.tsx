@@ -142,6 +142,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
               <TableHeader>
                 <TableRow className="bg-muted hover:bg-muted">
                   <TableHead>{t.admin.orders.columns.title}</TableHead>
+                  <TableHead className="w-32">{t.admin.orders.columns.customerName}</TableHead>
                   <TableHead className="w-20">{t.admin.orders.columns.quantity}</TableHead>
                   <TableHead className="w-28">{t.admin.orders.columns.amount}</TableHead>
                   <TableHead className="w-24">{t.admin.orders.columns.status}</TableHead>
@@ -153,7 +154,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
               <TableBody>
                 {orders.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
                       {t.admin.orders.empty}
                     </TableCell>
                   </TableRow>
@@ -170,6 +171,9 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                     <TableRow key={order.id}>
                       <TableCell className="truncate font-medium text-foreground">
                         {order.title}
+                      </TableCell>
+                      <TableCell className="truncate text-muted-foreground">
+                        {order.consumerName ?? '-'}
                       </TableCell>
                       <TableCell>
                         {order.quantity}
