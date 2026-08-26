@@ -21,15 +21,7 @@ const applyCouponSchema = z.object({
 
 export interface ApplyCouponResult {
   errorCode:
-    | 'validation_failed'
-    | 'not_found'
-    | 'already_applied'
-    | 'coupon_not_found'
-    | 'coupon_inactive'
-    | 'coupon_not_started'
-    | 'coupon_expired'
-    | 'coupon_usage_limit_reached'
-    | 'unexpected_error';
+    'validation_failed' | 'not_found' | 'already_applied' | 'coupon_invalid' | 'unexpected_error';
 }
 
 export async function applyCouponToOrder(
@@ -75,17 +67,8 @@ export async function applyCouponToOrder(
     (product.price + order.page_count * PRICING.PRICE_PER_PAGE_KRW) * order.quantity;
 
   const validation = await validateCoupon(parsed.data.code.trim().toUpperCase(), merchandiseAmount);
-  switch (validation.outcome) {
-    case 'not_found':
-      return { errorCode: 'coupon_not_found' };
-    case 'inactive':
-      return { errorCode: 'coupon_inactive' };
-    case 'not_started':
-      return { errorCode: 'coupon_not_started' };
-    case 'expired':
-      return { errorCode: 'coupon_expired' };
-    case 'usage_limit_reached':
-      return { errorCode: 'coupon_usage_limit_reached' };
+  if (validation.outcome !== 'valid') {
+    return { errorCode: 'coupon_invalid' };
   }
 
   const shippingFee = calculateShippingFee(address.postal_code, merchandiseAmount);

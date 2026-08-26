@@ -19,11 +19,7 @@ export interface CreateConsumerOrderResult {
     | 'validation_failed'
     | 'product_not_found'
     | 'address_not_found'
-    | 'coupon_not_found'
-    | 'coupon_inactive'
-    | 'coupon_not_started'
-    | 'coupon_expired'
-    | 'coupon_usage_limit_reached'
+    | 'coupon_invalid'
     | 'unexpected_error';
 }
 
@@ -70,22 +66,11 @@ export async function createConsumerOrder(
 
   if (couponCode) {
     const validation = await validateCoupon(couponCode, merchandiseAmount);
-    switch (validation.outcome) {
-      case 'not_found':
-        return { errorCode: 'coupon_not_found' };
-      case 'inactive':
-        return { errorCode: 'coupon_inactive' };
-      case 'not_started':
-        return { errorCode: 'coupon_not_started' };
-      case 'expired':
-        return { errorCode: 'coupon_expired' };
-      case 'usage_limit_reached':
-        return { errorCode: 'coupon_usage_limit_reached' };
-      case 'valid':
-        discountedMerchandiseAmount = validation.discountedAmount;
-        couponId = validation.coupon.id;
-        break;
+    if (validation.outcome !== 'valid') {
+      return { errorCode: 'coupon_invalid' };
     }
+    discountedMerchandiseAmount = validation.discountedAmount;
+    couponId = validation.coupon.id;
   }
 
   const { amount } = calculateOrderAmount({
