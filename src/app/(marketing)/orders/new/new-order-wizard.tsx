@@ -41,6 +41,7 @@ import {
   type FileUploadKind,
   STORAGE_BUCKETS,
 } from '@/constants/file-upload';
+import { ORDER_QUANTITY_MAX } from '@/constants/order';
 import {
   PHOTOBOOK_PAGE_COUNT_MIN,
   PHOTOBOOK_PAGE_COUNT_OPTIONS,
@@ -395,7 +396,13 @@ export function NewOrderWizard({
                   id="quantity"
                   type="number"
                   min={1}
+                  max={ORDER_QUANTITY_MAX}
                   step={1}
+                  onKeyDown={(event) => {
+                    if (['e', 'E', '+', '-'].includes(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
                   {...register('quantity', { valueAsNumber: true })}
                 />
                 {errors.quantity ? (
