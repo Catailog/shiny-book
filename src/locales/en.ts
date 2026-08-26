@@ -10,6 +10,7 @@ export const en = {
     coachmarkClose: 'Close',
     turnstilePendingTooltip: 'Please wait until security verification finishes.',
     searchLabel: 'Search',
+    warning: 'Warning',
   },
   site: {
     nav: {

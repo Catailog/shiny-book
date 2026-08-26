@@ -18,7 +18,7 @@ import {
 import { SortableContext, arrayMove, rectSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ImagePlus, RefreshCw, X } from 'lucide-react';
+import { ImagePlus, RefreshCw, TriangleAlert, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Coachmark } from '@/components/coachmark';
@@ -507,13 +507,32 @@ export function NewOrderWizard({
                     </Coachmark>
                   ) : null}
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {photosHintBefore}
-                  <span className={isPhotoCountExceeded ? 'text-destructive' : undefined}>
-                    {donePhotoCount}
-                  </span>
-                  {photosHintAfter}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm text-muted-foreground">
+                    {photosHintBefore}
+                    <span className={isPhotoCountExceeded ? 'text-destructive' : undefined}>
+                      {donePhotoCount}
+                    </span>
+                    {photosHintAfter}
+                  </p>
+                  {isPhotoCountExceeded ? (
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={<button type="button" aria-label={t.common.warning} />}
+                      >
+                        <TriangleAlert
+                          aria-hidden="true"
+                          className="size-4 shrink-0 text-destructive"
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t.consumer.orderNew.errors.photoCountExceeded
+                          .replace('{count}', String(photos.length))
+                          .replace('{required}', String(requiredPhotoCount))}
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : null}
+                </div>
               </div>
               <DndContext
                 sensors={photoDragSensors}
