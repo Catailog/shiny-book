@@ -5,6 +5,8 @@ import { createServerClient } from '@supabase/ssr';
 import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
+import { checkActionRateLimit } from '@/lib/rate-limit/action-rate-limit';
+import { parseClientIp } from '@/lib/request/parse-client-ip';
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -31,6 +33,17 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const isServerActionRequest = request.method === 'POST' && request.headers.has('next-action');
+  if (isServerActionRequest) {
+    const rateLimitKey =
+      user?.id ??
+      parseClientIp(request.headers.get('x-forwarded-for'), request.headers.get('x-real-ip'));
+    const rateLimit = await checkActionRateLimit(rateLimitKey);
+    if (!rateLimit.isAllowed) {
+      return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+    }
+  }
 
   const isAuthenticatedAdmin = user !== null && isAdminRole(user.app_metadata.role);
   const isAuthenticatedConsumer = user !== null && !isAdminRole(user.app_metadata.role);
