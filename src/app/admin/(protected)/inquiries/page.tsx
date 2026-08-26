@@ -9,7 +9,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValueMap,
 } from '@/components/ui/select';
 import {
   Table,
@@ -136,13 +136,7 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
           >
             <Select size="sm" name="searchField" defaultValue={searchField}>
               <SelectTrigger className="w-28">
-                <SelectValue>
-                  {(value: string) =>
-                    isInquirySearchField(value)
-                      ? t.admin.inquiries.list.search.fieldOptions[value]
-                      : value
-                  }
-                </SelectValue>
+                <SelectValueMap labels={t.admin.inquiries.list.search.fieldOptions} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={INQUIRY_SEARCH_FIELD.CUSTOMER_NAME}>

@@ -42,6 +42,20 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   );
 }
 
+interface SelectValueMapProps {
+  labels: Record<string, string>;
+  className?: string;
+}
+
+// A function child on SelectValue can't be passed down from a Server Component - the
+// function itself has to be created inside a Client Component. This wraps that pattern
+// so callers only need to pass a serializable labels map instead of a render function.
+function SelectValueMap({ labels, className }: SelectValueMapProps) {
+  return (
+    <SelectValue className={className}>{(value: string) => labels[value] ?? value}</SelectValue>
+  );
+}
+
 function SelectTrigger({ className, children, ...props }: SelectPrimitive.Trigger.Props) {
   const size = React.useContext(SelectSizeContext);
 
@@ -204,4 +218,5 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
+  SelectValueMap,
 };
