@@ -754,6 +754,7 @@ export const ko = {
       editTitle: '상품 수정',
       empty: '등록된 상품이 없습니다.',
       writeButton: '상품 추가',
+      searchPlaceholder: '상품명 검색...',
       saveSuccess: '저장됐습니다.',
       backToList: '목록으로 돌아가기',
       form: {

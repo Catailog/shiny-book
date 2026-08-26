@@ -755,6 +755,7 @@ export const en = {
       editTitle: 'Edit product',
       empty: 'No products yet.',
       writeButton: 'Add product',
+      searchPlaceholder: 'Search by product name...',
       saveSuccess: 'Saved.',
       backToList: 'Back to Products list',
       form: {

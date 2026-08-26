@@ -7,6 +7,7 @@ import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
 import { RelativeDate } from '@/components/relative-date';
+import { SearchForm } from '@/components/search-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,6 +21,7 @@ import {
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { isProductCategory } from '@/constants/product-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { getAllProducts } from '@/lib/products/get-all-products';
 import { defaultLocale, locales } from '@/locales';
@@ -40,16 +42,19 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
   const searchParams = await props.searchParams;
   const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isProductFilter(filterParam) ? filterParam : 'all';
+  const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
   const allProducts = await getAllProducts();
   const filteredProducts = allProducts.filter((product) => {
-    if (activeFilter === 'active') {
-      return product.is_active;
-    }
-    if (activeFilter === 'inactive') {
-      return !product.is_active;
-    }
-    return true;
+    const matchesFilter =
+      activeFilter === 'active'
+        ? product.is_active
+        : activeFilter === 'inactive'
+          ? !product.is_active
+          : true;
+    const matchesQuery =
+      query.length === 0 || product.name.toLowerCase().includes(query.toLowerCase());
+    return matchesFilter && matchesQuery;
   });
   const pageSize = parsePageSizeParam(
     searchParams.pageSize,
@@ -87,14 +92,22 @@ export default async function AdminProductsPage(props: PageProps<'/admin/product
               {t.admin.products.filterTabs.inactive}
             </FilterLink>
           </div>
-          <Button
-            render={<Link href={ADMIN_ROUTES.PRODUCTS_NEW} />}
-            nativeButton={false}
-            variant="primary"
-          >
-            <Plus aria-hidden="true" className="size-4" />
-            {t.admin.products.writeButton}
-          </Button>
+          <div className="flex items-center gap-3">
+            <SearchForm
+              defaultValue={query}
+              placeholder={t.admin.products.searchPlaceholder}
+              submitLabel={t.common.searchLabel}
+              inputClassName="w-60"
+            />
+            <Button
+              render={<Link href={ADMIN_ROUTES.PRODUCTS_NEW} />}
+              nativeButton={false}
+              variant="primary"
+            >
+              <Plus aria-hidden="true" className="size-4" />
+              {t.admin.products.writeButton}
+            </Button>
+          </div>
         </div>
 
         <div className="overflow-hidden rounded-lg border border-border bg-input-background">
