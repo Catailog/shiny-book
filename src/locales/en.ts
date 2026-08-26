@@ -444,7 +444,7 @@ export const en = {
         'This will move the order status back to the previous stage. If work has already progressed, it may no longer match reality, so proceed carefully.',
       revertConfirmButton: 'Force revert',
       revertCancelButton: 'Cancel',
-      viewPhotosButton: 'View uploaded photos',
+      viewPhotosButton: 'Uploaded photos',
       photosLoading: 'Loading...',
       photosEmpty: 'No photos uploaded.',
       fileViewError: 'Failed to load the file.',

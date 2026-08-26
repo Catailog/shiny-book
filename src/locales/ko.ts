@@ -443,7 +443,7 @@ export const ko = {
         '주문 상태를 이전 단계로 되돌립니다. 이미 진행된 작업이 있다면 실제 진행 상황과 어긋날 수 있으니 신중하게 진행해주세요.',
       revertConfirmButton: '이전 단계로 강행',
       revertCancelButton: '취소',
-      viewPhotosButton: '업로드 사진 보기',
+      viewPhotosButton: '업로드 사진',
       photosLoading: '불러오는 중...',
       photosEmpty: '업로드된 사진이 없습니다.',
       fileViewError: '파일을 불러오지 못했습니다.',
