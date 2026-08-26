@@ -55,7 +55,7 @@ export default async function MypageAccountPage() {
               </Label>
               <DisplayNameForm currentName={consumerName} />
             </div>
-            <Input id="account-name" defaultValue={consumerName} readOnly />
+            <Input id="account-name" defaultValue={consumerName} disabled />
           </div>
           <div className="flex flex-col gap-2">
             <Label
@@ -64,7 +64,7 @@ export default async function MypageAccountPage() {
             >
               {t.consumer.account.personalInfo.emailLabel}
             </Label>
-            <Input id="account-email" defaultValue={consumerEmail} readOnly />
+            <Input id="account-email" defaultValue={consumerEmail} disabled />
           </div>
           {consumerPhone ? (
             <div className="flex flex-col gap-2">
@@ -74,7 +74,7 @@ export default async function MypageAccountPage() {
               >
                 {t.consumer.account.personalInfo.phoneLabel}
               </Label>
-              <Input id="account-phone" defaultValue={consumerPhone} readOnly />
+              <Input id="account-phone" defaultValue={consumerPhone} disabled />
             </div>
           ) : null}
         </div>
