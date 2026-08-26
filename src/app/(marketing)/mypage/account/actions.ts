@@ -8,6 +8,7 @@ import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 import { type DisplayNameInput, displayNameSchema } from './display-name-schema';
 import {
@@ -90,8 +91,7 @@ export async function updateDisplayName(
     return { errorCode: 'validation_failed' };
   }
 
-  const supabase = await createServerSupabaseClient();
-  const { error } = await supabase
+  const { error } = await createServiceRoleClient()
     .from('profiles')
     .update({ display_name: parsed.data.displayName })
     .eq('id', consumer.id);
