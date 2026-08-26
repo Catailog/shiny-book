@@ -6,6 +6,7 @@ describe('isRole', () => {
   it('accepts known roles', () => {
     expect(isRole('consumer')).toBe(true);
     expect(isRole('admin')).toBe(true);
+    expect(isRole('vendor')).toBe(true);
   });
 
   it('rejects unknown values', () => {
