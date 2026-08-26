@@ -56,6 +56,7 @@ import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import type { OrderEditPrefill } from '@/lib/orders/get-order-edit-prefill';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
+import { deleteOrderPhoto } from '@/lib/uploads/delete-order-photo';
 import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
 import { cn } from '@/lib/utils';
 
@@ -77,6 +78,10 @@ interface PhotoItem {
   previewUrl: string | null;
   path: string | null;
   status: UploadStatus;
+  // Photos loaded from an order being edited are already saved - removing them here
+  // should only drop them from this draft, not delete the file until the edit is
+  // actually submitted (update-order-actions.ts replaces the saved photo set then).
+  isExisting: boolean;
 }
 
 interface NewOrderWizardProps {
@@ -127,6 +132,7 @@ export function NewOrderWizard({
       previewUrl: photo.previewUrl,
       path: photo.path,
       status: 'done',
+      isExisting: true,
     })),
   );
   const [addresses, setAddresses] = useState(initialAddresses);
@@ -259,6 +265,7 @@ export function NewOrderWizard({
       previewUrl: URL.createObjectURL(file),
       path: null as string | null,
       status: 'uploading' as UploadStatus,
+      isExisting: false,
       file,
     }));
 
@@ -289,6 +296,9 @@ export function NewOrderWizard({
       if (target?.previewUrl) {
         URL.revokeObjectURL(target.previewUrl);
       }
+      if (target?.path && !target.isExisting) {
+        void deleteOrderPhoto(target.path);
+      }
       return current.filter((photo) => photo.id !== id);
     });
   }
@@ -312,6 +322,7 @@ export function NewOrderWizard({
           previewUrl: photo.previewUrl,
           path: photo.path,
           status: 'done',
+          isExisting: false,
         })),
       );
     });
