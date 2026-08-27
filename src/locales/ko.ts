@@ -1026,8 +1026,12 @@ export const ko = {
         emailLabel: '이메일',
         phoneLabel: '연락처',
         editNameTitle: '이름 변경',
+        editPhoneTitle: '연락처 변경',
         nameInvalid: `이름은 1자 이상 ${DISPLAY_NAME_MAX_LENGTH}자 이하여야 합니다.`,
+        phoneInvalid: '올바른 연락처를 입력해주세요.',
+        phonePlaceholder: '연락처를 비워두면 등록된 연락처가 삭제됩니다.',
         updateSuccess: '이름이 변경됐습니다.',
+        phoneUpdateSuccess: '연락처가 변경됐습니다.',
       },
       profileImage: {
         changeButton: '이미지 변경',

@@ -1026,8 +1026,12 @@ export const en = {
         emailLabel: 'Email',
         phoneLabel: 'Phone',
         editNameTitle: 'Change name',
+        editPhoneTitle: 'Change phone number',
         nameInvalid: `Name must be between 1 and ${DISPLAY_NAME_MAX_LENGTH} characters.`,
+        phoneInvalid: 'Please enter a valid phone number.',
+        phonePlaceholder: 'Leave the phone number blank to remove it.',
         updateSuccess: 'Your name has been updated.',
+        phoneUpdateSuccess: 'Your phone number has been updated.',
       },
       profileImage: {
         changeButton: 'Change image',

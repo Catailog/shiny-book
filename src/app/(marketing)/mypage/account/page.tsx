@@ -12,6 +12,7 @@ import { DeleteAccountButton } from './delete-account-button';
 import { DisplayNameForm } from './display-name-form';
 import { NotificationPreferencesForm } from './notification-form';
 import { ChangePasswordForm } from './password-form';
+import { PhoneForm } from './phone-form';
 
 export default async function MypageAccountPage() {
   const locale = await getLocale();
@@ -66,17 +67,18 @@ export default async function MypageAccountPage() {
             </Label>
             <Input id="account-email" defaultValue={consumerEmail} disabled />
           </div>
-          {consumerPhone ? (
-            <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
               <Label
                 htmlFor="account-phone"
                 className="text-xs font-semibold tracking-wide uppercase"
               >
                 {t.consumer.account.personalInfo.phoneLabel}
               </Label>
-              <Input id="account-phone" defaultValue={consumerPhone} disabled />
+              <PhoneForm currentPhone={consumerPhone} />
             </div>
-          ) : null}
+            <Input id="account-phone" defaultValue={consumerPhone} disabled />
+          </div>
         </div>
       </section>
 

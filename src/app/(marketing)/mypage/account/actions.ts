@@ -19,6 +19,7 @@ import {
   notificationPreferencesSchema,
 } from './notification-schema';
 import { type ChangePasswordInput, changePasswordSchema } from './password-schema';
+import { type PhoneFormInput, phoneFormSchema } from './phone-schema';
 
 export interface ChangePasswordResult {
   errorCode:
@@ -111,6 +112,34 @@ export async function updateDisplayName(
     .from('profiles')
     .update({ display_name: parsed.data.displayName })
     .eq('id', consumer.id);
+  if (error) {
+    return { errorCode: 'unexpected_error' };
+  }
+
+  revalidatePath(CONSUMER_ROUTES.ACCOUNT);
+  return undefined;
+}
+
+export interface UpdatePhoneResult {
+  errorCode: 'unauthorized' | 'validation_failed' | 'unexpected_error';
+}
+
+export async function updateConsumerPhone(
+  input: PhoneFormInput,
+): Promise<UpdatePhoneResult | undefined> {
+  const consumer = await getCurrentConsumer();
+  if (!consumer) {
+    return { errorCode: 'unauthorized' };
+  }
+
+  const parsed = phoneFormSchema.safeParse(input);
+  if (!parsed.success) {
+    return { errorCode: 'validation_failed' };
+  }
+
+  const { error } = await createServiceRoleClient().auth.admin.updateUserById(consumer.id, {
+    user_metadata: { ...consumer.user_metadata, phone: parsed.data.phone ?? null },
+  });
   if (error) {
     return { errorCode: 'unexpected_error' };
   }
