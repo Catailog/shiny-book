@@ -25,6 +25,7 @@ import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { formatDate } from '@/lib/format-date';
 import { formatIdPrefix } from '@/lib/format-id-prefix';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 
 import { createInquiry } from './actions';
 import { type InquiryFormInput, inquiryFormSchema } from './inquiry-schema';
@@ -123,7 +124,7 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
         />
         {errors.title ? (
           <p className="text-sm text-destructive">
-            {t.consumer.inquiries.errors.validation_failed}
+            {fieldErrorMessage(t.consumer.inquiries.errors.fields.title, errors.title.type)}
           </p>
         ) : null}
       </div>
@@ -138,7 +139,7 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
         />
         {errors.content ? (
           <p className="text-sm text-destructive">
-            {t.consumer.inquiries.errors.validation_failed}
+            {fieldErrorMessage(t.consumer.inquiries.errors.fields.content, errors.content.type)}
           </p>
         ) : null}
       </div>

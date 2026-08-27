@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DISCOUNT_TYPE } from '@/constants/coupon';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { cn } from '@/lib/utils';
 import { defaultLocale, locales } from '@/locales';
 
@@ -96,7 +97,9 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
         <Label htmlFor="code">{t.admin.coupons.form.codeLabel}</Label>
         <Input id="code" type="text" className="w-40" {...register('code')} />
         {errors.code ? (
-          <p className="text-sm text-destructive">{t.admin.coupons.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.coupons.errors.fields.code, errors.code.type)}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
@@ -137,7 +140,12 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
           {...register('discountValue')}
         />
         {errors.discountValue ? (
-          <p className="text-sm text-destructive">{t.admin.coupons.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(
+              t.admin.coupons.errors.fields.discountValue,
+              errors.discountValue.type,
+            )}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
@@ -174,7 +182,7 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
           </PopoverContent>
         </Popover>
         {errors.startsAt ? (
-          <p className="text-sm text-destructive">{t.admin.coupons.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">{t.admin.coupons.errors.fields.period}</p>
         ) : null}
       </div>
       <Button type="submit" variant="primary" disabled={isPending}>

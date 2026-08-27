@@ -20,6 +20,7 @@ import {
   ANNOUNCEMENT_CATEGORY,
   type AnnouncementCategory,
 } from '@/constants/announcement-category';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { defaultLocale, locales } from '@/locales';
 
 import type { AnnouncementActionResult } from './actions';
@@ -77,7 +78,7 @@ export function AnnouncementForm({
         <Input id="title" type="text" {...register('title')} />
         {errors.title ? (
           <p className="text-sm text-destructive">
-            {t.admin.announcements.errors.validation_failed}
+            {fieldErrorMessage(t.admin.announcements.errors.fields.title, errors.title.type)}
           </p>
         ) : null}
       </div>
@@ -114,7 +115,7 @@ export function AnnouncementForm({
         />
         {errors.content ? (
           <p className="text-sm text-destructive">
-            {t.admin.announcements.errors.validation_failed}
+            {fieldErrorMessage(t.admin.announcements.errors.fields.content, errors.content.type)}
           </p>
         ) : null}
       </div>

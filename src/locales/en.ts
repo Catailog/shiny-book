@@ -1,3 +1,8 @@
+import { ADDRESS_LABEL_MAX_LENGTH } from '@/constants/address';
+import {
+  ANNOUNCEMENT_CONTENT_MAX_LENGTH,
+  ANNOUNCEMENT_TITLE_MAX_LENGTH,
+} from '@/constants/announcement';
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
 import {
@@ -5,9 +10,23 @@ import {
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
 } from '@/constants/auth';
+import {
+  COUPON_CODE_MAX_LENGTH,
+  COUPON_DISCOUNT_VALUE_MAX,
+  COUPON_PERCENTAGE_MAX,
+} from '@/constants/coupon';
+import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
 import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_NAME_MAX_LENGTH,
+  PRODUCT_PRICE_MAX,
+  PRODUCT_SIZE_MAX_LENGTH,
+  PRODUCT_SLUG_MAX_LENGTH,
+} from '@/constants/product';
 
 export const en = {
   common: {
@@ -545,6 +564,20 @@ export const en = {
         expired: 'Expired coupons cannot change status.',
         conflict: 'This was already changed elsewhere. Please refresh and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          code: {
+            required: 'Please enter a coupon code.',
+            tooLong: `Keep the coupon code within ${COUPON_CODE_MAX_LENGTH} characters.`,
+          },
+          discountValue: {
+            required: 'Please enter a discount value.',
+            invalid: 'Please enter the discount value as a number.',
+            min: 'The discount value must be 1 or more.',
+            max: `The discount value must be ${COUPON_DISCOUNT_VALUE_MAX.toLocaleString('en-US')} or less.`,
+            custom: `A percentage discount cannot exceed ${COUPON_PERCENTAGE_MAX}%.`,
+          },
+          period: 'The start date must be on or before the end date.',
+        },
       },
     },
     announcements: {
@@ -574,6 +607,16 @@ export const en = {
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          title: {
+            required: 'Please enter a title.',
+            tooLong: `Keep the title within ${ANNOUNCEMENT_TITLE_MAX_LENGTH} characters.`,
+          },
+          content: {
+            required: 'Please enter the content.',
+            tooLong: `Keep the content within ${ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+        },
       },
       list: {
         filterAllLabel: 'All',
@@ -640,6 +683,16 @@ export const en = {
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          question: {
+            required: 'Please enter a question.',
+            tooLong: `Keep the question within ${FAQ_QUESTION_MAX_LENGTH} characters.`,
+          },
+          answer: {
+            required: 'Please enter an answer.',
+            tooLong: `Keep the answer within ${FAQ_ANSWER_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+        },
       },
       list: {
         searchPlaceholder: 'Search questions...',
@@ -816,6 +869,31 @@ export const en = {
         slug_taken: 'This slug is already in use.',
         conflict: 'This was just changed elsewhere. Please refresh and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          slug: {
+            required: 'Please enter a slug.',
+            tooLong: `Keep the slug within ${PRODUCT_SLUG_MAX_LENGTH} characters.`,
+            format: 'Use only lowercase letters, numbers, and hyphens (-).',
+          },
+          name: {
+            required: 'Please enter a product name.',
+            tooLong: `Keep the product name within ${PRODUCT_NAME_MAX_LENGTH} characters.`,
+          },
+          size: {
+            required: 'Please enter a size.',
+            tooLong: `Keep the size within ${PRODUCT_SIZE_MAX_LENGTH} characters.`,
+          },
+          description: {
+            required: 'Please enter a product description.',
+            tooLong: `Keep the description within ${PRODUCT_DESCRIPTION_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+          price: {
+            required: 'Please enter a price.',
+            invalid: 'Please enter the price as a number.',
+            min: 'The price must be 0 or more.',
+            max: `The price must be ${PRODUCT_PRICE_MAX.toLocaleString('en-US')} or less.`,
+          },
+        },
       },
     },
   },
@@ -994,6 +1072,23 @@ export const en = {
           validation_failed: 'Please check your input and try again.',
           not_found: 'Address not found.',
           unexpected_error: 'Something went wrong. Please try again shortly.',
+          fields: {
+            label: {
+              required: 'Please enter an address label.',
+              tooLong: `Keep the address label within ${ADDRESS_LABEL_MAX_LENGTH} characters.`,
+            },
+            recipientName: {
+              required: 'Please enter a recipient name.',
+              tooLong: `Keep the recipient name within ${PERSON_NAME_MAX_LENGTH} characters.`,
+            },
+            phone: {
+              required: 'Please enter a phone number.',
+              format: 'Please enter a valid mobile phone number.',
+            },
+            addressLine1: {
+              required: 'Please use the address search to fill in the address.',
+            },
+          },
         },
       },
       notifications: {
@@ -1145,6 +1240,16 @@ export const en = {
         validation_failed: 'Please check your input and try again.',
         not_found: 'This inquiry could not be found.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          title: {
+            required: 'Please enter a title.',
+            tooLong: `Keep the title within ${INQUIRY_TITLE_MAX_LENGTH} characters.`,
+          },
+          content: {
+            required: 'Please enter the content.',
+            tooLong: `Keep the content within ${INQUIRY_CONTENT_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+        },
       },
     },
     reviews: {

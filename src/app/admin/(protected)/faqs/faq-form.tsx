@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { defaultLocale, locales } from '@/locales';
 
 import type { FaqActionResult } from './actions';
@@ -64,7 +65,9 @@ export function FaqForm({
         <Label htmlFor="question">{t.admin.faqs.form.questionLabel}</Label>
         <Input id="question" type="text" {...register('question')} />
         {errors.question ? (
-          <p className="text-sm text-destructive">{t.admin.faqs.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.faqs.errors.fields.question, errors.question.type)}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
@@ -76,7 +79,9 @@ export function FaqForm({
           {...register('answer')}
         />
         {errors.answer ? (
-          <p className="text-sm text-destructive">{t.admin.faqs.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.faqs.errors.fields.answer, errors.answer.type)}
+          </p>
         ) : null}
       </div>
       <Button type="submit" disabled={isPending} className="w-fit">

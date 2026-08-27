@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useT } from '@/hooks/use-t';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 
 import { createAddress, updateAddress } from './address-actions';
 import { type AddressFormInput, addressFormSchema } from './address-schema';
@@ -69,7 +70,10 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
         <Input id="address-label" {...register('label')} />
         {errors.label ? (
           <p className="text-sm text-destructive">
-            {t.consumer.account.shippingAddress.errors.validation_failed}
+            {fieldErrorMessage(
+              t.consumer.account.shippingAddress.errors.fields.label,
+              errors.label.type,
+            )}
           </p>
         ) : null}
       </div>
@@ -80,7 +84,10 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
         <Input id="address-recipient" {...register('recipientName')} />
         {errors.recipientName ? (
           <p className="text-sm text-destructive">
-            {t.consumer.account.shippingAddress.errors.validation_failed}
+            {fieldErrorMessage(
+              t.consumer.account.shippingAddress.errors.fields.recipientName,
+              errors.recipientName.type,
+            )}
           </p>
         ) : null}
       </div>
@@ -89,7 +96,10 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
         <Input id="address-phone" type="tel" {...register('phone')} />
         {errors.phone ? (
           <p className="text-sm text-destructive">
-            {t.consumer.account.shippingAddress.errors.validation_failed}
+            {fieldErrorMessage(
+              t.consumer.account.shippingAddress.errors.fields.phone,
+              errors.phone.type,
+            )}
           </p>
         ) : null}
       </div>
@@ -121,7 +131,10 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
         <Input id="address-line1" readOnly {...register('addressLine1')} />
         {errors.addressLine1 ? (
           <p className="text-sm text-destructive">
-            {t.consumer.account.shippingAddress.errors.validation_failed}
+            {fieldErrorMessage(
+              t.consumer.account.shippingAddress.errors.fields.addressLine1,
+              errors.addressLine1.type,
+            )}
           </p>
         ) : null}
       </div>

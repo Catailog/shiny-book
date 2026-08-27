@@ -1,3 +1,8 @@
+import { ADDRESS_LABEL_MAX_LENGTH } from '@/constants/address';
+import {
+  ANNOUNCEMENT_CONTENT_MAX_LENGTH,
+  ANNOUNCEMENT_TITLE_MAX_LENGTH,
+} from '@/constants/announcement';
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
 import {
@@ -5,9 +10,23 @@ import {
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
 } from '@/constants/auth';
+import {
+  COUPON_CODE_MAX_LENGTH,
+  COUPON_DISCOUNT_VALUE_MAX,
+  COUPON_PERCENTAGE_MAX,
+} from '@/constants/coupon';
+import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
 import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_NAME_MAX_LENGTH,
+  PRODUCT_PRICE_MAX,
+  PRODUCT_SIZE_MAX_LENGTH,
+  PRODUCT_SLUG_MAX_LENGTH,
+} from '@/constants/product';
 
 export const ko = {
   common: {
@@ -544,6 +563,20 @@ export const ko = {
         expired: '만료된 쿠폰은 상태를 변경할 수 없습니다.',
         conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          code: {
+            required: '쿠폰 코드를 입력해주세요.',
+            tooLong: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          discountValue: {
+            required: '할인 값을 입력해주세요.',
+            invalid: '할인 값을 숫자로 입력해주세요.',
+            min: '할인 값은 1 이상이어야 합니다.',
+            max: `할인 값은 ${COUPON_DISCOUNT_VALUE_MAX.toLocaleString('ko-KR')} 이하로 입력해주세요.`,
+            custom: `정률 할인은 ${COUPON_PERCENTAGE_MAX}%를 넘을 수 없습니다.`,
+          },
+          period: '시작일은 만료일보다 앞선 날짜여야 합니다.',
+        },
       },
     },
     announcements: {
@@ -573,6 +606,16 @@ export const ko = {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          title: {
+            required: '제목을 입력해주세요.',
+            tooLong: `제목은 ${ANNOUNCEMENT_TITLE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          content: {
+            required: '내용을 입력해주세요.',
+            tooLong: `내용은 ${ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+        },
       },
       list: {
         filterAllLabel: '전체',
@@ -639,6 +682,16 @@ export const ko = {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          question: {
+            required: '질문을 입력해주세요.',
+            tooLong: `질문은 ${FAQ_QUESTION_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          answer: {
+            required: '답변을 입력해주세요.',
+            tooLong: `답변은 ${FAQ_ANSWER_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+        },
       },
       list: {
         searchPlaceholder: '질문 검색...',
@@ -815,6 +868,31 @@ export const ko = {
         slug_taken: '이미 존재하는 슬러그입니다.',
         conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          slug: {
+            required: '슬러그를 입력해주세요.',
+            tooLong: `슬러그는 ${PRODUCT_SLUG_MAX_LENGTH}자 이하로 입력해주세요.`,
+            format: '슬러그는 영문 소문자, 숫자, 하이픈(-)만 사용할 수 있습니다.',
+          },
+          name: {
+            required: '상품명을 입력해주세요.',
+            tooLong: `상품명은 ${PRODUCT_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          size: {
+            required: '사이즈를 입력해주세요.',
+            tooLong: `사이즈는 ${PRODUCT_SIZE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          description: {
+            required: '상품 설명을 입력해주세요.',
+            tooLong: `상품 설명은 ${PRODUCT_DESCRIPTION_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+          price: {
+            required: '가격을 입력해주세요.',
+            invalid: '가격을 숫자로 입력해주세요.',
+            min: '가격은 0원 이상이어야 합니다.',
+            max: `가격은 ${PRODUCT_PRICE_MAX.toLocaleString('ko-KR')}원 이하로 입력해주세요.`,
+          },
+        },
       },
     },
   },
@@ -994,6 +1072,23 @@ export const ko = {
           validation_failed: '입력값을 다시 확인해주세요.',
           not_found: '배송지를 찾을 수 없습니다.',
           unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          fields: {
+            label: {
+              required: '배송지 이름을 입력해주세요.',
+              tooLong: `배송지 이름은 ${ADDRESS_LABEL_MAX_LENGTH}자 이하로 입력해주세요.`,
+            },
+            recipientName: {
+              required: '수령인을 입력해주세요.',
+              tooLong: `수령인은 ${PERSON_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
+            },
+            phone: {
+              required: '연락처를 입력해주세요.',
+              format: '올바른 휴대폰 번호를 입력해주세요.',
+            },
+            addressLine1: {
+              required: '주소 검색으로 주소를 입력해주세요.',
+            },
+          },
         },
       },
       notifications: {
@@ -1142,6 +1237,16 @@ export const ko = {
         validation_failed: '입력값을 다시 확인해주세요.',
         not_found: '문의를 찾을 수 없습니다.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          title: {
+            required: '제목을 입력해주세요.',
+            tooLong: `제목은 ${INQUIRY_TITLE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          content: {
+            required: '내용을 입력해주세요.',
+            tooLong: `내용은 ${INQUIRY_CONTENT_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+        },
       },
     },
     reviews: {

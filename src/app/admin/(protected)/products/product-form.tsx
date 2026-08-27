@@ -21,6 +21,7 @@ import {
 import { PRODUCT_IMAGE_UPLOAD_RULE, STORAGE_BUCKETS } from '@/constants/file-upload';
 import { LOCALE_LABELS, LOCALE_OPTIONS } from '@/constants/locale';
 import { PRODUCT_CATEGORY } from '@/constants/product-category';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createProductImageSignedUploadUrl } from '@/lib/uploads/create-product-image-signed-upload-url';
 import { type Locale, defaultLocale, locales } from '@/locales';
@@ -146,14 +147,18 @@ export function ProductForm({
         <Label htmlFor="slug">{t.admin.products.form.slugLabel}</Label>
         <Input id="slug" type="text" {...register('slug')} />
         {errors.slug ? (
-          <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.products.errors.fields.slug, errors.slug.type)}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="size">{t.admin.products.form.sizeLabel}</Label>
         <Input id="size" type="text" {...register('size')} />
         {errors.size ? (
-          <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.products.errors.fields.size, errors.size.type)}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-4 rounded-lg border border-primary/30 bg-primary-soft/40 p-4">
@@ -183,7 +188,7 @@ export function ProductForm({
             <Input id={nameFieldName} type="text" {...register(nameFieldName)} />
             {isKorean && errors.name ? (
               <p className="text-sm text-destructive">
-                {t.admin.products.errors.validation_failed}
+                {fieldErrorMessage(t.admin.products.errors.fields.name, errors.name.type)}
               </p>
             ) : null}
             {showNameFallbackNotice ? (
@@ -202,7 +207,10 @@ export function ProductForm({
             />
             {isKorean && errors.description ? (
               <p className="text-sm text-destructive">
-                {t.admin.products.errors.validation_failed}
+                {fieldErrorMessage(
+                  t.admin.products.errors.fields.description,
+                  errors.description.type,
+                )}
               </p>
             ) : null}
             {showDescriptionFallbackNotice ? (
@@ -215,7 +223,9 @@ export function ProductForm({
         <Label htmlFor="price">{t.admin.products.form.priceLabel}</Label>
         <Input id="price" type="number" min={0} {...register('price')} />
         {errors.price ? (
-          <p className="text-sm text-destructive">{t.admin.products.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.products.errors.fields.price, errors.price.type)}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
