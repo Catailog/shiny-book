@@ -71,7 +71,12 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="name" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.nameLabel}
             </Label>
-            <Input id="name" autoComplete="name" {...register('name')} />
+            <Input
+              id="name"
+              autoComplete="name"
+              maxLength={PERSON_NAME_MAX_LENGTH}
+              {...register('name')}
+            />
             <CharCounterField control={control} name="name" max={PERSON_NAME_MAX_LENGTH} />
             {errors.name ? (
               <p className="text-sm text-destructive">{t.consumer.signup.errors.nameRequired}</p>

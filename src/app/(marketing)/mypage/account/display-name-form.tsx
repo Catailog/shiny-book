@@ -66,7 +66,11 @@ export function DisplayNameForm({ currentName }: DisplayNameFormProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-col gap-2">
             <Label htmlFor="display-name">{t.consumer.account.personalInfo.nameLabel}</Label>
-            <Input id="display-name" {...register('displayName')} />
+            <Input
+              id="display-name"
+              maxLength={DISPLAY_NAME_MAX_LENGTH}
+              {...register('displayName')}
+            />
             <CharCounterField control={control} name="displayName" max={DISPLAY_NAME_MAX_LENGTH} />
             {errors.displayName ? (
               <p className="text-sm text-destructive">

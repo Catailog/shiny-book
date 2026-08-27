@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { DISCOUNT_TYPE } from '@/constants/coupon';
+import { COUPON_CODE_MAX_LENGTH, DISCOUNT_TYPE } from '@/constants/coupon';
 import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { cn } from '@/lib/utils';
 import { defaultLocale, locales } from '@/locales';
@@ -95,7 +95,13 @@ export function CouponForm({ onSuccess }: CouponFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap items-end gap-3" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="code">{t.admin.coupons.form.codeLabel}</Label>
-        <Input id="code" type="text" className="w-40" {...register('code')} />
+        <Input
+          id="code"
+          type="text"
+          maxLength={COUPON_CODE_MAX_LENGTH}
+          className="w-40"
+          {...register('code')}
+        />
         {errors.code ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(t.admin.coupons.errors.fields.code, errors.code.type)}

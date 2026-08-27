@@ -76,7 +76,7 @@ export function AddressForm({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="address-label">{t.consumer.account.shippingAddress.form.labelLabel}</Label>
-        <Input id="address-label" {...register('label')} />
+        <Input id="address-label" maxLength={ADDRESS_LABEL_MAX_LENGTH} {...register('label')} />
         <CharCounterField control={control} name="label" max={ADDRESS_LABEL_MAX_LENGTH} />
         {errors.label ? (
           <p className="text-sm text-destructive">
@@ -91,7 +91,11 @@ export function AddressForm({
         <Label htmlFor="address-recipient">
           {t.consumer.account.shippingAddress.form.recipientNameLabel}
         </Label>
-        <Input id="address-recipient" {...register('recipientName')} />
+        <Input
+          id="address-recipient"
+          maxLength={PERSON_NAME_MAX_LENGTH}
+          {...register('recipientName')}
+        />
         <CharCounterField control={control} name="recipientName" max={PERSON_NAME_MAX_LENGTH} />
         {errors.recipientName ? (
           <p className="text-sm text-destructive">
@@ -153,7 +157,11 @@ export function AddressForm({
         <Label htmlFor="address-line2">
           {t.consumer.account.shippingAddress.form.addressLine2Label}
         </Label>
-        <Input id="address-line2" {...register('addressLine2')} />
+        <Input
+          id="address-line2"
+          maxLength={ADDRESS_LINE_MAX_LENGTH}
+          {...register('addressLine2')}
+        />
         <CharCounterField control={control} name="addressLine2" max={ADDRESS_LINE_MAX_LENGTH} />
       </div>
       <div className="flex items-center gap-2">

@@ -121,6 +121,7 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
         <Label htmlFor="inquiry-title">{t.consumer.inquiries.form.titleLabel}</Label>
         <Input
           id="inquiry-title"
+          maxLength={INQUIRY_TITLE_MAX_LENGTH}
           placeholder={t.consumer.inquiries.form.titlePlaceholder}
           {...register('title')}
         />
@@ -137,6 +138,7 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
         <Textarea
           id="inquiry-content"
           rows={8}
+          maxLength={INQUIRY_CONTENT_MAX_LENGTH}
           placeholder={t.consumer.inquiries.form.contentPlaceholder}
           {...register('content')}
         />

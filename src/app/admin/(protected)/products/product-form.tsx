@@ -20,6 +20,12 @@ import {
 } from '@/components/ui/select';
 import { PRODUCT_IMAGE_UPLOAD_RULE, STORAGE_BUCKETS } from '@/constants/file-upload';
 import { LOCALE_LABELS, LOCALE_OPTIONS } from '@/constants/locale';
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_NAME_MAX_LENGTH,
+  PRODUCT_SIZE_MAX_LENGTH,
+  PRODUCT_SLUG_MAX_LENGTH,
+} from '@/constants/product';
 import { PRODUCT_CATEGORY } from '@/constants/product-category';
 import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
@@ -145,7 +151,7 @@ export function ProductForm({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="slug">{t.admin.products.form.slugLabel}</Label>
-        <Input id="slug" type="text" {...register('slug')} />
+        <Input id="slug" type="text" maxLength={PRODUCT_SLUG_MAX_LENGTH} {...register('slug')} />
         {errors.slug ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(t.admin.products.errors.fields.slug, errors.slug.type)}
@@ -154,7 +160,7 @@ export function ProductForm({
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="size">{t.admin.products.form.sizeLabel}</Label>
-        <Input id="size" type="text" {...register('size')} />
+        <Input id="size" type="text" maxLength={PRODUCT_SIZE_MAX_LENGTH} {...register('size')} />
         {errors.size ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(t.admin.products.errors.fields.size, errors.size.type)}
@@ -185,7 +191,12 @@ export function ProductForm({
             <Label htmlFor={nameFieldName}>
               {`${t.admin.products.form.nameLabel}(${LOCALE_LABELS[activeLanguage]})`}
             </Label>
-            <Input id={nameFieldName} type="text" {...register(nameFieldName)} />
+            <Input
+              id={nameFieldName}
+              type="text"
+              maxLength={PRODUCT_NAME_MAX_LENGTH}
+              {...register(nameFieldName)}
+            />
             {isKorean && errors.name ? (
               <p className="text-sm text-destructive">
                 {fieldErrorMessage(t.admin.products.errors.fields.name, errors.name.type)}
@@ -202,6 +213,7 @@ export function ProductForm({
             <textarea
               id={descriptionFieldName}
               rows={4}
+              maxLength={PRODUCT_DESCRIPTION_MAX_LENGTH}
               className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               {...register(descriptionFieldName)}
             />

@@ -419,6 +419,7 @@ export function NewOrderWizard({
               <Input
                 id="title"
                 type="text"
+                maxLength={ORDER_TITLE_MAX_LENGTH}
                 placeholder={t.consumer.orderNew.titlePlaceholder}
                 {...register('title')}
               />
