@@ -1003,12 +1003,16 @@ export const en = {
     },
     account: {
       title: 'Account settings',
+      currentPasswordLabel: 'Current password',
       passwordLabel: 'New password',
       passwordConfirmLabel: 'Confirm new password',
       submitButton: 'Change password',
       submitting: 'Changing...',
       success: 'Your password has been changed.',
       errors: {
+        currentPasswordRequired: 'Please enter your current password.',
+        incorrect_current_password: 'Your current password is incorrect.',
+        rate_limited: 'Too many password change attempts. Please try again shortly.',
         passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
         passwordConfirmRequired: 'Please confirm your new password.',
         passwordMismatch: 'Passwords do not match.',

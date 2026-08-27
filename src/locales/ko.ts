@@ -1003,12 +1003,16 @@ export const ko = {
     },
     account: {
       title: '계정 설정',
+      currentPasswordLabel: '현재 비밀번호',
       passwordLabel: '새 비밀번호',
       passwordConfirmLabel: '새 비밀번호 확인',
       submitButton: '변경하기',
       submitting: '변경 중...',
       success: '비밀번호가 변경됐습니다.',
       errors: {
+        currentPasswordRequired: '현재 비밀번호를 입력해주세요.',
+        incorrect_current_password: '현재 비밀번호가 일치하지 않습니다.',
+        rate_limited: '비밀번호 변경 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
         passwordConfirmRequired: '새 비밀번호 확인을 입력해주세요.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',

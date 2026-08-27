@@ -4,6 +4,7 @@ import { passwordSchema } from '@/schemas/password';
 
 export const changePasswordSchema = z
   .object({
+    currentPassword: z.string().min(1),
     password: passwordSchema,
     passwordConfirm: z.string().min(1),
   })
