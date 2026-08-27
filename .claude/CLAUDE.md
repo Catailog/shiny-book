@@ -102,6 +102,19 @@
   - 서버 전용 모듈 상단에는 `import 'server-only'`를 필수 명시하고, 클라이언트 컴포넌트로 시크릿 키나 DB 자격 증명이 유출되지 않도록 경계를 명확히 분리합니다.
 - **Supabase DB 타입 연동:**
   - DB 타입을 직접 작성하지 않고, `npm run db:types`로 추출된 `Database` 타입(`@/lib/db/database.types.ts`) 기반의 `Tables<'table_name'>` 형태로 자동 연동해 사용합니다.
+- **DB 접근은 Supabase 쿼리 빌더로만:**
+  - `supabase.from(...).select().eq()...` 형태의 쿼리 빌더(PostgREST)만 사용합니다. 값이 항상 별도 인자로 전달되어 파라미터 바인딩되므로 SQL 인젝션이 구조적으로 불가능합니다.
+  - 사용자 입력을 문자열로 이어붙여 SQL이나 PostgREST 필터를 조립하지 않습니다. 특히 `.or()`, `.filter()`에 `` `col.eq.${userInput}` `` 처럼 보간하는 것을 금지합니다(PostgREST 필터 인젝션). 이런 게 필요하면 `.eq()`/`.in()`/`.contains()` 등 전용 메서드로 분해합니다.
+  - raw SQL이 꼭 필요한 경우(DB 함수, 마이그레이션)는 사용자 입력이 없는 정적 SQL이거나, `supabase.rpc('fn', { arg })`처럼 인자를 바인딩하는 형태만 사용합니다. 앱 코드에 `pg`/`Pool` 같은 raw 클라이언트를 새로 들이지 않습니다.
+  - 목록 화면의 검색/필터는 이미 이 프로젝트에서 하는 대로, 가져온 배열에 JS `filter`를 거는 방식이라 쿼리에 사용자 입력이 안 닿습니다. 이 패턴을 유지합니다.
+  - 새 테이블 마이그레이션에는 `enable row level security`와 정책을 반드시 함께 넣습니다. 서버가 서비스 롤로 RLS를 우회하더라도, publishable 키로 직접 접근 가능한 클라이언트와 키 유출에 대한 최후 방어선입니다. (현재 전 테이블 적용됨 - 회귀 금지)
+  - DB 함수(PL/pgSQL)를 새로 만들 때 본문에서 `EXECUTE 'text' || arg`로 인자를 이어붙이지 않습니다. 동적 SQL이 불가피하면 `EXECUTE ... USING arg` 또는 `format('... %L ...', arg)`로 바인딩합니다.
+  - `.ilike()`/`.like()`를 도입하게 되면 사용자 입력의 `\` `%` `_`를 먼저 이스케이프한 뒤 패턴에 넣습니다(안 그러면 `%` 하나로 전체 조회).
+- **Zod 검증 결과만 사용:**
+  - Server Action/라우트의 입력 검증은 `safeParse`를 씁니다(예상 가능한 실패를 던지지 않고 반환값으로 모델링하기 위함 - 위 "포괄적 에러 처리" 예외 조항과 동일한 이유). `parse`는 실패가 정말 예외적이어서 Error Boundary로 올려야 할 때만.
+  - 검증 통과 후에는 반드시 `parsed.data`만 참조하고, 원본 `input`을 다시 읽지 않습니다. `admin.updateUserById(id, input)`처럼 raw `input`을 넘기면 선언 안 된 키가 그대로 흘러들어갑니다.
+  - `z.object`는 기본적으로 선언 안 된 키를 제거하므로 별도 설정이 필요 없습니다. `.passthrough()`(알 수 없는 키 유지)는 프록시성 엔벨로프 등 정말 필요한 경우가 아니면 쓰지 않습니다.
+  - `.strict()`(알 수 없는 키를 검증 실패로)는 내부 Server Action엔 계약이 쉽게 깨져 권장하지 않고, 외부 엔드포인트(8번) 요청 본문 검증에서만 고려합니다.
 - **포괄적 에러 처리:**
   - 모든 Async/Fetch 작업 및 API 호출에는 try-catch, 로딩 상태, Fallback UI를 갖춘 `<Suspense>` 및 Error Boundary 처리를 필수 포함합니다.
   - 사용자에게는 기술적 세부사항이 노출되지 않는 유저 친화적 에러 메시지를 제공합니다.
