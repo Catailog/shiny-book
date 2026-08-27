@@ -1095,6 +1095,9 @@ export const en = {
               tooShort: 'Please enter a valid phone number.',
               format: 'Please enter a valid phone number.',
             },
+            postalCode: {
+              required: 'Please use the address search to fill in the postal code.',
+            },
             addressLine1: {
               required: 'Please use the address search to fill in the address.',
             },

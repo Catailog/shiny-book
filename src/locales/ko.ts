@@ -1095,6 +1095,9 @@ export const ko = {
               tooShort: '올바른 연락처를 입력해주세요.',
               format: '올바른 연락처를 입력해주세요.',
             },
+            postalCode: {
+              required: '주소 검색으로 우편번호를 입력해주세요.',
+            },
             addressLine1: {
               required: '주소 검색으로 주소를 입력해주세요.',
             },

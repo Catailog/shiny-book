@@ -52,8 +52,8 @@ export function AddressForm({
   function handleSearchAddress() {
     void openPostcodePopup({
       onComplete: (data: Address) => {
-        setValue('postalCode', data.zonecode);
-        setValue('addressLine1', data.roadAddress || data.jibunAddress);
+        setValue('postalCode', data.zonecode, { shouldValidate: true });
+        setValue('addressLine1', data.roadAddress || data.jibunAddress, { shouldValidate: true });
       },
     });
   }
@@ -136,7 +136,10 @@ export function AddressForm({
         </div>
         {errors.postalCode ? (
           <p className="text-sm text-destructive">
-            {t.consumer.account.shippingAddress.errors.validation_failed}
+            {fieldErrorMessage(
+              t.consumer.account.shippingAddress.errors.fields.postalCode,
+              errors.postalCode.type,
+            )}
           </p>
         ) : null}
       </div>
