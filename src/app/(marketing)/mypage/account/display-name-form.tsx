@@ -67,12 +67,7 @@ export function DisplayNameForm({ currentName }: DisplayNameFormProps) {
           <div className="flex flex-col gap-2">
             <Label htmlFor="display-name">{t.consumer.account.personalInfo.nameLabel}</Label>
             <Input id="display-name" {...register('displayName')} />
-            <CharCounterField
-              control={control}
-              name="displayName"
-              max={DISPLAY_NAME_MAX_LENGTH}
-              message={t.common.charLimitHint.replace('{max}', String(DISPLAY_NAME_MAX_LENGTH))}
-            />
+            <CharCounterField control={control} name="displayName" max={DISPLAY_NAME_MAX_LENGTH} />
             {errors.displayName ? (
               <p className="text-sm text-destructive">
                 {t.consumer.account.personalInfo.nameInvalid}

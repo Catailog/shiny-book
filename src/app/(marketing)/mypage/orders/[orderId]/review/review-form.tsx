@@ -56,12 +56,7 @@ export function ReviewForm({ orderId }: ReviewFormProps) {
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="content">{t.consumer.reviews.form.contentLabel}</Label>
         <Textarea id="content" rows={6} {...register('content')} />
-        <CharCounterField
-          control={control}
-          name="content"
-          max={REVIEW_CONTENT_MAX_LENGTH}
-          message={t.common.charLimitHint.replace('{max}', String(REVIEW_CONTENT_MAX_LENGTH))}
-        />
+        <CharCounterField control={control} name="content" max={REVIEW_CONTENT_MAX_LENGTH} />
         {errors.content ? (
           <p className="text-sm text-destructive">{t.consumer.reviews.errors.validation_failed}</p>
         ) : null}

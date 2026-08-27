@@ -124,12 +124,7 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
           placeholder={t.consumer.inquiries.form.titlePlaceholder}
           {...register('title')}
         />
-        <CharCounterField
-          control={control}
-          name="title"
-          max={INQUIRY_TITLE_MAX_LENGTH}
-          message={t.common.charLimitHint.replace('{max}', String(INQUIRY_TITLE_MAX_LENGTH))}
-        />
+        <CharCounterField control={control} name="title" max={INQUIRY_TITLE_MAX_LENGTH} />
         {errors.title ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(t.consumer.inquiries.errors.fields.title, errors.title.type)}
@@ -145,12 +140,7 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
           placeholder={t.consumer.inquiries.form.contentPlaceholder}
           {...register('content')}
         />
-        <CharCounterField
-          control={control}
-          name="content"
-          max={INQUIRY_CONTENT_MAX_LENGTH}
-          message={t.common.charLimitHint.replace('{max}', String(INQUIRY_CONTENT_MAX_LENGTH))}
-        />
+        <CharCounterField control={control} name="content" max={INQUIRY_CONTENT_MAX_LENGTH} />
         {errors.content ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(t.consumer.inquiries.errors.fields.content, errors.content.type)}

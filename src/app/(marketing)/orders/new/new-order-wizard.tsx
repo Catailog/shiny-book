@@ -422,12 +422,7 @@ export function NewOrderWizard({
                 placeholder={t.consumer.orderNew.titlePlaceholder}
                 {...register('title')}
               />
-              <CharCounterField
-                control={control}
-                name="title"
-                max={ORDER_TITLE_MAX_LENGTH}
-                message={t.common.charLimitHint.replace('{max}', String(ORDER_TITLE_MAX_LENGTH))}
-              />
+              <CharCounterField control={control} name="title" max={ORDER_TITLE_MAX_LENGTH} />
               {errors.title ? (
                 <p className="text-sm text-destructive">
                   {errors.title.type === 'too_big'
