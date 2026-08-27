@@ -9,6 +9,7 @@ export async function getAddressesByConsumer(consumerId: string): Promise<Tables
     .from('addresses')
     .select()
     .eq('consumer_id', consumerId)
+    .is('deleted_at', null)
     .order('is_default', { ascending: false })
     .order('created_at', { ascending: false });
 
