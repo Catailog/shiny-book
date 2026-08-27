@@ -6,10 +6,11 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { formatDateTime } from '@/lib/format-date';
+import { cn } from '@/lib/utils';
 
 import { addConsumerMessage, loadOlderInquiryMessages } from './actions';
 
@@ -120,9 +121,18 @@ export function InquiryMessageThread({
         <Textarea
           rows={4}
           value={content}
+          maxLength={INQUIRY_CONTENT_MAX_LENGTH}
           onChange={(event) => setContent(event.target.value)}
           placeholder={t.consumer.inquiries.replyPlaceholder}
         />
+        <span
+          className={cn(
+            'ml-auto text-xs text-muted-foreground tabular-nums',
+            content.length > INQUIRY_CONTENT_MAX_LENGTH && 'font-medium text-destructive',
+          )}
+        >
+          {content.length} / {INQUIRY_CONTENT_MAX_LENGTH}
+        </span>
         <Button
           type="button"
           variant="primary"
