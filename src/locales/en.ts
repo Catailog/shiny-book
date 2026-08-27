@@ -1153,6 +1153,7 @@ export const en = {
         shipping: 'Shipping',
         shippingFree: 'Free',
         shippingUndetermined: 'To be determined',
+        amountPending: 'Shown after quantity is set',
         finalEstimate: 'Final Estimated Total',
         payButton: 'Request & Pay',
       },

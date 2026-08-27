@@ -1151,6 +1151,7 @@ export const ko = {
         shipping: '배송비',
         shippingFree: '무료',
         shippingUndetermined: '미정',
+        amountPending: '수량 입력 후 표시',
         finalEstimate: '최종 예상 금액',
         payButton: '의뢰 및 결제하기',
       },

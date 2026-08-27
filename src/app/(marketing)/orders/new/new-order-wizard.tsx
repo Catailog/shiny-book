@@ -162,7 +162,9 @@ export function NewOrderWizard({
     },
   });
   const title = useWatch({ control, name: 'title' });
-  const quantity = useWatch({ control, name: 'quantity' }) || 0;
+  const quantityRaw = useWatch({ control, name: 'quantity' });
+  const isQuantityValid = orderDetailsSchema.shape.quantity.safeParse(quantityRaw).success;
+  const quantity = isQuantityValid ? quantityRaw : 0;
   const pageCount = useWatch({ control, name: 'pageCount' }) || PHOTOBOOK_PAGE_COUNT_MIN;
   const addressId = useWatch({ control, name: 'addressId' });
   const requiredPhotoCount = pageCount * PHOTOBOOK_PHOTOS_PER_PAGE;
@@ -747,7 +749,7 @@ export function NewOrderWizard({
               <Button
                 type="button"
                 variant="primary"
-                disabled={isPending}
+                disabled={isPending || !isQuantityValid}
                 className="w-full"
                 onClick={handleSubmit}
               >
@@ -764,27 +766,31 @@ export function NewOrderWizard({
             {t.consumer.orderNew.summary.title}
           </h2>
           <div className="flex flex-col gap-2 text-sm">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <span className="text-muted-foreground">
                 {t.consumer.orderNew.summary.productLine
                   .replace('{productName}', product.name)
                   .replace('{pageCount}', String(pageCount))
-                  .replace('{quantity}', String(quantity))}
+                  .replace('{quantity}', isQuantityValid ? String(quantity) : '-')}
               </span>
-              <span className="text-foreground">₩{merchandiseAmount.toLocaleString()}</span>
+              <span className="text-foreground">
+                {isQuantityValid ? `₩${merchandiseAmount.toLocaleString()}` : '-'}
+              </span>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <span className="text-muted-foreground">{t.consumer.orderNew.summary.shipping}</span>
-              <span className="text-foreground">{shippingDisplay}</span>
+              <span className="text-foreground">{isQuantityValid ? shippingDisplay : '-'}</span>
             </div>
           </div>
           <div className="border-t border-border pt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <span className="font-heading text-xl font-bold text-foreground">
                 {t.consumer.orderNew.summary.finalEstimate}
               </span>
               <span className="font-heading text-2xl font-bold text-primary">
-                ₩{totalAmount.toLocaleString()}
+                {isQuantityValid
+                  ? `₩${totalAmount.toLocaleString()}`
+                  : t.consumer.orderNew.summary.amountPending}
               </span>
             </div>
           </div>
