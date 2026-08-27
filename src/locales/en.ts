@@ -36,6 +36,7 @@ export const en = {
     turnstilePendingTooltip: 'Please wait until security verification finishes.',
     searchLabel: 'Search',
     warning: 'Warning',
+    importantToastLabel: 'Important',
   },
   site: {
     nav: {

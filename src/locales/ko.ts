@@ -36,6 +36,7 @@ export const ko = {
     turnstilePendingTooltip: '보안 인증 확인이 끝날 때까지 잠시 기다려주세요.',
     searchLabel: '검색',
     warning: '경고',
+    importantToastLabel: '중요',
   },
   site: {
     nav: {

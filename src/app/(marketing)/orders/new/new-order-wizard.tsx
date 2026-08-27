@@ -203,6 +203,7 @@ export function NewOrderWizard({
         t.consumer.orderNew.errors.photoCountExceeded
           .replace('{count}', String(photos.length))
           .replace('{required}', String(requiredPhotoCount)),
+        t.common.importantToastLabel,
       );
       return;
     }
@@ -257,6 +258,7 @@ export function NewOrderWizard({
         t.consumer.orderNew.errors.photoCountExceeded
           .replace('{count}', String(projectedCount))
           .replace('{required}', String(requiredPhotoCount)),
+        t.common.importantToastLabel,
       );
       photosHighlight.trigger(photosSectionRef.current);
     }
