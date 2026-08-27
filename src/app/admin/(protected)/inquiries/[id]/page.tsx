@@ -93,7 +93,9 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
             <span className="text-xs font-bold text-muted-foreground">
               {t.admin.inquiries.detail.subjectLabel}
             </span>
-            <p className="font-semibold text-foreground">{inquiry.title}</p>
+            <p className="font-semibold [overflow-wrap:anywhere] break-words text-foreground">
+              {inquiry.title}
+            </p>
           </div>
           {relatedOrder ? (
             <div className="flex flex-col gap-1 rounded-lg border border-border bg-muted p-4">

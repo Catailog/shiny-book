@@ -170,7 +170,9 @@ export function MessageThread({
                 </div>
               </div>
             ) : (
-              <p className="text-sm whitespace-pre-wrap text-foreground">{message.content}</p>
+              <p className="text-sm [overflow-wrap:anywhere] break-words whitespace-pre-wrap text-foreground">
+                {message.content}
+              </p>
             )}
           </div>
         );
