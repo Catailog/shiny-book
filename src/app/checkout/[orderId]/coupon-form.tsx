@@ -39,7 +39,7 @@ export function CouponForm({ orderId }: CouponFormProps) {
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor="checkout-coupon-code">{t.checkout.coupon.label}</Label>
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <Input
           id="checkout-coupon-code"
           type="text"
