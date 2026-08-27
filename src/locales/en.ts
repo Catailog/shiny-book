@@ -288,7 +288,7 @@ export const en = {
       applySuccess: 'Coupon applied.',
       discountLabel: 'Coupon discount',
       errors: {
-        validation_failed: 'Please enter a coupon code.',
+        validation_failed: `The coupon code must be ${COUPON_CODE_MAX_LENGTH} characters or fewer.`,
         not_found: 'This order could not be found.',
         already_applied: 'A coupon has already been applied to this order.',
         coupon_invalid: "This coupon code can't be used.",
@@ -1168,6 +1168,7 @@ export const en = {
         photoCountExceeded:
           'The {count} uploaded photos exceed what the new page count needs ({required}). Please remove some photos or increase the page count.',
         addressRequired: 'Please select a shipping address.',
+        couponTooLong: `The coupon code must be ${COUPON_CODE_MAX_LENGTH} characters or fewer.`,
         uploadFailed: 'File upload failed. Please try again.',
         filesRequired: 'Please upload interior photos.',
         unauthorized: 'You do not have permission. Please sign in again.',

@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { COUPON_CODE_MAX_LENGTH } from '@/constants/coupon';
 import { useT } from '@/hooks/use-t';
 
 import { applyCouponToOrder } from './coupon-actions';
@@ -43,6 +44,7 @@ export function CouponForm({ orderId }: CouponFormProps) {
           id="checkout-coupon-code"
           type="text"
           value={code}
+          maxLength={COUPON_CODE_MAX_LENGTH}
           onChange={(event) => setCode(event.target.value)}
           className="flex-1"
         />

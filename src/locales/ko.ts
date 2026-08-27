@@ -287,7 +287,7 @@ export const ko = {
       applySuccess: '쿠폰이 적용됐습니다.',
       discountLabel: '쿠폰 할인',
       errors: {
-        validation_failed: '쿠폰 코드를 입력해주세요.',
+        validation_failed: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
         not_found: '주문을 찾을 수 없습니다.',
         already_applied: '이미 쿠폰이 적용된 주문입니다.',
         coupon_invalid: '사용할 수 없는 쿠폰 코드입니다.',
@@ -1166,6 +1166,7 @@ export const ko = {
         photoCountExceeded:
           '업로드된 사진 {count}장이 변경된 페이지 수의 필요 장수({required}장)를 초과했습니다. 사진을 정리하거나 페이지 수를 늘려주세요.',
         addressRequired: '배송지를 선택해주세요.',
+        couponTooLong: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
         uploadFailed: '파일 업로드에 실패했습니다. 다시 시도해주세요.',
         filesRequired: '내지 사진을 업로드해주세요.',
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',

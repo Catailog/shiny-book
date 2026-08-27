@@ -34,7 +34,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { TEST_COUPON_CODE } from '@/constants/coupon';
+import { COUPON_CODE_MAX_LENGTH, TEST_COUPON_CODE } from '@/constants/coupon';
 import {
   FILE_UPLOAD_KIND,
   FILE_UPLOAD_RULES,
@@ -363,6 +363,8 @@ export function NewOrderWizard({
         toast.error(t.consumer.orderNew.errors.quantityInvalid);
       } else if (issueField === 'pageCount') {
         toast.error(t.consumer.orderNew.errors.pageCountInvalid);
+      } else if (issueField === 'couponCode') {
+        toast.error(t.consumer.orderNew.errors.couponTooLong);
       } else if (issueField === 'addressId') {
         toast.error(t.consumer.orderNew.errors.addressRequired);
         addressHighlight.trigger(addressSectionRef.current);
@@ -726,7 +728,12 @@ export function NewOrderWizard({
                     </Coachmark>
                   ) : null}
                 </div>
-                <Input id="couponCode" type="text" {...register('couponCode')} />
+                <Input
+                  id="couponCode"
+                  type="text"
+                  maxLength={COUPON_CODE_MAX_LENGTH}
+                  {...register('couponCode')}
+                />
               </section>
             )}
 
