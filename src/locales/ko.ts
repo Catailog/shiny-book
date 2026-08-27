@@ -37,6 +37,7 @@ export const ko = {
     searchLabel: '검색',
     warning: '경고',
     importantToastLabel: '중요',
+    charLimitHint: '{max}자 이하로 입력해주세요.',
   },
   site: {
     nav: {

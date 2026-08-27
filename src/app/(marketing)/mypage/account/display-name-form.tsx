@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { CharCounterField } from '@/components/char-counter-field';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -16,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DISPLAY_NAME_MAX_LENGTH } from '@/constants/auth';
 import { useT } from '@/hooks/use-t';
 
 import { updateDisplayName } from './actions';
@@ -31,6 +33,7 @@ export function DisplayNameForm({ currentName }: DisplayNameFormProps) {
   const [isPending, startTransition] = useTransition();
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<DisplayNameInput>({
@@ -64,6 +67,12 @@ export function DisplayNameForm({ currentName }: DisplayNameFormProps) {
           <div className="flex flex-col gap-2">
             <Label htmlFor="display-name">{t.consumer.account.personalInfo.nameLabel}</Label>
             <Input id="display-name" {...register('displayName')} />
+            <CharCounterField
+              control={control}
+              name="displayName"
+              max={DISPLAY_NAME_MAX_LENGTH}
+              message={t.common.charLimitHint.replace('{max}', String(DISPLAY_NAME_MAX_LENGTH))}
+            />
             {errors.displayName ? (
               <p className="text-sm text-destructive">
                 {t.consumer.account.personalInfo.nameInvalid}

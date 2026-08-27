@@ -37,6 +37,7 @@ export const en = {
     searchLabel: 'Search',
     warning: 'Warning',
     importantToastLabel: 'Important',
+    charLimitHint: '{max} characters or fewer.',
   },
   site: {
     nav: {

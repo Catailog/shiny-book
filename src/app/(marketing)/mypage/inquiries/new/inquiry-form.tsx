@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { CharCounterField } from '@/components/char-counter-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY, type InquiryCategory } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
@@ -122,6 +124,12 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
           placeholder={t.consumer.inquiries.form.titlePlaceholder}
           {...register('title')}
         />
+        <CharCounterField
+          control={control}
+          name="title"
+          max={INQUIRY_TITLE_MAX_LENGTH}
+          message={t.common.charLimitHint.replace('{max}', String(INQUIRY_TITLE_MAX_LENGTH))}
+        />
         {errors.title ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(t.consumer.inquiries.errors.fields.title, errors.title.type)}
@@ -136,6 +144,12 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
           rows={8}
           placeholder={t.consumer.inquiries.form.contentPlaceholder}
           {...register('content')}
+        />
+        <CharCounterField
+          control={control}
+          name="content"
+          max={INQUIRY_CONTENT_MAX_LENGTH}
+          message={t.common.charLimitHint.replace('{max}', String(INQUIRY_CONTENT_MAX_LENGTH))}
         />
         {errors.content ? (
           <p className="text-sm text-destructive">

@@ -21,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ImagePlus, RefreshCw, TriangleAlert, X } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { CharCounterField } from '@/components/char-counter-field';
 import { Coachmark, CoachmarkHighlight } from '@/components/coachmark';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,7 +43,7 @@ import {
   ORDER_PHOTO_UPLOAD_CONCURRENCY,
   STORAGE_BUCKETS,
 } from '@/constants/file-upload';
-import { ORDER_QUANTITY_MAX } from '@/constants/order';
+import { ORDER_QUANTITY_MAX, ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import {
   PHOTOBOOK_PAGE_COUNT_MIN,
   PHOTOBOOK_PAGE_COUNT_OPTIONS,
@@ -420,6 +421,12 @@ export function NewOrderWizard({
                 type="text"
                 placeholder={t.consumer.orderNew.titlePlaceholder}
                 {...register('title')}
+              />
+              <CharCounterField
+                control={control}
+                name="title"
+                max={ORDER_TITLE_MAX_LENGTH}
+                message={t.common.charLimitHint.replace('{max}', String(ORDER_TITLE_MAX_LENGTH))}
               />
               {errors.title ? (
                 <p className="text-sm text-destructive">

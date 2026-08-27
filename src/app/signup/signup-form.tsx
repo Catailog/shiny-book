@@ -9,12 +9,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { CharCounterField } from '@/components/char-counter-field';
 import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 
@@ -70,6 +72,12 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               {t.consumer.signup.nameLabel}
             </Label>
             <Input id="name" autoComplete="name" {...register('name')} />
+            <CharCounterField
+              control={control}
+              name="name"
+              max={PERSON_NAME_MAX_LENGTH}
+              message={t.common.charLimitHint.replace('{max}', String(PERSON_NAME_MAX_LENGTH))}
+            />
             {errors.name ? (
               <p className="text-sm text-destructive">{t.consumer.signup.errors.nameRequired}</p>
             ) : null}
