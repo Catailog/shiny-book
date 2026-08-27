@@ -39,6 +39,7 @@ import {
   FILE_UPLOAD_KIND,
   FILE_UPLOAD_RULES,
   type FileUploadKind,
+  ORDER_PHOTO_UPLOAD_CONCURRENCY,
   STORAGE_BUCKETS,
 } from '@/constants/file-upload';
 import { ORDER_QUANTITY_MAX } from '@/constants/order';
@@ -54,6 +55,7 @@ import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import type { OrderEditPrefill } from '@/lib/orders/get-order-edit-prefill';
+import { runWithConcurrency } from '@/lib/run-with-concurrency';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { toastImportant } from '@/lib/toast';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
@@ -276,7 +278,9 @@ export function NewOrderWizard({
 
     setPhotos((current) => [...current, ...pending]);
 
-    await Promise.all(pending.map((item) => uploadAndProcessPhoto(item)));
+    await runWithConcurrency(pending, ORDER_PHOTO_UPLOAD_CONCURRENCY, (item) =>
+      uploadAndProcessPhoto(item),
+    );
   }
 
   function handlePhotoDragEnd(event: DragEndEvent) {

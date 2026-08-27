@@ -39,6 +39,12 @@ export const PROCESSED_PHOTO_IMAGE = {
 
 export const SIGNED_FILE_URL_EXPIRY_SECONDS = 60 * 5;
 
+// Max order photos uploaded/processed at once. A full photobook is up to 32 photos;
+// firing every upload in parallel floods the signed-url and processing Server Actions
+// and, in dev, can drop a response entirely ("An unexpected response was received from
+// the server"). Keep a handful in flight instead.
+export const ORDER_PHOTO_UPLOAD_CONCURRENCY = 4;
+
 export const TEST_PHOTO_POOL = {
   PREFIX: '_test-fixtures/pool/',
   SIZE: 960,
