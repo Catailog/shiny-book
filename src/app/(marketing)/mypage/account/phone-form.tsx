@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { PhoneInput } from '@/components/phone-input';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useT } from '@/hooks/use-t';
 
@@ -63,10 +63,8 @@ export function PhoneForm({ currentPhone }: PhoneFormProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
           <div className="flex flex-col gap-2">
             <Label htmlFor="edit-phone">{t.consumer.account.personalInfo.phoneLabel}</Label>
-            <Input
+            <PhoneInput
               id="edit-phone"
-              type="tel"
-              autoComplete="tel"
               {...register('phone', {
                 setValueAs: (value: string) => (value === '' ? undefined : value),
               })}

@@ -10,6 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { CharCounterField } from '@/components/char-counter-field';
+import { PhoneInput } from '@/components/phone-input';
 import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -170,10 +171,8 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="phone" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.phoneLabel}
             </Label>
-            <Input
+            <PhoneInput
               id="phone"
-              type="tel"
-              autoComplete="tel"
               {...register('phone', {
                 setValueAs: (value: string) => (value === '' ? undefined : value),
               })}

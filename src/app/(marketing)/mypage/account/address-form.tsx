@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { CharCounterField } from '@/components/char-counter-field';
+import { PhoneInput } from '@/components/phone-input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -108,7 +109,7 @@ export function AddressForm({
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="address-phone">{t.consumer.account.shippingAddress.form.phoneLabel}</Label>
-        <Input id="address-phone" type="tel" {...register('phone')} />
+        <PhoneInput id="address-phone" {...register('phone')} />
         {errors.phone ? (
           <p className="text-sm text-destructive">
             {fieldErrorMessage(

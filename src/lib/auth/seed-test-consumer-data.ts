@@ -253,7 +253,7 @@ export async function seedTestConsumerData(
         consumer_id: consumerId,
         label: address.label,
         recipient_name: '테스트 사용자',
-        phone: '010-1234-5678',
+        phone: '01012345678',
         postal_code: address.postalCode,
         address_line1: address.addressLine1,
         address_line2: address.addressLine2,
