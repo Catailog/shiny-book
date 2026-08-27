@@ -42,7 +42,6 @@ export function AvatarUploadForm({ avatarUrl, initials }: AvatarUploadFormProps)
     startTransition(async () => {
       const signed = await createSignedUploadUrl({
         kind: FILE_UPLOAD_KIND.AVATAR,
-        fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
       });

@@ -1,18 +1,19 @@
 import { randomUUID } from 'node:crypto';
 
-import type { FileUploadKind } from '@/constants/file-upload';
+import { type FileUploadKind, IMAGE_UPLOAD_EXTENSION_BY_MIME } from '@/constants/file-upload';
 
-export function getFileExtension(fileName: string): string {
-  const lastDotIndex = fileName.lastIndexOf('.');
-  return lastDotIndex === -1 ? '' : fileName.slice(lastDotIndex);
+// Extension for a validated upload MIME type; empty for anything unrecognized. Never
+// trust a client file name for the stored object path.
+export function extensionForMimeType(mimeType: string): string {
+  return IMAGE_UPLOAD_EXTENSION_BY_MIME[mimeType] ?? '';
 }
 
 export function buildUploadPath(
   consumerId: string,
   kind: FileUploadKind,
-  fileName: string,
+  mimeType: string,
 ): string {
-  return `${consumerId}/${kind}/raw-${randomUUID()}${getFileExtension(fileName)}`;
+  return `${consumerId}/${kind}/raw-${randomUUID()}${extensionForMimeType(mimeType)}`;
 }
 
 export function buildProcessedPhotoPath(rawPath: string): string {

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ChangeEvent } from 'react';
-import { useRef, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import Image from 'next/image';
@@ -39,8 +39,10 @@ import { COUPON_CODE_MAX_LENGTH, TEST_COUPON_CODE } from '@/constants/coupon';
 import {
   FILE_UPLOAD_KIND,
   FILE_UPLOAD_RULES,
-  type FileUploadKind,
+  ORDER_PHOTO_PROCESS_CHUNK_SIZE,
   ORDER_PHOTO_UPLOAD_CONCURRENCY,
+  ORDER_PHOTO_UPLOAD_RETRY_ATTEMPTS,
+  ORDER_PHOTO_UPLOAD_RETRY_DELAY_MS,
   STORAGE_BUCKETS,
 } from '@/constants/file-upload';
 import { ORDER_QUANTITY_MAX, ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
@@ -51,6 +53,7 @@ import {
 } from '@/constants/photobook';
 import { PRICING, SHIPPING } from '@/constants/pricing';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { TOAST_ID } from '@/constants/toast';
 import { useErrorHighlight } from '@/hooks/use-error-highlight';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
@@ -59,9 +62,9 @@ import type { OrderEditPrefill } from '@/lib/orders/get-order-edit-prefill';
 import { runWithConcurrency } from '@/lib/run-with-concurrency';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { toastImportant } from '@/lib/toast';
-import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
+import { createOrderPhotoUploadTickets } from '@/lib/uploads/create-order-photo-upload-tickets';
 import { deleteOrderPhoto } from '@/lib/uploads/delete-order-photo';
-import { processOrderPhoto } from '@/lib/uploads/process-order-photo';
+import { processOrderPhotos } from '@/lib/uploads/process-order-photos';
 import { cn } from '@/lib/utils';
 
 import { createConsumerOrder } from './actions';
@@ -74,7 +77,7 @@ import {
 import { generateTestPhotos } from './test-photo-actions';
 import { updateConsumerOrder } from './update-order-actions';
 
-type UploadStatus = 'uploading' | 'processing' | 'done' | 'error';
+type UploadStatus = 'queued' | 'uploading' | 'processing' | 'done' | 'error';
 type Phase = 'details' | 'photos';
 
 interface PhotoItem {
@@ -86,6 +89,9 @@ interface PhotoItem {
   // should only drop them from this draft, not delete the file until the edit is
   // actually submitted (update-order-actions.ts replaces the saved photo set then).
   isExisting: boolean;
+  // The picked File, kept so a failed upload can be retried. Absent for photos loaded
+  // from an order being edited.
+  file?: File;
 }
 
 interface NewOrderWizardProps {
@@ -95,28 +101,43 @@ interface NewOrderWizardProps {
   initialValues: OrderEditPrefill | null;
 }
 
-async function uploadRawFile(kind: FileUploadKind, file: File): Promise<string | null> {
-  const rule = FILE_UPLOAD_RULES[kind];
-  if (!rule.allowedMimeTypes.includes(file.type) || file.size > rule.maxSizeBytes) {
-    return null;
-  }
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  const signed = await createSignedUploadUrl({
-    kind,
-    fileName: file.name,
-    fileType: file.type,
-    fileSize: file.size,
-  });
-  if (!signed.success) {
-    return null;
+function chunkArray<T>(items: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let start = 0; start < items.length; start += size) {
+    chunks.push(items.slice(start, start + size));
   }
+  return chunks;
+}
 
+function isAllowedPhotoFile(file: File): boolean {
+  const rule = FILE_UPLOAD_RULES[FILE_UPLOAD_KIND.PHOTO];
+  return rule.allowedMimeTypes.includes(file.type) && file.size <= rule.maxSizeBytes;
+}
+
+// Pushes one file straight to Supabase Storage with a pre-minted ticket (client ->
+// Storage, not a Server Action). Retries once on a transient failure; the signed upload
+// token stays valid across a failed attempt.
+async function uploadFileToStorage(
+  ticket: { path: string; token: string },
+  file: File,
+): Promise<boolean> {
   const supabase = createBrowserSupabaseClient();
-  const { error } = await supabase.storage
-    .from(STORAGE_BUCKETS.ORDER_UPLOADS)
-    .uploadToSignedUrl(signed.path, signed.token, file);
-
-  return error ? null : signed.path;
+  for (let attempt = 0; attempt < ORDER_PHOTO_UPLOAD_RETRY_ATTEMPTS; attempt++) {
+    if (attempt > 0) {
+      await delay(ORDER_PHOTO_UPLOAD_RETRY_DELAY_MS);
+    }
+    const { error } = await supabase.storage
+      .from(STORAGE_BUCKETS.ORDER_UPLOADS)
+      .uploadToSignedUrl(ticket.path, ticket.token, file);
+    if (!error) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function NewOrderWizard({
@@ -140,8 +161,13 @@ export function NewOrderWizard({
     })),
   );
   const [addresses, setAddresses] = useState(initialAddresses);
+  // When photo processing is rate-limited, the timestamp the caller may retry at. The
+  // `clockTick` state just forces a re-render each second so the countdown updates live.
+  const [retryAllowedAt, setRetryAllowedAt] = useState<number | null>(null);
+  const [clockTick, setClockTick] = useState(() => Date.now());
   const addressSectionRef = useRef<HTMLElement>(null);
   const photosSectionRef = useRef<HTMLElement>(null);
+  const retryBarRef = useRef<HTMLDivElement>(null);
   const addressHighlight = useErrorHighlight();
   const photosHighlight = useErrorHighlight();
   const {
@@ -187,15 +213,52 @@ export function NewOrderWizard({
       : `₩${shippingFee.toLocaleString()}`;
   const totalAmount = merchandiseAmount + (isShippingFree ? 0 : (shippingFee ?? 0));
   const donePhotoCount = photos.filter((photo) => photo.status === 'done').length;
+  const retryablePhotoCount = photos.filter(
+    (photo) => photo.status === 'error' && photo.file != null,
+  ).length;
   const [photosHintBefore, photosHintAfter] = t.consumer.orderNew.photosHint
     .replace('{required}', String(requiredPhotoCount))
     .split('{count}');
   const isUploadingPhotos = photos.some(
-    (photo) => photo.status === 'uploading' || photo.status === 'processing',
+    (photo) =>
+      photo.status === 'queued' || photo.status === 'uploading' || photo.status === 'processing',
   );
+  const retrySecondsLeft =
+    retryAllowedAt !== null ? Math.max(0, Math.ceil((retryAllowedAt - clockTick) / 1000)) : 0;
+  const isRetryRateLimited = retrySecondsLeft > 0;
   const photoDragSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
+
+  // The "photo count exceeded" toast is fired with a stable id, so once the user
+  // resolves it (removes photos or raises the page count) we dismiss it automatically.
+  useEffect(() => {
+    if (!isPhotoCountExceeded) {
+      toast.dismiss(TOAST_ID.ORDER_PHOTO_COUNT_EXCEEDED);
+    }
+  }, [isPhotoCountExceeded]);
+
+  // Tick the countdown while a retry is rate-limited; clear it once the wait is over.
+  useEffect(() => {
+    if (retryAllowedAt === null) {
+      return;
+    }
+    const timer = setInterval(() => {
+      if (Date.now() >= retryAllowedAt) {
+        setRetryAllowedAt(null);
+      } else {
+        setClockTick(Date.now());
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [retryAllowedAt]);
+
+  // Bring the countdown into view the moment a retry gets rate-limited.
+  useEffect(() => {
+    if (isRetryRateLimited) {
+      retryBarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [isRetryRateLimited]);
 
   async function handleNext() {
     const isValid = await trigger(['title', 'quantity', 'pageCount']);
@@ -209,6 +272,7 @@ export function NewOrderWizard({
           .replace('{count}', String(photos.length))
           .replace('{required}', String(requiredPhotoCount)),
         t.common.importantToastLabel,
+        { id: TOAST_ID.ORDER_PHOTO_COUNT_EXCEEDED },
       );
       return;
     }
@@ -220,68 +284,192 @@ export function NewOrderWizard({
     setPhase('details');
   }
 
-  async function uploadAndProcessPhoto(item: { id: string; file: File }) {
-    const rawPath = await uploadRawFile(FILE_UPLOAD_KIND.PHOTO, item.file);
-    if (!rawPath) {
-      setPhotos((current) =>
-        current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
-      );
-      toast.error(t.consumer.orderNew.errors.uploadFailed);
-      return;
-    }
-
+  function patchPhoto(id: string, patch: Partial<PhotoItem>) {
     setPhotos((current) =>
-      current.map((photo) => (photo.id === item.id ? { ...photo, status: 'processing' } : photo)),
-    );
-
-    const processed = await processOrderPhoto(rawPath);
-    if (!processed.success) {
-      setPhotos((current) =>
-        current.map((photo) => (photo.id === item.id ? { ...photo, status: 'error' } : photo)),
-      );
-      toast.error(t.consumer.orderNew.errors.uploadFailed);
-      return;
-    }
-
-    setPhotos((current) =>
-      current.map((photo) =>
-        photo.id === item.id ? { ...photo, path: processed.path, status: 'done' } : photo,
-      ),
+      current.map((photo) => (photo.id === id ? { ...photo, ...patch } : photo)),
     );
   }
 
-  async function handlePhotosChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
-    event.target.value = '';
-    if (files.length === 0) {
+  function patchPhotos(ids: Set<string>, patch: Partial<PhotoItem>) {
+    setPhotos((current) =>
+      current.map((photo) => (ids.has(photo.id) ? { ...photo, ...patch } : photo)),
+    );
+  }
+
+  function notifyUploadFailed() {
+    toast.error(t.consumer.orderNew.errors.uploadFailed, {
+      id: TOAST_ID.ORDER_PHOTO_UPLOAD_FAILED,
+    });
+  }
+
+  async function uploadPendingPhotos(pending: { id: string; file: File }[]) {
+    // One Server Action mints all the signed upload URLs (Next.js runs Server Actions
+    // sequentially and the proxy rate-limits them, so per-photo calls do not scale).
+    const ticketResult = await createOrderPhotoUploadTickets(
+      pending.map((item) => ({
+        fileType: item.file.type,
+        fileSize: item.file.size,
+      })),
+    ).catch(() => null);
+
+    if (!ticketResult || !ticketResult.success) {
+      patchPhotos(new Set(pending.map((item) => item.id)), { status: 'error' });
+      notifyUploadFailed();
       return;
     }
 
-    const projectedCount = photos.length + files.length;
-    if (projectedCount > requiredPhotoCount) {
-      toastImportant.error(
-        t.consumer.orderNew.errors.photoCountExceeded
-          .replace('{count}', String(projectedCount))
-          .replace('{required}', String(requiredPhotoCount)),
-        t.common.importantToastLabel,
-      );
-      photosHighlight.trigger(photosSectionRef.current);
+    // Push the raw files straight to Storage in parallel - these are not Server Actions.
+    const uploaded: { id: string; rawPath: string }[] = [];
+    await runWithConcurrency(pending, ORDER_PHOTO_UPLOAD_CONCURRENCY, async (item, index) => {
+      const ticket = ticketResult.tickets[index];
+      if (!ticket) {
+        patchPhoto(item.id, { status: 'error' });
+        notifyUploadFailed();
+        return;
+      }
+      patchPhoto(item.id, { status: 'uploading' });
+      const ok = await uploadFileToStorage(ticket, item.file);
+      if (!ok) {
+        patchPhoto(item.id, { status: 'error' });
+        notifyUploadFailed();
+        return;
+      }
+      patchPhoto(item.id, { status: 'processing' });
+      uploaded.push({ id: item.id, rawPath: ticket.path });
+    });
+
+    if (uploaded.length === 0) {
+      return;
     }
 
-    const pending = files.map((file) => ({
+    // Process the uploaded photos in chunks - one Server Action per chunk keeps each
+    // request short and lets progress update as chunks finish.
+    const chunks = chunkArray(uploaded, ORDER_PHOTO_PROCESS_CHUNK_SIZE);
+    for (const [chunkIndex, group] of chunks.entries()) {
+      const processResult = await processOrderPhotos(group.map((entry) => entry.rawPath)).catch(
+        () => null,
+      );
+
+      if (!processResult || !processResult.success) {
+        if (processResult?.errorCode === 'rate_limited') {
+          // This chunk and every one after it are blocked by the same limit.
+          const blockedIds = new Set(
+            chunks.slice(chunkIndex).flatMap((remaining) => remaining.map((entry) => entry.id)),
+          );
+          patchPhotos(blockedIds, { status: 'error' });
+          setRetryAllowedAt(Date.now() + (processResult.retryAfterSeconds ?? 60) * 1000);
+          return;
+        }
+        patchPhotos(new Set(group.map((entry) => entry.id)), { status: 'error' });
+        notifyUploadFailed();
+        continue;
+      }
+
+      const donePaths = new Map(
+        processResult.results
+          .filter((entry): entry is { rawPath: string; processedPath: string } =>
+            Boolean(entry.processedPath),
+          )
+          .map((entry) => [entry.rawPath, entry.processedPath]),
+      );
+      setPhotos((current) =>
+        current.map((photo) => {
+          const entry = group.find((candidate) => candidate.id === photo.id);
+          if (!entry) {
+            return photo;
+          }
+          const processedPath = donePaths.get(entry.rawPath);
+          return processedPath
+            ? { ...photo, status: 'done', path: processedPath }
+            : { ...photo, status: 'error' };
+        }),
+      );
+      if (donePaths.size < group.length) {
+        notifyUploadFailed();
+      }
+    }
+  }
+
+  function handleRetryFailedPhotos() {
+    const failed = photos.filter(
+      (photo): photo is PhotoItem & { file: File } =>
+        photo.status === 'error' && photo.file != null,
+    );
+    if (failed.length === 0) {
+      return;
+    }
+    setRetryAllowedAt(null);
+
+    // Only retry up to what the current page count leaves room for; the rest stay as
+    // failed tiles until the user makes more room.
+    const occupiedSlots = photos.filter((photo) => photo.status !== 'error').length;
+    const capacity = Math.max(0, requiredPhotoCount - occupiedSlots);
+    const toRetry = failed.slice(0, capacity);
+    const stillOverCapacity = failed.length - toRetry.length;
+
+    if (stillOverCapacity > 0) {
+      toastImportant.warning(
+        t.consumer.orderNew.errors.photosSkippedOverLimit
+          .replace('{skipped}', String(stillOverCapacity))
+          .replace('{required}', String(requiredPhotoCount)),
+        t.common.importantToastLabel,
+        { id: TOAST_ID.ORDER_PHOTO_COUNT_EXCEEDED },
+      );
+    }
+    if (toRetry.length === 0) {
+      return;
+    }
+
+    patchPhotos(new Set(toRetry.map((photo) => photo.id)), { status: 'queued', path: null });
+    void uploadPendingPhotos(toRetry.map((photo) => ({ id: photo.id, file: photo.file })));
+  }
+
+  async function handlePhotosChange(event: ChangeEvent<HTMLInputElement>) {
+    const selected = Array.from(event.target.files ?? []);
+    event.target.value = '';
+    if (selected.length === 0) {
+      return;
+    }
+
+    const validFiles = selected.filter(isAllowedPhotoFile);
+    if (validFiles.length < selected.length) {
+      notifyUploadFailed();
+    }
+    if (validFiles.length === 0) {
+      return;
+    }
+
+    // Everything gets a tile, but only what fits the current page count is uploaded now.
+    // The overflow sits as a failed tile the user can retry after making room (raising
+    // the page count or removing photos).
+    const remainingCapacity = Math.max(0, requiredPhotoCount - photos.length);
+    const pending = validFiles.map((file, index) => ({
       id: crypto.randomUUID(),
       previewUrl: URL.createObjectURL(file),
       path: null as string | null,
-      status: 'uploading' as UploadStatus,
+      status: (index < remainingCapacity ? 'queued' : 'error') as UploadStatus,
       isExisting: false,
       file,
     }));
 
     setPhotos((current) => [...current, ...pending]);
 
-    await runWithConcurrency(pending, ORDER_PHOTO_UPLOAD_CONCURRENCY, (item) =>
-      uploadAndProcessPhoto(item),
-    );
+    const overCapacity = pending.filter((item) => item.status === 'error');
+    if (overCapacity.length > 0) {
+      toastImportant.warning(
+        t.consumer.orderNew.errors.photosSkippedOverLimit
+          .replace('{skipped}', String(overCapacity.length))
+          .replace('{required}', String(requiredPhotoCount)),
+        t.common.importantToastLabel,
+        { id: TOAST_ID.ORDER_PHOTO_COUNT_EXCEEDED },
+      );
+      photosHighlight.trigger(photosSectionRef.current);
+    }
+
+    const toUpload = pending.filter((item) => item.status === 'queued');
+    if (toUpload.length > 0) {
+      await uploadPendingPhotos(toUpload.map((item) => ({ id: item.id, file: item.file })));
+    }
   }
 
   function handlePhotoDragEnd(event: DragEndEvent) {
@@ -582,6 +770,33 @@ export function NewOrderWizard({
                   ) : null}
                 </div>
               </div>
+              {retryablePhotoCount > 0 ? (
+                <div
+                  ref={retryBarRef}
+                  className="flex items-center justify-between gap-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-2.5"
+                >
+                  <p className="text-sm text-destructive">
+                    {isRetryRateLimited
+                      ? t.consumer.orderNew.photosRateLimited.replace(
+                          '{seconds}',
+                          String(retrySecondsLeft),
+                        )
+                      : t.consumer.orderNew.photosRetryNotice.replace(
+                          '{count}',
+                          String(retryablePhotoCount),
+                        )}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={isUploadingPhotos || isRetryRateLimited}
+                    onClick={handleRetryFailedPhotos}
+                  >
+                    {t.consumer.orderNew.photosRetryButton}
+                  </Button>
+                </div>
+              ) : null}
               <DndContext
                 sensors={photoDragSensors}
                 collisionDetection={closestCenter}
@@ -600,11 +815,7 @@ export function NewOrderWizard({
                         placeholderLabel={t.consumer.orderNew.testUploadButton}
                         removeLabel={t.consumer.orderNew.removePhotoLabel}
                         statusLabel={
-                          photo.status === 'done'
-                            ? null
-                            : photo.status === 'error'
-                              ? t.consumer.orderNew.errors.uploadFailed
-                              : t.consumer.orderNew.status[photo.status]
+                          photo.status === 'done' ? null : t.consumer.orderNew.status[photo.status]
                         }
                         onRemove={handleRemovePhoto}
                       />
@@ -864,8 +1075,17 @@ function SortablePhotoItem({
         </div>
       )}
       {statusLabel ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/70 text-xs text-foreground">
-          {statusLabel}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-background/80 p-3 text-center text-xs font-medium">
+          {photo.status === 'error' ? (
+            <TriangleAlert aria-hidden="true" className="size-5 text-destructive" />
+          ) : null}
+          <span
+            className={
+              photo.status === 'error' ? 'leading-snug text-destructive' : 'text-foreground'
+            }
+          >
+            {statusLabel}
+          </span>
         </div>
       ) : null}
       <button

@@ -1,16 +1,33 @@
 import { describe, expect, it } from 'vitest';
 
 import { FILE_UPLOAD_KIND } from '@/constants/file-upload';
-import { buildProcessedPhotoPath, buildUploadPath } from '@/lib/uploads/build-upload-path';
+import {
+  buildProcessedPhotoPath,
+  buildUploadPath,
+  extensionForMimeType,
+} from '@/lib/uploads/build-upload-path';
+
+describe('extensionForMimeType', () => {
+  it('maps known image types', () => {
+    expect(extensionForMimeType('image/png')).toBe('.png');
+    expect(extensionForMimeType('image/jpeg')).toBe('.jpg');
+    expect(extensionForMimeType('image/webp')).toBe('.webp');
+  });
+
+  it('returns empty for an unrecognized type', () => {
+    expect(extensionForMimeType('text/html')).toBe('');
+    expect(extensionForMimeType('application/octet-stream')).toBe('');
+  });
+});
 
 describe('buildUploadPath', () => {
-  it('scopes the path under the consumer id and kind', () => {
-    const path = buildUploadPath('consumer-1', FILE_UPLOAD_KIND.PHOTO, 'photo.png');
+  it('scopes the path under the consumer id and kind with an extension from the MIME type', () => {
+    const path = buildUploadPath('consumer-1', FILE_UPLOAD_KIND.PHOTO, 'image/png');
     expect(path).toMatch(/^consumer-1\/photo\/raw-[0-9a-f-]+\.png$/);
   });
 
-  it('omits the extension when the file name has none', () => {
-    const path = buildUploadPath('consumer-1', FILE_UPLOAD_KIND.PHOTO, 'photo');
+  it('never derives the object name from a caller-supplied file name', () => {
+    const path = buildUploadPath('consumer-1', FILE_UPLOAD_KIND.PHOTO, 'application/octet-stream');
     expect(path).toMatch(/^consumer-1\/photo\/raw-[0-9a-f-]+$/);
   });
 });

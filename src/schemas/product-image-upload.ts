@@ -4,7 +4,6 @@ import { PRODUCT_IMAGE_UPLOAD_RULE } from '@/constants/file-upload';
 
 export const productImageSignedUploadUrlRequestSchema = z
   .object({
-    fileName: z.string().min(1).max(255),
     fileType: z.string().min(1),
     fileSize: z.number().int().positive(),
   })

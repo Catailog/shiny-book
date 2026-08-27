@@ -97,7 +97,6 @@ export function ProductForm({
     setIsUploadingImage(true);
     startTransition(async () => {
       const signed = await createProductImageSignedUploadUrl({
-        fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
       });

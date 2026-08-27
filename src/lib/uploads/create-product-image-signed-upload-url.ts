@@ -38,7 +38,7 @@ export async function createProductImageSignedUploadUrl(
     return { success: false, errorCode: 'validation_failed' };
   }
 
-  const path = buildProductImagePath(parsed.data.fileName);
+  const path = buildProductImagePath(parsed.data.fileType);
   const supabase = createServiceRoleClient();
 
   try {

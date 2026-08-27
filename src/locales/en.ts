@@ -1135,6 +1135,9 @@ export const en = {
       editButton: 'Edit',
       photosLabel: 'Interior photos',
       photosHint: '{count} / {required} uploaded',
+      photosRetryNotice: '{count} photo(s) failed to upload.',
+      photosRateLimited: 'Too many upload attempts. You can retry in {seconds}s.',
+      photosRetryButton: 'Retry',
       addPhotosButton: 'Add photos',
       removePhotoLabel: 'Remove photo',
       testUploadButton: 'Auto-upload test photos',
@@ -1150,9 +1153,11 @@ export const en = {
       uploadingTooltip: "You can't continue while images are still uploading.",
       submitting: 'Creating order...',
       status: {
+        queued: 'Waiting...',
         uploading: 'Uploading...',
         processing: 'Processing image...',
         done: 'Upload complete',
+        error: 'Upload failed',
       },
       summary: {
         title: 'Order Summary',
@@ -1175,6 +1180,8 @@ export const en = {
         photoCountMismatch: 'Please upload the exact number of interior photos required.',
         photoCountExceeded:
           'The {count} uploaded photos exceed what the new page count needs ({required}). Please remove some photos or increase the page count.',
+        photosSkippedOverLimit:
+          "{skipped} photo(s) went over the {required}-photo limit and aren't uploaded yet. Increase the page count or remove some photos, then retry them from the list.",
         addressRequired: 'Please select a shipping address.',
         couponTooLong: `The coupon code must be ${COUPON_CODE_MAX_LENGTH} characters or fewer.`,
         uploadFailed: 'File upload failed. Please try again.',

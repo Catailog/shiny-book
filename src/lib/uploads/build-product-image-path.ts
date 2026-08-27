@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
-import { getFileExtension } from '@/lib/uploads/build-upload-path';
+import { extensionForMimeType } from '@/lib/uploads/build-upload-path';
 
-export function buildProductImagePath(fileName: string): string {
-  return `raw-${randomUUID()}${getFileExtension(fileName)}`;
+export function buildProductImagePath(mimeType: string): string {
+  return `raw-${randomUUID()}${extensionForMimeType(mimeType)}`;
 }

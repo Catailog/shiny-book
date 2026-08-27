@@ -24,20 +24,24 @@ export type CreateSignedUploadUrlResult =
 export async function createSignedUploadUrl(
   input: SignedUploadUrlRequest,
 ): Promise<CreateSignedUploadUrlResult> {
-  const consumer = await getCurrentConsumer();
-  if (!consumer) {
-    return { success: false, errorCode: 'unauthorized' };
-  }
-
-  const parsed = signedUploadUrlRequestSchema.safeParse(input);
-  if (!parsed.success) {
-    return { success: false, errorCode: 'validation_failed' };
-  }
-
-  const path = buildUploadPath(consumer.id, parsed.data.kind, parsed.data.fileName);
-  const supabase = await createServerSupabaseClient();
-
+  // The whole body is guarded: under a burst of photo uploads the auth check can throw
+  // (Auth server hiccup / rate limit), and an uncaught throw here surfaces to the client
+  // as "An unexpected response was received from the server" instead of a retryable
+  // failure result.
   try {
+    const consumer = await getCurrentConsumer();
+    if (!consumer) {
+      return { success: false, errorCode: 'unauthorized' };
+    }
+
+    const parsed = signedUploadUrlRequestSchema.safeParse(input);
+    if (!parsed.success) {
+      return { success: false, errorCode: 'validation_failed' };
+    }
+
+    const path = buildUploadPath(consumer.id, parsed.data.kind, parsed.data.fileType);
+    const supabase = await createServerSupabaseClient();
+
     const { data, error } = await supabase.storage
       .from(STORAGE_BUCKETS.ORDER_UPLOADS)
       .createSignedUploadUrl(path);

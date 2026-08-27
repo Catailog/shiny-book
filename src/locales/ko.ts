@@ -1133,6 +1133,9 @@ export const ko = {
       editButton: '수정',
       photosLabel: '내지 사진',
       photosHint: '{count} / {required}장 업로드됨',
+      photosRetryNotice: '{count}장 업로드에 실패했어요.',
+      photosRateLimited: '업로드 시도가 너무 많아요. {seconds}초 후에 다시 시도할 수 있어요.',
+      photosRetryButton: '다시 올리기',
       addPhotosButton: '사진 추가',
       removePhotoLabel: '사진 삭제',
       testUploadButton: '테스트 이미지 자동 업로드',
@@ -1148,9 +1151,11 @@ export const ko = {
       uploadingTooltip: '이미지 업로드 중에는 진행할 수 없어요.',
       submitting: '주문 생성 중...',
       status: {
+        queued: '대기 중...',
         uploading: '업로드 중...',
         processing: '이미지 처리 중...',
         done: '업로드 완료',
+        error: '업로드 실패',
       },
       summary: {
         title: '주문 요약',
@@ -1173,6 +1178,8 @@ export const ko = {
         photoCountMismatch: '내지 사진을 정확한 장수만큼 업로드해주세요.',
         photoCountExceeded:
           '업로드된 사진 {count}장이 변경된 페이지 수의 필요 장수({required}장)를 초과했습니다. 사진을 정리하거나 페이지 수를 늘려주세요.',
+        photosSkippedOverLimit:
+          '{skipped}장은 최대 장수({required}장)를 넘어서 아직 업로드하지 않았어요. 페이지 수를 늘리거나 사진을 정리한 뒤 목록에서 다시 올려주세요.',
         addressRequired: '배송지를 선택해주세요.',
         couponTooLong: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
         uploadFailed: '파일 업로드에 실패했습니다. 다시 시도해주세요.',
