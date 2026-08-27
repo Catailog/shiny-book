@@ -1012,7 +1012,6 @@ export const en = {
       errors: {
         currentPasswordRequired: 'Please enter your current password.',
         incorrect_current_password: 'Your current password is incorrect.',
-        rate_limited: 'Too many password change attempts. Please try again shortly.',
         passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
         passwordConfirmRequired: 'Please confirm your new password.',
         passwordMismatch: 'Passwords do not match.',

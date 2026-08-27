@@ -8,9 +8,8 @@ import { CONSUMER_ROUTES } from '@/constants/routes';
 import { TEST_ACCOUNT } from '@/constants/test-account';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { deletePairedTestAdmin } from '@/lib/auth/test-account-pair';
+import { verifyUserPassword } from '@/lib/auth/verify-user-password';
 import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
-import { checkAuthActionRateLimit } from '@/lib/rate-limit/auth-action-rate-limit';
-import { getClientIp } from '@/lib/request/get-client-ip';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
@@ -23,11 +22,7 @@ import { type ChangePasswordInput, changePasswordSchema } from './password-schem
 
 export interface ChangePasswordResult {
   errorCode:
-    | 'unauthorized'
-    | 'validation_failed'
-    | 'incorrect_current_password'
-    | 'rate_limited'
-    | 'unexpected_error';
+    'unauthorized' | 'validation_failed' | 'incorrect_current_password' | 'unexpected_error';
 }
 
 export async function changeConsumerPassword(
@@ -47,24 +42,15 @@ export async function changeConsumerPassword(
     return { errorCode: 'unexpected_error' };
   }
 
-  const clientIp = await getClientIp();
-  const rateLimit = await checkAuthActionRateLimit(
-    `password-change:consumer:${consumer.id}`,
-    `password-change:ip:${clientIp}`,
+  const isCurrentPasswordValid = await verifyUserPassword(
+    consumer.email,
+    parsed.data.currentPassword,
   );
-  if (!rateLimit.isAllowed) {
-    return { errorCode: 'rate_limited' };
-  }
-
-  const supabase = await createServerSupabaseClient();
-  const { error: verifyError } = await supabase.auth.signInWithPassword({
-    email: consumer.email,
-    password: parsed.data.currentPassword,
-  });
-  if (verifyError) {
+  if (!isCurrentPasswordValid) {
     return { errorCode: 'incorrect_current_password' };
   }
 
+  const supabase = await createServerSupabaseClient();
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) {
     return { errorCode: 'unexpected_error' };
