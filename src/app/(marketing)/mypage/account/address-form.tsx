@@ -151,6 +151,7 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
           render={({ field }) => (
             <Checkbox
               id="address-is-default"
+              name={field.name}
               checked={field.value}
               onCheckedChange={field.onChange}
             />

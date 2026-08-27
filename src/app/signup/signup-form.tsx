@@ -182,6 +182,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 render={({ field }) => (
                   <Checkbox
                     id="agree-terms"
+                    name={field.name}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -205,6 +206,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 render={({ field }) => (
                   <Checkbox
                     id="agree-privacy"
+                    name={field.name}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -227,6 +229,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               render={({ field }) => (
                 <Checkbox
                   id="marketing-email-consent"
+                  name={field.name}
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
@@ -243,6 +246,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               render={({ field }) => (
                 <Checkbox
                   id="marketing-sms-consent"
+                  name={field.name}
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />

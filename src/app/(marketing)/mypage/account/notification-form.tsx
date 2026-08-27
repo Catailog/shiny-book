@@ -49,7 +49,12 @@ export function NotificationPreferencesForm({ defaultValues }: NotificationPrefe
             control={control}
             name="marketingEmailConsent"
             render={({ field }) => (
-              <Checkbox id="notify-email" checked={field.value} onCheckedChange={field.onChange} />
+              <Checkbox
+                id="notify-email"
+                name={field.name}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
             )}
           />
           <Label htmlFor="notify-email" className="font-normal">
@@ -61,7 +66,12 @@ export function NotificationPreferencesForm({ defaultValues }: NotificationPrefe
             control={control}
             name="marketingSmsConsent"
             render={({ field }) => (
-              <Checkbox id="notify-sms" checked={field.value} onCheckedChange={field.onChange} />
+              <Checkbox
+                id="notify-sms"
+                name={field.name}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
             )}
           />
           <Label htmlFor="notify-sms" className="font-normal">

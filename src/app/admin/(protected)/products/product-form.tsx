@@ -296,7 +296,12 @@ export function ProductForm({
           control={control}
           name="isActive"
           render={({ field }) => (
-            <Checkbox id="isActive" checked={field.value} onCheckedChange={field.onChange} />
+            <Checkbox
+              id="isActive"
+              name={field.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
           )}
         />
         <Label htmlFor="isActive" className="font-normal">
