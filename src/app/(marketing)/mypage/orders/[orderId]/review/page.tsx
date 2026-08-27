@@ -41,7 +41,9 @@ export default async function OrderReviewPage(props: PageProps<'/mypage/orders/[
             <StarRating value={review.rating} readOnly />
             <span className="text-xs text-muted-foreground">{formatDate(review.created_at)}</span>
           </div>
-          <p className="text-sm whitespace-pre-wrap text-foreground">{review.content}</p>
+          {review.content ? (
+            <p className="text-sm whitespace-pre-wrap text-foreground">{review.content}</p>
+          ) : null}
         </div>
       ) : (
         <ReviewForm orderId={orderId} />

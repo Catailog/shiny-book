@@ -2,15 +2,33 @@ import type { NextRequest } from 'next/server';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
 import { ORDER_STATUS } from '@/constants/order-status';
+import { ROLE } from '@/constants/roles';
 import { SHIPMENT_JOB_STATUS } from '@/constants/shipment-job-status';
+import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
+import { hasRequiredRole } from '@/lib/api/require-role';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
+import { checkApiRateLimit } from '@/lib/rate-limit/api-key-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { generateTrackingNumber } from '@/lib/vendors/generate-tracking-number';
 import { toShipmentJobResponse } from '@/lib/vendors/to-shipment-job-response';
 import { createShipmentJobRequestSchema } from '@/schemas/api/shipment-jobs';
 
 export async function POST(request: NextRequest) {
+  const auth = await authenticateApiKey(request);
+  if (!auth.isAuthorized) {
+    return apiError(auth.errorCode, 'Invalid or missing API key');
+  }
+
+  const rateLimit = await checkApiRateLimit(auth.clientId);
+  if (!rateLimit.isAllowed) {
+    return apiError(API_ERROR_CODES.RATE_LIMITED, 'Too many requests');
+  }
+
+  if (!hasRequiredRole(auth.role, [ROLE.VENDOR, ROLE.ADMIN])) {
+    return apiError(API_ERROR_CODES.FORBIDDEN, 'Not allowed to create shipment jobs');
+  }
+
   const body: unknown = await request.json().catch(() => null);
   const parsed = createShipmentJobRequestSchema.safeParse(body);
 

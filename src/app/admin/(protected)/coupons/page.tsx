@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
+import { SearchForm } from '@/components/search-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -18,6 +18,7 @@ import {
 import { DISCOUNT_TYPE, isDiscountType } from '@/constants/coupon';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatDateTime } from '@/lib/format-date';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
@@ -39,18 +40,21 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
   const searchParams = await props.searchParams;
   const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isCouponFilter(filterParam) ? filterParam : 'all';
+  const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
   const coupons = await getCoupons();
   const now = new Date();
   const allFilteredCoupons = coupons.filter((coupon) => {
     const isExpired = coupon.expires_at !== null && new Date(coupon.expires_at) <= now;
-    if (activeFilter === 'active') {
-      return coupon.is_active && !isExpired;
-    }
-    if (activeFilter === 'expired') {
-      return isExpired;
-    }
-    return true;
+    const matchesFilter =
+      activeFilter === 'active'
+        ? coupon.is_active && !isExpired
+        : activeFilter === 'expired'
+          ? isExpired
+          : true;
+    const matchesQuery =
+      query.length === 0 || coupon.code.toLowerCase().includes(query.toLowerCase());
+    return matchesFilter && matchesQuery;
   });
   const pageSize = parsePageSizeParam(
     searchParams.pageSize,
@@ -65,8 +69,11 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.coupons.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.coupons.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <div className="flex justify-end">
+          <AdminPageSizeSelect />
+        </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
             <FilterLink href={ADMIN_ROUTES.COUPONS} isActive={activeFilter === 'all'}>
@@ -86,17 +93,12 @@ export default async function AdminCouponsPage(props: PageProps<'/admin/coupons'
             </FilterLink>
           </div>
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <Search
-                aria-hidden="true"
-                className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-              />
-              <Input
-                type="search"
-                placeholder={t.admin.coupons.list.searchPlaceholder}
-                className="w-60 pl-9"
-              />
-            </div>
+            <SearchForm
+              defaultValue={query}
+              placeholder={t.admin.coupons.list.searchPlaceholder}
+              submitLabel={t.common.searchLabel}
+              inputClassName="w-60"
+            />
             <Button
               render={<Link href={ADMIN_ROUTES.COUPONS_NEW} />}
               nativeButton={false}

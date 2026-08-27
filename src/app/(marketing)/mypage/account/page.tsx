@@ -9,8 +9,10 @@ import { locales } from '@/locales';
 import { AddressManager } from './address-manager';
 import { AvatarUploadForm } from './avatar-upload-form';
 import { DeleteAccountButton } from './delete-account-button';
+import { DisplayNameForm } from './display-name-form';
 import { NotificationPreferencesForm } from './notification-form';
 import { ChangePasswordForm } from './password-form';
+import { PhoneForm } from './phone-form';
 
 export default async function MypageAccountPage() {
   const locale = await getLocale();
@@ -45,10 +47,16 @@ export default async function MypageAccountPage() {
         <AvatarUploadForm avatarUrl={avatarUrl} initials={avatarInitials} />
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="account-name" className="text-xs font-semibold tracking-wide uppercase">
-              {t.consumer.account.personalInfo.nameLabel}
-            </Label>
-            <Input id="account-name" defaultValue={consumerName} readOnly />
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="account-name"
+                className="text-xs font-semibold tracking-wide uppercase"
+              >
+                {t.consumer.account.personalInfo.nameLabel}
+              </Label>
+              <DisplayNameForm currentName={consumerName} />
+            </div>
+            <Input id="account-name" value={consumerName} readOnly disabled />
           </div>
           <div className="flex flex-col gap-2">
             <Label
@@ -57,19 +65,20 @@ export default async function MypageAccountPage() {
             >
               {t.consumer.account.personalInfo.emailLabel}
             </Label>
-            <Input id="account-email" defaultValue={consumerEmail} readOnly />
+            <Input id="account-email" value={consumerEmail} readOnly disabled />
           </div>
-          {consumerPhone ? (
-            <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
               <Label
                 htmlFor="account-phone"
                 className="text-xs font-semibold tracking-wide uppercase"
               >
                 {t.consumer.account.personalInfo.phoneLabel}
               </Label>
-              <Input id="account-phone" defaultValue={consumerPhone} readOnly />
+              <PhoneForm currentPhone={consumerPhone} />
             </div>
-          ) : null}
+            <Input id="account-phone" value={consumerPhone} readOnly disabled />
+          </div>
         </div>
       </section>
 
@@ -81,7 +90,7 @@ export default async function MypageAccountPage() {
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
-        <AddressManager addresses={addresses} />
+        <AddressManager addresses={addresses} defaultPhone={consumerPhone} />
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">

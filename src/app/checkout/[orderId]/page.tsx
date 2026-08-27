@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 
 import { CancelOrderButton } from '@/components/cancel-order-button';
 import { ORDER_STATUS } from '@/constants/order-status';
+import { env } from '@/env';
+import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
@@ -14,14 +16,15 @@ import { CouponForm } from './coupon-form';
 
 export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]'>) {
   const { orderId } = await props.params;
-  const [order, paymentSummary] = await Promise.all([
+  const [consumer, order, paymentSummary] = await Promise.all([
+    getCurrentConsumer(),
     getOrderById(orderId),
     getOrderPaymentSummary(orderId),
   ]);
   const locale = await getLocale();
   const t = locales[locale];
 
-  if (!order) {
+  if (!order || !consumer || order.consumer_id !== consumer.id) {
     notFound();
   }
 
@@ -102,7 +105,7 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
             orderId={order.id}
             orderName={order.title}
             amount={order.amount}
-            allowTestPayment
+            allowTestPayment={env.ALLOW_TEST_PAYMENT}
           />
         </div>
       </div>

@@ -34,6 +34,7 @@ export type Database = {
           address_line2: string | null;
           consumer_id: string | null;
           created_at: string;
+          deleted_at: string | null;
           id: string;
           is_default: boolean;
           label: string;
@@ -47,6 +48,7 @@ export type Database = {
           address_line2?: string | null;
           consumer_id?: string | null;
           created_at?: string;
+          deleted_at?: string | null;
           id?: string;
           is_default?: boolean;
           label: string;
@@ -60,6 +62,7 @@ export type Database = {
           address_line2?: string | null;
           consumer_id?: string | null;
           created_at?: string;
+          deleted_at?: string | null;
           id?: string;
           is_default?: boolean;
           label?: string;

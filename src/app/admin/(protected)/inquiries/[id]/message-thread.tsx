@@ -16,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
+import { INQUIRY_ANSWER_MAX_LENGTH, INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import type { Tables } from '@/lib/db/database.types';
 import { formatDateTime } from '@/lib/format-date';
 import { defaultLocale, locales } from '@/locales';
@@ -152,6 +152,7 @@ export function MessageThread({
                 <textarea
                   rows={4}
                   value={editingContent}
+                  maxLength={INQUIRY_ANSWER_MAX_LENGTH}
                   onChange={(event) => setEditingContent(event.target.value)}
                   className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 />
@@ -170,7 +171,9 @@ export function MessageThread({
                 </div>
               </div>
             ) : (
-              <p className="text-sm whitespace-pre-wrap text-foreground">{message.content}</p>
+              <p className="text-sm [overflow-wrap:anywhere] break-words whitespace-pre-wrap text-foreground">
+                {message.content}
+              </p>
             )}
           </div>
         );

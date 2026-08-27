@@ -2,7 +2,15 @@ import { ClickableTableRow } from '@/components/clickable-table-row';
 import { FilterLink } from '@/components/filter-link';
 import { ListPagination } from '@/components/list-pagination';
 import { RelativeDate } from '@/components/relative-date';
+import { SearchForm } from '@/components/search-form';
 import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValueMap,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -12,8 +20,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
+import { INQUIRY_SEARCH_FIELD, isInquirySearchField } from '@/constants/inquiry-search';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { ADMIN_ROUTES } from '@/constants/routes';
+import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { getInquiries } from '@/lib/inquiries/get-inquiries';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
@@ -33,6 +43,11 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
   const searchParams = await props.searchParams;
   const filterParam = firstSearchParam(searchParams.filter);
   const activeFilter = isInquiryFilter(filterParam) ? filterParam : 'all';
+  const searchFieldParam = firstSearchParam(searchParams.searchField);
+  const searchField = isInquirySearchField(searchFieldParam)
+    ? searchFieldParam
+    : INQUIRY_SEARCH_FIELD.TITLE;
+  const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
   const allInquiries = await getInquiries();
   const filteredInquiries = allInquiries.filter((inquiry) => {
@@ -40,19 +55,30 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
     const isFollowUp = inquiry.answered_at !== null && inquiry.hasNewConsumerReply;
     const isAnswered = inquiry.answered_at !== null && !inquiry.hasNewConsumerReply;
 
-    if (activeFilter === 'new') {
-      return isNew;
+    const matchesFilter =
+      activeFilter === 'new'
+        ? isNew
+        : activeFilter === 'followup'
+          ? isFollowUp
+          : activeFilter === 'unresolved'
+            ? isNew || isFollowUp
+            : activeFilter === 'answered'
+              ? isAnswered
+              : true;
+    if (!matchesFilter) {
+      return false;
     }
-    if (activeFilter === 'followup') {
-      return isFollowUp;
+    if (query.length === 0) {
+      return true;
     }
-    if (activeFilter === 'unresolved') {
-      return isNew || isFollowUp;
+    const normalizedQuery = query.toLowerCase();
+    if (searchField === INQUIRY_SEARCH_FIELD.TITLE) {
+      return inquiry.title.toLowerCase().includes(normalizedQuery);
     }
-    if (activeFilter === 'answered') {
-      return isAnswered;
-    }
-    return true;
+    return (
+      (inquiry.consumerDisplayName ?? '').toLowerCase().includes(normalizedQuery) ||
+      (inquiry.consumerEmail ?? '').toLowerCase().includes(normalizedQuery)
+    );
   });
   const pageSize = parsePageSizeParam(
     searchParams.pageSize,
@@ -67,36 +93,61 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.inquiries.title} actions={<AdminPageSizeSelect />} />
+      <AdminTopbar title={t.admin.inquiries.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
-        <div className="flex gap-2">
-          <FilterLink href={ADMIN_ROUTES.INQUIRIES} isActive={activeFilter === 'all'}>
-            {t.admin.inquiries.list.filterAllLabel}
-          </FilterLink>
-          <FilterLink
-            href={`${ADMIN_ROUTES.INQUIRIES}?filter=new`}
-            isActive={activeFilter === 'new'}
+        <div className="flex justify-end">
+          <AdminPageSizeSelect />
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex gap-2">
+            <FilterLink href={ADMIN_ROUTES.INQUIRIES} isActive={activeFilter === 'all'}>
+              {t.admin.inquiries.list.filterAllLabel}
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.INQUIRIES}?filter=new`}
+              isActive={activeFilter === 'new'}
+            >
+              {t.admin.inquiries.statusPending}
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.INQUIRIES}?filter=followup`}
+              isActive={activeFilter === 'followup'}
+            >
+              {t.admin.inquiries.newReplyBadge}
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.INQUIRIES}?filter=unresolved`}
+              isActive={activeFilter === 'unresolved'}
+            >
+              {t.admin.inquiries.list.unresolvedFilterLabel}
+            </FilterLink>
+            <FilterLink
+              href={`${ADMIN_ROUTES.INQUIRIES}?filter=answered`}
+              isActive={activeFilter === 'answered'}
+            >
+              {t.admin.inquiries.statusAnswered}
+            </FilterLink>
+          </div>
+          <SearchForm
+            defaultValue={query}
+            placeholder={t.admin.inquiries.list.search.placeholder}
+            submitLabel={t.common.searchLabel}
+            inputClassName="w-48"
           >
-            {t.admin.inquiries.statusPending}
-          </FilterLink>
-          <FilterLink
-            href={`${ADMIN_ROUTES.INQUIRIES}?filter=followup`}
-            isActive={activeFilter === 'followup'}
-          >
-            {t.admin.inquiries.newReplyBadge}
-          </FilterLink>
-          <FilterLink
-            href={`${ADMIN_ROUTES.INQUIRIES}?filter=unresolved`}
-            isActive={activeFilter === 'unresolved'}
-          >
-            {t.admin.inquiries.list.unresolvedFilterLabel}
-          </FilterLink>
-          <FilterLink
-            href={`${ADMIN_ROUTES.INQUIRIES}?filter=answered`}
-            isActive={activeFilter === 'answered'}
-          >
-            {t.admin.inquiries.statusAnswered}
-          </FilterLink>
+            <Select size="sm" name="searchField" defaultValue={searchField}>
+              <SelectTrigger className="w-28">
+                <SelectValueMap labels={t.admin.inquiries.list.search.fieldOptions} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={INQUIRY_SEARCH_FIELD.TITLE}>
+                  {t.admin.inquiries.list.search.fieldOptions.title}
+                </SelectItem>
+                <SelectItem value={INQUIRY_SEARCH_FIELD.CUSTOMER_NAME}>
+                  {t.admin.inquiries.list.search.fieldOptions.customerName}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </SearchForm>
         </div>
         <div className="overflow-hidden rounded-lg border border-border bg-input-background">
           <Table>
@@ -129,9 +180,22 @@ export default async function AdminInquiriesPage(props: PageProps<'/admin/inquir
                     href={`${ADMIN_ROUTES.INQUIRIES}/${inquiry.id}`}
                   >
                     <TableCell className="truncate">
-                      {inquiry.consumer_id === null
-                        ? t.admin.inquiries.list.deletedConsumerLabel
-                        : (inquiry.consumerEmail ?? '-')}
+                      {inquiry.consumer_id === null ? (
+                        t.admin.inquiries.list.deletedConsumerLabel
+                      ) : inquiry.consumerDisplayName ? (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="truncate font-medium text-foreground">
+                            {inquiry.consumerDisplayName}
+                          </span>
+                          {inquiry.consumerEmail ? (
+                            <span className="truncate text-xs text-muted-foreground">
+                              {inquiry.consumerEmail}
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : (
+                        (inquiry.consumerEmail ?? '-')
+                      )}
                     </TableCell>
                     <TableCell>
                       <Badge className="bg-muted text-muted-foreground">

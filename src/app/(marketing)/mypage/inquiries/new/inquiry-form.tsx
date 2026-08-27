@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
+import { CharCounterField } from '@/components/char-counter-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,11 +20,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY, type InquiryCategory } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 import type { Tables } from '@/lib/db/database.types';
 import { formatDate } from '@/lib/format-date';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 
 import { createInquiry } from './actions';
 import { type InquiryFormInput, inquiryFormSchema } from './inquiry-schema';
@@ -96,14 +100,14 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
                   <SelectValue placeholder={t.consumer.inquiries.form.relatedOrderPlaceholder}>
                     {(value: string) => {
                       const selected = orders.find((order) => order.id === value);
-                      return selected ? `${selected.title} (#${selected.id.slice(0, 8)})` : null;
+                      return selected ? `${selected.title} (${formatIdPrefix(selected.id)})` : null;
                     }}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {orders.map((order) => (
                     <SelectItem key={order.id} value={order.id}>
-                      {order.title} (#{order.id.slice(0, 8)}, {formatDate(order.created_at)})
+                      {order.title} ({formatIdPrefix(order.id)}, {formatDate(order.created_at)})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -117,12 +121,14 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
         <Label htmlFor="inquiry-title">{t.consumer.inquiries.form.titleLabel}</Label>
         <Input
           id="inquiry-title"
+          maxLength={INQUIRY_TITLE_MAX_LENGTH}
           placeholder={t.consumer.inquiries.form.titlePlaceholder}
           {...register('title')}
         />
+        <CharCounterField control={control} name="title" max={INQUIRY_TITLE_MAX_LENGTH} />
         {errors.title ? (
           <p className="text-sm text-destructive">
-            {t.consumer.inquiries.errors.validation_failed}
+            {fieldErrorMessage(t.consumer.inquiries.errors.fields.title, errors.title.type)}
           </p>
         ) : null}
       </div>
@@ -132,12 +138,14 @@ export function InquiryForm({ orders, defaultCategory, defaultOrderId }: Inquiry
         <Textarea
           id="inquiry-content"
           rows={8}
+          maxLength={INQUIRY_CONTENT_MAX_LENGTH}
           placeholder={t.consumer.inquiries.form.contentPlaceholder}
           {...register('content')}
         />
+        <CharCounterField control={control} name="content" max={INQUIRY_CONTENT_MAX_LENGTH} />
         {errors.content ? (
           <p className="text-sm text-destructive">
-            {t.consumer.inquiries.errors.validation_failed}
+            {fieldErrorMessage(t.consumer.inquiries.errors.fields.content, errors.content.type)}
           </p>
         ) : null}
       </div>

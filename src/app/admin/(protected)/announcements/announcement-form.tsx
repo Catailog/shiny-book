@@ -17,9 +17,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  ANNOUNCEMENT_CONTENT_MAX_LENGTH,
+  ANNOUNCEMENT_TITLE_MAX_LENGTH,
+} from '@/constants/announcement';
+import {
   ANNOUNCEMENT_CATEGORY,
   type AnnouncementCategory,
 } from '@/constants/announcement-category';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { defaultLocale, locales } from '@/locales';
 
 import type { AnnouncementActionResult } from './actions';
@@ -74,10 +79,15 @@ export function AnnouncementForm({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="title">{t.admin.announcements.form.titleLabel}</Label>
-        <Input id="title" type="text" {...register('title')} />
+        <Input
+          id="title"
+          type="text"
+          maxLength={ANNOUNCEMENT_TITLE_MAX_LENGTH}
+          {...register('title')}
+        />
         {errors.title ? (
           <p className="text-sm text-destructive">
-            {t.admin.announcements.errors.validation_failed}
+            {fieldErrorMessage(t.admin.announcements.errors.fields.title, errors.title.type)}
           </p>
         ) : null}
       </div>
@@ -109,12 +119,13 @@ export function AnnouncementForm({
         <textarea
           id="content"
           rows={8}
+          maxLength={ANNOUNCEMENT_CONTENT_MAX_LENGTH}
           className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           {...register('content')}
         />
         {errors.content ? (
           <p className="text-sm text-destructive">
-            {t.admin.announcements.errors.validation_failed}
+            {fieldErrorMessage(t.admin.announcements.errors.fields.content, errors.content.type)}
           </p>
         ) : null}
       </div>

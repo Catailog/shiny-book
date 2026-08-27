@@ -18,6 +18,7 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiriesByConsumer } from '@/lib/inquiries/get-inquiries-by-consumer';
 import { paginate, parsePageParam } from '@/lib/pagination';
@@ -77,7 +78,9 @@ export default async function MypageInquiriesPage(props: PageProps<'/mypage/inqu
             ) : null}
             {inquiries.map((inquiry) => (
               <TableRow key={inquiry.id} className="hover:bg-transparent">
-                <TableCell className="text-muted-foreground">#{inquiry.id.slice(0, 8)}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {formatIdPrefix(inquiry.id)}
+                </TableCell>
                 <TableCell>
                   <Badge className="bg-muted text-muted-foreground">
                     {inquiry.category === INQUIRY_CATEGORY.ORDER

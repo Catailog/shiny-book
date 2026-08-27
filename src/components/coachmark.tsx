@@ -33,7 +33,7 @@ interface CoachmarkHighlightProps {
   autoBorderRadius: string | null;
 }
 
-function CoachmarkHighlight({ radiusClassName, autoBorderRadius }: CoachmarkHighlightProps) {
+export function CoachmarkHighlight({ radiusClassName, autoBorderRadius }: CoachmarkHighlightProps) {
   return (
     <span
       aria-hidden="true"

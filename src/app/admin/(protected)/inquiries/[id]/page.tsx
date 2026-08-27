@@ -9,10 +9,12 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
 import { formatDate } from '@/lib/format-date';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { formatCurrency } from '@/lib/format/currency';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
 import { getInquiryMessages } from '@/lib/inquiries/get-inquiry-messages';
 import { getInquiryOrderContext } from '@/lib/inquiries/get-inquiry-order-context';
+import { getConsumerProfileById } from '@/lib/profiles/get-consumer-profile-by-id';
 import { getProfileEmailsByIds } from '@/lib/profiles/get-profile-emails-by-ids';
 import { defaultLocale, locales } from '@/locales';
 
@@ -29,11 +31,12 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
     notFound();
   }
 
-  const [messages, relatedOrder] = await Promise.all([
+  const [messages, relatedOrder, consumer] = await Promise.all([
     getInquiryMessages(inquiry.id),
     inquiry.category === INQUIRY_CATEGORY.ORDER && inquiry.order_id
       ? getInquiryOrderContext(inquiry.order_id)
       : Promise.resolve(null),
+    inquiry.consumer_id ? getConsumerProfileById(inquiry.consumer_id) : Promise.resolve(null),
   ]);
   const adminAuthorIds = [
     ...new Set(
@@ -65,6 +68,19 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
         <div className="flex flex-col gap-6 rounded-lg border border-border bg-card p-6">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-bold text-muted-foreground">
+              {t.admin.inquiries.detail.customerLabel}
+            </span>
+            <p className="text-sm text-foreground">
+              {inquiry.consumer_id === null
+                ? t.admin.inquiries.list.deletedConsumerLabel
+                : (consumer?.displayName ?? consumer?.email ?? '-')}
+            </p>
+            {inquiry.consumer_id !== null && consumer?.displayName && consumer.email ? (
+              <p className="text-xs text-muted-foreground">{consumer.email}</p>
+            ) : null}
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-bold text-muted-foreground">
               {t.admin.inquiries.list.table.category}
             </span>
             <p className="text-sm text-foreground">
@@ -77,7 +93,9 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
             <span className="text-xs font-bold text-muted-foreground">
               {t.admin.inquiries.detail.subjectLabel}
             </span>
-            <p className="font-semibold text-foreground">{inquiry.title}</p>
+            <p className="font-semibold [overflow-wrap:anywhere] break-words text-foreground">
+              {inquiry.title}
+            </p>
           </div>
           {relatedOrder ? (
             <div className="flex flex-col gap-1 rounded-lg border border-border bg-muted p-4">
@@ -89,7 +107,7 @@ export default async function AdminInquiryDetailPage(props: PageProps<'/admin/in
                   {relatedOrder.productName ?? relatedOrder.title}
                 </p>
                 <span className="text-xs text-muted-foreground">
-                  #{relatedOrder.id.slice(0, 8)}
+                  {formatIdPrefix(relatedOrder.id)}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">

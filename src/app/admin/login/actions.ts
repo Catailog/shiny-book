@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { TEST_ACCOUNT_ROLE_PREFIX } from '@/constants/test-account';
+import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { createTestAccountPair } from '@/lib/auth/test-account-pair';
 import {
@@ -12,13 +13,15 @@ import {
   readTestAccountPairToken,
   signInWithExistingTestAccount,
 } from '@/lib/auth/test-account-session';
+import { checkAuthActionRateLimit } from '@/lib/rate-limit/auth-action-rate-limit';
+import { getClientIp } from '@/lib/request/get-client-ip';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { verifyTurnstileToken } from '@/lib/turnstile/verify-turnstile-token';
 
 import { type AdminLoginInput, adminLoginSchema } from './login-schema';
 
 export interface AdminLoginActionResult {
-  errorCode: 'invalid_credentials' | 'unexpected_error';
+  errorCode: 'invalid_credentials' | 'rate_limited' | 'unexpected_error';
 }
 
 export async function signInAdmin(
@@ -27,6 +30,15 @@ export async function signInAdmin(
   const parsed = adminLoginSchema.safeParse(input);
   if (!parsed.success) {
     return { errorCode: 'invalid_credentials' };
+  }
+
+  const clientIp = await getClientIp();
+  const rateLimit = await checkAuthActionRateLimit(
+    `login-admin:ip:${clientIp}`,
+    `login-admin:email:${parsed.data.email.toLowerCase()}`,
+  );
+  if (!rateLimit.isAllowed) {
+    return { errorCode: 'rate_limited' };
   }
 
   const supabase = await createServerSupabaseClient();
@@ -54,6 +66,10 @@ export interface AdminTestLoginResult {
 export async function signInTestAdmin(
   turnstileToken: string,
 ): Promise<AdminTestLoginResult | undefined> {
+  if (!env.ALLOW_TEST_LOGIN) {
+    return { errorCode: 'unavailable' };
+  }
+
   const isHuman = await verifyTurnstileToken(turnstileToken);
   if (!isHuman) {
     return { errorCode: 'bot_verification_failed' };

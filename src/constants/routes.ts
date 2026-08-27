@@ -21,6 +21,7 @@ export const CONSUMER_ROUTES = {
   ACCOUNT: '/mypage/account',
   INQUIRIES: '/mypage/inquiries',
   NEW_INQUIRY: '/mypage/inquiries/new',
+  CHECKOUT: '/checkout',
 } as const;
 
 export const NOTICE_ROUTES = {

@@ -1,6 +1,32 @@
+import { ADDRESS_LABEL_MAX_LENGTH } from '@/constants/address';
+import {
+  ANNOUNCEMENT_CONTENT_MAX_LENGTH,
+  ANNOUNCEMENT_TITLE_MAX_LENGTH,
+} from '@/constants/announcement';
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
+import {
+  DISPLAY_NAME_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from '@/constants/auth';
+import {
+  COUPON_CODE_MAX_LENGTH,
+  COUPON_DISCOUNT_VALUE_MAX,
+  COUPON_PERCENTAGE_MAX,
+} from '@/constants/coupon';
+import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
+import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
+import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_NAME_MAX_LENGTH,
+  PRODUCT_PRICE_MAX,
+  PRODUCT_SIZE_MAX_LENGTH,
+  PRODUCT_SLUG_MAX_LENGTH,
+} from '@/constants/product';
 
 export const en = {
   common: {
@@ -8,6 +34,9 @@ export const en = {
     error: 'Something went wrong.',
     coachmarkClose: 'Close',
     turnstilePendingTooltip: 'Please wait until security verification finishes.',
+    searchLabel: 'Search',
+    warning: 'Warning',
+    importantToastLabel: 'Important',
   },
   site: {
     nav: {
@@ -259,15 +288,12 @@ export const en = {
       applySuccess: 'Coupon applied.',
       discountLabel: 'Coupon discount',
       errors: {
-        validation_failed: 'Please enter a coupon code.',
+        validation_failed: `The coupon code must be ${COUPON_CODE_MAX_LENGTH} characters or fewer.`,
         not_found: 'This order could not be found.',
         already_applied: 'A coupon has already been applied to this order.',
-        coupon_not_found: 'This coupon code does not exist.',
-        coupon_inactive: 'This coupon is not available.',
-        coupon_not_started: 'This coupon is not available yet.',
-        coupon_expired: 'This coupon has expired.',
-        coupon_usage_limit_reached: 'This coupon has reached its usage limit.',
+        coupon_invalid: "This coupon code can't be used.",
         coupon_conflict: 'This coupon was just used elsewhere. Please try again.',
+        rate_limited: 'Too many attempts. Please try again later.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
     },
@@ -373,6 +399,7 @@ export const en = {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
         invalid_credentials: 'Please check your email and password.',
+        rate_limited: 'Too many login attempts. Please try again later.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       testLoginErrors: {
@@ -414,6 +441,7 @@ export const en = {
       empty: 'No orders to show.',
       columns: {
         title: 'Title',
+        customerName: 'Customer',
         quantity: 'Quantity',
         amount: 'Amount',
         status: 'Status',
@@ -423,6 +451,14 @@ export const en = {
       },
       quantitySuffix: 'copies',
       filterAllLabel: 'All',
+      search: {
+        placeholder: 'Search',
+        fieldOptions: {
+          title: 'Title',
+          id: 'Order ID',
+          customerName: 'Customer',
+        },
+      },
       advanceButton: 'Advance to next stage',
       revertButton: 'Revert to previous stage',
       revertConfirmTitle: 'Revert to the previous stage?',
@@ -430,7 +466,7 @@ export const en = {
         'This will move the order status back to the previous stage. If work has already progressed, it may no longer match reality, so proceed carefully.',
       revertConfirmButton: 'Force revert',
       revertCancelButton: 'Cancel',
-      viewPhotosButton: 'View uploaded photos',
+      viewPhotosButton: 'Uploaded photos',
       photosLoading: 'Loading...',
       photosEmpty: 'No photos uploaded.',
       fileViewError: 'Failed to load the file.',
@@ -529,6 +565,20 @@ export const en = {
         expired: 'Expired coupons cannot change status.',
         conflict: 'This was already changed elsewhere. Please refresh and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          code: {
+            required: 'Please enter a coupon code.',
+            tooLong: `Keep the coupon code within ${COUPON_CODE_MAX_LENGTH} characters.`,
+          },
+          discountValue: {
+            required: 'Please enter a discount value.',
+            invalid: 'Please enter the discount value as a number.',
+            min: 'The discount value must be 1 or more.',
+            max: `The discount value must be ${COUPON_DISCOUNT_VALUE_MAX.toLocaleString('en-US')} or less.`,
+            custom: `A percentage discount cannot exceed ${COUPON_PERCENTAGE_MAX}%.`,
+          },
+          period: 'The start date must be on or before the end date.',
+        },
       },
     },
     announcements: {
@@ -558,6 +608,16 @@ export const en = {
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          title: {
+            required: 'Please enter a title.',
+            tooLong: `Keep the title within ${ANNOUNCEMENT_TITLE_MAX_LENGTH} characters.`,
+          },
+          content: {
+            required: 'Please enter the content.',
+            tooLong: `Keep the content within ${ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+        },
       },
       list: {
         filterAllLabel: 'All',
@@ -624,6 +684,16 @@ export const en = {
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          question: {
+            required: 'Please enter a question.',
+            tooLong: `Keep the question within ${FAQ_QUESTION_MAX_LENGTH} characters.`,
+          },
+          answer: {
+            required: 'Please enter an answer.',
+            tooLong: `Keep the answer within ${FAQ_ANSWER_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+        },
       },
       list: {
         searchPlaceholder: 'Search questions...',
@@ -688,6 +758,13 @@ export const en = {
           answered: 'Answered',
           closed: 'Closed',
         },
+        search: {
+          placeholder: 'Search',
+          fieldOptions: {
+            customerName: 'Customer',
+            title: 'Title',
+          },
+        },
         table: {
           inquiryNo: 'INQUIRY #',
           customerName: 'CUSTOMER NAME',
@@ -744,6 +821,7 @@ export const en = {
       editTitle: 'Edit product',
       empty: 'No products yet.',
       writeButton: 'Add product',
+      searchPlaceholder: 'Search by product name...',
       saveSuccess: 'Saved.',
       backToList: 'Back to Products list',
       form: {
@@ -792,6 +870,31 @@ export const en = {
         slug_taken: 'This slug is already in use.',
         conflict: 'This was just changed elsewhere. Please refresh and try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          slug: {
+            required: 'Please enter a slug.',
+            tooLong: `Keep the slug within ${PRODUCT_SLUG_MAX_LENGTH} characters.`,
+            format: 'Use only lowercase letters, numbers, and hyphens (-).',
+          },
+          name: {
+            required: 'Please enter a product name.',
+            tooLong: `Keep the product name within ${PRODUCT_NAME_MAX_LENGTH} characters.`,
+          },
+          size: {
+            required: 'Please enter a size.',
+            tooLong: `Keep the size within ${PRODUCT_SIZE_MAX_LENGTH} characters.`,
+          },
+          description: {
+            required: 'Please enter a product description.',
+            tooLong: `Keep the description within ${PRODUCT_DESCRIPTION_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+          price: {
+            required: 'Please enter a price.',
+            invalid: 'Please enter the price as a number.',
+            min: 'The price must be 0 or more.',
+            max: `The price must be ${PRODUCT_PRICE_MAX.toLocaleString('en-US')} or less.`,
+          },
+        },
       },
     },
   },
@@ -820,6 +923,7 @@ export const en = {
         emailInvalid: 'Please enter a valid email.',
         passwordRequired: 'Please enter your password.',
         invalid_credentials: 'Please check your email and password.',
+        rate_limited: 'Too many login attempts. Please try again later.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
       testLoginErrors: {
@@ -848,10 +952,12 @@ export const en = {
       loginPrompt: 'Already have an account?',
       loginLink: 'Sign in',
       errors: {
-        nameRequired: 'Please enter your name.',
+        nameRequired: `Name must be 1 to ${PERSON_NAME_MAX_LENGTH} characters.`,
         emailInvalid: 'Please enter a valid email.',
-        passwordTooShort: 'Password must be at least 6 characters.',
+        passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
+        passwordConfirmRequired: 'Please confirm your password.',
         passwordMismatch: 'Passwords do not match.',
+        phoneInvalid: 'Please enter a valid mobile phone number.',
         agreeTermsRequired: 'Please agree to the Terms of Service.',
         agreePrivacyRequired:
           'Please agree to the collection and use of your personal information.',
@@ -897,13 +1003,17 @@ export const en = {
     },
     account: {
       title: 'Account settings',
+      currentPasswordLabel: 'Current password',
       passwordLabel: 'New password',
       passwordConfirmLabel: 'Confirm new password',
       submitButton: 'Change password',
       submitting: 'Changing...',
       success: 'Your password has been changed.',
       errors: {
-        passwordTooShort: 'Password must be at least 6 characters.',
+        currentPasswordRequired: 'Please enter your current password.',
+        incorrect_current_password: 'Your current password is incorrect.',
+        passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
+        passwordConfirmRequired: 'Please confirm your new password.',
         passwordMismatch: 'Passwords do not match.',
         unauthorized: 'You do not have permission. Please sign in again.',
         validation_failed: 'Please check your input and try again.',
@@ -915,11 +1025,21 @@ export const en = {
         nameLabel: 'Name',
         emailLabel: 'Email',
         phoneLabel: 'Phone',
+        editNameTitle: 'Change name',
+        editPhoneTitle: 'Change phone number',
+        nameInvalid: `Name must be between 1 and ${DISPLAY_NAME_MAX_LENGTH} characters.`,
+        phoneInvalid: 'Please enter a valid phone number.',
+        phonePlaceholder: 'Leave the phone number blank to remove it.',
+        updateSuccess: 'Your name has been updated.',
+        phoneUpdateSuccess: 'Your phone number has been updated.',
       },
       profileImage: {
         changeButton: 'Change image',
+        deleteButton: 'Remove',
         uploading: 'Uploading...',
+        deleting: 'Removing...',
         updateSuccess: 'Profile image updated.',
+        deleteSuccess: 'Profile image removed.',
         errors: {
           unauthorized: 'You do not have permission. Please sign in again.',
           validation_failed: 'Please upload an image file (PNG, JPG, WEBP) up to 5MB.',
@@ -961,6 +1081,27 @@ export const en = {
           validation_failed: 'Please check your input and try again.',
           not_found: 'Address not found.',
           unexpected_error: 'Something went wrong. Please try again shortly.',
+          fields: {
+            label: {
+              required: 'Please enter an address label.',
+              tooLong: `Keep the address label within ${ADDRESS_LABEL_MAX_LENGTH} characters.`,
+            },
+            recipientName: {
+              required: 'Please enter a recipient name.',
+              tooLong: `Keep the recipient name within ${PERSON_NAME_MAX_LENGTH} characters.`,
+            },
+            phone: {
+              required: 'Please enter a phone number.',
+              tooShort: 'Please enter a valid phone number.',
+              format: 'Please enter a valid phone number.',
+            },
+            postalCode: {
+              required: 'Please use the address search to fill in the postal code.',
+            },
+            addressLine1: {
+              required: 'Please use the address search to fill in the address.',
+            },
+          },
         },
       },
       notifications: {
@@ -994,6 +1135,9 @@ export const en = {
       editButton: 'Edit',
       photosLabel: 'Interior photos',
       photosHint: '{count} / {required} uploaded',
+      photosRetryNotice: '{count} photo(s) failed to upload.',
+      photosRateLimited: 'Too many upload attempts. You can retry in {seconds}s.',
+      photosRetryButton: 'Retry',
       addPhotosButton: 'Add photos',
       removePhotoLabel: 'Remove photo',
       testUploadButton: 'Auto-upload test photos',
@@ -1009,9 +1153,11 @@ export const en = {
       uploadingTooltip: "You can't continue while images are still uploading.",
       submitting: 'Creating order...',
       status: {
+        queued: 'Waiting...',
         uploading: 'Uploading...',
         processing: 'Processing image...',
         done: 'Upload complete',
+        error: 'Upload failed',
       },
       summary: {
         title: 'Order Summary',
@@ -1020,17 +1166,24 @@ export const en = {
         shipping: 'Shipping',
         shippingFree: 'Free',
         shippingUndetermined: 'To be determined',
+        amountPending: 'Shown after quantity is set',
         finalEstimate: 'Final Estimated Total',
         payButton: 'Request & Pay',
       },
       errors: {
         titleRequired: 'Please enter a book title.',
+        titleTooLong: `Title can be up to ${ORDER_TITLE_MAX_LENGTH} characters.`,
+        titleInvalidChars: 'Title contains characters that are not allowed.',
         quantityInvalid: 'Quantity must be at least 1.',
+        quantityTooLarge: 'Quantity cannot exceed {max}.',
         pageCountInvalid: 'Please select a page count.',
         photoCountMismatch: 'Please upload the exact number of interior photos required.',
         photoCountExceeded:
           'The {count} uploaded photos exceed what the new page count needs ({required}). Please remove some photos or increase the page count.',
+        photosSkippedOverLimit:
+          "{skipped} photo(s) went over the {required}-photo limit and aren't uploaded yet. Increase the page count or remove some photos, then retry them from the list.",
         addressRequired: 'Please select a shipping address.',
+        couponTooLong: `The coupon code must be ${COUPON_CODE_MAX_LENGTH} characters or fewer.`,
         uploadFailed: 'File upload failed. Please try again.',
         filesRequired: 'Please upload interior photos.',
         unauthorized: 'You do not have permission. Please sign in again.',
@@ -1039,11 +1192,7 @@ export const en = {
         address_not_found: 'The selected address could not be found. Please choose again.',
         order_not_editable:
           'This order was already processed and can no longer be edited. Check My Page.',
-        coupon_not_found: 'This coupon code does not exist.',
-        coupon_inactive: 'This coupon is not available.',
-        coupon_not_started: 'This coupon is not available yet.',
-        coupon_expired: 'This coupon has expired.',
-        coupon_usage_limit_reached: 'This coupon has reached its usage limit.',
+        coupon_invalid: "This coupon code can't be used.",
         coupon_conflict: 'This coupon was just used elsewhere. Please try again.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
       },
@@ -1113,6 +1262,16 @@ export const en = {
         validation_failed: 'Please check your input and try again.',
         not_found: 'This inquiry could not be found.',
         unexpected_error: 'Something went wrong. Please try again shortly.',
+        fields: {
+          title: {
+            required: 'Please enter a title.',
+            tooLong: `Keep the title within ${INQUIRY_TITLE_MAX_LENGTH} characters.`,
+          },
+          content: {
+            required: 'Please enter the content.',
+            tooLong: `Keep the content within ${INQUIRY_CONTENT_MAX_LENGTH.toLocaleString('en-US')} characters.`,
+          },
+        },
       },
     },
     reviews: {
@@ -1120,7 +1279,7 @@ export const en = {
       ratingLabel: 'Rating',
       form: {
         ratingLabel: 'Rating',
-        contentLabel: 'Review',
+        contentLabel: 'Review (optional)',
         submitButton: 'Submit review',
         submitting: 'Submitting...',
       },

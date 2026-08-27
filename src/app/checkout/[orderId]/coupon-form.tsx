@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { COUPON_CODE_MAX_LENGTH } from '@/constants/coupon';
 import { useT } from '@/hooks/use-t';
 
 import { applyCouponToOrder } from './coupon-actions';
@@ -38,11 +39,12 @@ export function CouponForm({ orderId }: CouponFormProps) {
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor="checkout-coupon-code">{t.checkout.coupon.label}</Label>
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <Input
           id="checkout-coupon-code"
           type="text"
           value={code}
+          maxLength={COUPON_CODE_MAX_LENGTH}
           onChange={(event) => setCode(event.target.value)}
           className="flex-1"
         />

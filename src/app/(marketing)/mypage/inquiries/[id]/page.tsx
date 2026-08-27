@@ -8,6 +8,7 @@ import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatDate } from '@/lib/format-date';
+import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { formatCurrency } from '@/lib/format/currency';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getInquiryById } from '@/lib/inquiries/get-inquiry-by-id';
@@ -50,7 +51,9 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
       <div className="max-w-2xl rounded-lg border border-border bg-card p-6 shadow-sm">
         <div className="flex flex-col gap-2 border-b border-border pb-4">
           <div className="flex items-center justify-between gap-4">
-            <h1 className="font-heading text-2xl font-bold text-foreground">{inquiry.title}</h1>
+            <h1 className="min-w-0 font-heading text-2xl font-bold [overflow-wrap:anywhere] break-words text-foreground">
+              {inquiry.title}
+            </h1>
             <Badge
               className={
                 isAnswered
@@ -78,7 +81,7 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
                   {relatedOrder.productName ?? relatedOrder.title}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  #{relatedOrder.id.slice(0, 8)}
+                  {formatIdPrefix(relatedOrder.id)}
                 </span>
               </div>
               <span className="text-xs text-muted-foreground">

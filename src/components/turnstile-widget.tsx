@@ -6,6 +6,7 @@ import Script from 'next/script';
 
 import { env } from '@/env';
 import { useHtmlClassPresent } from '@/hooks/use-html-class-present';
+import { cn } from '@/lib/utils';
 
 interface TurnstileRenderOptions {
   sitekey: string;
@@ -64,7 +65,8 @@ export function TurnstileWidget({ onVerify, onExpire }: TurnstileWidgetProps) {
         strategy="afterInteractive"
         onLoad={() => setIsScriptReady(true)}
       />
-      <div ref={containerRef} className="flex justify-center" />
+      {/* min-h-[65px]: Cloudflare Turnstile 기본 위젯의 공식 렌더링 높이, 스크립트 로드 전 레이아웃 시프트 방지 */}
+      <div ref={containerRef} className={cn('flex justify-center', 'min-h-[65px]')} />
     </>
   );
 }

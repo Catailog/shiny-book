@@ -12,7 +12,7 @@ import { useT } from '@/hooks/use-t';
 import { createBrowserSupabaseClient } from '@/lib/supabase/browser-client';
 import { createSignedUploadUrl } from '@/lib/uploads/create-signed-upload-url';
 
-import { updateProfileImage } from './actions';
+import { deleteProfileImage, updateProfileImage } from './actions';
 
 interface AvatarUploadFormProps {
   avatarUrl: string | null;
@@ -24,6 +24,7 @@ export function AvatarUploadForm({ avatarUrl, initials }: AvatarUploadFormProps)
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState(avatarUrl);
   const [isPending, startTransition] = useTransition();
+  const [isDeletePending, startDeleteTransition] = useTransition();
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -41,7 +42,6 @@ export function AvatarUploadForm({ avatarUrl, initials }: AvatarUploadFormProps)
     startTransition(async () => {
       const signed = await createSignedUploadUrl({
         kind: FILE_UPLOAD_KIND.AVATAR,
-        fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
       });
@@ -70,6 +70,19 @@ export function AvatarUploadForm({ avatarUrl, initials }: AvatarUploadFormProps)
     });
   }
 
+  function handleDelete() {
+    startDeleteTransition(async () => {
+      const result = await deleteProfileImage();
+      if (result) {
+        toast.error(t.consumer.account.profileImage.errors[result.errorCode]);
+        return;
+      }
+
+      setPreviewUrl(null);
+      toast.success(t.consumer.account.profileImage.deleteSuccess);
+    });
+  }
+
   return (
     <div className="flex items-center gap-4">
       <Avatar size="lg">
@@ -77,17 +90,32 @@ export function AvatarUploadForm({ avatarUrl, initials }: AvatarUploadFormProps)
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col gap-1">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={isPending}
-          onClick={() => inputRef.current?.click()}
-        >
-          {isPending
-            ? t.consumer.account.profileImage.uploading
-            : t.consumer.account.profileImage.changeButton}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={isPending}
+            onClick={() => inputRef.current?.click()}
+          >
+            {isPending
+              ? t.consumer.account.profileImage.uploading
+              : t.consumer.account.profileImage.changeButton}
+          </Button>
+          {previewUrl ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={isDeletePending}
+              onClick={handleDelete}
+            >
+              {isDeletePending
+                ? t.consumer.account.profileImage.deleting
+                : t.consumer.account.profileImage.deleteButton}
+            </Button>
+          ) : null}
+        </div>
         <input
           ref={inputRef}
           type="file"

@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { INQUIRY_ANSWER_MAX_LENGTH } from '@/constants/inquiry';
 import { defaultLocale, locales } from '@/locales';
 
 import { addAdminMessage } from '../actions';
@@ -39,6 +40,7 @@ export function ReplyForm({ inquiryId }: ReplyFormProps) {
       <textarea
         rows={4}
         value={content}
+        maxLength={INQUIRY_ANSWER_MAX_LENGTH}
         onChange={(event) => setContent(event.target.value)}
         placeholder={t.admin.inquiries.detail.replyPlaceholder}
         className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"

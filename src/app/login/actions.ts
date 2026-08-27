@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { TEST_ACCOUNT_ROLE_PREFIX } from '@/constants/test-account';
+import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 import { createTestAccountPair } from '@/lib/auth/test-account-pair';
@@ -13,13 +14,15 @@ import {
   readTestAccountPairToken,
   signInWithExistingTestAccount,
 } from '@/lib/auth/test-account-session';
+import { checkAuthActionRateLimit } from '@/lib/rate-limit/auth-action-rate-limit';
+import { getClientIp } from '@/lib/request/get-client-ip';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { verifyTurnstileToken } from '@/lib/turnstile/verify-turnstile-token';
 
 import { type ConsumerLoginInput, consumerLoginSchema } from './login-schema';
 
 export interface ConsumerLoginActionResult {
-  errorCode: 'invalid_credentials' | 'unexpected_error';
+  errorCode: 'invalid_credentials' | 'rate_limited' | 'unexpected_error';
 }
 
 export async function signInConsumer(
@@ -29,6 +32,15 @@ export async function signInConsumer(
   const parsed = consumerLoginSchema.safeParse(input);
   if (!parsed.success) {
     return { errorCode: 'invalid_credentials' };
+  }
+
+  const clientIp = await getClientIp();
+  const rateLimit = await checkAuthActionRateLimit(
+    `login-consumer:ip:${clientIp}`,
+    `login-consumer:email:${parsed.data.email.toLowerCase()}`,
+  );
+  if (!rateLimit.isAllowed) {
+    return { errorCode: 'rate_limited' };
   }
 
   const supabase = await createServerSupabaseClient();
@@ -61,6 +73,10 @@ export async function signInTestConsumer(
   redirectTo: string | undefined,
   turnstileToken: string,
 ): Promise<ConsumerTestLoginResult | undefined> {
+  if (!env.ALLOW_TEST_LOGIN) {
+    return { errorCode: 'unavailable' };
+  }
+
   const isHuman = await verifyTurnstileToken(turnstileToken);
   if (!isHuman) {
     return { errorCode: 'bot_verification_failed' };

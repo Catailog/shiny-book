@@ -39,6 +39,22 @@ export function ChangePasswordForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-6" noValidate>
+      <div className="col-span-2 flex flex-col gap-2">
+        <Label htmlFor="current-password" className="text-xs font-semibold tracking-wide uppercase">
+          {t.consumer.account.currentPasswordLabel}
+        </Label>
+        <Input
+          id="current-password"
+          type="password"
+          autoComplete="current-password"
+          {...register('currentPassword')}
+        />
+        {errors.currentPassword ? (
+          <p className="text-sm text-destructive">
+            {t.consumer.account.errors.currentPasswordRequired}
+          </p>
+        ) : null}
+      </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="new-password" className="text-xs font-semibold tracking-wide uppercase">
           {t.consumer.account.passwordLabel}
@@ -67,7 +83,11 @@ export function ChangePasswordForm() {
           {...register('passwordConfirm')}
         />
         {errors.passwordConfirm ? (
-          <p className="text-sm text-destructive">{t.consumer.account.errors.passwordMismatch}</p>
+          <p className="text-sm text-destructive">
+            {errors.passwordConfirm.type === 'too_small'
+              ? t.consumer.account.errors.passwordConfirmRequired
+              : t.consumer.account.errors.passwordMismatch}
+          </p>
         ) : null}
       </div>
       <Button type="submit" variant="primary" disabled={isPending} className="w-fit">

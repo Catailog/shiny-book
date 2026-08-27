@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
+import { fieldErrorMessage } from '@/lib/forms/field-error-message';
 import { defaultLocale, locales } from '@/locales';
 
 import type { FaqActionResult } from './actions';
@@ -62,9 +64,16 @@ export function FaqForm({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="question">{t.admin.faqs.form.questionLabel}</Label>
-        <Input id="question" type="text" {...register('question')} />
+        <Input
+          id="question"
+          type="text"
+          maxLength={FAQ_QUESTION_MAX_LENGTH}
+          {...register('question')}
+        />
         {errors.question ? (
-          <p className="text-sm text-destructive">{t.admin.faqs.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.faqs.errors.fields.question, errors.question.type)}
+          </p>
         ) : null}
       </div>
       <div className="flex flex-col gap-1.5">
@@ -72,11 +81,14 @@ export function FaqForm({
         <textarea
           id="answer"
           rows={6}
+          maxLength={FAQ_ANSWER_MAX_LENGTH}
           className="w-full rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           {...register('answer')}
         />
         {errors.answer ? (
-          <p className="text-sm text-destructive">{t.admin.faqs.errors.validation_failed}</p>
+          <p className="text-sm text-destructive">
+            {fieldErrorMessage(t.admin.faqs.errors.fields.answer, errors.answer.type)}
+          </p>
         ) : null}
       </div>
       <Button type="submit" disabled={isPending} className="w-fit">

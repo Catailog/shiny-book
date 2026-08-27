@@ -1,6 +1,32 @@
+import { ADDRESS_LABEL_MAX_LENGTH } from '@/constants/address';
+import {
+  ANNOUNCEMENT_CONTENT_MAX_LENGTH,
+  ANNOUNCEMENT_TITLE_MAX_LENGTH,
+} from '@/constants/announcement';
 import type { AnnouncementCategory } from '@/constants/announcement-category';
 import type { ApiErrorCode } from '@/constants/api-errors';
+import {
+  DISPLAY_NAME_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from '@/constants/auth';
+import {
+  COUPON_CODE_MAX_LENGTH,
+  COUPON_DISCOUNT_VALUE_MAX,
+  COUPON_PERCENTAGE_MAX,
+} from '@/constants/coupon';
+import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
+import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
+import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
 import type { OrderStatus } from '@/constants/order-status';
+import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_NAME_MAX_LENGTH,
+  PRODUCT_PRICE_MAX,
+  PRODUCT_SIZE_MAX_LENGTH,
+  PRODUCT_SLUG_MAX_LENGTH,
+} from '@/constants/product';
 
 export const ko = {
   common: {
@@ -8,6 +34,9 @@ export const ko = {
     error: '오류가 발생했습니다.',
     coachmarkClose: '닫기',
     turnstilePendingTooltip: '보안 인증 확인이 끝날 때까지 잠시 기다려주세요.',
+    searchLabel: '검색',
+    warning: '경고',
+    importantToastLabel: '중요',
   },
   site: {
     nav: {
@@ -258,15 +287,12 @@ export const ko = {
       applySuccess: '쿠폰이 적용됐습니다.',
       discountLabel: '쿠폰 할인',
       errors: {
-        validation_failed: '쿠폰 코드를 입력해주세요.',
+        validation_failed: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
         not_found: '주문을 찾을 수 없습니다.',
         already_applied: '이미 쿠폰이 적용된 주문입니다.',
-        coupon_not_found: '존재하지 않는 쿠폰 코드입니다.',
-        coupon_inactive: '사용할 수 없는 쿠폰입니다.',
-        coupon_not_started: '아직 사용할 수 없는 쿠폰입니다.',
-        coupon_expired: '만료된 쿠폰입니다.',
-        coupon_usage_limit_reached: '사용 횟수를 초과한 쿠폰입니다.',
+        coupon_invalid: '사용할 수 없는 쿠폰 코드입니다.',
         coupon_conflict: '다른 곳에서 먼저 사용된 쿠폰입니다. 다시 시도해주세요.',
+        rate_limited: '쿠폰 적용 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
     },
@@ -364,13 +390,14 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '관리자 테스트를 위해 매번 새 계정으로 자동 로그인 합니다.',
+      testLoginTooltip: '관리자 테스트를 위해 새 계정으로 자동 로그인 합니다.',
       coachmarkTestLoginTitle: '관리자 테스트 계정으로 즉시 로그인',
       coachmarkTestLoginDescription: '클릭 한 번으로 관리자 화면을 확인할 수 있어요.',
       errors: {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
         invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        rate_limited: '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       testLoginErrors: {
@@ -413,6 +440,7 @@ export const ko = {
       empty: '표시할 주문이 없습니다.',
       columns: {
         title: '도서명',
+        customerName: '고객명',
         quantity: '수량',
         amount: '결제 금액',
         status: '상태',
@@ -422,6 +450,14 @@ export const ko = {
       },
       quantitySuffix: '권',
       filterAllLabel: '전체',
+      search: {
+        placeholder: '검색어 입력',
+        fieldOptions: {
+          title: '도서명',
+          id: '주문번호',
+          customerName: '고객명',
+        },
+      },
       advanceButton: '다음 단계로 진행',
       revertButton: '이전 단계로',
       revertConfirmTitle: '이전 단계로 되돌릴까요?',
@@ -429,7 +465,7 @@ export const ko = {
         '주문 상태를 이전 단계로 되돌립니다. 이미 진행된 작업이 있다면 실제 진행 상황과 어긋날 수 있으니 신중하게 진행해주세요.',
       revertConfirmButton: '이전 단계로 강행',
       revertCancelButton: '취소',
-      viewPhotosButton: '업로드 사진 보기',
+      viewPhotosButton: '업로드 사진',
       photosLoading: '불러오는 중...',
       photosEmpty: '업로드된 사진이 없습니다.',
       fileViewError: '파일을 불러오지 못했습니다.',
@@ -528,6 +564,20 @@ export const ko = {
         expired: '만료된 쿠폰은 상태를 변경할 수 없습니다.',
         conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          code: {
+            required: '쿠폰 코드를 입력해주세요.',
+            tooLong: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          discountValue: {
+            required: '할인 값을 입력해주세요.',
+            invalid: '할인 값을 숫자로 입력해주세요.',
+            min: '할인 값은 1 이상이어야 합니다.',
+            max: `할인 값은 ${COUPON_DISCOUNT_VALUE_MAX.toLocaleString('ko-KR')} 이하로 입력해주세요.`,
+            custom: `정률 할인은 ${COUPON_PERCENTAGE_MAX}%를 넘을 수 없습니다.`,
+          },
+          period: '시작일은 만료일보다 앞선 날짜여야 합니다.',
+        },
       },
     },
     announcements: {
@@ -557,6 +607,16 @@ export const ko = {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          title: {
+            required: '제목을 입력해주세요.',
+            tooLong: `제목은 ${ANNOUNCEMENT_TITLE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          content: {
+            required: '내용을 입력해주세요.',
+            tooLong: `내용은 ${ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+        },
       },
       list: {
         filterAllLabel: '전체',
@@ -623,6 +683,16 @@ export const ko = {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          question: {
+            required: '질문을 입력해주세요.',
+            tooLong: `질문은 ${FAQ_QUESTION_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          answer: {
+            required: '답변을 입력해주세요.',
+            tooLong: `답변은 ${FAQ_ANSWER_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+        },
       },
       list: {
         searchPlaceholder: '질문 검색...',
@@ -687,6 +757,13 @@ export const ko = {
           answered: '답변 완료',
           closed: '종료',
         },
+        search: {
+          placeholder: '검색어 입력',
+          fieldOptions: {
+            customerName: '고객명',
+            title: '제목',
+          },
+        },
         table: {
           inquiryNo: '문의번호',
           customerName: '고객명',
@@ -743,6 +820,7 @@ export const ko = {
       editTitle: '상품 수정',
       empty: '등록된 상품이 없습니다.',
       writeButton: '상품 추가',
+      searchPlaceholder: '상품명 검색...',
       saveSuccess: '저장됐습니다.',
       backToList: '목록으로 돌아가기',
       form: {
@@ -791,6 +869,31 @@ export const ko = {
         slug_taken: '이미 존재하는 슬러그입니다.',
         conflict: '다른 곳에서 이미 변경됐습니다. 새로고침 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          slug: {
+            required: '슬러그를 입력해주세요.',
+            tooLong: `슬러그는 ${PRODUCT_SLUG_MAX_LENGTH}자 이하로 입력해주세요.`,
+            format: '슬러그는 영문 소문자, 숫자, 하이픈(-)만 사용할 수 있습니다.',
+          },
+          name: {
+            required: '상품명을 입력해주세요.',
+            tooLong: `상품명은 ${PRODUCT_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          size: {
+            required: '사이즈를 입력해주세요.',
+            tooLong: `사이즈는 ${PRODUCT_SIZE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          description: {
+            required: '상품 설명을 입력해주세요.',
+            tooLong: `상품 설명은 ${PRODUCT_DESCRIPTION_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+          price: {
+            required: '가격을 입력해주세요.',
+            invalid: '가격을 숫자로 입력해주세요.',
+            min: '가격은 0원 이상이어야 합니다.',
+            max: `가격은 ${PRODUCT_PRICE_MAX.toLocaleString('ko-KR')}원 이하로 입력해주세요.`,
+          },
+        },
       },
     },
   },
@@ -810,7 +913,7 @@ export const ko = {
       submitting: '로그인 중...',
       testLoginButton: '테스트 계정 즉시 로그인',
       testLoginSubmitting: '로그인 중...',
-      testLoginTooltip: '소비자 테스트를 위해 매번 새 계정으로 자동 로그인 합니다.',
+      testLoginTooltip: '소비자 테스트를 위해 새 계정으로 자동 로그인 합니다.',
       coachmarkTestLoginTitle: '소비자 테스트 계정으로 즉시 로그인',
       coachmarkTestLoginDescription: '직접 회원가입 해서 테스트 할 수도 있어요.',
       signupPrompt: '아직 계정이 없으신가요?',
@@ -819,6 +922,7 @@ export const ko = {
         emailInvalid: '올바른 이메일을 입력해주세요.',
         passwordRequired: '비밀번호를 입력해주세요.',
         invalid_credentials: '이메일 또는 비밀번호를 확인해주세요.',
+        rate_limited: '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
       testLoginErrors: {
@@ -848,10 +952,12 @@ export const ko = {
       loginPrompt: '이미 계정이 있으신가요?',
       loginLink: '로그인',
       errors: {
-        nameRequired: '이름을 입력해주세요.',
+        nameRequired: `이름은 1자 이상 ${PERSON_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
         emailInvalid: '올바른 이메일을 입력해주세요.',
-        passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
+        passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
+        passwordConfirmRequired: '비밀번호 확인을 입력해주세요.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
+        phoneInvalid: '올바른 휴대폰 번호를 입력해주세요.',
         agreeTermsRequired: '이용약관에 동의해주세요.',
         agreePrivacyRequired: '개인정보 수집 및 이용에 동의해주세요.',
         email_taken: '이미 가입된 이메일입니다.',
@@ -897,13 +1003,17 @@ export const ko = {
     },
     account: {
       title: '계정 설정',
+      currentPasswordLabel: '현재 비밀번호',
       passwordLabel: '새 비밀번호',
       passwordConfirmLabel: '새 비밀번호 확인',
       submitButton: '변경하기',
       submitting: '변경 중...',
       success: '비밀번호가 변경됐습니다.',
       errors: {
-        passwordTooShort: '비밀번호는 6자 이상이어야 합니다.',
+        currentPasswordRequired: '현재 비밀번호를 입력해주세요.',
+        incorrect_current_password: '현재 비밀번호가 일치하지 않습니다.',
+        passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
+        passwordConfirmRequired: '새 비밀번호 확인을 입력해주세요.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         validation_failed: '입력값을 다시 확인해주세요.',
@@ -915,11 +1025,21 @@ export const ko = {
         nameLabel: '이름',
         emailLabel: '이메일',
         phoneLabel: '연락처',
+        editNameTitle: '이름 변경',
+        editPhoneTitle: '연락처 변경',
+        nameInvalid: `이름은 1자 이상 ${DISPLAY_NAME_MAX_LENGTH}자 이하여야 합니다.`,
+        phoneInvalid: '올바른 연락처를 입력해주세요.',
+        phonePlaceholder: '연락처를 비워두면 등록된 연락처가 삭제됩니다.',
+        updateSuccess: '이름이 변경됐습니다.',
+        phoneUpdateSuccess: '연락처가 변경됐습니다.',
       },
       profileImage: {
         changeButton: '이미지 변경',
+        deleteButton: '삭제',
         uploading: '업로드 중...',
+        deleting: '삭제 중...',
         updateSuccess: '프로필 이미지가 변경됐습니다.',
+        deleteSuccess: '프로필 이미지가 삭제됐습니다.',
         errors: {
           unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
           validation_failed: '이미지 파일(PNG, JPG, WEBP, 5MB 이하)만 업로드할 수 있습니다.',
@@ -961,6 +1081,27 @@ export const ko = {
           validation_failed: '입력값을 다시 확인해주세요.',
           not_found: '배송지를 찾을 수 없습니다.',
           unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          fields: {
+            label: {
+              required: '배송지 이름을 입력해주세요.',
+              tooLong: `배송지 이름은 ${ADDRESS_LABEL_MAX_LENGTH}자 이하로 입력해주세요.`,
+            },
+            recipientName: {
+              required: '수령인을 입력해주세요.',
+              tooLong: `수령인은 ${PERSON_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
+            },
+            phone: {
+              required: '연락처를 입력해주세요.',
+              tooShort: '올바른 연락처를 입력해주세요.',
+              format: '올바른 연락처를 입력해주세요.',
+            },
+            postalCode: {
+              required: '주소 검색으로 우편번호를 입력해주세요.',
+            },
+            addressLine1: {
+              required: '주소 검색으로 주소를 입력해주세요.',
+            },
+          },
         },
       },
       notifications: {
@@ -992,6 +1133,9 @@ export const ko = {
       editButton: '수정',
       photosLabel: '내지 사진',
       photosHint: '{count} / {required}장 업로드됨',
+      photosRetryNotice: '{count}장 업로드에 실패했어요.',
+      photosRateLimited: '업로드 시도가 너무 많아요. {seconds}초 후에 다시 시도할 수 있어요.',
+      photosRetryButton: '다시 올리기',
       addPhotosButton: '사진 추가',
       removePhotoLabel: '사진 삭제',
       testUploadButton: '테스트 이미지 자동 업로드',
@@ -1007,9 +1151,11 @@ export const ko = {
       uploadingTooltip: '이미지 업로드 중에는 진행할 수 없어요.',
       submitting: '주문 생성 중...',
       status: {
+        queued: '대기 중...',
         uploading: '업로드 중...',
         processing: '이미지 처리 중...',
         done: '업로드 완료',
+        error: '업로드 실패',
       },
       summary: {
         title: '주문 요약',
@@ -1018,17 +1164,24 @@ export const ko = {
         shipping: '배송비',
         shippingFree: '무료',
         shippingUndetermined: '미정',
+        amountPending: '수량 입력 후 표시',
         finalEstimate: '최종 예상 금액',
         payButton: '의뢰 및 결제하기',
       },
       errors: {
         titleRequired: '도서명을 입력해주세요.',
+        titleTooLong: `도서명은 최대 ${ORDER_TITLE_MAX_LENGTH}자까지 입력할 수 있습니다.`,
+        titleInvalidChars: '도서명에 사용할 수 없는 문자가 포함되어 있습니다.',
         quantityInvalid: '수량은 1권 이상이어야 합니다.',
+        quantityTooLarge: '수량은 최대 {max}권까지 주문 가능합니다.',
         pageCountInvalid: '페이지 수를 선택해주세요.',
         photoCountMismatch: '내지 사진을 정확한 장수만큼 업로드해주세요.',
         photoCountExceeded:
           '업로드된 사진 {count}장이 변경된 페이지 수의 필요 장수({required}장)를 초과했습니다. 사진을 정리하거나 페이지 수를 늘려주세요.',
+        photosSkippedOverLimit:
+          '{skipped}장은 최대 장수({required}장)를 넘어서 아직 업로드하지 않았어요. 페이지 수를 늘리거나 사진을 정리한 뒤 목록에서 다시 올려주세요.',
         addressRequired: '배송지를 선택해주세요.',
+        couponTooLong: `쿠폰 코드는 ${COUPON_CODE_MAX_LENGTH}자 이하로 입력해주세요.`,
         uploadFailed: '파일 업로드에 실패했습니다. 다시 시도해주세요.',
         filesRequired: '내지 사진을 업로드해주세요.',
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
@@ -1036,11 +1189,7 @@ export const ko = {
         product_not_found: '상품을 찾을 수 없습니다.',
         address_not_found: '선택한 배송지를 찾을 수 없습니다. 다시 선택해주세요.',
         order_not_editable: '이미 처리된 주문이라 수정할 수 없습니다. 마이페이지에서 확인해주세요.',
-        coupon_not_found: '존재하지 않는 쿠폰 코드입니다.',
-        coupon_inactive: '사용할 수 없는 쿠폰입니다.',
-        coupon_not_started: '아직 사용할 수 없는 쿠폰입니다.',
-        coupon_expired: '만료된 쿠폰입니다.',
-        coupon_usage_limit_reached: '사용 횟수를 초과한 쿠폰입니다.',
+        coupon_invalid: '사용할 수 없는 쿠폰 코드입니다.',
         coupon_conflict: '다른 곳에서 먼저 사용된 쿠폰입니다. 다시 시도해주세요.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
       },
@@ -1110,6 +1259,16 @@ export const ko = {
         validation_failed: '입력값을 다시 확인해주세요.',
         not_found: '문의를 찾을 수 없습니다.',
         unexpected_error: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        fields: {
+          title: {
+            required: '제목을 입력해주세요.',
+            tooLong: `제목은 ${INQUIRY_TITLE_MAX_LENGTH}자 이하로 입력해주세요.`,
+          },
+          content: {
+            required: '내용을 입력해주세요.',
+            tooLong: `내용은 ${INQUIRY_CONTENT_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 입력해주세요.`,
+          },
+        },
       },
     },
     reviews: {
@@ -1117,7 +1276,7 @@ export const ko = {
       ratingLabel: '평점',
       form: {
         ratingLabel: '평점',
-        contentLabel: '후기 내용',
+        contentLabel: '후기 내용 (선택)',
         submitButton: '후기 등록',
         submitting: '등록 중...',
       },

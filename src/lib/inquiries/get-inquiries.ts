@@ -5,13 +5,14 @@ import type { Tables } from '@/lib/db/database.types';
 import { getInquiryMessageSummaryMap } from '@/lib/inquiries/get-inquiry-message-summary';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
-export interface InquiryWithConsumerEmail extends Tables<'inquiries'> {
+export interface InquiryWithConsumerInfo extends Tables<'inquiries'> {
+  consumerDisplayName: string | null;
   consumerEmail: string | null;
   hasNewConsumerReply: boolean;
   lastMessageAt: string;
 }
 
-export async function getInquiries(): Promise<InquiryWithConsumerEmail[]> {
+export async function getInquiries(): Promise<InquiryWithConsumerInfo[]> {
   const supabase = createServiceRoleClient();
   const { data } = await supabase
     .from('inquiries')
@@ -31,19 +32,27 @@ export async function getInquiries(): Promise<InquiryWithConsumerEmail[]> {
     answeredAtByInquiryId,
   );
 
-  return Promise.all(
-    data.map(async (inquiry) => {
-      const userData = inquiry.consumer_id
-        ? (await supabase.auth.admin.getUserById(inquiry.consumer_id)).data
-        : null;
-      const summary = summaryByInquiryId.get(inquiry.id);
+  const consumerIds = [
+    ...new Set(
+      data.map((inquiry) => inquiry.consumer_id).filter((id): id is string => id !== null),
+    ),
+  ];
+  const { data: profiles } =
+    consumerIds.length > 0
+      ? await supabase.from('profiles').select('id, display_name, email').in('id', consumerIds)
+      : { data: [] };
+  const profileByConsumerId = new Map((profiles ?? []).map((profile) => [profile.id, profile]));
 
-      return {
-        ...inquiry,
-        consumerEmail: userData?.user?.email ?? null,
-        hasNewConsumerReply: summary?.hasNewConsumerReply ?? false,
-        lastMessageAt: summary?.lastMessageCreatedAt ?? inquiry.created_at,
-      };
-    }),
-  );
+  return data.map((inquiry) => {
+    const profile = inquiry.consumer_id ? profileByConsumerId.get(inquiry.consumer_id) : undefined;
+    const summary = summaryByInquiryId.get(inquiry.id);
+
+    return {
+      ...inquiry,
+      consumerDisplayName: profile?.display_name ?? null,
+      consumerEmail: profile?.email ?? null,
+      hasNewConsumerReply: summary?.hasNewConsumerReply ?? false,
+      lastMessageAt: summary?.lastMessageCreatedAt ?? inquiry.created_at,
+    };
+  });
 }

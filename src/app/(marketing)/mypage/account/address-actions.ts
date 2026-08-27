@@ -77,6 +77,7 @@ export async function updateAddress(
     .from('addresses')
     .select('consumer_id')
     .eq('id', id)
+    .is('deleted_at', null)
     .maybeSingle();
 
   if (!existing || existing.consumer_id !== consumer.id) {
@@ -120,13 +121,19 @@ export async function deleteAddress(id: string): Promise<AddressActionResult | u
     .from('addresses')
     .select('consumer_id')
     .eq('id', id)
+    .is('deleted_at', null)
     .maybeSingle();
 
   if (!existing || existing.consumer_id !== consumer.id) {
     return { errorCode: 'not_found' };
   }
 
-  const { error } = await supabase.from('addresses').delete().eq('id', id);
+  // Soft delete: keep the row so orders that reference this address stay intact, just
+  // hide it from the consumer and drop its default flag.
+  const { error } = await supabase
+    .from('addresses')
+    .update({ deleted_at: new Date().toISOString(), is_default: false })
+    .eq('id', id);
   if (error) {
     return { errorCode: 'unexpected_error' };
   }

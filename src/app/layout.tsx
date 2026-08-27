@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 
 import { AnimationPauseObserver } from '@/components/animation-pause-observer';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { TOAST_DURATION_MS } from '@/constants/toast';
 
 import './globals.css';
 
@@ -41,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         </script>
         <AnimationPauseObserver />
         <TooltipProvider>{children}</TooltipProvider>
-        <Toaster />
+        <Toaster duration={TOAST_DURATION_MS} />
       </body>
     </html>
   );

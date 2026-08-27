@@ -9,12 +9,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { CharCounterField } from '@/components/char-counter-field';
+import { PhoneInput } from '@/components/phone-input';
 import { TurnstileWidget } from '@/components/turnstile-widget';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { useT } from '@/hooks/use-t';
 
@@ -69,7 +72,13 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="name" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.nameLabel}
             </Label>
-            <Input id="name" autoComplete="name" {...register('name')} />
+            <Input
+              id="name"
+              autoComplete="name"
+              maxLength={PERSON_NAME_MAX_LENGTH}
+              {...register('name')}
+            />
+            <CharCounterField control={control} name="name" max={PERSON_NAME_MAX_LENGTH} />
             {errors.name ? (
               <p className="text-sm text-destructive">{t.consumer.signup.errors.nameRequired}</p>
             ) : null}
@@ -152,7 +161,9 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             </div>
             {errors.passwordConfirm ? (
               <p className="text-sm text-destructive">
-                {t.consumer.signup.errors.passwordMismatch}
+                {errors.passwordConfirm.type === 'too_small'
+                  ? t.consumer.signup.errors.passwordConfirmRequired
+                  : t.consumer.signup.errors.passwordMismatch}
               </p>
             ) : null}
           </div>
@@ -160,7 +171,15 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="phone" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.phoneLabel}
             </Label>
-            <Input id="phone" type="tel" autoComplete="tel" {...register('phone')} />
+            <PhoneInput
+              id="phone"
+              {...register('phone', {
+                setValueAs: (value: string) => (value === '' ? undefined : value),
+              })}
+            />
+            {errors.phone ? (
+              <p className="text-sm text-destructive">{t.consumer.signup.errors.phoneInvalid}</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
@@ -170,6 +189,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 render={({ field }) => (
                   <Checkbox
                     id="agree-terms"
+                    name={field.name}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -193,6 +213,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 render={({ field }) => (
                   <Checkbox
                     id="agree-privacy"
+                    name={field.name}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -215,6 +236,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               render={({ field }) => (
                 <Checkbox
                   id="marketing-email-consent"
+                  name={field.name}
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
@@ -231,6 +253,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               render={({ field }) => (
                 <Checkbox
                   id="marketing-sms-consent"
+                  name={field.name}
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />

@@ -1,0 +1,1 @@
+export const ID_DISPLAY_PREFIX_LENGTH = 8;
