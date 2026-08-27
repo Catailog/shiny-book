@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
       KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
       KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
       TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
