@@ -30,9 +30,10 @@ import { AddressForm } from './address-form';
 
 interface AddressManagerProps {
   addresses: Tables<'addresses'>[];
+  defaultPhone: string;
 }
 
-export function AddressManager({ addresses }: AddressManagerProps) {
+export function AddressManager({ addresses, defaultPhone }: AddressManagerProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
@@ -65,7 +66,7 @@ export function AddressManager({ addresses }: AddressManagerProps) {
             <DialogHeader>
               <DialogTitle>{t.consumer.account.shippingAddress.addTitle}</DialogTitle>
             </DialogHeader>
-            <AddressForm onSuccess={() => setOpenDialogId(null)} />
+            <AddressForm defaultPhone={defaultPhone} onSuccess={() => setOpenDialogId(null)} />
           </DialogContent>
         </Dialog>
       </div>

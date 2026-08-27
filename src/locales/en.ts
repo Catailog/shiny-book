@@ -1088,7 +1088,8 @@ export const en = {
             },
             phone: {
               required: 'Please enter a phone number.',
-              format: 'Please enter a valid mobile phone number.',
+              tooShort: 'Please enter a valid phone number.',
+              format: 'Please enter a valid phone number.',
             },
             addressLine1: {
               required: 'Please use the address search to fill in the address.',

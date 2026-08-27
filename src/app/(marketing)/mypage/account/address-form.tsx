@@ -21,10 +21,16 @@ import { type AddressFormInput, addressFormSchema } from './address-schema';
 interface AddressFormProps {
   addressId?: string;
   defaultValues?: AddressFormInput;
+  defaultPhone?: string;
   onSuccess: () => void;
 }
 
-export function AddressForm({ addressId, defaultValues, onSuccess }: AddressFormProps) {
+export function AddressForm({
+  addressId,
+  defaultValues,
+  defaultPhone,
+  onSuccess,
+}: AddressFormProps) {
   const t = useT();
   const [isPending, startTransition] = useTransition();
   const openPostcodePopup = useKakaoPostcodePopup();
@@ -36,7 +42,7 @@ export function AddressForm({ addressId, defaultValues, onSuccess }: AddressForm
     formState: { errors },
   } = useForm<AddressFormInput>({
     resolver: zodResolver(addressFormSchema),
-    defaultValues: defaultValues ?? { isDefault: false },
+    defaultValues: defaultValues ?? { isDefault: false, phone: defaultPhone ?? '' },
   });
 
   function handleSearchAddress() {

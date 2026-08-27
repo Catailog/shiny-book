@@ -88,7 +88,7 @@ export default async function MypageAccountPage() {
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
-        <AddressManager addresses={addresses} />
+        <AddressManager addresses={addresses} defaultPhone={consumerPhone} />
       </section>
 
       <section className="flex flex-col gap-4 border-b border-border pb-8">
