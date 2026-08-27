@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 
 import { FILE_UPLOAD_KIND, STORAGE_BUCKETS } from '@/constants/file-upload';
 import { CONSUMER_ROUTES } from '@/constants/routes';
+import { TEST_ACCOUNT } from '@/constants/test-account';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
+import { deletePairedTestAdmin } from '@/lib/auth/test-account-pair';
 import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
@@ -169,6 +171,14 @@ export async function deleteConsumerAccount(): Promise<DeleteAccountResult | und
   const isDeleted = await deleteConsumerAndData(consumer.id);
   if (!isDeleted) {
     return { errorCode: 'unexpected_error' };
+  }
+
+  const pairToken = consumer.app_metadata[TEST_ACCOUNT.PAIR_TOKEN_METADATA_KEY];
+  if (
+    consumer.app_metadata[TEST_ACCOUNT.IS_TEST_ACCOUNT_METADATA_KEY] === true &&
+    typeof pairToken === 'string'
+  ) {
+    await deletePairedTestAdmin(pairToken);
   }
 
   const supabase = await createServerSupabaseClient();

@@ -11,6 +11,8 @@ import {
 } from '@/lib/auth/test-account-session';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
+const LIST_USERS_PAGE_SIZE = 1000;
+
 export interface TestAccountPairCredentials {
   consumerEmail: string;
   consumerPassword: string;
@@ -61,4 +63,40 @@ export async function createTestAccountPair(): Promise<TestAccountPairCredential
   await seedTestConsumerData(consumerUser.user.id, adminUser.user.id);
 
   return { consumerEmail, consumerPassword, adminEmail, adminPassword };
+}
+
+// Best-effort deletion of the admin account paired with a test consumer. Called when a
+// test consumer deletes their own account so the paired admin is not left as an orphan
+// until the cleanup cron catches it days later. Failures are swallowed on purpose: the
+// consumer deletion has already succeeded and the cron is the backstop.
+export async function deletePairedTestAdmin(pairToken: string): Promise<void> {
+  const serviceClient = createServiceRoleClient();
+
+  let page = 1;
+  while (true) {
+    const { data, error } = await serviceClient.auth.admin.listUsers({
+      page,
+      perPage: LIST_USERS_PAGE_SIZE,
+    });
+    if (error) {
+      return;
+    }
+
+    const pairedAdmin = data.users.find(
+      (user) =>
+        user.app_metadata.role === ROLE.ADMIN &&
+        user.app_metadata[TEST_ACCOUNT.IS_TEST_ACCOUNT_METADATA_KEY] === true &&
+        user.app_metadata[TEST_ACCOUNT.PAIR_TOKEN_METADATA_KEY] === pairToken,
+    );
+
+    if (pairedAdmin) {
+      await serviceClient.auth.admin.deleteUser(pairedAdmin.id);
+      return;
+    }
+
+    if (data.users.length < LIST_USERS_PAGE_SIZE) {
+      return;
+    }
+    page += 1;
+  }
 }
