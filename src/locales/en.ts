@@ -956,6 +956,7 @@ export const en = {
         passwordTooShort: `Password must be ${PASSWORD_MIN_LENGTH} to ${PASSWORD_MAX_LENGTH} characters.`,
         passwordConfirmRequired: 'Please confirm your password.',
         passwordMismatch: 'Passwords do not match.',
+        phoneInvalid: 'Please enter a valid mobile phone number.',
         agreeTermsRequired: 'Please agree to the Terms of Service.',
         agreePrivacyRequired:
           'Please agree to the collection and use of your personal information.',

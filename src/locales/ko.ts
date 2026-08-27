@@ -956,6 +956,7 @@ export const ko = {
         passwordTooShort: `비밀번호는 ${PASSWORD_MIN_LENGTH}자 이상 ${PASSWORD_MAX_LENGTH}자 이하여야 합니다.`,
         passwordConfirmRequired: '비밀번호 확인을 입력해주세요.',
         passwordMismatch: '비밀번호가 일치하지 않습니다.',
+        phoneInvalid: '올바른 휴대폰 번호를 입력해주세요.',
         agreeTermsRequired: '이용약관에 동의해주세요.',
         agreePrivacyRequired: '개인정보 수집 및 이용에 동의해주세요.',
         email_taken: '이미 가입된 이메일입니다.',

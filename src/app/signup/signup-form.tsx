@@ -162,7 +162,17 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             <Label htmlFor="phone" className="text-xs font-semibold tracking-wide uppercase">
               {t.consumer.signup.phoneLabel}
             </Label>
-            <Input id="phone" type="tel" autoComplete="tel" {...register('phone')} />
+            <Input
+              id="phone"
+              type="tel"
+              autoComplete="tel"
+              {...register('phone', {
+                setValueAs: (value: string) => (value === '' ? undefined : value),
+              })}
+            />
+            {errors.phone ? (
+              <p className="text-sm text-destructive">{t.consumer.signup.errors.phoneInvalid}</p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
