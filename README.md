@@ -85,7 +85,3 @@ http://localhost:3000 에서 확인할 수 있습니다.
 | `npm run db:types`                | 로컬 Supabase 스키마로 타입 재생성           |
 | `npm run db:seed-admin`           | 로컬 관리자 계정 시드                        |
 | `npm run db:seed-test-photo-pool` | 테스트 로그인/사진 채우기용 이미지 풀 업로드 |
-
-## 브랜치 전략
-
-모든 작업은 `dev` 브랜치에서 진행합니다. `main`은 검증이 끝난 상태만 유지하는 보호 브랜치이며, `dev` -> `main`은 PR을 통해서만 병합합니다. PR에서 CI(타입체크/린트/테스트/빌드)를 모두 통과해야 병합할 수 있습니다.
