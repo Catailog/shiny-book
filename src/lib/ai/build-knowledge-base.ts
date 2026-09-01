@@ -1,10 +1,12 @@
 import 'server-only';
 
 import { AI_KNOWLEDGE_BASE_MAX_CHARS } from '@/constants/ai';
+import { buildPricingFacts } from '@/lib/ai/build-pricing-facts';
 import { flattenLocaleSection } from '@/lib/ai/flatten-locale-section';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { logger } from '@/lib/log/logger';
+import { getProductCatalog } from '@/lib/products/get-product-catalog';
 import { type Locale, locales } from '@/locales';
 
 const FAQ_LIMIT = 100;
@@ -22,24 +24,43 @@ const POLICY_SECTION_KEYS = [
 // Assemble everything the support assistant is allowed to answer from into one
 // block of text, which is stuffed into the system prompt (the corpus is small).
 export async function buildKnowledgeBase(locale: Locale): Promise<string> {
-  const [faqs, announcements] = await Promise.all([
+  const [faqs, announcements, products] = await Promise.all([
     getFaqs(FAQ_LIMIT),
     getAnnouncements(ANNOUNCEMENT_LIMIT),
+    getProductCatalog(locale),
   ]);
   const t = locales[locale];
 
   const sections: string[] = [];
 
+  if (products.length > 0) {
+    sections.push(
+      `## 상품\n${products
+        .map(
+          (product) =>
+            `[${product.name}] ${product.price}, ${product.size}, ${product.category}\n${product.description}`,
+        )
+        .join('\n\n')}`,
+    );
+  }
+
+  sections.push(buildPricingFacts());
+
   if (faqs.length > 0) {
     sections.push(
-      `## FAQ\n${faqs.map((faq) => `Q: ${faq.question}\nA: ${faq.answer}`).join('\n\n')}`,
+      `## FAQ\n${faqs
+        .map((faq) => `[[faq:${faq.id}]] Q: ${faq.question}\nA: ${faq.answer}`)
+        .join('\n\n')}`,
     );
   }
 
   if (announcements.length > 0) {
     sections.push(
       `## 공지\n${announcements
-        .map((announcement) => `[${announcement.title}] ${announcement.content}`)
+        .map(
+          (announcement) =>
+            `[[notice:${announcement.id}]] [${announcement.title}] ${announcement.content}`,
+        )
         .join('\n\n')}`,
     );
   }
