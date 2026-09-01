@@ -28,9 +28,10 @@ export const AI_MODEL: Record<AiProvider, string> = {
 };
 
 // gemini-3.6-flash is a "thinking" model: reasoning tokens draw from this same
-// budget before any answer text is produced, so leave headroom for reasoning
-// plus a full support reply. Thinking is also held to `minimal` at call time.
-export const AI_MAX_OUTPUT_TOKENS = 2_000;
+// budget before any answer text is produced. Thinking is held to `minimal` at
+// call time (near-zero reasoning tokens in practice), so this is mostly a
+// runaway guard with wide headroom for a full multi-part support reply.
+export const AI_MAX_OUTPUT_TOKENS = 3_000;
 export const AI_REQUEST_TIMEOUT_MS = 30_000;
 
 // Near-deterministic. A support bot should track the knowledge base, not improvise.
