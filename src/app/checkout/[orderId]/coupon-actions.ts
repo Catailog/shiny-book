@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { COUPON_CODE_MAX_LENGTH } from '@/constants/coupon';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRICING } from '@/constants/pricing';
-import { getAddressById } from '@/lib/addresses/get-address-by-id';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { validateCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
@@ -65,15 +64,12 @@ export async function applyCouponToOrder(
     return { errorCode: 'rate_limited' };
   }
 
-  if (!order.product_id || !order.address_id || order.page_count === null) {
+  if (!order.product_id || order.ship_postal_code === null || order.page_count === null) {
     return { errorCode: 'unexpected_error' };
   }
 
-  const [product, address] = await Promise.all([
-    getProductById(order.product_id),
-    getAddressById(order.address_id),
-  ]);
-  if (!product || !address) {
+  const product = await getProductById(order.product_id);
+  if (!product) {
     return { errorCode: 'unexpected_error' };
   }
 
@@ -85,7 +81,7 @@ export async function applyCouponToOrder(
     return { errorCode: 'coupon_invalid' };
   }
 
-  const shippingFee = calculateShippingFee(address.postal_code, merchandiseAmount);
+  const shippingFee = calculateShippingFee(order.ship_postal_code, merchandiseAmount);
   const amount = validation.discountedAmount + shippingFee;
 
   const supabase = createServiceRoleClient();
