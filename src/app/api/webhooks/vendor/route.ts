@@ -1,12 +1,13 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
+import { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRINT_JOB_STATUS, isPrintJobStatus } from '@/constants/print-job-status';
 import { SHIPMENT_JOB_STATUS, isShipmentJobStatus } from '@/constants/shipment-job-status';
 import { VENDOR_TYPES, VENDOR_WEBHOOK_SECRET } from '@/constants/vendor-webhook';
 import { withRequestContext } from '@/lib/api/with-request-context';
+import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { markWebhookEventProcessed } from '@/lib/webhooks/check-webhook-idempotency';
@@ -53,6 +54,16 @@ async function postHandler(request: NextRequest) {
       .select()
       .maybeSingle();
 
+    if (printJob) {
+      await recordOrderEvent({
+        orderId: printJob.order_id,
+        eventType: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+        source: ORDER_EVENT_SOURCE.WEBHOOK,
+        actor: 'webhook:print-shop',
+        metadata: { provider: 'vendor', eventId },
+      });
+    }
+
     if (printJob && event.status === PRINT_JOB_STATUS.DONE) {
       await transitionOrderStatus(printJob.order_id, ORDER_STATUS.PRINTING, ORDER_STATUS.BINDING, {
         source: ORDER_EVENT_SOURCE.WEBHOOK,
@@ -70,6 +81,16 @@ async function postHandler(request: NextRequest) {
       .eq('id', event.jobId)
       .select()
       .maybeSingle();
+
+    if (shipmentJob) {
+      await recordOrderEvent({
+        orderId: shipmentJob.order_id,
+        eventType: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+        source: ORDER_EVENT_SOURCE.WEBHOOK,
+        actor: 'webhook:courier',
+        metadata: { provider: 'vendor', eventId },
+      });
+    }
 
     if (shipmentJob && event.status === SHIPMENT_JOB_STATUS.DELIVERED) {
       await transitionOrderStatus(
