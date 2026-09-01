@@ -10,6 +10,7 @@ import {
   AI_PROVIDER,
   AI_PROVIDER_FALLBACK_ORDER,
   AI_REQUEST_TIMEOUT_MS,
+  AI_TEMPERATURE,
   type AiProvider,
 } from '@/constants/ai';
 import { env } from '@/env';
@@ -63,8 +64,12 @@ export async function streamChatCompletion(
       system,
       messages,
       maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
+      temperature: AI_TEMPERATURE,
       maxRetries: 0,
       timeout: AI_REQUEST_TIMEOUT_MS,
+      // Ignored by non-Google models. Keeps Gemini's reasoning from consuming the
+      // output-token budget and drifting away from the reference material.
+      providerOptions: { google: { thinkingConfig: { thinkingLevel: 'minimal' } } },
     });
 
     const iterator = result.fullStream[Symbol.asyncIterator]();

@@ -8,6 +8,7 @@ describe('buildSystemPrompt', () => {
     expect(prompt).toContain('Q: 배송?\nA: 3일');
     expect(prompt).toContain('Reply in Korean');
     expect(prompt).toContain('inquiry (문의)');
+    expect(prompt).toContain('exact figures and wording');
   });
 
   it('asks for an English reply for the en locale', () => {

@@ -27,8 +27,14 @@ export const AI_MODEL: Record<AiProvider, string> = {
   [AI_PROVIDER.CLOUDFLARE]: '@cf/openai/gpt-oss-20b',
 };
 
-export const AI_MAX_OUTPUT_TOKENS = 800;
+// gemini-3.6-flash is a "thinking" model: reasoning tokens draw from this same
+// budget before any answer text is produced, so leave headroom for reasoning
+// plus a full support reply. Thinking is also held to `minimal` at call time.
+export const AI_MAX_OUTPUT_TOKENS = 2_000;
 export const AI_REQUEST_TIMEOUT_MS = 30_000;
+
+// Near-deterministic. A support bot should track the knowledge base, not improvise.
+export const AI_TEMPERATURE = 0.2;
 
 // The whole knowledge base is stuffed into the system prompt; truncate if the
 // assembled text ever grows past this.

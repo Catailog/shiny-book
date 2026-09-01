@@ -65,6 +65,10 @@ describe('streamChatCompletion', () => {
     expect(result?.provider).toBe('gemini');
     expect(await readAll(result!.stream)).toBe('Hello');
     expect(streamTextMock).toHaveBeenCalledTimes(1);
+    expect(streamTextMock.mock.calls[0]?.[0]).toMatchObject({
+      temperature: 0.2,
+      providerOptions: { google: { thinkingConfig: { thinkingLevel: 'minimal' } } },
+    });
   });
 
   it('falls through when a provider emits an error part before any text', async () => {
