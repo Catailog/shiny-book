@@ -77,15 +77,26 @@ export async function Nav() {
           entries={navEntries}
           openMenuLabel={t.site.nav.openMenu}
           menuTitle={t.site.nav.menuTitle}
+          mobileActions={
+            <>
+              <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
+              <ThemeToggle
+                switchToLightLabel={t.site.nav.switchToLightMode}
+                switchToDarkLabel={t.site.nav.switchToDarkMode}
+              />
+            </>
+          }
         />
         <TooltipProvider>
           <div className="flex items-center gap-1">
             <AiAssistant />
-            <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
-            <ThemeToggle
-              switchToLightLabel={t.site.nav.switchToLightMode}
-              switchToDarkLabel={t.site.nav.switchToDarkMode}
-            />
+            <div className="hidden items-center gap-1 md:flex">
+              <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
+              <ThemeToggle
+                switchToLightLabel={t.site.nav.switchToLightMode}
+                switchToDarkLabel={t.site.nav.switchToDarkMode}
+              />
+            </div>
             {isConsumer ? (
               <>
                 <NavAuthIcons
