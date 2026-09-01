@@ -18,6 +18,7 @@ import {
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
+import type { OrderEventType } from '@/constants/order-event';
 import type { OrderStatus } from '@/constants/order-status';
 import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 import {
@@ -246,6 +247,13 @@ export const ko = {
     completed: '완료',
     cancelled: '취소됨',
   } satisfies Record<OrderStatus, string>,
+  orderEvent: {
+    'order.created': '주문 생성',
+    'order.status_changed': '상태 변경',
+    'webhook.received': '외부 시스템 이벤트 수신',
+    'notification.sent': '알림 발송',
+    'admin.note': '관리자 메모',
+  } satisfies Record<OrderEventType, string>,
   announcementCategories: {
     notice: '공지사항',
     event: '이벤트',

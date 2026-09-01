@@ -18,6 +18,7 @@ import {
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
+import type { OrderEventType } from '@/constants/order-event';
 import type { OrderStatus } from '@/constants/order-status';
 import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 import {
@@ -246,6 +247,13 @@ export const en = {
     completed: 'Completed',
     cancelled: 'Cancelled',
   } satisfies Record<OrderStatus, string>,
+  orderEvent: {
+    'order.created': 'Order created',
+    'order.status_changed': 'Status changed',
+    'webhook.received': 'External system event received',
+    'notification.sent': 'Notification sent',
+    'admin.note': 'Admin note',
+  } satisfies Record<OrderEventType, string>,
   announcementCategories: {
     notice: 'Notice',
     event: 'Event',
