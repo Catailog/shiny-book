@@ -268,6 +268,7 @@ export const ko = {
     VALIDATION_FAILED: '입력값이 올바르지 않습니다.',
     RATE_LIMITED: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.',
     INTERNAL_ERROR: '일시적인 오류가 발생했습니다.',
+    AI_UNAVAILABLE: 'AI 응답을 생성하지 못했습니다.',
   } satisfies Record<ApiErrorCode, string>,
   checkout: {
     title: '결제하기',

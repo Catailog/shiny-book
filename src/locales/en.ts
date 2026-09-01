@@ -268,6 +268,7 @@ export const en = {
     VALIDATION_FAILED: 'The input is invalid.',
     RATE_LIMITED: 'Too many requests. Please try again later.',
     INTERNAL_ERROR: 'Something went wrong. Please try again.',
+    AI_UNAVAILABLE: 'Could not generate an AI response.',
   } satisfies Record<ApiErrorCode, string>,
   checkout: {
     title: 'Checkout',
