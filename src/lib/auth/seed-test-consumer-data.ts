@@ -390,6 +390,7 @@ export async function seedTestConsumerData(
         ship_address_line2: TEST_HOME_ADDRESS.addressLine2,
         product_id: product.id,
         status: plan.status,
+        payment_key: plan.status === ORDER_STATUS.AWAITING_PAYMENT ? null : 'test-payment',
         title: generateRandomBookTitle(locale),
         page_count: pageCount,
         quantity,

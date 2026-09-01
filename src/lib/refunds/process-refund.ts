@@ -3,6 +3,7 @@ import 'server-only';
 import { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { REFUND_STATUS } from '@/constants/refund';
+import { env } from '@/env';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import { cancelTossPayment } from '@/lib/payments/toss-cancel-payment';
@@ -48,13 +49,16 @@ export async function processRefund(refundRequestId: string): Promise<ProcessRef
     return { outcome: 'failed' };
   }
 
-  if (order.payment_key === null) {
+  // A real cancellation needs the stored payment key. In the test-payment
+  // environment `cancelTossPayment` mocks the call and ignores the key, so a
+  // missing key (e.g. seeded orders) should not block the refund.
+  if (order.payment_key === null && !env.ALLOW_TEST_PAYMENT) {
     await markRequestFailed(supabase, refundRequestId);
     return { outcome: 'provider_failed', errorMessage: 'Order has no stored payment key' };
   }
 
   const cancellation = await cancelTossPayment({
-    paymentKey: order.payment_key,
+    paymentKey: order.payment_key ?? 'test-payment',
     cancelReason: request.reason,
     cancelAmount: request.amount ?? undefined,
   });

@@ -1,5 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+let mockAllowTestPayment = true;
+vi.mock('@/env', () => ({
+  env: {
+    get ALLOW_TEST_PAYMENT() {
+      return mockAllowTestPayment;
+    },
+  },
+}));
+
 const requestFetchMock = vi.fn();
 const orderUpdateMock = vi.fn();
 
@@ -55,6 +64,7 @@ function buildOrder(overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockAllowTestPayment = true;
   requestFetchMock.mockResolvedValue({ data: buildRequest() });
   getOrderByIdMock.mockResolvedValue(buildOrder());
   cancelTossPaymentMock.mockResolvedValue({ isCancelled: true, transactionKey: 'txn_1' });
@@ -112,7 +122,8 @@ describe('processRefund', () => {
     expect(await processRefund('rr-1')).toEqual({ outcome: 'order_missing' });
   });
 
-  it('fails when the order has no stored payment key', async () => {
+  it('fails when the order has no stored payment key and test payments are off', async () => {
+    mockAllowTestPayment = false;
     getOrderByIdMock.mockResolvedValueOnce(buildOrder({ payment_key: null }));
 
     const result = await processRefund('rr-1');
@@ -122,6 +133,15 @@ describe('processRefund', () => {
       errorMessage: 'Order has no stored payment key',
     });
     expect(cancelTossPaymentMock).not.toHaveBeenCalled();
+  });
+
+  it('still processes a refund with no payment key in the test-payment environment', async () => {
+    getOrderByIdMock.mockResolvedValueOnce(buildOrder({ payment_key: null }));
+
+    const result = await processRefund('rr-1');
+
+    expect(result.outcome).toBe('completed');
+    expect(cancelTossPaymentMock).toHaveBeenCalled();
   });
 
   it('surfaces a provider cancellation failure', async () => {
