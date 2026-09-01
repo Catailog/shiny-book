@@ -254,9 +254,6 @@ export const en = {
     'webhook.received': 'External system event received',
     'notification.sent': 'Notification sent',
     'admin.note': 'Admin note',
-    'refund.requested': 'Refund requested',
-    'refund.approved': 'Refund approved',
-    'refund.rejected': 'Refund rejected',
     'refund.completed': 'Refund completed',
   } satisfies Record<OrderEventType, string>,
   announcementCategories: {
@@ -412,9 +409,7 @@ export const en = {
         processedAt: 'Processed',
       },
       status: {
-        requested: 'Pending',
         approved: 'Approved',
-        rejected: 'Rejected',
         completed: 'Completed',
         failed: 'Failed',
       },

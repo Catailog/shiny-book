@@ -1,9 +1,7 @@
 import { ORDER_STATUS, type OrderStatus } from '@/constants/order-status';
 
 export const REFUND_STATUS = {
-  REQUESTED: 'requested',
   APPROVED: 'approved',
-  REJECTED: 'rejected',
   COMPLETED: 'completed',
   FAILED: 'failed',
 } as const;

@@ -112,7 +112,7 @@ describe('processRefund', () => {
 
   it('returns not_processable when the request is not approved or failed', async () => {
     requestFetchMock.mockResolvedValueOnce({
-      data: buildRequest({ status: REFUND_STATUS.REQUESTED }),
+      data: buildRequest({ status: REFUND_STATUS.COMPLETED }),
     });
     expect(await processRefund('rr-1')).toEqual({ outcome: 'not_processable' });
   });

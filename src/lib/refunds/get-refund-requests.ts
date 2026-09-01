@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { type RefundStatus, isRefundStatus } from '@/constants/refund';
+import { REFUND_STATUS, type RefundStatus, isRefundStatus } from '@/constants/refund';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 export interface RefundRequestListItem {
@@ -37,7 +37,7 @@ export async function getRefundRequests(): Promise<RefundRequestListItem[]> {
     requestedAmount: row.amount,
     orderAmount: row.orders?.amount ?? null,
     orderRefundedAmount: row.orders?.refunded_amount ?? null,
-    status: isRefundStatus(row.status) ? row.status : 'requested',
+    status: isRefundStatus(row.status) ? row.status : REFUND_STATUS.FAILED,
     reviewNote: row.review_note,
     createdAt: row.created_at,
   }));
