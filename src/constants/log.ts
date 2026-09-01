@@ -10,17 +10,6 @@ export const LOG_LEVEL_BY_ENV = {
   test: 'silent',
 } as const;
 
-// Structured-context keys. Call sites use these instead of ad-hoc spellings so
-// one request's lines can be filtered on a stable field name.
-export const LOG_FIELD = {
-  REQUEST_ID: 'requestId',
-  ORDER_ID: 'orderId',
-  CONSUMER_ID: 'consumerId',
-  ADMIN_ID: 'adminId',
-  EVENT: 'event',
-  DURATION_MS: 'durationMs',
-} as const;
-
 // pino redact paths (dot-notation, `*` matches one nesting level). Sensitive
 // keys are replaced with the censor value even when a raw object is passed by
 // mistake. Bare `name` is intentionally not listed - too many non-PII uses.
