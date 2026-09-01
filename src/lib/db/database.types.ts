@@ -269,6 +269,53 @@ export type Database = {
           },
         ];
       };
+      order_events: {
+        Row: {
+          actor: string;
+          created_at: string;
+          event_type: string;
+          from_status: string | null;
+          id: string;
+          metadata: Json;
+          order_id: string;
+          reason: string | null;
+          source: string;
+          to_status: string | null;
+        };
+        Insert: {
+          actor?: string;
+          created_at?: string;
+          event_type: string;
+          from_status?: string | null;
+          id?: string;
+          metadata?: Json;
+          order_id: string;
+          reason?: string | null;
+          source: string;
+          to_status?: string | null;
+        };
+        Update: {
+          actor?: string;
+          created_at?: string;
+          event_type?: string;
+          from_status?: string | null;
+          id?: string;
+          metadata?: Json;
+          order_id?: string;
+          reason?: string | null;
+          source?: string;
+          to_status?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'order_events_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       order_photos: {
         Row: {
           created_at: string;
