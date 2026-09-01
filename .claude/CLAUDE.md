@@ -66,10 +66,11 @@
 ## 6. Next.js, React, UI & 상태 관리 최적화
 
 - **Async Runtime API:** `cookies()`, `headers()`, `params`, `searchParams` 등 런타임 API는 반드시 `await` 키워드를 사용합니다. (예: `const cookieStore = await cookies();`, `const { id } = await props.params;`)
+- **이 프로젝트는 Next.js 16 (App Router)입니다. 요청 가로채기 파일은 `middleware.ts`가 아니라 `src/proxy.ts`(`export function proxy`)입니다.** Next.js 16에서 `middleware` 컨벤션이 `proxy`로 리네임됐습니다. `middleware.ts`를 새로 만들거나 "미들웨어" 파일을 언급하지 말고 기존 `src/proxy.ts`를 수정합니다. 상세는 `.claude/gotchas/nextjs16-middleware-renamed-to-proxy.md`.
 - **데이터 패칭 및 렌더링 위계질서:**
   1. **1순위 (Server Component):** SEO, 초기 페이지 로드, 단순 조회의 경우 반드시 Next.js Server Component에서 async/await 및 표준 `fetch()` (또는 Supabase Server Client)를 사용합니다.
   2. **2순위 (TanStack Query):** 무한 스크롤, 낙관적 업데이트(Optimistic Updates), 주기적 폴링 등 인터랙티브한 클라이언트 기능이 필수적인 경우에만 `'use client'` 컴포넌트에서 `TanStack Query`를 제한적으로 활용합니다. (Query Key는 계층적 배열 구조 준수)
-  - **캐싱 기본값:** 이 프로젝트는 `cacheComponents`를 켜지 않은 기존 모델을 사용하며, `fetch()`는 기본적으로 캐시되지 않습니다. 반복 조회를 캐싱하려면 `fetch(url, { cache: 'force-cache' })`처럼 명시적으로 옵션을 지정합니다.
+  - **캐싱 기본값:** 이 프로젝트는 `cacheComponents`를 켜지 않은 기존 모델을 사용하며, `fetch()`는 기본적으로 캐시되지 않습니다. 반복 조회 캐싱은 `fetch(url, { cache: 'force-cache' })` 또는 `unstable_cache`(READ 함수 한정)로 명시적으로 지정하고, `use cache` 디렉티브는 쓰지 않습니다(`unstable_cache`의 deprecated 표시는 의도적으로 무시). 캐시를 켠 데이터는 그 값을 바꾸는 모든 경로(Server Action, 웹훅, 관리자 액션)에 `revalidateTag`/`revalidatePath` 무효화를 반드시 연결합니다.
 - **`'use client'` 최소화:** 데이터 패칭이나 단순 상태 관리에 사용하지 않으며, Web API 접근 및 Event Listener가 필요한 최하단 소형 컴포넌트에만 최소한으로 선언합니다.
 - **상태 관리 역할 분담:**
   - 전역 UI 상태 (Client Global): `Zustand` (필요 시 `immer`, `persist` 미들웨어 적용)
@@ -117,6 +118,7 @@
   - **예외:** Server Action에서 폼 검증 실패 등 예상 가능한 에러는 try-catch로 던지지 않고 `useActionState`의 반환값으로 모델링합니다. try-catch와 Error Boundary는 예기치 못한 예외에만 사용합니다.
 - **로깅 및 개인정보 마스킹:**
   - 에러/디버그 로그에 이름, 주소, 연락처 등 개인정보(PII)를 원문 그대로 남기지 않고, 마스킹하거나 리소스 ID 같은 식별자로 대체합니다.
+  - 요청 추적용 correlation id는 `AsyncLocalStorage`로 구현합니다. `proxy.ts`에서 `x-request-id`를 생성/전파하고, Route Handler와 Server Action에서 `run()`으로 감싼 뒤 로거가 store에서 읽어 로그 라인에 첨부합니다. `instrumentation.ts` + OpenTelemetry 방식은 쓰지 않습니다. 현재 구조화 로거가 없어 미구현 상태이며, 로거를 도입할 때 이 방식으로 붙입니다.
 - **동시 상태 변경 방지 (경량 처리):**
   - 핵심 엔티티의 상태 변경은 `UPDATE ... WHERE status = '이전상태'` 형태의 조건부 업데이트로 처리하여, 관리자 수동 변경과 외부 웹훅 콜백처럼 서로 다른 경로에서 동시에 들어와도 상태가 꼬이지 않게 합니다. 별도의 분산 락 시스템은 이 프로젝트 규모에서 과설계이므로 도입하지 않습니다.
 - **의존성 추가 전 확인:**
