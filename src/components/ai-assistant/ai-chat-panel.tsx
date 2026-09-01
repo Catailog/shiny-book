@@ -191,14 +191,16 @@ export function AiChatPanel() {
       ) : null}
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto pr-1">
-        <p className="rounded-lg bg-muted px-3 py-2 text-sm text-foreground">{t.ai.greeting}</p>
+        <p className="w-fit max-w-[85%] rounded-lg bg-muted px-3 py-2 text-sm break-words text-foreground">
+          {t.ai.greeting}
+        </p>
 
         {messages.map((message) => {
           if (message.role === 'user') {
             return (
               <p
                 key={message.id}
-                className="ml-auto max-w-[85%] rounded-lg bg-primary px-3 py-2 text-sm whitespace-pre-wrap text-primary-foreground"
+                className="ml-auto w-fit max-w-[85%] rounded-lg bg-primary px-3 py-2 text-sm break-words whitespace-pre-wrap text-primary-foreground"
               >
                 {message.content}
               </p>
@@ -212,7 +214,7 @@ export function AiChatPanel() {
           const { text, sources } = extractSources(message.content);
           return (
             <div key={message.id} className="space-y-1.5">
-              <p className="max-w-[85%] rounded-lg bg-muted px-3 py-2 text-sm whitespace-pre-wrap text-foreground">
+              <p className="w-fit max-w-[85%] rounded-lg bg-muted px-3 py-2 text-sm break-words whitespace-pre-wrap text-foreground">
                 {text}
               </p>
               {sources.length > 0 ? (
