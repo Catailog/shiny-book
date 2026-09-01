@@ -5,6 +5,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { ROLE } from '@/constants/roles';
 import { TEST_ACCOUNT } from '@/constants/test-account';
 import { env } from '@/env';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { deleteConsumerAndData } from '@/lib/consumers/delete-consumer-and-data';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
@@ -32,7 +33,7 @@ function isRequestAuthorized(request: Request): boolean {
   return timingSafeEqual(expected, actual);
 }
 
-export async function GET(request: Request): Promise<NextResponse> {
+async function getHandler(request: Request): Promise<NextResponse> {
   if (!isRequestAuthorized(request)) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
@@ -118,3 +119,5 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   return NextResponse.json({ checkedGroups: groups.size, deletedGroups, deletedAccounts });
 }
+
+export const GET = withRequestContext(getHandler);

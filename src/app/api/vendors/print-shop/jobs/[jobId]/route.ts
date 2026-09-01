@@ -3,11 +3,12 @@ import { ROLE } from '@/constants/roles';
 import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
 import { hasRequiredRole } from '@/lib/api/require-role';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { checkApiRateLimit } from '@/lib/rate-limit/api-key-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { toPrintJobResponse } from '@/lib/vendors/to-print-job-response';
 
-export async function GET(
+async function getHandler(
   request: Request,
   ctx: RouteContext<'/api/vendors/print-shop/jobs/[jobId]'>,
 ) {
@@ -41,3 +42,5 @@ export async function GET(
 
   return apiSuccess(printJob);
 }
+
+export const GET = withRequestContext(getHandler);

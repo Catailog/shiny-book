@@ -4,11 +4,12 @@ import { API_ERROR_CODES } from '@/constants/api-errors';
 import { ROLE } from '@/constants/roles';
 import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { toOrderResponse } from '@/lib/orders/to-order-response';
 import { checkApiRateLimit } from '@/lib/rate-limit/api-key-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
-export async function GET(request: NextRequest, ctx: RouteContext<'/api/orders/[id]'>) {
+async function getHandler(request: NextRequest, ctx: RouteContext<'/api/orders/[id]'>) {
   const auth = await authenticateApiKey(request);
   if (!auth.isAuthorized) {
     return apiError(auth.errorCode, 'Invalid or missing API key');
@@ -39,3 +40,5 @@ export async function GET(request: NextRequest, ctx: RouteContext<'/api/orders/[
 
   return apiSuccess(order);
 }
+
+export const GET = withRequestContext(getHandler);

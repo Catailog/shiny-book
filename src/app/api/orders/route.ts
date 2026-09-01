@@ -7,12 +7,13 @@ import { ROLE } from '@/constants/roles';
 import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
 import { hasRequiredRole } from '@/lib/api/require-role';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { toOrderResponse } from '@/lib/orders/to-order-response';
 import { checkApiRateLimit } from '@/lib/rate-limit/api-key-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { createOrderRequestSchema } from '@/schemas/api/orders';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const auth = await authenticateApiKey(request);
   if (!auth.isAuthorized) {
     return apiError(auth.errorCode, 'Invalid or missing API key');
@@ -59,3 +60,5 @@ export async function POST(request: NextRequest) {
 
   return apiSuccess(order, 201);
 }
+
+export const POST = withRequestContext(postHandler);

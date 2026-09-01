@@ -3,11 +3,12 @@ import { NextResponse } from 'next/server';
 
 import { TOSS_PAYMENT_STATUS } from '@/constants/toss-payment-status';
 import { TOSS_WEBHOOK_EVENT_TYPES } from '@/constants/toss-webhook-events';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { finalizeOrderPayment } from '@/lib/orders/finalize-order-payment';
 import { markWebhookEventProcessed } from '@/lib/webhooks/check-webhook-idempotency';
 import { parseTossPaymentWebhook } from '@/lib/webhooks/parse-toss-payment-webhook';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const transmissionId = request.headers.get('tosspayments-webhook-transmission-id');
   const body: unknown = await request.json().catch(() => null);
   const event = parseTossPaymentWebhook(body);
@@ -39,3 +40,5 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ received: true }, { status: 200 });
 }
+
+export const POST = withRequestContext(postHandler);

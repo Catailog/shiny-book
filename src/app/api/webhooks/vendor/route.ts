@@ -5,13 +5,14 @@ import { ORDER_STATUS } from '@/constants/order-status';
 import { PRINT_JOB_STATUS, isPrintJobStatus } from '@/constants/print-job-status';
 import { SHIPMENT_JOB_STATUS, isShipmentJobStatus } from '@/constants/shipment-job-status';
 import { VENDOR_TYPES, VENDOR_WEBHOOK_SECRET } from '@/constants/vendor-webhook';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { markWebhookEventProcessed } from '@/lib/webhooks/check-webhook-idempotency';
 import { parseVendorWebhook } from '@/lib/webhooks/parse-vendor-webhook';
 import { verifyHmacSignature } from '@/lib/webhooks/verify-hmac-signature';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const signature = request.headers.get('x-vendor-webhook-signature');
   const eventId = request.headers.get('x-vendor-webhook-event-id');
   const rawBody = await request.text();
@@ -77,3 +78,5 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ received: true }, { status: 200 });
 }
+
+export const POST = withRequestContext(postHandler);
