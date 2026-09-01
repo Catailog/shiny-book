@@ -362,6 +362,11 @@ export type Database = {
           page_count: number | null;
           product_id: string | null;
           quantity: number;
+          ship_address_line1: string | null;
+          ship_address_line2: string | null;
+          ship_phone: string | null;
+          ship_postal_code: string | null;
+          ship_recipient_name: string | null;
           status: string;
           title: string;
           updated_at: string;
@@ -379,6 +384,11 @@ export type Database = {
           page_count?: number | null;
           product_id?: string | null;
           quantity: number;
+          ship_address_line1?: string | null;
+          ship_address_line2?: string | null;
+          ship_phone?: string | null;
+          ship_postal_code?: string | null;
+          ship_recipient_name?: string | null;
           status?: string;
           title: string;
           updated_at?: string;
@@ -396,6 +406,11 @@ export type Database = {
           page_count?: number | null;
           product_id?: string | null;
           quantity?: number;
+          ship_address_line1?: string | null;
+          ship_address_line2?: string | null;
+          ship_phone?: string | null;
+          ship_postal_code?: string | null;
+          ship_recipient_name?: string | null;
           status?: string;
           title?: string;
           updated_at?: string;
