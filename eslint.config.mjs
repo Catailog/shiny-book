@@ -5,6 +5,21 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    // Server code logs through `@/lib/log/logger`; `console.log`/`info`/`debug`
+    // are almost always stray debugging. `warn`/`error` stay allowed for
+    // client components that have no logger.
+    rules: {
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+  {
+    // One-off CLI / maintenance scripts: `console` is the intended output.
+    files: ['scripts/**'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
