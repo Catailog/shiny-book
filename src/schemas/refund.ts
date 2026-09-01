@@ -1,17 +1,12 @@
 import { z } from 'zod';
 
-import { REFUND_REASON_MAX_LENGTH, REFUND_REVIEW_NOTE_MAX_LENGTH } from '@/constants/refund';
+import { REFUND_NOTE_MAX_LENGTH } from '@/constants/refund';
 
-export const refundRequestInputSchema = z.object({
-  reason: z.string().trim().min(1).max(REFUND_REASON_MAX_LENGTH),
-  // Omitted / undefined means a full refund of the order's outstanding amount.
+// Admin-initiated refund. `amount` omitted means a full refund of the order's
+// outstanding amount; `note` is an optional internal memo.
+export const adminRefundInputSchema = z.object({
   amount: z.number().int().positive().optional(),
+  note: z.string().trim().max(REFUND_NOTE_MAX_LENGTH).optional(),
 });
 
-export type RefundRequestInput = z.infer<typeof refundRequestInputSchema>;
-
-export const refundReviewInputSchema = z.object({
-  note: z.string().trim().max(REFUND_REVIEW_NOTE_MAX_LENGTH).optional(),
-});
-
-export type RefundReviewInput = z.infer<typeof refundReviewInputSchema>;
+export type AdminRefundInput = z.infer<typeof adminRefundInputSchema>;

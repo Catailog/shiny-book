@@ -23,6 +23,7 @@ import {
 import { ORDER_SEARCH_FIELD, isOrderSearchField } from '@/constants/order-search';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { isRefundableOrderStatus } from '@/constants/refund';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { getCoupons } from '@/lib/coupons/get-coupons';
@@ -35,6 +36,7 @@ import { defaultLocale, locales } from '@/locales';
 import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
+import { RefundOrderButton } from './refund-order-button';
 import { RevertOrderStatusButton } from './revert-order-status-button';
 import { ViewOrderEventsButton } from './view-order-events-button';
 import { ViewOrderPhotosButton } from './view-order-photos-button';
@@ -273,6 +275,13 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                               from={status}
                               to={nextStatus ?? null}
                             />
+                            {isRefundableOrderStatus(status) ? (
+                              <RefundOrderButton
+                                orderId={order.id}
+                                orderAmount={order.amount}
+                                refundedAmount={order.refunded_amount}
+                              />
+                            ) : null}
                           </div>
                         ) : (
                           <span className="text-muted-foreground">-</span>
