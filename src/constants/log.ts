@@ -2,6 +2,10 @@ export const LOG_LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'] a
 
 export type LogLevel = (typeof LOG_LEVELS)[number];
 
+// Correlation id header. `proxy.ts` sets it on the forwarded request so Server
+// Components / Actions read a stable value; Route Handlers echo it on responses.
+export const REQUEST_ID_HEADER = 'x-request-id';
+
 // Default level per environment. Production keeps `info` so request lines and
 // business events are captured; development is verbose; tests stay quiet.
 export const LOG_LEVEL_BY_ENV = {

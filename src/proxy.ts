@@ -2,14 +2,23 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@supabase/ssr';
 
+import { REQUEST_ID_HEADER } from '@/constants/log';
 import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
+import { resolveRequestId } from '@/lib/log/resolve-request-id';
 import { checkActionRateLimit } from '@/lib/rate-limit/action-rate-limit';
 import { parseClientIp } from '@/lib/request/parse-client-ip';
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  // Establish the correlation id here so Server Components / Actions downstream
+  // read a stable `x-request-id` off `headers()`. `/api/*` is not matched by
+  // this proxy and resolves its own id in `withRequestContext`.
+  const requestId = resolveRequestId(request.headers.get(REQUEST_ID_HEADER));
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(REQUEST_ID_HEADER, requestId);
+
+  let supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } });
 
   const supabase = createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
@@ -21,7 +30,7 @@ export async function proxy(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          supabaseResponse = NextResponse.next({ request });
+          supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options),
           );
@@ -77,6 +86,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(CONSUMER_ROUTES.MYPAGE, request.url));
   }
 
+  supabaseResponse.headers.set(REQUEST_ID_HEADER, requestId);
   return supabaseResponse;
 }
 

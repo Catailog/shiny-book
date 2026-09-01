@@ -2,11 +2,10 @@ import type { NextRequest } from 'next/server';
 
 import 'server-only';
 
+import { REQUEST_ID_HEADER } from '@/constants/log';
 import { logger } from '@/lib/log/logger';
 import { runWithRequestContext } from '@/lib/log/request-context';
 import { resolveRequestId } from '@/lib/log/resolve-request-id';
-
-export const REQUEST_ID_HEADER = 'x-request-id';
 
 // Wrap a Route Handler so every line it logs carries a correlation id, and the
 // request/response pair is logged with method, path, status, and duration.
