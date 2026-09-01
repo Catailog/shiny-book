@@ -4,6 +4,10 @@ export const ORDER_EVENT_TYPE = {
   WEBHOOK_RECEIVED: 'webhook.received',
   NOTIFICATION_SENT: 'notification.sent',
   ADMIN_NOTE: 'admin.note',
+  REFUND_REQUESTED: 'refund.requested',
+  REFUND_APPROVED: 'refund.approved',
+  REFUND_REJECTED: 'refund.rejected',
+  REFUND_COMPLETED: 'refund.completed',
 } as const;
 
 export type OrderEventType = (typeof ORDER_EVENT_TYPE)[keyof typeof ORDER_EVENT_TYPE];

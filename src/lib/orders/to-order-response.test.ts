@@ -48,7 +48,7 @@ describe('toOrderResponse', () => {
   });
 
   it('returns null when the stored status is not a recognized order status', () => {
-    const result = toOrderResponse(buildOrderRow({ status: 'refunded' }));
+    const result = toOrderResponse(buildOrderRow({ status: 'exploded' }));
     expect(result).toBeNull();
   });
 });

@@ -22,6 +22,7 @@ export const orderResponseSchema = z.object({
     ORDER_STATUS.SHIPPING,
     ORDER_STATUS.COMPLETED,
     ORDER_STATUS.CANCELLED,
+    ORDER_STATUS.REFUNDED,
   ]),
   title: z.string(),
   manuscriptFileUrl: z.string().nullable(),

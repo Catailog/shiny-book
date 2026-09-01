@@ -7,10 +7,11 @@ describe('isOrderStatus', () => {
     expect(isOrderStatus('awaiting_payment')).toBe(true);
     expect(isOrderStatus('completed')).toBe(true);
     expect(isOrderStatus('cancelled')).toBe(true);
+    expect(isOrderStatus('refunded')).toBe(true);
   });
 
   it('rejects unknown values', () => {
-    expect(isOrderStatus('refunded')).toBe(false);
+    expect(isOrderStatus('exploded')).toBe(false);
     expect(isOrderStatus('')).toBe(false);
   });
 });

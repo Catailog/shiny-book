@@ -33,12 +33,31 @@ const notificationSentMetadata = z.object({
 
 const adminNoteMetadata = z.object({});
 
+const refundRequestedMetadata = z.object({
+  refundRequestId: z.string(),
+  amount: z.number().int().positive().optional(),
+});
+
+const refundReviewedMetadata = z.object({
+  refundRequestId: z.string(),
+});
+
+const refundCompletedMetadata = z.object({
+  refundRequestId: z.string(),
+  amount: z.number().int().positive(),
+  transactionKey: z.string().optional(),
+});
+
 export const ORDER_EVENT_METADATA_SCHEMA = {
   [ORDER_EVENT_TYPE.ORDER_CREATED]: orderCreatedMetadata,
   [ORDER_EVENT_TYPE.ORDER_STATUS_CHANGED]: orderStatusChangedMetadata,
   [ORDER_EVENT_TYPE.WEBHOOK_RECEIVED]: webhookReceivedMetadata,
   [ORDER_EVENT_TYPE.NOTIFICATION_SENT]: notificationSentMetadata,
   [ORDER_EVENT_TYPE.ADMIN_NOTE]: adminNoteMetadata,
+  [ORDER_EVENT_TYPE.REFUND_REQUESTED]: refundRequestedMetadata,
+  [ORDER_EVENT_TYPE.REFUND_APPROVED]: refundReviewedMetadata,
+  [ORDER_EVENT_TYPE.REFUND_REJECTED]: refundReviewedMetadata,
+  [ORDER_EVENT_TYPE.REFUND_COMPLETED]: refundCompletedMetadata,
 } as const satisfies Record<OrderEventType, z.ZodType>;
 
 export type OrderEventMetadata = z.infer<

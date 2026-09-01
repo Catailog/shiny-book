@@ -8,4 +8,5 @@ export const ORDER_STATUS_TONE = {
   [ORDER_STATUS.SHIPPING]: 'in_progress',
   [ORDER_STATUS.COMPLETED]: 'done',
   [ORDER_STATUS.CANCELLED]: 'cancelled',
+  [ORDER_STATUS.REFUNDED]: 'cancelled',
 } as const satisfies Record<OrderStatus, string>;

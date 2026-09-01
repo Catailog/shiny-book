@@ -246,6 +246,7 @@ export const en = {
     shipping: 'Shipping',
     completed: 'Completed',
     cancelled: 'Cancelled',
+    refunded: 'Refunded',
   } satisfies Record<OrderStatus, string>,
   orderEvent: {
     'order.created': 'Order created',
@@ -253,6 +254,10 @@ export const en = {
     'webhook.received': 'External system event received',
     'notification.sent': 'Notification sent',
     'admin.note': 'Admin note',
+    'refund.requested': 'Refund requested',
+    'refund.approved': 'Refund approved',
+    'refund.rejected': 'Refund rejected',
+    'refund.completed': 'Refund completed',
   } satisfies Record<OrderEventType, string>,
   announcementCategories: {
     notice: 'Notice',

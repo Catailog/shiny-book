@@ -246,6 +246,7 @@ export const ko = {
     shipping: '배송중',
     completed: '완료',
     cancelled: '취소됨',
+    refunded: '환불됨',
   } satisfies Record<OrderStatus, string>,
   orderEvent: {
     'order.created': '주문 생성',
@@ -253,6 +254,10 @@ export const ko = {
     'webhook.received': '외부 시스템 이벤트 수신',
     'notification.sent': '알림 발송',
     'admin.note': '관리자 메모',
+    'refund.requested': '환불 요청',
+    'refund.approved': '환불 승인',
+    'refund.rejected': '환불 거절',
+    'refund.completed': '환불 완료',
   } satisfies Record<OrderEventType, string>,
   announcementCategories: {
     notice: '공지사항',
