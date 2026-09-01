@@ -19,12 +19,14 @@ interface ViewOrderEventsButtonProps {
 export function ViewOrderEventsButton({ orderId }: ViewOrderEventsButtonProps) {
   const t = locales[defaultLocale];
   const [isOpen, setIsOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [events, setEvents] = useState<OrderEventView[] | null>(null);
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
-    if (open && events === null) {
+    // Refetch on every open - the timeline changes as the order progresses, so a
+    // cached first load would go stale after a status change.
+    if (open) {
       startTransition(async () => {
         const result = await getOrderEventViews(orderId);
         if (result.errorCode) {
@@ -47,9 +49,9 @@ export function ViewOrderEventsButton({ orderId }: ViewOrderEventsButtonProps) {
         <DialogHeader>
           <DialogTitle>{t.admin.orders.viewEventsButton}</DialogTitle>
         </DialogHeader>
-        {isPending ? (
+        {events === null ? (
           <p className="text-sm text-muted-foreground">{t.admin.orders.eventsLoading}</p>
-        ) : events && events.length > 0 ? (
+        ) : events.length > 0 ? (
           <ol className="space-y-3">
             {events.map((event) => (
               <li key={event.id} className="flex flex-col gap-0.5 border-l-2 border-border pl-3">

@@ -24,12 +24,13 @@ interface ConsumerOrderHistoryButtonProps {
 export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButtonProps) {
   const t = useT();
   const [isOpen, setIsOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [events, setEvents] = useState<ConsumerOrderEventView[] | null>(null);
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
-    if (open && events === null) {
+    // Refetch on every open so the progress list reflects the latest status.
+    if (open) {
       startTransition(async () => {
         const result = await getConsumerOrderHistory(orderId);
         if (result.errorCode) {
@@ -54,9 +55,9 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
         <DialogHeader>
           <DialogTitle>{t.consumer.mypage.orders.historyTitle}</DialogTitle>
         </DialogHeader>
-        {isPending ? (
+        {events === null ? (
           <p className="text-sm text-muted-foreground">{t.consumer.mypage.orders.historyLoading}</p>
-        ) : events && events.length > 0 ? (
+        ) : events.length > 0 ? (
           <ol className="space-y-3">
             {events.map((event) => (
               <li key={event.id} className="flex flex-col gap-0.5 border-l-2 border-border pl-3">
