@@ -8,6 +8,7 @@ import { env } from '@/env';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 const TEST_PAYMENT_KEY = 'test-payment';
 
@@ -31,6 +32,9 @@ export async function confirmTestPayment(orderId: string): Promise<{ success: fa
     actor: TEST_PAYMENT_KEY,
     metadata: { paymentKey: TEST_PAYMENT_KEY, amount: order.amount },
   });
+
+  const supabase = createServiceRoleClient();
+  await supabase.from('orders').update({ payment_key: TEST_PAYMENT_KEY }).eq('id', orderId);
 
   redirect(`/checkout/${orderId}/success?paymentKey=${TEST_PAYMENT_KEY}&amount=${order.amount}`);
 }

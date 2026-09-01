@@ -83,7 +83,8 @@ export async function finalizeOrderPayment(
   );
 
   if (updated) {
-    return { outcome: 'confirmed', order: updated };
+    await supabase.from('orders').update({ payment_key: paymentKey }).eq('id', orderId);
+    return { outcome: 'confirmed', order: { ...updated, payment_key: paymentKey } };
   }
 
   const { data: latest } = await supabase.from('orders').select().eq('id', orderId).maybeSingle();

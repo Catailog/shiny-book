@@ -360,6 +360,7 @@ export type Database = {
           id: string;
           manuscript_file_url: string | null;
           page_count: number | null;
+          payment_key: string | null;
           product_id: string | null;
           quantity: number;
           refunded_amount: number;
@@ -383,6 +384,7 @@ export type Database = {
           id?: string;
           manuscript_file_url?: string | null;
           page_count?: number | null;
+          payment_key?: string | null;
           product_id?: string | null;
           quantity: number;
           refunded_amount?: number;
@@ -406,6 +408,7 @@ export type Database = {
           id?: string;
           manuscript_file_url?: string | null;
           page_count?: number | null;
+          payment_key?: string | null;
           product_id?: string | null;
           quantity?: number;
           refunded_amount?: number;
