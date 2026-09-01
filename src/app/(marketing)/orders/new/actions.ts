@@ -2,11 +2,13 @@
 
 import { redirect } from 'next/navigation';
 
+import { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { getAddressById } from '@/lib/addresses/get-address-by-id';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { validateCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateOrderAmount } from '@/lib/orders/calculate-order-amount';
+import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import { getProductById } from '@/lib/products/get-product-by-id';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { isValidOrderPhotoPath } from '@/lib/uploads/is-valid-order-photo-path';
@@ -115,6 +117,15 @@ export async function createConsumerOrder(
   if (photosError) {
     return { errorCode: 'unexpected_error' };
   }
+
+  await recordOrderEvent({
+    orderId: order.id,
+    eventType: ORDER_EVENT_TYPE.ORDER_CREATED,
+    source: ORDER_EVENT_SOURCE.CONSUMER,
+    actor: consumer.id,
+    toStatus: ORDER_STATUS.AWAITING_PAYMENT,
+    metadata: { productId: product.id, quantity: parsed.data.quantity, amount },
+  });
 
   redirect(`/checkout/${order.id}`);
 }
