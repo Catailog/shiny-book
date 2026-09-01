@@ -20,15 +20,33 @@ interface ChatMessage {
   content: string;
 }
 
-type SourceKind = 'faq' | 'notice';
+type SourceKind = 'faq' | 'notice' | 'page';
 
 interface MessageSource {
   kind: SourceKind;
   id: string;
 }
 
-const SOURCE_MARKER = /\[\[(faq|notice):([0-9a-fA-F-]+)\]\]/g;
-const TRAILING_PARTIAL_MARKER = /\[\[?[a-z]*:?[0-9a-fA-F-]*\]?\]?\s*$/;
+const SOURCE_MARKER = /\[\[(faq|notice|page):([0-9a-zA-Z-]+)\]\]/g;
+const TRAILING_PARTIAL_MARKER = /\[\[?[a-z]*:?[0-9a-zA-Z-]*\]?\]?\s*$/;
+const MAX_MESSAGE_SOURCES = 3;
+
+function toSourceKind(value: string): SourceKind {
+  if (value === 'faq' || value === 'page') {
+    return value;
+  }
+  return 'notice';
+}
+
+function sourceHref(source: MessageSource): string {
+  if (source.kind === 'faq') {
+    return `${FAQ_ROUTES.LIST}#${source.id}`;
+  }
+  if (source.kind === 'notice') {
+    return `${NOTICE_ROUTES.LIST}/${source.id}`;
+  }
+  return `/${source.id}`;
+}
 
 // Persist for the browser tab only: survives closing/reopening the drawer and
 // navigating within the tab, and is discarded when the tab closes.
@@ -70,7 +88,7 @@ function extractSources(raw: string): { text: string; sources: MessageSource[] }
   const sources: MessageSource[] = [];
   const text = raw
     .replace(SOURCE_MARKER, (_full, kind: string, id: string) => {
-      const normalizedKind: SourceKind = kind === 'faq' ? 'faq' : 'notice';
+      const normalizedKind = toSourceKind(kind);
       if (!sources.some((source) => source.kind === normalizedKind && source.id === id)) {
         sources.push({ kind: normalizedKind, id });
       }
@@ -79,10 +97,10 @@ function extractSources(raw: string): { text: string; sources: MessageSource[] }
     .replace(TRAILING_PARTIAL_MARKER, '')
     .trimEnd();
 
-  return { text, sources };
+  return { text, sources: sources.slice(0, MAX_MESSAGE_SOURCES) };
 }
 
-export function AiChatPanel() {
+export function AiChatPanel({ onNavigate }: { onNavigate?: () => void }) {
   const t = useT();
   const [messages, setMessages] = useState<ChatMessage[]>(() =>
     typeof window === 'undefined' ? [] : loadHistory(),
@@ -222,15 +240,16 @@ export function AiChatPanel() {
                   {sources.map((source) => (
                     <Link
                       key={`${source.kind}-${source.id}`}
-                      href={
-                        source.kind === 'faq'
-                          ? `${FAQ_ROUTES.LIST}#${source.id}`
-                          : `${NOTICE_ROUTES.LIST}/${source.id}`
-                      }
+                      href={sourceHref(source)}
+                      onClick={onNavigate}
                       className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     >
                       <BookOpen aria-hidden="true" className="size-3" />
-                      {source.kind === 'faq' ? t.ai.sourceFaq : t.ai.sourceNotice}
+                      {source.kind === 'faq'
+                        ? t.ai.sourceFaq
+                        : source.kind === 'notice'
+                          ? t.ai.sourceNotice
+                          : t.ai.sourcePage}
                     </Link>
                   ))}
                 </div>
@@ -279,6 +298,7 @@ export function AiChatPanel() {
               {t.ai.inquiryPrompt}{' '}
               <Link
                 href={CONSUMER_ROUTES.INQUIRIES}
+                onClick={onNavigate}
                 className="font-medium text-foreground underline underline-offset-2"
               >
                 {t.ai.inquiryLink}

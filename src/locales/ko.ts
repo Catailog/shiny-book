@@ -285,6 +285,7 @@ export const ko = {
     disclaimer: 'AI 답변은 참고용이며 실제와 다를 수 있어요.',
     sourceFaq: '관련 FAQ',
     sourceNotice: '관련 공지',
+    sourcePage: '관련 안내',
     clearChat: '새 대화',
   },
   checkout: {

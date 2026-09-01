@@ -37,7 +37,7 @@ export function AiAssistant() {
           </h2>
           <p className="text-xs text-muted-foreground">{t.ai.panelDescription}</p>
         </div>
-        <AiChatPanel />
+        <AiChatPanel onNavigate={() => setIsOpen(false)} />
       </SheetContent>
     </Sheet>
   );

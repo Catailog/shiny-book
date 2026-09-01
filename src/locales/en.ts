@@ -285,6 +285,7 @@ export const en = {
     disclaimer: 'AI answers are for reference and may differ from actual details.',
     sourceFaq: 'Related FAQ',
     sourceNotice: 'Related notice',
+    sourcePage: 'Related page',
     clearChat: 'New chat',
   },
   checkout: {
