@@ -21,10 +21,10 @@ export const env = createEnv({
       .transform((value) => value === 'true'),
     // AI chat providers. Optional: the fallback chain skips any provider whose
     // key is missing, so the assistant works with 1, 2, or all 3 configured.
-    GOOGLE_AI_STUDIO_API_KEY: z.string().min(1).optional(),
+    GEMINI_API_KEY: z.string().min(1).optional(),
     GROQ_API_KEY: z.string().min(1).optional(),
     CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
-    CLOUDFLARE_WORKERS_AI_API_TOKEN: z.string().min(1).optional(),
+    CLOUDFLARE_API_TOKEN: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),

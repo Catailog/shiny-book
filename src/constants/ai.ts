@@ -19,7 +19,7 @@ export const AI_PROVIDER_FALLBACK_ORDER: readonly AiProvider[] = [
 // Model ids drift - keep them here so a bump is a one-line change.
 export const AI_MODEL: Record<AiProvider, string> = {
   [AI_PROVIDER.GEMINI]: 'gemini-2.0-flash',
-  [AI_PROVIDER.GROQ]: 'llama-3.3-70b-versatile',
+  [AI_PROVIDER.GROQ]: 'llama-3.1-8b-instant',
   [AI_PROVIDER.CLOUDFLARE]: '@cf/meta/llama-3.1-8b-instruct',
 };
 

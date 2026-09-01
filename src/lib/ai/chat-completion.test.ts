@@ -8,36 +8,30 @@ vi.mock('@ai-sdk/groq', () => ({ createGroq: () => () => 'groq-model' }));
 vi.mock('@ai-sdk/openai', () => ({ createOpenAI: () => () => 'cf-model' }));
 
 const mockKeys = {
-  GOOGLE_AI_STUDIO_API_KEY: 'g' as string | undefined,
+  GEMINI_API_KEY: 'g' as string | undefined,
   GROQ_API_KEY: 'q' as string | undefined,
   CLOUDFLARE_ACCOUNT_ID: 'acc' as string | undefined,
-  CLOUDFLARE_WORKERS_AI_API_TOKEN: 'tok' as string | undefined,
+  CLOUDFLARE_API_TOKEN: 'tok' as string | undefined,
 };
 vi.mock('@/env', () => ({ env: mockKeys }));
 vi.mock('@/lib/log/logger', () => ({ logger: { warn: vi.fn(), error: vi.fn() } }));
 
 const { streamChatCompletion } = await import('@/lib/ai/chat-completion');
 
-function textStreamOf(chunks: string[]) {
+function fullStreamOf(parts: unknown[]) {
   return {
-    textStream: {
+    fullStream: {
       async *[Symbol.asyncIterator]() {
-        for (const chunk of chunks) {
-          yield chunk;
+        for (const part of parts) {
+          yield part;
         }
       },
     },
   };
 }
 
-function failingTextStream() {
-  return {
-    textStream: {
-      async *[Symbol.asyncIterator]() {
-        throw new Error('provider rejected');
-      },
-    },
-  };
+function textParts(...texts: string[]) {
+  return texts.map((text) => ({ type: 'text-delta', text }));
 }
 
 async function readAll(stream: ReadableStream<Uint8Array>): Promise<string> {
@@ -56,15 +50,15 @@ async function readAll(stream: ReadableStream<Uint8Array>): Promise<string> {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mockKeys.GOOGLE_AI_STUDIO_API_KEY = 'g';
+  mockKeys.GEMINI_API_KEY = 'g';
   mockKeys.GROQ_API_KEY = 'q';
   mockKeys.CLOUDFLARE_ACCOUNT_ID = 'acc';
-  mockKeys.CLOUDFLARE_WORKERS_AI_API_TOKEN = 'tok';
+  mockKeys.CLOUDFLARE_API_TOKEN = 'tok';
 });
 
 describe('streamChatCompletion', () => {
-  it('uses the first provider that yields a token', async () => {
-    streamTextMock.mockReturnValueOnce(textStreamOf(['Hel', 'lo']));
+  it('uses the first provider that produces text', async () => {
+    streamTextMock.mockReturnValueOnce(fullStreamOf(textParts('Hel', 'lo')));
 
     const result = await streamChatCompletion('sys', []);
 
@@ -73,10 +67,10 @@ describe('streamChatCompletion', () => {
     expect(streamTextMock).toHaveBeenCalledTimes(1);
   });
 
-  it('falls through to the next provider when one rejects before the first token', async () => {
+  it('falls through when a provider emits an error part before any text', async () => {
     streamTextMock
-      .mockReturnValueOnce(failingTextStream())
-      .mockReturnValueOnce(textStreamOf(['from groq']));
+      .mockReturnValueOnce(fullStreamOf([{ type: 'error', error: new Error('model_not_found') }]))
+      .mockReturnValueOnce(fullStreamOf(textParts('from groq')));
 
     const result = await streamChatCompletion('sys', []);
 
@@ -85,9 +79,19 @@ describe('streamChatCompletion', () => {
     expect(streamTextMock).toHaveBeenCalledTimes(2);
   });
 
+  it('falls through on an empty stream', async () => {
+    streamTextMock
+      .mockReturnValueOnce(fullStreamOf([]))
+      .mockReturnValueOnce(fullStreamOf(textParts('groq text')));
+
+    const result = await streamChatCompletion('sys', []);
+
+    expect(result?.provider).toBe('groq');
+  });
+
   it('skips providers whose keys are missing', async () => {
-    mockKeys.GOOGLE_AI_STUDIO_API_KEY = undefined;
-    streamTextMock.mockReturnValueOnce(textStreamOf(['groq only']));
+    mockKeys.GEMINI_API_KEY = undefined;
+    streamTextMock.mockReturnValueOnce(fullStreamOf(textParts('groq only')));
 
     const result = await streamChatCompletion('sys', []);
 
@@ -96,14 +100,14 @@ describe('streamChatCompletion', () => {
   });
 
   it('returns null when every provider fails', async () => {
-    streamTextMock.mockReturnValue(failingTextStream());
+    streamTextMock.mockReturnValue(fullStreamOf([{ type: 'error', error: new Error('down') }]));
 
     expect(await streamChatCompletion('sys', [])).toBeNull();
     expect(streamTextMock).toHaveBeenCalledTimes(3);
   });
 
   it('returns null when no provider keys are configured', async () => {
-    mockKeys.GOOGLE_AI_STUDIO_API_KEY = undefined;
+    mockKeys.GEMINI_API_KEY = undefined;
     mockKeys.GROQ_API_KEY = undefined;
     mockKeys.CLOUDFLARE_ACCOUNT_ID = undefined;
 

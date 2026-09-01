@@ -23,36 +23,28 @@ export interface ChatCompletionStream {
 function resolveModel(provider: AiProvider): LanguageModel | null {
   switch (provider) {
     case AI_PROVIDER.GEMINI:
-      return env.GOOGLE_AI_STUDIO_API_KEY
-        ? createGoogleGenerativeAI({ apiKey: env.GOOGLE_AI_STUDIO_API_KEY })(AI_MODEL[provider])
+      return env.GEMINI_API_KEY
+        ? createGoogleGenerativeAI({ apiKey: env.GEMINI_API_KEY })(AI_MODEL[provider])
         : null;
     case AI_PROVIDER.GROQ:
       return env.GROQ_API_KEY ? createGroq({ apiKey: env.GROQ_API_KEY })(AI_MODEL[provider]) : null;
     case AI_PROVIDER.CLOUDFLARE:
-      return env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_WORKERS_AI_API_TOKEN
+      return env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_API_TOKEN
         ? createOpenAI({
-            apiKey: env.CLOUDFLARE_WORKERS_AI_API_TOKEN,
+            apiKey: env.CLOUDFLARE_API_TOKEN,
             baseURL: `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
           })(AI_MODEL[provider])
         : null;
   }
 }
 
-async function* restOfStream(iterator: AsyncIterator<string>): AsyncGenerator<string> {
-  while (true) {
-    const next = await iterator.next();
-    if (next.done) {
-      return;
-    }
-    if (next.value.length > 0) {
-      yield next.value;
-    }
-  }
+function describeError(error: unknown): { message: string } | { value: string } {
+  return error instanceof Error ? { message: error.message } : { value: String(error) };
 }
 
-// Try each configured provider in order. A provider that rejects the request
-// (auth, model, outage, rate limit) fails before its first token, so we can
-// still fall through; once a provider yields a token we are committed to it.
+// Try each configured provider in order. The AI SDK routes stream failures to
+// `fullStream` as an `error` part instead of throwing, so we pull parts until the
+// first text (commit to this provider) or the first error (fall through).
 export async function streamChatCompletion(
   system: string,
   messages: ModelMessage[],
@@ -63,55 +55,71 @@ export async function streamChatCompletion(
       continue;
     }
 
+    const result = streamText({
+      model,
+      system,
+      messages,
+      maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
+      maxRetries: 0,
+      timeout: AI_REQUEST_TIMEOUT_MS,
+    });
+
+    const iterator = result.fullStream[Symbol.asyncIterator]();
+
+    let firstText: string | null = null;
     try {
-      const result = streamText({
-        model,
-        system,
-        messages,
-        maxOutputTokens: AI_MAX_OUTPUT_TOKENS,
-        maxRetries: 0,
-        timeout: AI_REQUEST_TIMEOUT_MS,
-      });
-
-      const iterator = result.textStream[Symbol.asyncIterator]();
-      const first = await iterator.next();
-
-      const encoder = new TextEncoder();
-      const stream = new ReadableStream<Uint8Array>({
-        async start(controller) {
-          try {
-            if (!first.done && first.value.length > 0) {
-              controller.enqueue(encoder.encode(first.value));
-            }
-            for await (const chunk of restOfStream(iterator)) {
-              controller.enqueue(encoder.encode(chunk));
-            }
-            controller.close();
-          } catch (error) {
-            logger.error(
-              {
-                event: 'ai.stream_interrupted',
-                provider,
-                err: error instanceof Error ? { message: error.message } : { value: String(error) },
-              },
-              'AI response stream failed after it had started',
-            );
-            controller.error(error);
-          }
-        },
-      });
-
-      return { provider, stream };
+      while (firstText === null) {
+        const next = await iterator.next();
+        if (next.done) {
+          throw new Error('provider returned an empty stream');
+        }
+        if (next.value.type === 'error') {
+          throw next.value.error;
+        }
+        if (next.value.type === 'text-delta') {
+          firstText = next.value.text;
+        }
+      }
     } catch (error) {
       logger.warn(
-        {
-          event: 'ai.provider_failed',
-          provider,
-          err: error instanceof Error ? { message: error.message } : { value: String(error) },
-        },
-        'AI provider rejected the request, trying the next',
+        { event: 'ai.provider_failed', provider, err: describeError(error) },
+        'AI provider failed before producing text, trying the next',
       );
+      continue;
     }
+
+    const committedFirstText = firstText;
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        try {
+          if (committedFirstText.length > 0) {
+            controller.enqueue(encoder.encode(committedFirstText));
+          }
+          while (true) {
+            const next = await iterator.next();
+            if (next.done) {
+              break;
+            }
+            if (next.value.type === 'error') {
+              throw next.value.error;
+            }
+            if (next.value.type === 'text-delta' && next.value.text.length > 0) {
+              controller.enqueue(encoder.encode(next.value.text));
+            }
+          }
+          controller.close();
+        } catch (error) {
+          logger.error(
+            { event: 'ai.stream_interrupted', provider, err: describeError(error) },
+            'AI response stream failed after it had started',
+          );
+          controller.error(error);
+        }
+      },
+    });
+
+    return { provider, stream };
   }
 
   return null;
