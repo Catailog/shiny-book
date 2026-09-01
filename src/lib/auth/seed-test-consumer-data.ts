@@ -2,6 +2,11 @@ import 'server-only';
 
 import { INQUIRY_MESSAGE_AUTHOR } from '@/constants/inquiry';
 import { INQUIRY_CATEGORY } from '@/constants/inquiry-category';
+import {
+  ORDER_EVENT_SOURCE,
+  ORDER_EVENT_TYPE,
+  type OrderEventSource,
+} from '@/constants/order-event';
 import { ORDER_STATUS, type OrderStatus } from '@/constants/order-status';
 import { PHOTOBOOK_PAGE_COUNT_OPTIONS, PHOTOBOOK_PHOTOS_PER_PAGE } from '@/constants/photobook';
 import { PRICING } from '@/constants/pricing';
@@ -193,6 +198,98 @@ const TEST_ORDER_PLAN: readonly TestOrderPlanItem[] = [
   },
 ];
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+
+// The linear order lifecycle. A seeded order at status X gets one event per
+// step up to and including X, so its history dialog looks like a real order's.
+const FORWARD_STATUS_SEQUENCE: readonly OrderStatus[] = [
+  ORDER_STATUS.AWAITING_PAYMENT,
+  ORDER_STATUS.PAID,
+  ORDER_STATUS.PRINTING,
+  ORDER_STATUS.BINDING,
+  ORDER_STATUS.SHIPPING,
+  ORDER_STATUS.COMPLETED,
+];
+
+function transitionProvenance(
+  toStatus: OrderStatus,
+  consumerId: string,
+  adminId: string,
+): { source: OrderEventSource; actor: string } {
+  switch (toStatus) {
+    case ORDER_STATUS.PAID:
+      return { source: ORDER_EVENT_SOURCE.WEBHOOK, actor: 'webhook:toss' };
+    case ORDER_STATUS.PRINTING:
+      return { source: ORDER_EVENT_SOURCE.ADMIN, actor: adminId };
+    case ORDER_STATUS.BINDING:
+      return { source: ORDER_EVENT_SOURCE.WEBHOOK, actor: 'webhook:print-shop' };
+    case ORDER_STATUS.SHIPPING:
+      return { source: ORDER_EVENT_SOURCE.WEBHOOK, actor: 'vendor:courier' };
+    case ORDER_STATUS.COMPLETED:
+      return { source: ORDER_EVENT_SOURCE.WEBHOOK, actor: 'webhook:courier' };
+    default:
+      return { source: ORDER_EVENT_SOURCE.CONSUMER, actor: consumerId };
+  }
+}
+
+function buildOrderEventRows(params: {
+  orderId: string;
+  finalStatus: OrderStatus;
+  consumerId: string;
+  adminId: string;
+  productId: string;
+  quantity: number;
+  amount: number;
+  createdAt: Date;
+}) {
+  const finalIndex = FORWARD_STATUS_SEQUENCE.indexOf(params.finalStatus);
+  const reachedStatuses =
+    finalIndex < 0
+      ? [ORDER_STATUS.AWAITING_PAYMENT]
+      : FORWARD_STATUS_SEQUENCE.slice(0, finalIndex + 1);
+
+  let timestamp = params.createdAt.getTime();
+
+  return reachedStatuses.map((status, index) => {
+    if (index > 0) {
+      timestamp += randomInt(4, 20) * HOUR_MS;
+    }
+    const createdAt = new Date(Math.min(timestamp, Date.now())).toISOString();
+
+    if (index === 0) {
+      return {
+        order_id: params.orderId,
+        event_type: ORDER_EVENT_TYPE.ORDER_CREATED,
+        source: ORDER_EVENT_SOURCE.CONSUMER,
+        actor: params.consumerId,
+        from_status: null,
+        to_status: ORDER_STATUS.AWAITING_PAYMENT,
+        metadata: {
+          productId: params.productId,
+          quantity: params.quantity,
+          amount: params.amount,
+        },
+        created_at: createdAt,
+      };
+    }
+
+    const previousStatus = reachedStatuses[index - 1] ?? ORDER_STATUS.AWAITING_PAYMENT;
+    const { source, actor } = transitionProvenance(status, params.consumerId, params.adminId);
+
+    return {
+      order_id: params.orderId,
+      event_type: ORDER_EVENT_TYPE.ORDER_STATUS_CHANGED,
+      source,
+      actor,
+      from_status: previousStatus,
+      to_status: status,
+      metadata: status === ORDER_STATUS.PAID ? { amount: params.amount } : {},
+      created_at: createdAt,
+    };
+  });
+}
+
 interface SeedMessageSpec {
   authorType: (typeof INQUIRY_MESSAGE_AUTHOR)[keyof typeof INQUIRY_MESSAGE_AUTHOR];
   authorId: string | null;
@@ -275,6 +372,8 @@ export async function seedTestConsumerData(
     const quantity = randomInt(1, 3);
     const merchandiseAmount = (product.price + pageCount * PRICING.PRICE_PER_PAGE_KRW) * quantity;
     const shippingFee = calculateShippingFee(TEST_HOME_ADDRESS.postalCode, merchandiseAmount);
+    const amount = merchandiseAmount + shippingFee;
+    const orderCreatedAt = new Date(Date.now() - randomInt(2, 14) * DAY_MS);
 
     const { data: insertedOrder } = await serviceClient
       .from('orders')
@@ -286,7 +385,8 @@ export async function seedTestConsumerData(
         title: generateRandomBookTitle(locale),
         page_count: pageCount,
         quantity,
-        amount: merchandiseAmount + shippingFee,
+        amount,
+        created_at: orderCreatedAt.toISOString(),
       })
       .select('id')
       .single();
@@ -294,6 +394,19 @@ export async function seedTestConsumerData(
     if (!insertedOrder) {
       continue;
     }
+
+    await serviceClient.from('order_events').insert(
+      buildOrderEventRows({
+        orderId: insertedOrder.id,
+        finalStatus: plan.status,
+        consumerId,
+        adminId: adminAuthorId,
+        productId: product.id,
+        quantity,
+        amount,
+        createdAt: orderCreatedAt,
+      }),
+    );
 
     const photoRows = Array.from(
       { length: pageCount * PHOTOBOOK_PHOTOS_PER_PAGE },
