@@ -29,11 +29,14 @@ function resolveModel(provider: AiProvider): LanguageModel | null {
     case AI_PROVIDER.GROQ:
       return env.GROQ_API_KEY ? createGroq({ apiKey: env.GROQ_API_KEY })(AI_MODEL[provider]) : null;
     case AI_PROVIDER.CLOUDFLARE:
+      // `.chat(...)` forces the OpenAI-compatible chat/completions endpoint;
+      // the provider's default call signature targets the Responses API,
+      // which Cloudflare's compat layer does not reliably support.
       return env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_API_TOKEN
         ? createOpenAI({
             apiKey: env.CLOUDFLARE_API_TOKEN,
             baseURL: `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
-          })(AI_MODEL[provider])
+          }).chat(AI_MODEL[provider])
         : null;
   }
 }

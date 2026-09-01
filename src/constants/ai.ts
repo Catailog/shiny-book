@@ -16,11 +16,15 @@ export const AI_PROVIDER_FALLBACK_ORDER: readonly AiProvider[] = [
   AI_PROVIDER.CLOUDFLARE,
 ];
 
-// Model ids drift - keep them here so a bump is a one-line change.
+// Model ids drift - keep them here so a bump is a one-line change. Last
+// verified 2026-09-02 (Groq deprecated its llama-3.x line on 2026-08-16 and
+// points migrators at the gpt-oss models; Cloudflare deprecated
+// @cf/meta/llama-3.1-8b-instruct on 2026-05-30; Gemini 2.x is retired in favor
+// of the 3.x line).
 export const AI_MODEL: Record<AiProvider, string> = {
-  [AI_PROVIDER.GEMINI]: 'gemini-2.0-flash',
-  [AI_PROVIDER.GROQ]: 'llama-3.1-8b-instant',
-  [AI_PROVIDER.CLOUDFLARE]: '@cf/meta/llama-3.1-8b-instruct',
+  [AI_PROVIDER.GEMINI]: 'gemini-3.6-flash',
+  [AI_PROVIDER.GROQ]: 'openai/gpt-oss-20b',
+  [AI_PROVIDER.CLOUDFLARE]: '@cf/openai/gpt-oss-20b',
 };
 
 export const AI_MAX_OUTPUT_TOKENS = 800;

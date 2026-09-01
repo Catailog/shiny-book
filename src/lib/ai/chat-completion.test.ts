@@ -5,7 +5,7 @@ vi.mock('ai', () => ({ streamText: streamTextMock }));
 
 vi.mock('@ai-sdk/google', () => ({ createGoogleGenerativeAI: () => () => 'gemini-model' }));
 vi.mock('@ai-sdk/groq', () => ({ createGroq: () => () => 'groq-model' }));
-vi.mock('@ai-sdk/openai', () => ({ createOpenAI: () => () => 'cf-model' }));
+vi.mock('@ai-sdk/openai', () => ({ createOpenAI: () => ({ chat: () => 'cf-model' }) }));
 
 const mockKeys = {
   GEMINI_API_KEY: 'g' as string | undefined,
