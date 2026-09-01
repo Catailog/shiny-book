@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { ORDER_STATUS } from '@/constants/order-status';
-import {
-  REFUND_STATUS,
-  isOpenRefundStatus,
-  isRefundStatus,
-  isRefundableOrderStatus,
-} from '@/constants/refund';
+import { REFUND_STATUS, isRefundStatus, isRefundableOrderStatus } from '@/constants/refund';
 
 describe('isRefundStatus', () => {
   it('accepts known statuses', () => {
@@ -30,18 +25,5 @@ describe('isRefundableOrderStatus', () => {
     expect(isRefundableOrderStatus(ORDER_STATUS.AWAITING_PAYMENT)).toBe(false);
     expect(isRefundableOrderStatus(ORDER_STATUS.CANCELLED)).toBe(false);
     expect(isRefundableOrderStatus(ORDER_STATUS.REFUNDED)).toBe(false);
-  });
-});
-
-describe('isOpenRefundStatus', () => {
-  it('treats requested and approved as open', () => {
-    expect(isOpenRefundStatus(REFUND_STATUS.REQUESTED)).toBe(true);
-    expect(isOpenRefundStatus(REFUND_STATUS.APPROVED)).toBe(true);
-  });
-
-  it('treats rejected/completed/failed as closed', () => {
-    expect(isOpenRefundStatus(REFUND_STATUS.REJECTED)).toBe(false);
-    expect(isOpenRefundStatus(REFUND_STATUS.COMPLETED)).toBe(false);
-    expect(isOpenRefundStatus(REFUND_STATUS.FAILED)).toBe(false);
   });
 });

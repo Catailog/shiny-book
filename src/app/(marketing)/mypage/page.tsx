@@ -12,7 +12,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
-import { isRefundableOrderStatus } from '@/constants/refund';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { formatIdPrefix } from '@/lib/format-id-prefix';
@@ -23,7 +22,6 @@ import { getReviewsByConsumer } from '@/lib/reviews/get-reviews-by-consumer';
 import { locales } from '@/locales';
 
 import { ConsumerOrderHistoryButton } from './consumer-order-history-button';
-import { RequestRefundButton } from './request-refund-button';
 
 const IN_PROGRESS_STATUSES = new Set<string>([
   ORDER_STATUS.PAID,
@@ -148,39 +146,31 @@ export default async function MypagePage() {
                       <RelativeDate value={order.created_at} locale={locale} />
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col items-start gap-1.5">
-                        {status === ORDER_STATUS.COMPLETED ? (
+                      {status === ORDER_STATUS.COMPLETED ? (
+                        <Link
+                          href={`/mypage/orders/${order.id}/review`}
+                          className="text-sm font-medium text-foreground underline"
+                        >
+                          {review
+                            ? t.consumer.mypage.orders.reviewDoneLink
+                            : t.consumer.mypage.orders.reviewWriteLink}
+                        </Link>
+                      ) : status === ORDER_STATUS.AWAITING_PAYMENT ? (
+                        <div className="flex flex-col items-start gap-1">
                           <Link
-                            href={`/mypage/orders/${order.id}/review`}
-                            className="text-sm font-medium text-foreground underline"
+                            href={`/checkout/${order.id}`}
+                            className="text-sm font-medium text-primary underline"
                           >
-                            {review
-                              ? t.consumer.mypage.orders.reviewDoneLink
-                              : t.consumer.mypage.orders.reviewWriteLink}
+                            {t.consumer.mypage.orders.payLink}
                           </Link>
-                        ) : status === ORDER_STATUS.AWAITING_PAYMENT ? (
-                          <div className="flex flex-col items-start gap-1">
-                            <Link
-                              href={`/checkout/${order.id}`}
-                              className="text-sm font-medium text-primary underline"
-                            >
-                              {t.consumer.mypage.orders.payLink}
-                            </Link>
-                            <CancelOrderButton
-                              orderId={order.id}
-                              className="text-sm text-muted-foreground underline"
-                            />
-                          </div>
-                        ) : null}
-                        {status && isRefundableOrderStatus(status) ? (
-                          <RequestRefundButton orderId={order.id} />
-                        ) : null}
-                        {status &&
-                        status !== ORDER_STATUS.AWAITING_PAYMENT &&
-                        !isRefundableOrderStatus(status) ? (
-                          <span className="text-muted-foreground">-</span>
-                        ) : null}
-                      </div>
+                          <CancelOrderButton
+                            orderId={order.id}
+                            className="text-sm text-muted-foreground underline"
+                          />
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       {inquiry ? (

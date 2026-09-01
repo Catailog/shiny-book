@@ -29,16 +29,5 @@ export function isRefundableOrderStatus(status: OrderStatus): boolean {
   return REFUNDABLE_ORDER_STATUSES.some((candidate) => candidate === status);
 }
 
-// A request in one of these statuses still blocks a new request for the same
-// order and can still be processed.
-export const OPEN_REFUND_STATUSES: readonly RefundStatus[] = [
-  REFUND_STATUS.REQUESTED,
-  REFUND_STATUS.APPROVED,
-];
-
-export function isOpenRefundStatus(status: RefundStatus): boolean {
-  return OPEN_REFUND_STATUSES.some((candidate) => candidate === status);
-}
-
 export const REFUND_REASON_MAX_LENGTH = 500;
 export const REFUND_REVIEW_NOTE_MAX_LENGTH = 500;
