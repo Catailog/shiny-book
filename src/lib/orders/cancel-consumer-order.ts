@@ -1,5 +1,6 @@
 'use server';
 
+import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
@@ -26,6 +27,7 @@ export async function cancelConsumerOrder(
     orderId,
     ORDER_STATUS.AWAITING_PAYMENT,
     ORDER_STATUS.CANCELLED,
+    { source: ORDER_EVENT_SOURCE.CONSUMER, actor: consumer.id },
   );
 
   if (!updated) {

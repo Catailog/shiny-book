@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRINT_JOB_STATUS, isPrintJobStatus } from '@/constants/print-job-status';
 import { SHIPMENT_JOB_STATUS, isShipmentJobStatus } from '@/constants/shipment-job-status';
@@ -53,7 +54,10 @@ async function postHandler(request: NextRequest) {
       .maybeSingle();
 
     if (printJob && event.status === PRINT_JOB_STATUS.DONE) {
-      await transitionOrderStatus(printJob.order_id, ORDER_STATUS.PRINTING, ORDER_STATUS.BINDING);
+      await transitionOrderStatus(printJob.order_id, ORDER_STATUS.PRINTING, ORDER_STATUS.BINDING, {
+        source: ORDER_EVENT_SOURCE.WEBHOOK,
+        actor: 'webhook:print-shop',
+      });
     }
   } else if (event.vendor === VENDOR_TYPES.COURIER) {
     if (!isShipmentJobStatus(event.status)) {
@@ -72,6 +76,7 @@ async function postHandler(request: NextRequest) {
         shipmentJob.order_id,
         ORDER_STATUS.SHIPPING,
         ORDER_STATUS.COMPLETED,
+        { source: ORDER_EVENT_SOURCE.WEBHOOK, actor: 'webhook:courier' },
       );
     }
   }

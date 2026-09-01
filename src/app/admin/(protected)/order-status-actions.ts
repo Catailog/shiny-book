@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS, type OrderStatus } from '@/constants/order-status';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
@@ -27,7 +28,10 @@ export async function advanceOrderStatus(
     return { error: 'not_allowed' };
   }
 
-  const updated = await transitionOrderStatus(orderId, from, to);
+  const updated = await transitionOrderStatus(orderId, from, to, {
+    source: ORDER_EVENT_SOURCE.ADMIN,
+    actor: admin.id,
+  });
   if (!updated) {
     return { error: 'conflict' };
   }
@@ -54,7 +58,11 @@ export async function revertOrderStatusAction(
     return { error: 'not_allowed' };
   }
 
-  const updated = await revertOrderStatus(orderId, from, to);
+  const updated = await revertOrderStatus(orderId, from, to, {
+    source: ORDER_EVENT_SOURCE.ADMIN,
+    actor: admin.id,
+    reason: 'admin revert',
+  });
   if (!updated) {
     return { error: 'conflict' };
   }

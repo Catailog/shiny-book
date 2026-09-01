@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
+import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { ROLE } from '@/constants/roles';
 import { SHIPMENT_JOB_STATUS } from '@/constants/shipment-job-status';
@@ -57,7 +58,11 @@ async function postHandler(request: NextRequest) {
     return apiError(API_ERROR_CODES.INTERNAL_ERROR, 'Failed to create shipment job');
   }
 
-  await transitionOrderStatus(parsed.data.orderId, ORDER_STATUS.BINDING, ORDER_STATUS.SHIPPING);
+  await transitionOrderStatus(parsed.data.orderId, ORDER_STATUS.BINDING, ORDER_STATUS.SHIPPING, {
+    source: ORDER_EVENT_SOURCE.WEBHOOK,
+    actor: 'vendor:courier',
+    metadata: { trackingNumber: data.tracking_number },
+  });
 
   return apiSuccess(shipmentJob, 201);
 }
