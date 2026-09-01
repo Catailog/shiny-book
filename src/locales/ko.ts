@@ -1011,6 +1011,11 @@ export const ko = {
         reviewDoneLink: '후기 완료',
         inquiryLink: '문의하기',
         payLink: '결제하기',
+        historyButton: '진행 이력',
+        historyTitle: '주문 진행 이력',
+        historyLoading: '불러오는 중...',
+        historyEmpty: '기록된 이력이 없습니다.',
+        historyError: '이력을 불러오지 못했습니다.',
       },
     },
     account: {

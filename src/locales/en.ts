@@ -1011,6 +1011,11 @@ export const en = {
         reviewDoneLink: 'Review done',
         inquiryLink: 'Ask',
         payLink: 'Pay now',
+        historyButton: 'Progress history',
+        historyTitle: 'Order progress history',
+        historyLoading: 'Loading...',
+        historyEmpty: 'No history recorded.',
+        historyError: 'Failed to load the history.',
       },
     },
     account: {

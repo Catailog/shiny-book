@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import type { Tables } from '@/lib/db/database.types';
-import { toOrderEventView } from '@/lib/orders/order-event-timeline';
+import { toConsumerOrderEventViews, toOrderEventView } from '@/lib/orders/order-event-timeline';
 import { locales } from '@/locales';
 
 function buildEvent(overrides: Partial<Tables<'order_events'>> = {}): Tables<'order_events'> {
@@ -56,5 +56,31 @@ describe('toOrderEventView', () => {
     );
 
     expect(view.title).toBe(locales.ko.orderEvent['order.status_changed']);
+  });
+});
+
+describe('toConsumerOrderEventViews', () => {
+  it('keeps only milestone events and drops the actor field', () => {
+    const views = toConsumerOrderEventViews(
+      [
+        buildEvent({ id: 'a', event_type: ORDER_EVENT_TYPE.ORDER_CREATED }),
+        buildEvent({
+          id: 'b',
+          event_type: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+          actor: 'webhook:toss',
+        }),
+        buildEvent({
+          id: 'c',
+          event_type: ORDER_EVENT_TYPE.ORDER_STATUS_CHANGED,
+          to_status: ORDER_STATUS.PAID,
+        }),
+        buildEvent({ id: 'd', event_type: ORDER_EVENT_TYPE.ADMIN_NOTE }),
+      ],
+      locales.ko,
+    );
+
+    expect(views.map((view) => view.id)).toEqual(['a', 'c']);
+    expect(views[0]).not.toHaveProperty('actor');
+    expect(views[1]?.title).toBe(locales.ko.orderStatus.paid);
   });
 });
