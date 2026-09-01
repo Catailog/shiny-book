@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { TOSS_PAYMENT_STATUS } from '@/constants/toss-payment-status';
 import { TOSS_WEBHOOK_EVENT_TYPES } from '@/constants/toss-webhook-events';
 import { withRequestContext } from '@/lib/api/with-request-context';
+import { logger } from '@/lib/log/logger';
 import { finalizeOrderPayment } from '@/lib/orders/finalize-order-payment';
 import { markWebhookEventProcessed } from '@/lib/webhooks/check-webhook-idempotency';
 import { parseTossPaymentWebhook } from '@/lib/webhooks/parse-toss-payment-webhook';
@@ -31,10 +32,17 @@ async function postHandler(request: NextRequest) {
   try {
     await finalizeOrderPayment(event.data.orderId, event.data.paymentKey);
   } catch (error) {
-    console.error('[toss-webhook] failed to finalize order payment', {
-      orderId: event.data.orderId,
-      error: error instanceof Error ? error.message : error,
-    });
+    logger.error(
+      {
+        event: 'toss.webhook.finalize_failed',
+        orderId: event.data.orderId,
+        err:
+          error instanceof Error
+            ? { message: error.message, stack: error.stack }
+            : { value: String(error) },
+      },
+      'failed to finalize order payment from toss webhook',
+    );
     return NextResponse.json({ received: false }, { status: 500 });
   }
 
