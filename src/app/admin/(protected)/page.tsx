@@ -54,6 +54,7 @@ const STATUS_FILTER_VALUES: readonly OrderStatus[] = [
   ORDER_STATUS.SHIPPING,
   ORDER_STATUS.COMPLETED,
   ORDER_STATUS.CANCELLED,
+  ORDER_STATUS.REFUNDED,
 ];
 
 export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
@@ -110,11 +111,12 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
       return (
         order.status !== ORDER_STATUS.AWAITING_PAYMENT &&
         order.status !== ORDER_STATUS.CANCELLED &&
+        order.status !== ORDER_STATUS.REFUNDED &&
         createdAt.getFullYear() === now.getFullYear() &&
         createdAt.getMonth() === now.getMonth()
       );
     })
-    .reduce((sum, order) => sum + order.amount, 0);
+    .reduce((sum, order) => sum + (order.amount - order.refunded_amount), 0);
   const activeCoupons = coupons.filter((coupon) => coupon.is_active);
 
   const kpis = [
