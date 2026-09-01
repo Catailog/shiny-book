@@ -288,6 +288,7 @@ export const ko = {
     amountLabel: '결제 금액',
     merchandiseAmountLabel: '상품 금액',
     shippingFeeLabel: '배송비',
+    shippingAddressLabel: '배송지',
     coupon: {
       label: '쿠폰 코드',
       applyButton: '확인',

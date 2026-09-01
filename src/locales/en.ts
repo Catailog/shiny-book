@@ -289,6 +289,7 @@ export const en = {
     amountLabel: 'Amount',
     merchandiseAmountLabel: 'Merchandise amount',
     shippingFeeLabel: 'Shipping fee',
+    shippingAddressLabel: 'Shipping to',
     coupon: {
       label: 'Coupon code',
       applyButton: 'Apply',
