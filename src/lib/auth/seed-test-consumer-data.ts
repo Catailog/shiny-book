@@ -201,6 +201,9 @@ const TEST_ORDER_PLAN: readonly TestOrderPlanItem[] = [
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 
+const TEST_RECIPIENT_NAME = '테스트 사용자';
+const TEST_PHONE = '01012345678';
+
 // The linear order lifecycle. A seeded order at status X gets one event per
 // step up to and including X, so its history dialog looks like a real order's.
 const FORWARD_STATUS_SEQUENCE: readonly OrderStatus[] = [
@@ -349,8 +352,8 @@ export async function seedTestConsumerData(
       addressesToSeed.map((address, index) => ({
         consumer_id: consumerId,
         label: address.label,
-        recipient_name: '테스트 사용자',
-        phone: '01012345678',
+        recipient_name: TEST_RECIPIENT_NAME,
+        phone: TEST_PHONE,
         postal_code: address.postalCode,
         address_line1: address.addressLine1,
         address_line2: address.addressLine2,
@@ -380,6 +383,11 @@ export async function seedTestConsumerData(
       .insert({
         consumer_id: consumerId,
         address_id: homeAddress.id,
+        ship_recipient_name: TEST_RECIPIENT_NAME,
+        ship_phone: TEST_PHONE,
+        ship_postal_code: TEST_HOME_ADDRESS.postalCode,
+        ship_address_line1: TEST_HOME_ADDRESS.addressLine1,
+        ship_address_line2: TEST_HOME_ADDRESS.addressLine2,
         product_id: product.id,
         status: plan.status,
         title: generateRandomBookTitle(locale),
