@@ -270,6 +270,20 @@ export const en = {
     INTERNAL_ERROR: 'Something went wrong. Please try again.',
     AI_UNAVAILABLE: 'Could not generate an AI response.',
   } satisfies Record<ApiErrorCode, string>,
+  ai: {
+    triggerLabel: 'AI assistant',
+    panelTitle: 'AI assistant',
+    panelDescription: 'Ask about our products, production, shipping, and pricing.',
+    greeting:
+      'Hi! Ask me anything about Shiny Book. I can help with products, the production process, shipping, and pricing.',
+    inputPlaceholder: 'Type a message',
+    sendLabel: 'Send',
+    thinking: 'Writing a reply',
+    errorMessage: 'Could not generate a reply. Please try again in a moment.',
+    inquiryPrompt: 'Need more help?',
+    inquiryLink: 'Contact support',
+    disclaimer: 'AI answers are for reference and may differ from actual details.',
+  },
   checkout: {
     title: 'Checkout',
     backButton: 'Back',

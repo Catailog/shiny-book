@@ -29,6 +29,10 @@ export const NOTICE_ROUTES = {
   LIST: '/notices',
 } as const;
 
+export const API_ROUTES = {
+  AI_CHAT: '/api/ai/chat',
+} as const;
+
 export const FAQ_ROUTES = {
   LIST: '/faq',
 } as const;

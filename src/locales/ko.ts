@@ -270,6 +270,20 @@ export const ko = {
     INTERNAL_ERROR: '일시적인 오류가 발생했습니다.',
     AI_UNAVAILABLE: 'AI 응답을 생성하지 못했습니다.',
   } satisfies Record<ApiErrorCode, string>,
+  ai: {
+    triggerLabel: 'AI 어시스턴트',
+    panelTitle: 'AI 어시스턴트',
+    panelDescription: '제품, 제작, 배송, 가격 등 서비스에 대해 물어보세요.',
+    greeting:
+      '안녕하세요! Shiny Book에 대해 궁금한 점을 물어보세요. 제품, 제작 과정, 배송, 가격 정책을 안내해 드릴게요.',
+    inputPlaceholder: '메시지를 입력하세요',
+    sendLabel: '보내기',
+    thinking: '답변을 작성하고 있어요',
+    errorMessage: '답변을 생성하지 못했어요. 잠시 후 다시 시도해 주세요.',
+    inquiryPrompt: '더 자세한 도움이 필요하신가요?',
+    inquiryLink: '1:1 문의하기',
+    disclaimer: 'AI 답변은 참고용이며 실제와 다를 수 있어요.',
+  },
   checkout: {
     title: '결제하기',
     backButton: '이전 단계로',

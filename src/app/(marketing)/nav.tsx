@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Shield } from 'lucide-react';
 
+import { AiAssistant } from '@/components/ai-assistant/ai-assistant';
 import { Coachmark, CoachmarkSpot } from '@/components/coachmark';
 import { LanguageToggle } from '@/components/language-toggle';
 import { SiteContainer } from '@/components/site-container';
@@ -79,6 +80,7 @@ export async function Nav() {
         />
         <TooltipProvider>
           <div className="flex items-center gap-1">
+            <AiAssistant />
             <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
             <ThemeToggle
               switchToLightLabel={t.site.nav.switchToLightMode}
