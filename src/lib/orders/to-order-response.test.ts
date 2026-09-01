@@ -18,6 +18,7 @@ function buildOrderRow(overrides: Partial<Tables<'orders'>> = {}): Tables<'order
     page_count: null,
     quantity: 1,
     amount: 10000,
+    refunded_amount: 0,
     ship_recipient_name: null,
     ship_phone: null,
     ship_postal_code: null,

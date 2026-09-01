@@ -362,6 +362,7 @@ export type Database = {
           page_count: number | null;
           product_id: string | null;
           quantity: number;
+          refunded_amount: number;
           ship_address_line1: string | null;
           ship_address_line2: string | null;
           ship_phone: string | null;
@@ -384,6 +385,7 @@ export type Database = {
           page_count?: number | null;
           product_id?: string | null;
           quantity: number;
+          refunded_amount?: number;
           ship_address_line1?: string | null;
           ship_address_line2?: string | null;
           ship_phone?: string | null;
@@ -406,6 +408,7 @@ export type Database = {
           page_count?: number | null;
           product_id?: string | null;
           quantity?: number;
+          refunded_amount?: number;
           ship_address_line1?: string | null;
           ship_address_line2?: string | null;
           ship_phone?: string | null;
@@ -564,6 +567,59 @@ export type Database = {
           updated_at?: string | null;
         };
         Relationships: [];
+      };
+      refund_requests: {
+        Row: {
+          amount: number | null;
+          created_at: string;
+          id: string;
+          order_id: string;
+          reason: string;
+          requested_by: string;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          toss_transaction_key: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          amount?: number | null;
+          created_at?: string;
+          id?: string;
+          order_id: string;
+          reason: string;
+          requested_by: string;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          toss_transaction_key?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number | null;
+          created_at?: string;
+          id?: string;
+          order_id?: string;
+          reason?: string;
+          requested_by?: string;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          toss_transaction_key?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'refund_requests_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       reviews: {
         Row: {
