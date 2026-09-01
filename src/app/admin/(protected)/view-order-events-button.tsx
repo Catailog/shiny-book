@@ -4,10 +4,12 @@ import { useState, useTransition } from 'react';
 
 import { toast } from 'sonner';
 
+import { ShippingAddressSummary } from '@/components/shipping-address-summary';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { formatDateTime } from '@/lib/format-date';
 import type { OrderEventView } from '@/lib/orders/order-event-timeline';
+import type { OrderShippingAddressView } from '@/lib/orders/shipping-address-snapshot';
 import { defaultLocale, locales } from '@/locales';
 
 import { getOrderEventViews } from './order-events-actions';
@@ -21,6 +23,7 @@ export function ViewOrderEventsButton({ orderId }: ViewOrderEventsButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [, startTransition] = useTransition();
   const [events, setEvents] = useState<OrderEventView[] | null>(null);
+  const [shippingAddress, setShippingAddress] = useState<OrderShippingAddressView | null>(null);
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -36,6 +39,7 @@ export function ViewOrderEventsButton({ orderId }: ViewOrderEventsButtonProps) {
         }
 
         setEvents(result.events ?? []);
+        setShippingAddress(result.shippingAddress ?? null);
       });
     }
   }
@@ -49,6 +53,20 @@ export function ViewOrderEventsButton({ orderId }: ViewOrderEventsButtonProps) {
         <DialogHeader>
           <DialogTitle>{t.admin.orders.viewEventsButton}</DialogTitle>
         </DialogHeader>
+        {shippingAddress ? (
+          <div className="flex flex-col gap-1 rounded-md bg-muted p-3">
+            <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+              {t.admin.orders.shippingAddressLabel}
+            </span>
+            <ShippingAddressSummary
+              recipientName={shippingAddress.recipientName}
+              phone={shippingAddress.phone}
+              postalCode={shippingAddress.postalCode}
+              addressLine1={shippingAddress.addressLine1}
+              addressLine2={shippingAddress.addressLine2}
+            />
+          </div>
+        ) : null}
         {events === null ? (
           <p className="text-sm text-muted-foreground">{t.admin.orders.eventsLoading}</p>
         ) : events.length > 0 ? (

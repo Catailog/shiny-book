@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 
 import { toast } from 'sonner';
 
+import { ShippingAddressSummary } from '@/components/shipping-address-summary';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ import {
 import { useT } from '@/hooks/use-t';
 import { formatDateTime } from '@/lib/format-date';
 import type { ConsumerOrderEventView } from '@/lib/orders/order-event-timeline';
+import type { OrderShippingAddressView } from '@/lib/orders/shipping-address-snapshot';
 
 import { getConsumerOrderHistory } from './order-history-actions';
 
@@ -26,6 +28,7 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
   const [isOpen, setIsOpen] = useState(false);
   const [, startTransition] = useTransition();
   const [events, setEvents] = useState<ConsumerOrderEventView[] | null>(null);
+  const [shippingAddress, setShippingAddress] = useState<OrderShippingAddressView | null>(null);
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -40,6 +43,7 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
         }
 
         setEvents(result.events ?? []);
+        setShippingAddress(result.shippingAddress ?? null);
       });
     }
   }
@@ -55,6 +59,20 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
         <DialogHeader>
           <DialogTitle>{t.consumer.mypage.orders.historyTitle}</DialogTitle>
         </DialogHeader>
+        {shippingAddress ? (
+          <div className="flex flex-col gap-1 rounded-md bg-secondary p-3">
+            <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+              {t.consumer.mypage.orders.shippingAddressLabel}
+            </span>
+            <ShippingAddressSummary
+              recipientName={shippingAddress.recipientName}
+              phone={shippingAddress.phone}
+              postalCode={shippingAddress.postalCode}
+              addressLine1={shippingAddress.addressLine1}
+              addressLine2={shippingAddress.addressLine2}
+            />
+          </div>
+        ) : null}
         {events === null ? (
           <p className="text-sm text-muted-foreground">{t.consumer.mypage.orders.historyLoading}</p>
         ) : events.length > 0 ? (

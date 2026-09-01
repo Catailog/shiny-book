@@ -483,6 +483,7 @@ export const en = {
       eventsLoading: 'Loading...',
       eventsEmpty: 'No history recorded.',
       eventViewError: 'Failed to load the history.',
+      shippingAddressLabel: 'Shipping to',
       statusChangeErrors: {
         unauthorized: 'You do not have permission. Please sign in again.',
         not_allowed: 'This status change is not allowed.',
@@ -1017,6 +1018,7 @@ export const en = {
         historyLoading: 'Loading...',
         historyEmpty: 'No history recorded.',
         historyError: 'Failed to load the history.',
+        shippingAddressLabel: 'Shipping to',
       },
     },
     account: {

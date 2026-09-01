@@ -24,3 +24,38 @@ export function toShippingAddressSnapshot(address: SnapshotSource): ShippingAddr
     ship_address_line2: address.address_line2,
   };
 }
+
+export interface OrderShippingAddressView {
+  recipientName: string | null;
+  phone: string | null;
+  postalCode: string | null;
+  addressLine1: string | null;
+  addressLine2: string | null;
+}
+
+type SnapshotColumns = Pick<
+  Tables<'orders'>,
+  | 'ship_recipient_name'
+  | 'ship_phone'
+  | 'ship_postal_code'
+  | 'ship_address_line1'
+  | 'ship_address_line2'
+>;
+
+// Read an order's stored shipping snapshot back out as a camelCase view for the
+// UI. Returns null when the order has no snapshot (external API orders).
+export function toOrderShippingAddressView(
+  order: SnapshotColumns,
+): OrderShippingAddressView | null {
+  if (order.ship_address_line1 === null && order.ship_recipient_name === null) {
+    return null;
+  }
+
+  return {
+    recipientName: order.ship_recipient_name,
+    phone: order.ship_phone,
+    postalCode: order.ship_postal_code,
+    addressLine1: order.ship_address_line1,
+    addressLine2: order.ship_address_line2,
+  };
+}

@@ -482,6 +482,7 @@ export const ko = {
       eventsLoading: '불러오는 중...',
       eventsEmpty: '기록된 이력이 없습니다.',
       eventViewError: '이력을 불러오지 못했습니다.',
+      shippingAddressLabel: '배송지',
       statusChangeErrors: {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         not_allowed: '허용되지 않는 상태 변경입니다.',
@@ -1017,6 +1018,7 @@ export const ko = {
         historyLoading: '불러오는 중...',
         historyEmpty: '기록된 이력이 없습니다.',
         historyError: '이력을 불러오지 못했습니다.',
+        shippingAddressLabel: '배송지',
       },
     },
     account: {

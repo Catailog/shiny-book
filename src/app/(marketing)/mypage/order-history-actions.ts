@@ -8,11 +8,16 @@ import {
   type ConsumerOrderEventView,
   toConsumerOrderEventViews,
 } from '@/lib/orders/order-event-timeline';
+import {
+  type OrderShippingAddressView,
+  toOrderShippingAddressView,
+} from '@/lib/orders/shipping-address-snapshot';
 import { locales } from '@/locales';
 
 export interface GetConsumerOrderHistoryResult {
   errorCode?: 'unauthorized';
   events?: ConsumerOrderEventView[];
+  shippingAddress?: OrderShippingAddressView | null;
 }
 
 export async function getConsumerOrderHistory(
@@ -30,5 +35,8 @@ export async function getConsumerOrderHistory(
 
   const events = await getOrderEvents(orderId);
   const locale = await getLocale();
-  return { events: toConsumerOrderEventViews(events, locales[locale]) };
+  return {
+    events: toConsumerOrderEventViews(events, locales[locale]),
+    shippingAddress: toOrderShippingAddressView(order),
+  };
 }
