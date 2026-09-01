@@ -477,6 +477,10 @@ export const ko = {
       photosLoading: '불러오는 중...',
       photosEmpty: '업로드된 사진이 없습니다.',
       fileViewError: '파일을 불러오지 못했습니다.',
+      viewEventsButton: '주문 이력',
+      eventsLoading: '불러오는 중...',
+      eventsEmpty: '기록된 이력이 없습니다.',
+      eventViewError: '이력을 불러오지 못했습니다.',
       statusChangeErrors: {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         not_allowed: '허용되지 않는 상태 변경입니다.',

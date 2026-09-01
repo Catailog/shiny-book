@@ -36,6 +36,7 @@ import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
 import { AdvanceOrderStatusButton } from './advance-order-status-button';
 import { RevertOrderStatusButton } from './revert-order-status-button';
+import { ViewOrderEventsButton } from './view-order-events-button';
 import { ViewOrderPhotosButton } from './view-order-photos-button';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
@@ -259,6 +260,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                       <TableCell className="whitespace-normal">
                         {status ? (
                           <div className="flex flex-wrap gap-2">
+                            <ViewOrderEventsButton orderId={order.id} />
                             <RevertOrderStatusButton
                               orderId={order.id}
                               from={status}

@@ -478,6 +478,10 @@ export const en = {
       photosLoading: 'Loading...',
       photosEmpty: 'No photos uploaded.',
       fileViewError: 'Failed to load the file.',
+      viewEventsButton: 'Order history',
+      eventsLoading: 'Loading...',
+      eventsEmpty: 'No history recorded.',
+      eventViewError: 'Failed to load the history.',
       statusChangeErrors: {
         unauthorized: 'You do not have permission. Please sign in again.',
         not_allowed: 'This status change is not allowed.',
