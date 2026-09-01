@@ -21,3 +21,10 @@ export const PHOTO_UPLOAD_ACTION_RATE_LIMIT = {
   MAX_REQUESTS: 40,
   WINDOW: '1 m',
 } as const;
+
+// AI support chat is anonymous, so it is rate limited per IP (plus session when
+// signed in) inside the route.
+export const AI_CHAT_RATE_LIMIT = {
+  MAX_REQUESTS: 20,
+  WINDOW: '10 m',
+} as const;
