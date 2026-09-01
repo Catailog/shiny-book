@@ -15,6 +15,7 @@ export function buildPricingFacts(): string {
 
   return [
     '## 가격 계산',
+    '[[page:pricing]]',
     `Photo-book length: ${PHOTOBOOK_PAGE_COUNT_MIN} to ${PHOTOBOOK_PAGE_COUNT_MAX} pages, chosen in steps of ${PHOTOBOOK_PAGE_COUNT_STEP} pages.`,
     `Per-page add-on: ${won(PRICING.PRICE_PER_PAGE_KRW)} for every page.`,
     `Merchandise price = (the product's base price + page count x ${won(PRICING.PRICE_PER_PAGE_KRW)}) x quantity. Each product's base price is in the 상품 section above.`,

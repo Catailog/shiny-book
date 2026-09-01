@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { AI_KNOWLEDGE_BASE_MAX_CHARS } from '@/constants/ai';
+import { MARKETING_ROUTES } from '@/constants/routes';
 import { buildPricingFacts } from '@/lib/ai/build-pricing-facts';
 import { flattenLocaleSection } from '@/lib/ai/flatten-locale-section';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
@@ -12,13 +13,14 @@ import { type Locale, locales } from '@/locales';
 const FAQ_LIMIT = 100;
 const ANNOUNCEMENT_LIMIT = 30;
 
-// Locale sections that describe the product, pricing, and policies.
-const POLICY_SECTION_KEYS = [
-  'pricing',
-  'layoutGuidelines',
-  'ecoPapers',
-  'sustainability',
-  'shippingPolicy',
+// Locale sections that describe pricing and policies, each with the marketing
+// page a [[page:<slug>]] citation should link to.
+const POLICY_SECTIONS = [
+  { key: 'pricing', route: MARKETING_ROUTES.PRICING },
+  { key: 'layoutGuidelines', route: MARKETING_ROUTES.LAYOUT_GUIDELINES },
+  { key: 'ecoPapers', route: MARKETING_ROUTES.ECO_PAPERS },
+  { key: 'sustainability', route: MARKETING_ROUTES.SUSTAINABILITY },
+  { key: 'shippingPolicy', route: MARKETING_ROUTES.SHIPPING_POLICY },
 ] as const;
 
 // Assemble everything the support assistant is allowed to answer from into one
@@ -65,11 +67,16 @@ export async function buildKnowledgeBase(locale: Locale): Promise<string> {
     );
   }
 
-  const policyText = POLICY_SECTION_KEYS.map((key) => flattenLocaleSection(t[key]))
-    .filter((part) => part.trim().length > 0)
-    .join('\n\n');
-  if (policyText.length > 0) {
-    sections.push(`## 정책/안내\n${policyText}`);
+  const policyEntries = POLICY_SECTIONS.map((section) => ({
+    slug: section.route.replace(/^\//, ''),
+    text: flattenLocaleSection(t[section.key]),
+  })).filter((entry) => entry.text.trim().length > 0);
+  if (policyEntries.length > 0) {
+    sections.push(
+      `## 정책/안내\n${policyEntries
+        .map((entry) => `[[page:${entry.slug}]] ${entry.text}`)
+        .join('\n\n')}`,
+    );
   }
 
   const knowledgeBase = sections.join('\n\n');
