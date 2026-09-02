@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { PRICING } from '@/constants/pricing';
-import { getAddressById } from '@/lib/addresses/get-address-by-id';
 import { calculateShippingFee } from '@/lib/orders/calculate-shipping-fee';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { getProductById } from '@/lib/products/get-product-by-id';
@@ -17,22 +16,18 @@ export interface OrderPaymentSummary {
 
 export async function getOrderPaymentSummary(orderId: string): Promise<OrderPaymentSummary | null> {
   const order = await getOrderById(orderId);
-  if (!order || !order.product_id || !order.address_id || order.page_count === null) {
+  if (!order || !order.product_id || order.ship_postal_code === null || order.page_count === null) {
     return null;
   }
 
-  const [product, address] = await Promise.all([
-    getProductById(order.product_id),
-    getAddressById(order.address_id),
-  ]);
-
-  if (!product || !address) {
+  const product = await getProductById(order.product_id);
+  if (!product) {
     return null;
   }
 
   const merchandiseAmount =
     (product.price + order.page_count * PRICING.PRICE_PER_PAGE_KRW) * order.quantity;
-  const shippingFee = calculateShippingFee(address.postal_code, merchandiseAmount);
+  const shippingFee = calculateShippingFee(order.ship_postal_code, merchandiseAmount);
 
   let couponCode: string | null = null;
   if (order.coupon_id) {

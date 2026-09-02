@@ -1,17 +1,20 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRINT_JOB_STATUS, isPrintJobStatus } from '@/constants/print-job-status';
 import { SHIPMENT_JOB_STATUS, isShipmentJobStatus } from '@/constants/shipment-job-status';
 import { VENDOR_TYPES, VENDOR_WEBHOOK_SECRET } from '@/constants/vendor-webhook';
+import { withRequestContext } from '@/lib/api/with-request-context';
+import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { markWebhookEventProcessed } from '@/lib/webhooks/check-webhook-idempotency';
 import { parseVendorWebhook } from '@/lib/webhooks/parse-vendor-webhook';
 import { verifyHmacSignature } from '@/lib/webhooks/verify-hmac-signature';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const signature = request.headers.get('x-vendor-webhook-signature');
   const eventId = request.headers.get('x-vendor-webhook-event-id');
   const rawBody = await request.text();
@@ -51,8 +54,21 @@ export async function POST(request: NextRequest) {
       .select()
       .maybeSingle();
 
+    if (printJob) {
+      await recordOrderEvent({
+        orderId: printJob.order_id,
+        eventType: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+        source: ORDER_EVENT_SOURCE.WEBHOOK,
+        actor: 'webhook:print-shop',
+        metadata: { provider: 'vendor', eventId },
+      });
+    }
+
     if (printJob && event.status === PRINT_JOB_STATUS.DONE) {
-      await transitionOrderStatus(printJob.order_id, ORDER_STATUS.PRINTING, ORDER_STATUS.BINDING);
+      await transitionOrderStatus(printJob.order_id, ORDER_STATUS.PRINTING, ORDER_STATUS.BINDING, {
+        source: ORDER_EVENT_SOURCE.WEBHOOK,
+        actor: 'webhook:print-shop',
+      });
     }
   } else if (event.vendor === VENDOR_TYPES.COURIER) {
     if (!isShipmentJobStatus(event.status)) {
@@ -66,14 +82,27 @@ export async function POST(request: NextRequest) {
       .select()
       .maybeSingle();
 
+    if (shipmentJob) {
+      await recordOrderEvent({
+        orderId: shipmentJob.order_id,
+        eventType: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+        source: ORDER_EVENT_SOURCE.WEBHOOK,
+        actor: 'webhook:courier',
+        metadata: { provider: 'vendor', eventId, shipmentStatus: event.status },
+      });
+    }
+
     if (shipmentJob && event.status === SHIPMENT_JOB_STATUS.DELIVERED) {
       await transitionOrderStatus(
         shipmentJob.order_id,
         ORDER_STATUS.SHIPPING,
         ORDER_STATUS.COMPLETED,
+        { source: ORDER_EVENT_SOURCE.WEBHOOK, actor: 'webhook:courier' },
       );
     }
   }
 
   return NextResponse.json({ received: true }, { status: 200 });
 }
+
+export const POST = withRequestContext(postHandler);

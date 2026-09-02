@@ -22,12 +22,17 @@ function SheetClose({ ...props }: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
+// `fill-mode-forwards` holds the exit animation's end state (opacity 0) until
+// the sheet unmounts. The overlay fade runs 100ms but base-ui keeps it mounted
+// until the longer content slide-out finishes; without a forwards fill the
+// overlay reverts to opacity 1 in that gap and flashes on every close - that
+// was the flicker.
 function SheetOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) {
   return (
     <DialogPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        'fixed inset-0 z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0',
+        'fixed inset-0 z-50 bg-black/10 duration-100 fill-mode-forwards supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0',
         className,
       )}
       {...props}
@@ -40,10 +45,12 @@ function SheetContent({
   children,
   title,
   showCloseButton = true,
+  side = 'left',
   ...props
 }: DialogPrimitive.Popup.Props & {
   title: string;
   showCloseButton?: boolean;
+  side?: 'left' | 'right';
 }) {
   return (
     <SheetPortal>
@@ -51,7 +58,10 @@ function SheetContent({
       <DialogPrimitive.Popup
         data-slot="sheet-content"
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex h-full w-3/4 max-w-xs flex-col gap-4 bg-popover p-4 text-sm text-popover-foreground shadow-lg outline-none data-open:animate-in data-open:slide-in-from-left data-closed:animate-out data-closed:slide-out-to-left',
+          'fixed inset-y-0 z-50 flex h-full w-3/4 max-w-xs flex-col gap-4 bg-popover p-4 text-sm text-popover-foreground shadow-lg outline-none data-open:animate-in data-closed:animate-out',
+          side === 'left'
+            ? 'left-0 data-open:slide-in-from-left data-closed:slide-out-to-left'
+            : 'right-0 data-open:slide-in-from-right data-closed:slide-out-to-right',
           className,
         )}
         {...props}

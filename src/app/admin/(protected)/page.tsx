@@ -23,8 +23,10 @@ import {
 import { ORDER_SEARCH_FIELD, isOrderSearchField } from '@/constants/order-search';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
 import { ADMIN_PAGE_SIZE_OPTIONS, DEFAULT_LIST_PAGE_SIZE } from '@/constants/pagination';
+import { isRefundableOrderStatus } from '@/constants/refund';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
+import { env } from '@/env';
 import { getCoupons } from '@/lib/coupons/get-coupons';
 import { formatIdPrefix } from '@/lib/format-id-prefix';
 import { getOrders } from '@/lib/orders/get-orders';
@@ -34,8 +36,7 @@ import { defaultLocale, locales } from '@/locales';
 
 import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
-import { AdvanceOrderStatusButton } from './advance-order-status-button';
-import { RevertOrderStatusButton } from './revert-order-status-button';
+import { OrderActionsMenu } from './order-actions-menu';
 import { ViewOrderPhotosButton } from './view-order-photos-button';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
@@ -53,6 +54,7 @@ const STATUS_FILTER_VALUES: readonly OrderStatus[] = [
   ORDER_STATUS.SHIPPING,
   ORDER_STATUS.COMPLETED,
   ORDER_STATUS.CANCELLED,
+  ORDER_STATUS.REFUNDED,
 ];
 
 export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
@@ -66,6 +68,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
     : ORDER_SEARCH_FIELD.TITLE;
   const query = firstSearchParam(searchParams.q).trim().slice(0, ADMIN_SEARCH_QUERY_MAX_LENGTH);
 
+  const showSimulator = env.NODE_ENV !== 'production';
   const [allOrders, coupons] = await Promise.all([getOrders(), getCoupons()]);
   const filteredOrders = allOrders.filter((order) => {
     const matchesFilter = activeFilter === null || order.status === activeFilter;
@@ -109,11 +112,12 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
       return (
         order.status !== ORDER_STATUS.AWAITING_PAYMENT &&
         order.status !== ORDER_STATUS.CANCELLED &&
+        order.status !== ORDER_STATUS.REFUNDED &&
         createdAt.getFullYear() === now.getFullYear() &&
         createdAt.getMonth() === now.getMonth()
       );
     })
-    .reduce((sum, order) => sum + order.amount, 0);
+    .reduce((sum, order) => sum + (order.amount - order.refunded_amount), 0);
   const activeCoupons = coupons.filter((coupon) => coupon.is_active);
 
   const kpis = [
@@ -206,7 +210,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                   <TableHead className="w-24">{t.admin.orders.columns.status}</TableHead>
                   <TableHead className="w-28">{t.admin.orders.columns.files}</TableHead>
                   <TableHead className="w-28">{t.admin.orders.columns.createdAt}</TableHead>
-                  <TableHead className="w-56">{t.admin.orders.columns.actions}</TableHead>
+                  <TableHead className="w-20">{t.admin.orders.columns.actions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -256,20 +260,18 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                       <TableCell className="text-muted-foreground">
                         <RelativeDate value={order.created_at} locale={defaultLocale} />
                       </TableCell>
-                      <TableCell className="whitespace-normal">
+                      <TableCell>
                         {status ? (
-                          <div className="flex flex-wrap gap-2">
-                            <RevertOrderStatusButton
-                              orderId={order.id}
-                              from={status}
-                              to={previousStatus}
-                            />
-                            <AdvanceOrderStatusButton
-                              orderId={order.id}
-                              from={status}
-                              to={nextStatus ?? null}
-                            />
-                          </div>
+                          <OrderActionsMenu
+                            orderId={order.id}
+                            status={status}
+                            previousStatus={previousStatus}
+                            nextStatus={nextStatus ?? null}
+                            orderAmount={order.amount}
+                            refundedAmount={order.refunded_amount}
+                            isRefundable={isRefundableOrderStatus(status)}
+                            showSimulator={showSimulator}
+                          />
                         ) : (
                           <span className="text-muted-foreground">-</span>
                         )}

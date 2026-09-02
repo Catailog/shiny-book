@@ -9,7 +9,8 @@ export async function getSoldBookCount(): Promise<number> {
     .from('orders')
     .select('quantity')
     .neq('status', ORDER_STATUS.AWAITING_PAYMENT)
-    .neq('status', ORDER_STATUS.CANCELLED);
+    .neq('status', ORDER_STATUS.CANCELLED)
+    .neq('status', ORDER_STATUS.REFUNDED);
 
   if (!data) {
     return 0;

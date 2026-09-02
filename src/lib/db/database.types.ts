@@ -269,6 +269,53 @@ export type Database = {
           },
         ];
       };
+      order_events: {
+        Row: {
+          actor: string;
+          created_at: string;
+          event_type: string;
+          from_status: string | null;
+          id: string;
+          metadata: Json;
+          order_id: string;
+          reason: string | null;
+          source: string;
+          to_status: string | null;
+        };
+        Insert: {
+          actor?: string;
+          created_at?: string;
+          event_type: string;
+          from_status?: string | null;
+          id?: string;
+          metadata?: Json;
+          order_id: string;
+          reason?: string | null;
+          source: string;
+          to_status?: string | null;
+        };
+        Update: {
+          actor?: string;
+          created_at?: string;
+          event_type?: string;
+          from_status?: string | null;
+          id?: string;
+          metadata?: Json;
+          order_id?: string;
+          reason?: string | null;
+          source?: string;
+          to_status?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'order_events_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       order_photos: {
         Row: {
           created_at: string;
@@ -313,8 +360,15 @@ export type Database = {
           id: string;
           manuscript_file_url: string | null;
           page_count: number | null;
+          payment_key: string | null;
           product_id: string | null;
           quantity: number;
+          refunded_amount: number;
+          ship_address_line1: string | null;
+          ship_address_line2: string | null;
+          ship_phone: string | null;
+          ship_postal_code: string | null;
+          ship_recipient_name: string | null;
           status: string;
           title: string;
           updated_at: string;
@@ -330,8 +384,15 @@ export type Database = {
           id?: string;
           manuscript_file_url?: string | null;
           page_count?: number | null;
+          payment_key?: string | null;
           product_id?: string | null;
           quantity: number;
+          refunded_amount?: number;
+          ship_address_line1?: string | null;
+          ship_address_line2?: string | null;
+          ship_phone?: string | null;
+          ship_postal_code?: string | null;
+          ship_recipient_name?: string | null;
           status?: string;
           title: string;
           updated_at?: string;
@@ -347,8 +408,15 @@ export type Database = {
           id?: string;
           manuscript_file_url?: string | null;
           page_count?: number | null;
+          payment_key?: string | null;
           product_id?: string | null;
           quantity?: number;
+          refunded_amount?: number;
+          ship_address_line1?: string | null;
+          ship_address_line2?: string | null;
+          ship_phone?: string | null;
+          ship_postal_code?: string | null;
+          ship_recipient_name?: string | null;
           status?: string;
           title?: string;
           updated_at?: string;
@@ -502,6 +570,59 @@ export type Database = {
           updated_at?: string | null;
         };
         Relationships: [];
+      };
+      refund_requests: {
+        Row: {
+          amount: number | null;
+          created_at: string;
+          id: string;
+          order_id: string;
+          reason: string;
+          requested_by: string;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          toss_transaction_key: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          amount?: number | null;
+          created_at?: string;
+          id?: string;
+          order_id: string;
+          reason: string;
+          requested_by: string;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          toss_transaction_key?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number | null;
+          created_at?: string;
+          id?: string;
+          order_id?: string;
+          reason?: string;
+          requested_by?: string;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          toss_transaction_key?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'refund_requests_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       reviews: {
         Row: {

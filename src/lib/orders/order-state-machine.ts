@@ -8,6 +8,9 @@ const ALLOWED_TRANSITIONS: Record<OrderStatus, readonly OrderStatus[]> = {
   [ORDER_STATUS.SHIPPING]: [ORDER_STATUS.COMPLETED],
   [ORDER_STATUS.COMPLETED]: [],
   [ORDER_STATUS.CANCELLED]: [],
+  // Refunds are processed outside this fulfillment state machine (see
+  // lib/refunds/process-refund); `refunded` is only ever a terminal state here.
+  [ORDER_STATUS.REFUNDED]: [],
 };
 
 export function getNextStatuses(from: OrderStatus): readonly OrderStatus[] {
@@ -26,6 +29,7 @@ const REVERT_TRANSITIONS: Record<OrderStatus, OrderStatus | null> = {
   [ORDER_STATUS.SHIPPING]: ORDER_STATUS.BINDING,
   [ORDER_STATUS.COMPLETED]: ORDER_STATUS.SHIPPING,
   [ORDER_STATUS.CANCELLED]: null,
+  [ORDER_STATUS.REFUNDED]: null,
 };
 
 export function getPreviousStatus(from: OrderStatus): OrderStatus | null {

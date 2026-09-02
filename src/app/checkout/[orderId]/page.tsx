@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { CancelOrderButton } from '@/components/cancel-order-button';
+import { ShippingAddressSummary } from '@/components/shipping-address-summary';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { env } from '@/env';
 import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
@@ -51,6 +52,23 @@ export default async function CheckoutPage(props: PageProps<'/checkout/[orderId]
             </p>
           </div>
         </div>
+        {order.ship_address_line1 ? (
+          <>
+            <div className="h-px w-full bg-border" />
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                {t.checkout.shippingAddressLabel}
+              </span>
+              <ShippingAddressSummary
+                recipientName={order.ship_recipient_name}
+                phone={order.ship_phone}
+                postalCode={order.ship_postal_code}
+                addressLine1={order.ship_address_line1}
+                addressLine2={order.ship_address_line2}
+              />
+            </div>
+          </>
+        ) : null}
         <div className="h-px w-full bg-border" />
         {paymentSummary ? (
           <div className="flex flex-col gap-2 text-sm">

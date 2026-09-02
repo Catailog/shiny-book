@@ -9,6 +9,7 @@ export const ADMIN_ROUTES = {
   FAQS: '/admin/faqs',
   FAQS_NEW: '/admin/faqs/new',
   INQUIRIES: '/admin/inquiries',
+  REFUNDS: '/admin/refunds',
   PRODUCTS: '/admin/products',
   PRODUCTS_NEW: '/admin/products/new',
 } as const;
@@ -26,6 +27,10 @@ export const CONSUMER_ROUTES = {
 
 export const NOTICE_ROUTES = {
   LIST: '/notices',
+} as const;
+
+export const API_ROUTES = {
+  AI_CHAT: '/api/ai/chat',
 } as const;
 
 export const FAQ_ROUTES = {

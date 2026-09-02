@@ -18,6 +18,7 @@ import {
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
+import type { OrderEventType } from '@/constants/order-event';
 import type { OrderStatus } from '@/constants/order-status';
 import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 import {
@@ -27,6 +28,7 @@ import {
   PRODUCT_SIZE_MAX_LENGTH,
   PRODUCT_SLUG_MAX_LENGTH,
 } from '@/constants/product';
+import type { ShipmentJobStatus } from '@/constants/shipment-job-status';
 
 export const en = {
   common: {
@@ -245,7 +247,21 @@ export const en = {
     shipping: 'Shipping',
     completed: 'Completed',
     cancelled: 'Cancelled',
+    refunded: 'Refunded',
   } satisfies Record<OrderStatus, string>,
+  orderEvent: {
+    'order.created': 'Order created',
+    'order.status_changed': 'Status changed',
+    'webhook.received': 'External system event received',
+    'notification.sent': 'Notification sent',
+    'admin.note': 'Admin note',
+    'refund.completed': 'Refund completed',
+  } satisfies Record<OrderEventType, string>,
+  shipmentStatus: {
+    received: 'Picked up by courier',
+    in_transit: 'In transit',
+    delivered: 'Delivered',
+  } satisfies Record<ShipmentJobStatus, string>,
   announcementCategories: {
     notice: 'Notice',
     event: 'Event',
@@ -258,7 +274,26 @@ export const en = {
     VALIDATION_FAILED: 'The input is invalid.',
     RATE_LIMITED: 'Too many requests. Please try again later.',
     INTERNAL_ERROR: 'Something went wrong. Please try again.',
+    AI_UNAVAILABLE: 'Could not generate an AI response.',
   } satisfies Record<ApiErrorCode, string>,
+  ai: {
+    triggerLabel: 'AI assistant',
+    panelTitle: 'AI assistant',
+    panelDescription: 'Ask about our products, production, shipping, and pricing.',
+    greeting:
+      'Hi! Ask me anything about Shiny Book. I can help with products, the production process, shipping, and pricing.',
+    inputPlaceholder: 'Type a message',
+    sendLabel: 'Send',
+    thinking: 'The AI is writing a reply',
+    errorMessage: 'Could not generate a reply. Please try again in a moment.',
+    inquiryPrompt: 'Need more help?',
+    inquiryLink: 'Contact support',
+    disclaimer: 'AI answers are for reference and may differ from actual details.',
+    sourceFaq: 'Related FAQ',
+    sourceNotice: 'Related notice',
+    sourcePage: 'Related page',
+    clearChat: 'New chat',
+  },
   checkout: {
     title: 'Checkout',
     backButton: 'Back',
@@ -281,6 +316,7 @@ export const en = {
     amountLabel: 'Amount',
     merchandiseAmountLabel: 'Merchandise amount',
     shippingFeeLabel: 'Shipping fee',
+    shippingAddressLabel: 'Shipping to',
     coupon: {
       label: 'Coupon code',
       applyButton: 'Apply',
@@ -382,7 +418,36 @@ export const en = {
       announcements: 'Announcements',
       faqs: 'FAQs',
       inquiries: 'Inquiries',
+      refunds: 'Refunds',
       logout: 'Logout',
+    },
+    refunds: {
+      title: 'Refunds',
+      empty: 'No refunds yet.',
+      fullAmountLabel: 'Full',
+      adminInitiatedLabel: 'Admin refund',
+      table: {
+        order: 'Order',
+        note: 'Note',
+        amount: 'Refund amount',
+        status: 'Status',
+        processedAt: 'Processed',
+      },
+      status: {
+        approved: 'Approved',
+        completed: 'Completed',
+        failed: 'Failed',
+      },
+      retry: {
+        button: 'Retry',
+        success: 'Refund processing re-run.',
+        errors: {
+          unauthorized: 'You do not have permission.',
+          not_found: 'Request not found.',
+          not_processable: 'This refund cannot be retried.',
+          process_failed: 'The payment cancellation failed.',
+        },
+      },
     },
     login: {
       title: 'Admin login',
@@ -470,10 +535,51 @@ export const en = {
       photosLoading: 'Loading...',
       photosEmpty: 'No photos uploaded.',
       fileViewError: 'Failed to load the file.',
+      viewEventsButton: 'Order history',
+      eventsLoading: 'Loading...',
+      eventsEmpty: 'No history recorded.',
+      eventViewError: 'Failed to load the history.',
+      shippingAddressLabel: 'Shipping to',
+      refund: {
+        button: 'Refund',
+        dialogTitle: 'Refund order',
+        remainingLabel: 'Refundable amount:',
+        amountLabel: 'Refund amount (optional)',
+        amountHint: 'Leave blank for a full refund',
+        amountInvalid: 'Enter a positive whole number.',
+        amountTooLarge: 'The amount exceeds what can be refunded.',
+        noteLabel: 'Note (optional)',
+        cancel: 'Close',
+        confirm: 'Process refund',
+        submitting: 'Processing...',
+        success: 'The refund has been processed.',
+        errors: {
+          unauthorized: 'You do not have permission.',
+          validation_failed: 'Please check your input.',
+          order_not_found: 'Order not found.',
+          not_refundable: 'This order cannot be refunded in its current state.',
+          amount_exceeds_remaining: 'The amount exceeds what can be refunded.',
+          process_failed: 'The payment cancellation failed. Please retry from Refunds.',
+          failed: 'The refund failed.',
+        },
+      },
       statusChangeErrors: {
         unauthorized: 'You do not have permission. Please sign in again.',
         not_allowed: 'This status change is not allowed.',
         conflict: 'This order was already updated elsewhere. Please refresh and try again.',
+      },
+      actionsMenuLabel: 'Manage',
+      simulateShipment: {
+        button: 'Simulate shipment',
+        success: 'Shipment advanced to:',
+        errors: {
+          disabled: 'Not available in production.',
+          unauthorized: 'You do not have permission.',
+          not_found: 'Order not found.',
+          not_shippable: 'This order is not at the shipping stage. Only binding or shipping works.',
+          already_delivered: 'Already delivered.',
+          failed: 'The shipment simulation failed.',
+        },
       },
     },
     coupons: {
@@ -999,6 +1105,14 @@ export const en = {
         reviewDoneLink: 'Review done',
         inquiryLink: 'Ask',
         payLink: 'Pay now',
+        historyButton: 'Progress history',
+        historyTitle: 'Order progress history',
+        historyLoading: 'Loading...',
+        historyEmpty: 'No history recorded.',
+        historyError: 'Failed to load the history.',
+        shippingAddressLabel: 'Shipping to',
+        trackingLabel: 'Shipment tracking',
+        trackingNumberLabel: 'Tracking number',
       },
     },
     account: {

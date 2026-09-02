@@ -21,6 +21,8 @@ import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
 import { getReviewsByConsumer } from '@/lib/reviews/get-reviews-by-consumer';
 import { locales } from '@/locales';
 
+import { ConsumerOrderHistoryButton } from './consumer-order-history-button';
+
 const IN_PROGRESS_STATUSES = new Set<string>([
   ORDER_STATUS.PAID,
   ORDER_STATUS.PRINTING,
@@ -135,7 +137,10 @@ export default async function MypagePage() {
                     </TableCell>
                     <TableCell>₩{order.amount.toLocaleString()}</TableCell>
                     <TableCell>
-                      {status ? <OrderStatusBadge status={status} /> : order.status}
+                      <div className="flex flex-col items-start gap-1">
+                        {status ? <OrderStatusBadge status={status} /> : order.status}
+                        <ConsumerOrderHistoryButton orderId={order.id} />
+                      </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       <RelativeDate value={order.created_at} locale={locale} />

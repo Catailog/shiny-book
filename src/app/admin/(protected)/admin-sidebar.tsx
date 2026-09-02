@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Package,
   Tag,
+  Undo2,
   Volume2,
 } from 'lucide-react';
 
@@ -33,6 +34,7 @@ export function AdminSidebar({ signOutAction }: AdminSidebarProps) {
     { href: ADMIN_ROUTES.ANNOUNCEMENTS, label: t.admin.nav.announcements, icon: Volume2 },
     { href: ADMIN_ROUTES.FAQS, label: t.admin.nav.faqs, icon: HelpCircle },
     { href: ADMIN_ROUTES.INQUIRIES, label: t.admin.nav.inquiries, icon: MessageSquare },
+    { href: ADMIN_ROUTES.REFUNDS, label: t.admin.nav.refunds, icon: Undo2 },
   ];
 
   return (

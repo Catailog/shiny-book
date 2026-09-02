@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -15,6 +17,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 export interface NavLinkEntry {
@@ -36,12 +39,19 @@ interface NavLinksProps {
   entries: NavEntry[];
   openMenuLabel: string;
   menuTitle: string;
+  mobileActions?: ReactNode;
 }
 
 const NAV_ITEM_CLASSNAME = 'rounded-none bg-transparent px-3 py-1.5 text-sm font-medium';
 const SHEET_LINK_CLASSNAME = 'rounded-md px-3 py-2 text-sm font-medium';
 
-export function NavLinks({ brandName, entries, openMenuLabel, menuTitle }: NavLinksProps) {
+export function NavLinks({
+  brandName,
+  entries,
+  openMenuLabel,
+  menuTitle,
+  mobileActions,
+}: NavLinksProps) {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
@@ -107,6 +117,13 @@ export function NavLinks({ brandName, entries, openMenuLabel, menuTitle }: NavLi
                 );
               })}
             </nav>
+            {mobileActions ? (
+              <TooltipProvider>
+                <div className="mt-auto flex items-center gap-1 border-t border-border pt-4">
+                  {mobileActions}
+                </div>
+              </TooltipProvider>
+            ) : null}
           </SheetContent>
         </Sheet>
         <Link href="/" className="flex items-center gap-2">

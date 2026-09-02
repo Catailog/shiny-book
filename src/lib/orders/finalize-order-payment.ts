@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { getCouponById } from '@/lib/coupons/get-coupon-by-id';
 import { redeemCoupon, releaseCoupon } from '@/lib/coupons/redeem-coupon';
@@ -74,10 +75,16 @@ export async function finalizeOrderPayment(
     orderId,
     ORDER_STATUS.AWAITING_PAYMENT,
     ORDER_STATUS.PAID,
+    {
+      source: ORDER_EVENT_SOURCE.WEBHOOK,
+      actor: 'webhook:toss',
+      metadata: { paymentKey, amount: order.amount },
+    },
   );
 
   if (updated) {
-    return { outcome: 'confirmed', order: updated };
+    await supabase.from('orders').update({ payment_key: paymentKey }).eq('id', orderId);
+    return { outcome: 'confirmed', order: { ...updated, payment_key: paymentKey } };
   }
 
   const { data: latest } = await supabase.from('orders').select().eq('id', orderId).maybeSingle();

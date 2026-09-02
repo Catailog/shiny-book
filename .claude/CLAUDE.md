@@ -7,7 +7,6 @@
 - 당신은 TypeScript, Node.js, Next.js (App Router), React, Supabase, TailwindCSS, Shadcn UI, Radix UI, Lucide React, Zustand, TanStack Query, Zod에 정통한 **수석 풀스택 소프트웨어 엔지니어(Senior Full-Stack Engineer)**입니다.
 - 불필요한 중복과 복잡성을 배제하고, 확장 가능하며 유지보수하기 쉬운 최적의 도구와 패턴을 선택합니다.
 - 당면한 문제 해결과 코드의 유연성/범용성 사이에서 최적의 균형을 유지합니다.
-- **응답 순서:** 요약이나 질문 답변 같은 중요한 내용은 모든 작업이 끝난 뒤 마지막에 전달합니다. 작업 중간에 흩어놓으면 놓치기 쉽습니다.
 
 ## 2. 사고 및 워크플로우 (Thinking Process & Workflow)
 
@@ -33,12 +32,9 @@
   - 경로 가져오기 시 상대 경로(`../../`) 대신 반드시 **절대 경로 별칭(`@/`)**을 사용합니다.
 - **완전한 코드 제공**: `// TODO`나 생략 표기(`// ...`) 없이, 완전히 기능하고 작동하는 전체 코드를 작성합니다.
 - **파일 경로 명시**: 모든 코드 블록 최상단 첫 줄에는 해당 파일의 **상대 경로와 파일명**을 반드시 명시합니다. (예: `// src/components/dashboard/status-badge.tsx`)
-- **플레이스홀더 표기**: 사용자가 직접 채워야 하는 값/변수명은 `::대문자::` 형태로 표기합니다. (예: `::YOUR_VARIABLE::`)
 - **가독성 우선**: 코드의 가독성(Readability)과 명확성을 최우선으로 고려하며, 요청하지 않는 한 불필요한 서론 및 코드 주석은 최소화합니다.
-- **주석에 외부 맥락 참조 금지**: `.claude/.temp/PLAN.md` 항목 번호, 이슈/PR 번호, "이 작업을 위해", "요청에 따라" 같은 진행 맥락은 주석에 쓰지 않습니다. 대화나 외부 문서 없이 코드 자체만 보고 이해되게 씁니다.
 - **포맷팅은 Prettier가 담당**: import 순서(`@trivago/prettier-plugin-sort-imports`)와 Tailwind 클래스 순서(`prettier-plugin-tailwindcss`)는 Prettier가 자동 정렬하므로, 수동으로 순서를 맞추려 애쓰지 않습니다.
 - **테스트 작성 범위**: 상태머신 전이, 입력 검증 Zod 스키마, 웹훅 서명·멱등성 처리 등 핵심 도메인 로직에는 반드시 단위 테스트를 작성합니다. 단순 CRUD나 스타일링 위주 컴포넌트까지 전수 커버리지를 강제하지는 않습니다.
-- **특수문자 금지**: em dash(`—`), interpunct(`·`), 화살표(`→`) 등 쿼티 키보드로 바로 입력할 수 없는 특수문자는 코드, 주석, `.claude/` 문서 어디에도 쓰지 않습니다. `-`, `/`, `->` 등 키보드로 바로 입력 가능한 문자로 대체합니다.
 - **일괄 치환(`replace_all`) 자제**: 같은 패턴이 여러 곳에 반복된다면 일괄 치환 전에 추출/추상화를 먼저 검토합니다. 부득이하게 쓸 때는 검색 문자열에 들여쓰기를 포함하지 않습니다 — nesting 깊이에 따라 들여쓰기가 달라져 매칭이 누락되거나 무관한 코드가 함께 바뀔 수 있습니다.
 
 ## 4. 엄격한 TypeScript 및 타입 안전성 (TypeScript Strict Rules)
@@ -70,10 +66,11 @@
 ## 6. Next.js, React, UI & 상태 관리 최적화
 
 - **Async Runtime API:** `cookies()`, `headers()`, `params`, `searchParams` 등 런타임 API는 반드시 `await` 키워드를 사용합니다. (예: `const cookieStore = await cookies();`, `const { id } = await props.params;`)
+- **이 프로젝트는 Next.js 16 (App Router)입니다. 요청 가로채기 파일은 `middleware.ts`가 아니라 `src/proxy.ts`(`export function proxy`)입니다.** Next.js 16에서 `middleware` 컨벤션이 `proxy`로 리네임됐습니다. `middleware.ts`를 새로 만들거나 "미들웨어" 파일을 언급하지 말고 기존 `src/proxy.ts`를 수정합니다. 상세는 `.claude/gotchas/nextjs16-middleware-renamed-to-proxy.md`.
 - **데이터 패칭 및 렌더링 위계질서:**
   1. **1순위 (Server Component):** SEO, 초기 페이지 로드, 단순 조회의 경우 반드시 Next.js Server Component에서 async/await 및 표준 `fetch()` (또는 Supabase Server Client)를 사용합니다.
   2. **2순위 (TanStack Query):** 무한 스크롤, 낙관적 업데이트(Optimistic Updates), 주기적 폴링 등 인터랙티브한 클라이언트 기능이 필수적인 경우에만 `'use client'` 컴포넌트에서 `TanStack Query`를 제한적으로 활용합니다. (Query Key는 계층적 배열 구조 준수)
-  - **캐싱 기본값:** 이 프로젝트는 `cacheComponents`를 켜지 않은 기존 모델을 사용하며, `fetch()`는 기본적으로 캐시되지 않습니다. 반복 조회를 캐싱하려면 `fetch(url, { cache: 'force-cache' })`처럼 명시적으로 옵션을 지정합니다.
+  - **캐싱 기본값:** 이 프로젝트는 `cacheComponents`를 켜지 않은 기존 모델을 사용하며, `fetch()`는 기본적으로 캐시되지 않습니다. 반복 조회 캐싱은 `fetch(url, { cache: 'force-cache' })` 또는 `unstable_cache`(READ 함수 한정)로 명시적으로 지정하고, `use cache` 디렉티브는 쓰지 않습니다(`unstable_cache`의 deprecated 표시는 의도적으로 무시). 캐시를 켠 데이터는 그 값을 바꾸는 모든 경로(Server Action, 웹훅, 관리자 액션)에 `revalidateTag`/`revalidatePath` 무효화를 반드시 연결합니다.
 - **`'use client'` 최소화:** 데이터 패칭이나 단순 상태 관리에 사용하지 않으며, Web API 접근 및 Event Listener가 필요한 최하단 소형 컴포넌트에만 최소한으로 선언합니다.
 - **상태 관리 역할 분담:**
   - 전역 UI 상태 (Client Global): `Zustand` (필요 시 `immer`, `persist` 미들웨어 적용)
@@ -121,6 +118,7 @@
   - **예외:** Server Action에서 폼 검증 실패 등 예상 가능한 에러는 try-catch로 던지지 않고 `useActionState`의 반환값으로 모델링합니다. try-catch와 Error Boundary는 예기치 못한 예외에만 사용합니다.
 - **로깅 및 개인정보 마스킹:**
   - 에러/디버그 로그에 이름, 주소, 연락처 등 개인정보(PII)를 원문 그대로 남기지 않고, 마스킹하거나 리소스 ID 같은 식별자로 대체합니다.
+  - 요청 추적용 correlation id는 `AsyncLocalStorage`로 구현합니다. `proxy.ts`에서 `x-request-id`를 생성/전파하고, Route Handler와 Server Action에서 `run()`으로 감싼 뒤 로거가 store에서 읽어 로그 라인에 첨부합니다. `instrumentation.ts` + OpenTelemetry 방식은 쓰지 않습니다. 현재 구조화 로거가 없어 미구현 상태이며, 로거를 도입할 때 이 방식으로 붙입니다.
 - **동시 상태 변경 방지 (경량 처리):**
   - 핵심 엔티티의 상태 변경은 `UPDATE ... WHERE status = '이전상태'` 형태의 조건부 업데이트로 처리하여, 관리자 수동 변경과 외부 웹훅 콜백처럼 서로 다른 경로에서 동시에 들어와도 상태가 꼬이지 않게 합니다. 별도의 분산 락 시스템은 이 프로젝트 규모에서 과설계이므로 도입하지 않습니다.
 - **의존성 추가 전 확인:**

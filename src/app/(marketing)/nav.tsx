@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { Shield } from 'lucide-react';
 
+import { AiAssistant } from '@/components/ai-assistant/ai-assistant';
 import { Coachmark, CoachmarkSpot } from '@/components/coachmark';
 import { LanguageToggle } from '@/components/language-toggle';
 import { SiteContainer } from '@/components/site-container';
@@ -76,14 +77,26 @@ export async function Nav() {
           entries={navEntries}
           openMenuLabel={t.site.nav.openMenu}
           menuTitle={t.site.nav.menuTitle}
+          mobileActions={
+            <>
+              <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
+              <ThemeToggle
+                switchToLightLabel={t.site.nav.switchToLightMode}
+                switchToDarkLabel={t.site.nav.switchToDarkMode}
+              />
+            </>
+          }
         />
         <TooltipProvider>
           <div className="flex items-center gap-1">
-            <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
-            <ThemeToggle
-              switchToLightLabel={t.site.nav.switchToLightMode}
-              switchToDarkLabel={t.site.nav.switchToDarkMode}
-            />
+            <AiAssistant />
+            <div className="hidden items-center gap-1 md:flex">
+              <LanguageToggle locale={locale} label={t.site.nav.changeLanguage} />
+              <ThemeToggle
+                switchToLightLabel={t.site.nav.switchToLightMode}
+                switchToDarkLabel={t.site.nav.switchToDarkMode}
+              />
+            </div>
             {isConsumer ? (
               <>
                 <NavAuthIcons

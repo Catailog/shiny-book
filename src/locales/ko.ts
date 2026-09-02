@@ -18,6 +18,7 @@ import {
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
+import type { OrderEventType } from '@/constants/order-event';
 import type { OrderStatus } from '@/constants/order-status';
 import { PERSON_NAME_MAX_LENGTH } from '@/constants/person-name';
 import {
@@ -27,6 +28,7 @@ import {
   PRODUCT_SIZE_MAX_LENGTH,
   PRODUCT_SLUG_MAX_LENGTH,
 } from '@/constants/product';
+import type { ShipmentJobStatus } from '@/constants/shipment-job-status';
 
 export const ko = {
   common: {
@@ -245,7 +247,21 @@ export const ko = {
     shipping: '배송중',
     completed: '완료',
     cancelled: '취소됨',
+    refunded: '환불됨',
   } satisfies Record<OrderStatus, string>,
+  orderEvent: {
+    'order.created': '주문 생성',
+    'order.status_changed': '상태 변경',
+    'webhook.received': '외부 시스템 이벤트 수신',
+    'notification.sent': '알림 발송',
+    'admin.note': '관리자 메모',
+    'refund.completed': '환불 완료',
+  } satisfies Record<OrderEventType, string>,
+  shipmentStatus: {
+    received: '택배사 접수',
+    in_transit: '배송 중',
+    delivered: '배송 완료',
+  } satisfies Record<ShipmentJobStatus, string>,
   announcementCategories: {
     notice: '공지사항',
     event: '이벤트',
@@ -258,7 +274,26 @@ export const ko = {
     VALIDATION_FAILED: '입력값이 올바르지 않습니다.',
     RATE_LIMITED: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.',
     INTERNAL_ERROR: '일시적인 오류가 발생했습니다.',
+    AI_UNAVAILABLE: 'AI 응답을 생성하지 못했습니다.',
   } satisfies Record<ApiErrorCode, string>,
+  ai: {
+    triggerLabel: 'AI 어시스턴트',
+    panelTitle: 'AI 어시스턴트',
+    panelDescription: '제품, 제작, 배송, 가격 등 서비스에 대해 물어보세요.',
+    greeting:
+      '안녕하세요! Shiny Book에 대해 궁금한 점을 물어보세요. 제품, 제작 과정, 배송, 가격 정책을 안내해 드릴게요.',
+    inputPlaceholder: '메시지를 입력하세요',
+    sendLabel: '보내기',
+    thinking: 'AI가 답변을 작성 중입니다',
+    errorMessage: '답변을 생성하지 못했어요. 잠시 후 다시 시도해 주세요.',
+    inquiryPrompt: '더 자세한 도움이 필요하신가요?',
+    inquiryLink: '1:1 문의하기',
+    disclaimer: 'AI 답변은 참고용이며 실제와 다를 수 있어요.',
+    sourceFaq: '관련 FAQ',
+    sourceNotice: '관련 공지',
+    sourcePage: '관련 안내',
+    clearChat: '새 대화',
+  },
   checkout: {
     title: '결제하기',
     backButton: '이전 단계로',
@@ -280,6 +315,7 @@ export const ko = {
     amountLabel: '결제 금액',
     merchandiseAmountLabel: '상품 금액',
     shippingFeeLabel: '배송비',
+    shippingAddressLabel: '배송지',
     coupon: {
       label: '쿠폰 코드',
       applyButton: '확인',
@@ -380,7 +416,36 @@ export const ko = {
       announcements: '공지사항 관리',
       faqs: 'FAQ 관리',
       inquiries: '문의 관리',
+      refunds: '환불 관리',
       logout: '로그아웃',
+    },
+    refunds: {
+      title: '환불 내역',
+      empty: '환불 내역이 없습니다.',
+      fullAmountLabel: '전액',
+      adminInitiatedLabel: '관리자 환불',
+      table: {
+        order: '주문',
+        note: '메모',
+        amount: '환불 금액',
+        status: '상태',
+        processedAt: '처리일',
+      },
+      status: {
+        approved: '승인됨',
+        completed: '완료',
+        failed: '실패',
+      },
+      retry: {
+        button: '재시도',
+        success: '환불 처리를 다시 실행했습니다.',
+        errors: {
+          unauthorized: '권한이 없습니다.',
+          not_found: '요청을 찾을 수 없습니다.',
+          not_processable: '재시도할 수 없는 상태입니다.',
+          process_failed: '결제 취소 처리에 실패했습니다.',
+        },
+      },
     },
     login: {
       title: '관리자 로그인',
@@ -469,10 +534,51 @@ export const ko = {
       photosLoading: '불러오는 중...',
       photosEmpty: '업로드된 사진이 없습니다.',
       fileViewError: '파일을 불러오지 못했습니다.',
+      viewEventsButton: '주문 이력',
+      eventsLoading: '불러오는 중...',
+      eventsEmpty: '기록된 이력이 없습니다.',
+      eventViewError: '이력을 불러오지 못했습니다.',
+      shippingAddressLabel: '배송지',
+      refund: {
+        button: '환불',
+        dialogTitle: '주문 환불',
+        remainingLabel: '환불 가능 금액:',
+        amountLabel: '환불 금액 (선택)',
+        amountHint: '비워두면 전액 환불',
+        amountInvalid: '0보다 큰 정수를 입력해주세요.',
+        amountTooLarge: '환불 가능 금액을 초과했습니다.',
+        noteLabel: '메모 (선택)',
+        cancel: '닫기',
+        confirm: '환불 처리',
+        submitting: '처리 중...',
+        success: '환불을 처리했습니다.',
+        errors: {
+          unauthorized: '권한이 없습니다.',
+          validation_failed: '입력값을 확인해주세요.',
+          order_not_found: '주문을 찾을 수 없습니다.',
+          not_refundable: '이 주문은 환불할 수 없는 상태입니다.',
+          amount_exceeds_remaining: '환불 가능 금액을 초과했습니다.',
+          process_failed: '결제 취소 처리에 실패했습니다. 환불 관리에서 재시도해주세요.',
+          failed: '환불 처리에 실패했습니다.',
+        },
+      },
       statusChangeErrors: {
         unauthorized: '권한이 없습니다. 다시 로그인해주세요.',
         not_allowed: '허용되지 않는 상태 변경입니다.',
         conflict: '다른 곳에서 이미 상태가 변경됐습니다. 새로고침 후 다시 시도해주세요.',
+      },
+      actionsMenuLabel: '관리',
+      simulateShipment: {
+        button: '배송 시뮬레이션',
+        success: '배송 상태를 진행했습니다:',
+        errors: {
+          disabled: '프로덕션에서는 사용할 수 없습니다.',
+          unauthorized: '권한이 없습니다.',
+          not_found: '주문을 찾을 수 없습니다.',
+          not_shippable: '배송이 가능한 단계가 아닙니다. 제본중 또는 배송중에서만 됩니다.',
+          already_delivered: '이미 배송 완료 상태입니다.',
+          failed: '배송 시뮬레이션에 실패했습니다.',
+        },
       },
     },
     coupons: {
@@ -999,6 +1105,14 @@ export const ko = {
         reviewDoneLink: '후기 완료',
         inquiryLink: '문의하기',
         payLink: '결제하기',
+        historyButton: '진행 이력',
+        historyTitle: '주문 진행 이력',
+        historyLoading: '불러오는 중...',
+        historyEmpty: '기록된 이력이 없습니다.',
+        historyError: '이력을 불러오지 못했습니다.',
+        shippingAddressLabel: '배송지',
+        trackingLabel: '배송 추적',
+        trackingNumberLabel: '운송장 번호',
       },
     },
     account: {

@@ -9,6 +9,7 @@ import { getCouponById } from '@/lib/coupons/get-coupon-by-id';
 import { calculateDiscountedAmount, validateCoupon } from '@/lib/coupons/redeem-coupon';
 import { calculateOrderAmount } from '@/lib/orders/calculate-order-amount';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
+import { toShippingAddressSnapshot } from '@/lib/orders/shipping-address-snapshot';
 import { getProductById } from '@/lib/products/get-product-by-id';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { isValidOrderPhotoPath } from '@/lib/uploads/is-valid-order-photo-path';
@@ -106,6 +107,7 @@ export async function updateConsumerOrder(
     .from('orders')
     .update({
       address_id: address.id,
+      ...toShippingAddressSnapshot(address),
       product_id: product.id,
       coupon_id: couponId,
       title: parsed.data.title,

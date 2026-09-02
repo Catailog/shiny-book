@@ -1,12 +1,6 @@
 import Link from 'next/link';
 
 import { PageSection } from '@/components/page-section';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { FAQ_LIST_LIMIT } from '@/constants/faq';
 import { CONSUMER_ROUTES } from '@/constants/routes';
@@ -14,6 +8,8 @@ import { getFaqs } from '@/lib/faqs/get-faqs';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { MOCK_FAQS } from '@/lib/mock/mock-faqs';
 import { locales } from '@/locales';
+
+import { FaqAccordion } from './faq-accordion';
 
 export default async function FaqPage() {
   const locale = await getLocale();
@@ -44,18 +40,13 @@ export default async function FaqPage() {
         {faqs.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t.faq.empty}</p>
         ) : (
-          <Accordion className="mx-auto max-w-3xl rounded-lg border border-border bg-background px-7">
-            {faqs.map((faq) => (
-              <AccordionItem key={faq.id} value={faq.id}>
-                <AccordionTrigger className="py-6 text-base font-semibold text-foreground">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-[15px] leading-relaxed text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <FaqAccordion
+            faqs={faqs.map((faq) => ({
+              id: faq.id,
+              question: faq.question,
+              answer: faq.answer,
+            }))}
+          />
         )}
       </PageSection>
     </>

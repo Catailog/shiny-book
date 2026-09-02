@@ -5,10 +5,11 @@ import { randomUUID } from 'node:crypto';
 import { API_ERROR_CODES } from '@/constants/api-errors';
 import { VENDOR_WEBHOOK_SECRET } from '@/constants/vendor-webhook';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { signHmacPayload } from '@/lib/webhooks/sign-hmac-payload';
 import { simulateVendorWebhookRequestSchema } from '@/schemas/api/simulate-vendor-webhook';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const body: unknown = await request.json().catch(() => null);
   const parsed = simulateVendorWebhookRequestSchema.safeParse(body);
 
@@ -34,3 +35,5 @@ export async function POST(request: NextRequest) {
 
   return apiSuccess({ delivered: response.ok, eventId, webhookResponse });
 }
+
+export const POST = withRequestContext(postHandler);

@@ -1,18 +1,21 @@
 import type { NextRequest } from 'next/server';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
+import { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { PRICING } from '@/constants/pricing';
 import { ROLE } from '@/constants/roles';
 import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
 import { hasRequiredRole } from '@/lib/api/require-role';
+import { withRequestContext } from '@/lib/api/with-request-context';
+import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import { toOrderResponse } from '@/lib/orders/to-order-response';
 import { checkApiRateLimit } from '@/lib/rate-limit/api-key-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { createOrderRequestSchema } from '@/schemas/api/orders';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const auth = await authenticateApiKey(request);
   if (!auth.isAuthorized) {
     return apiError(auth.errorCode, 'Invalid or missing API key');
@@ -57,5 +60,16 @@ export async function POST(request: NextRequest) {
     return apiError(API_ERROR_CODES.INTERNAL_ERROR, 'Failed to create order');
   }
 
+  await recordOrderEvent({
+    orderId: data.id,
+    eventType: ORDER_EVENT_TYPE.ORDER_CREATED,
+    source: ORDER_EVENT_SOURCE.SYSTEM,
+    actor: `api:${auth.clientId}`,
+    toStatus: ORDER_STATUS.AWAITING_PAYMENT,
+    metadata: { quantity: data.quantity, amount: data.amount },
+  });
+
   return apiSuccess(order, 201);
 }
+
+export const POST = withRequestContext(postHandler);

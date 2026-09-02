@@ -1,12 +1,14 @@
 import type { NextRequest } from 'next/server';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
+import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS } from '@/constants/order-status';
 import { ROLE } from '@/constants/roles';
 import { SHIPMENT_JOB_STATUS } from '@/constants/shipment-job-status';
 import { authenticateApiKey } from '@/lib/api/api-key-auth';
 import { apiError, apiSuccess } from '@/lib/api/api-response';
 import { hasRequiredRole } from '@/lib/api/require-role';
+import { withRequestContext } from '@/lib/api/with-request-context';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
 import { checkApiRateLimit } from '@/lib/rate-limit/api-key-rate-limit';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
@@ -14,7 +16,7 @@ import { generateTrackingNumber } from '@/lib/vendors/generate-tracking-number';
 import { toShipmentJobResponse } from '@/lib/vendors/to-shipment-job-response';
 import { createShipmentJobRequestSchema } from '@/schemas/api/shipment-jobs';
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const auth = await authenticateApiKey(request);
   if (!auth.isAuthorized) {
     return apiError(auth.errorCode, 'Invalid or missing API key');
@@ -56,7 +58,13 @@ export async function POST(request: NextRequest) {
     return apiError(API_ERROR_CODES.INTERNAL_ERROR, 'Failed to create shipment job');
   }
 
-  await transitionOrderStatus(parsed.data.orderId, ORDER_STATUS.BINDING, ORDER_STATUS.SHIPPING);
+  await transitionOrderStatus(parsed.data.orderId, ORDER_STATUS.BINDING, ORDER_STATUS.SHIPPING, {
+    source: ORDER_EVENT_SOURCE.WEBHOOK,
+    actor: 'vendor:courier',
+    metadata: { trackingNumber: data.tracking_number },
+  });
 
   return apiSuccess(shipmentJob, 201);
 }
+
+export const POST = withRequestContext(postHandler);

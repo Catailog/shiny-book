@@ -18,6 +18,13 @@ function buildOrderRow(overrides: Partial<Tables<'orders'>> = {}): Tables<'order
     page_count: null,
     quantity: 1,
     amount: 10000,
+    refunded_amount: 0,
+    payment_key: null,
+    ship_recipient_name: null,
+    ship_phone: null,
+    ship_postal_code: null,
+    ship_address_line1: null,
+    ship_address_line2: null,
     created_at: '2026-08-13T00:00:00.000Z',
     updated_at: '2026-08-13T00:00:00.000Z',
     ...overrides,
@@ -42,7 +49,7 @@ describe('toOrderResponse', () => {
   });
 
   it('returns null when the stored status is not a recognized order status', () => {
-    const result = toOrderResponse(buildOrderRow({ status: 'refunded' }));
+    const result = toOrderResponse(buildOrderRow({ status: 'exploded' }));
     expect(result).toBeNull();
   });
 });
