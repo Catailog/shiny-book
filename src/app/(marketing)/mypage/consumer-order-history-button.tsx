@@ -15,7 +15,9 @@ import {
 import { useT } from '@/hooks/use-t';
 import { formatDateTime } from '@/lib/format-date';
 import type { ConsumerOrderEventView } from '@/lib/orders/order-event-timeline';
+import type { ShipmentTrackingView } from '@/lib/orders/shipment-tracking';
 import type { OrderShippingAddressView } from '@/lib/orders/shipping-address-snapshot';
+import { cn } from '@/lib/utils';
 
 import { getConsumerOrderHistory } from './order-history-actions';
 
@@ -29,6 +31,7 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
   const [, startTransition] = useTransition();
   const [events, setEvents] = useState<ConsumerOrderEventView[] | null>(null);
   const [shippingAddress, setShippingAddress] = useState<OrderShippingAddressView | null>(null);
+  const [shipment, setShipment] = useState<ShipmentTrackingView | null>(null);
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -44,6 +47,7 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
 
         setEvents(result.events ?? []);
         setShippingAddress(result.shippingAddress ?? null);
+        setShipment(result.shipment ?? null);
       });
     }
   }
@@ -71,6 +75,70 @@ export function ConsumerOrderHistoryButton({ orderId }: ConsumerOrderHistoryButt
               addressLine1={shippingAddress.addressLine1}
               addressLine2={shippingAddress.addressLine2}
             />
+          </div>
+        ) : null}
+        {shipment ? (
+          <div className="flex flex-col gap-3 rounded-md bg-secondary p-3">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                {t.consumer.mypage.orders.trackingLabel}
+              </span>
+              <span className="text-sm text-foreground">
+                <span className="text-muted-foreground">
+                  {t.consumer.mypage.orders.trackingNumberLabel}
+                </span>{' '}
+                {shipment.trackingNumber}
+              </span>
+            </div>
+            <ol className="flex items-start">
+              {shipment.steps.map((step, index) => (
+                <li key={step.status} className="flex flex-1 flex-col items-center gap-1.5">
+                  <div className="flex w-full items-center">
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'h-px flex-1',
+                        index === 0
+                          ? 'bg-transparent'
+                          : step.state === 'upcoming'
+                            ? 'bg-border'
+                            : 'bg-primary',
+                      )}
+                    />
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'size-3 shrink-0 rounded-full border-2',
+                        step.state === 'upcoming'
+                          ? 'border-border bg-background'
+                          : 'border-primary bg-primary',
+                      )}
+                    />
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'h-px flex-1',
+                        index === shipment.steps.length - 1
+                          ? 'bg-transparent'
+                          : step.state === 'done'
+                            ? 'bg-primary'
+                            : 'bg-border',
+                      )}
+                    />
+                  </div>
+                  <span
+                    className={cn(
+                      'text-xs whitespace-nowrap',
+                      step.state === 'current'
+                        ? 'font-semibold text-foreground'
+                        : 'text-muted-foreground',
+                    )}
+                  >
+                    {t.shipmentStatus[step.status]}
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
         ) : null}
         {events === null ? (

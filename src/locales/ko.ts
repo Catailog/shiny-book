@@ -28,6 +28,7 @@ import {
   PRODUCT_SIZE_MAX_LENGTH,
   PRODUCT_SLUG_MAX_LENGTH,
 } from '@/constants/product';
+import type { ShipmentJobStatus } from '@/constants/shipment-job-status';
 
 export const ko = {
   common: {
@@ -256,6 +257,11 @@ export const ko = {
     'admin.note': '관리자 메모',
     'refund.completed': '환불 완료',
   } satisfies Record<OrderEventType, string>,
+  shipmentStatus: {
+    received: '택배사 접수',
+    in_transit: '배송 중',
+    delivered: '배송 완료',
+  } satisfies Record<ShipmentJobStatus, string>,
   announcementCategories: {
     notice: '공지사항',
     event: '이벤트',
@@ -1092,6 +1098,8 @@ export const ko = {
         historyEmpty: '기록된 이력이 없습니다.',
         historyError: '이력을 불러오지 못했습니다.',
         shippingAddressLabel: '배송지',
+        trackingLabel: '배송 추적',
+        trackingNumberLabel: '운송장 번호',
       },
     },
     account: {

@@ -28,6 +28,7 @@ import {
   PRODUCT_SIZE_MAX_LENGTH,
   PRODUCT_SLUG_MAX_LENGTH,
 } from '@/constants/product';
+import type { ShipmentJobStatus } from '@/constants/shipment-job-status';
 
 export const en = {
   common: {
@@ -256,6 +257,11 @@ export const en = {
     'admin.note': 'Admin note',
     'refund.completed': 'Refund completed',
   } satisfies Record<OrderEventType, string>,
+  shipmentStatus: {
+    received: 'Picked up by courier',
+    in_transit: 'In transit',
+    delivered: 'Delivered',
+  } satisfies Record<ShipmentJobStatus, string>,
   announcementCategories: {
     notice: 'Notice',
     event: 'Event',
@@ -1092,6 +1098,8 @@ export const en = {
         historyEmpty: 'No history recorded.',
         historyError: 'Failed to load the history.',
         shippingAddressLabel: 'Shipping to',
+        trackingLabel: 'Shipment tracking',
+        trackingNumberLabel: 'Tracking number',
       },
     },
     account: {
