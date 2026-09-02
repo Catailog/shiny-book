@@ -2,6 +2,7 @@ import { ORDER_EVENT_TYPE, type OrderEventType, isOrderEventType } from '@/const
 import { isOrderStatus } from '@/constants/order-status';
 import type { Tables } from '@/lib/db/database.types';
 import type { locales } from '@/locales';
+import { parseOrderEventMetadata } from '@/schemas/order-event';
 
 type LocaleBundle = (typeof locales)[keyof typeof locales];
 
@@ -61,6 +62,15 @@ function resolveTitle(event: Tables<'order_events'>, t: LocaleBundle): string {
     isOrderStatus(event.to_status)
   ) {
     return t.orderStatus[event.to_status];
+  }
+
+  // A courier callback carries the shipment sub-status - name the step
+  // ("배송 중") rather than the generic "external event received" label.
+  if (event.event_type === ORDER_EVENT_TYPE.WEBHOOK_RECEIVED) {
+    const metadata = parseOrderEventMetadata(ORDER_EVENT_TYPE.WEBHOOK_RECEIVED, event.metadata);
+    if (metadata !== null && 'shipmentStatus' in metadata && metadata.shipmentStatus) {
+      return t.shipmentStatus[metadata.shipmentStatus];
+    }
   }
 
   if (isOrderEventType(event.event_type)) {

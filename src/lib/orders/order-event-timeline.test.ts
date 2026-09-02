@@ -43,6 +43,30 @@ describe('toOrderEventView', () => {
     );
   });
 
+  it('names the courier step for a webhook carrying a shipment status', () => {
+    const view = toOrderEventView(
+      buildEvent({
+        event_type: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+        metadata: { provider: 'vendor', shipmentStatus: 'in_transit' },
+      }),
+      locales.ko,
+    );
+
+    expect(view.title).toBe(locales.ko.shipmentStatus.in_transit);
+  });
+
+  it('falls back to the generic webhook label when no shipment status is present', () => {
+    const view = toOrderEventView(
+      buildEvent({
+        event_type: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
+        metadata: { provider: 'toss' },
+      }),
+      locales.ko,
+    );
+
+    expect(view.title).toBe(locales.ko.orderEvent['webhook.received']);
+  });
+
   it('falls back to the raw event type when it is unknown', () => {
     expect(toOrderEventView(buildEvent({ event_type: 'order.exploded' }), locales.ko).title).toBe(
       'order.exploded',

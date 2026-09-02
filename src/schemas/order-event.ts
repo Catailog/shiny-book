@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { ORDER_EVENT_TYPE, type OrderEventType } from '@/constants/order-event';
+import { SHIPMENT_JOB_STATUS } from '@/constants/shipment-job-status';
 
 // `metadata` shape per event type. Kept as plain `z.object` so unknown keys are
 // stripped on the write path; no PII (recipient email/phone/address, names) goes
@@ -23,6 +24,15 @@ const orderStatusChangedMetadata = z.object({
 const webhookReceivedMetadata = z.object({
   provider: z.enum(['toss', 'vendor']),
   eventId: z.string().optional(),
+  // Present on courier callbacks: the shipment sub-status this event carried, so
+  // the order-history timeline can name the step instead of a generic label.
+  shipmentStatus: z
+    .enum([
+      SHIPMENT_JOB_STATUS.RECEIVED,
+      SHIPMENT_JOB_STATUS.IN_TRANSIT,
+      SHIPMENT_JOB_STATUS.DELIVERED,
+    ])
+    .optional(),
 });
 
 const notificationSentMetadata = z.object({

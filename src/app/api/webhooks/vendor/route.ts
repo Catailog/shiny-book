@@ -88,7 +88,7 @@ async function postHandler(request: NextRequest) {
         eventType: ORDER_EVENT_TYPE.WEBHOOK_RECEIVED,
         source: ORDER_EVENT_SOURCE.WEBHOOK,
         actor: 'webhook:courier',
-        metadata: { provider: 'vendor', eventId },
+        metadata: { provider: 'vendor', eventId, shipmentStatus: event.status },
       });
     }
 
