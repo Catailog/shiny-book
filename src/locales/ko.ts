@@ -567,6 +567,19 @@ export const ko = {
         not_allowed: '허용되지 않는 상태 변경입니다.',
         conflict: '다른 곳에서 이미 상태가 변경됐습니다. 새로고침 후 다시 시도해주세요.',
       },
+      actionsMenuLabel: '관리',
+      simulateShipment: {
+        button: '배송 시뮬레이션',
+        success: '배송 상태를 진행했습니다:',
+        errors: {
+          disabled: '프로덕션에서는 사용할 수 없습니다.',
+          unauthorized: '권한이 없습니다.',
+          not_found: '주문을 찾을 수 없습니다.',
+          not_shippable: '배송이 가능한 단계가 아닙니다. 제본중 또는 배송중에서만 됩니다.',
+          already_delivered: '이미 배송 완료 상태입니다.',
+          failed: '배송 시뮬레이션에 실패했습니다.',
+        },
+      },
     },
     coupons: {
       title: '쿠폰 관리',

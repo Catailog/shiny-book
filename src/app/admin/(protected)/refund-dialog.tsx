@@ -23,29 +23,32 @@ import { defaultLocale, locales } from '@/locales';
 
 import { refundOrder } from './refund-order-actions';
 
-interface RefundOrderButtonProps {
+interface RefundDialogProps {
   orderId: string;
   orderAmount: number;
   refundedAmount: number;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function RefundOrderButton({
+export function RefundDialog({
   orderId,
   orderAmount,
   refundedAmount,
-}: RefundOrderButtonProps) {
+  open,
+  onOpenChange,
+}: RefundDialogProps) {
   const t = locales[defaultLocale];
   const router = useRouter();
   const remaining = orderAmount - refundedAmount;
-  const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [amountError, setAmountError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  function handleOpenChange(open: boolean) {
-    setIsOpen(open);
-    if (!open) {
+  function handleOpenChange(next: boolean) {
+    onOpenChange(next);
+    if (!next) {
       setAmount('');
       setNote('');
       setAmountError(null);
@@ -87,10 +90,7 @@ export function RefundOrderButton({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <Button type="button" size="sm" variant="outline" onClick={() => handleOpenChange(true)}>
-        {t.admin.orders.refund.button}
-      </Button>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t.admin.orders.refund.dialogTitle}</DialogTitle>

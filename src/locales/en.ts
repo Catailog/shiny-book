@@ -568,6 +568,19 @@ export const en = {
         not_allowed: 'This status change is not allowed.',
         conflict: 'This order was already updated elsewhere. Please refresh and try again.',
       },
+      actionsMenuLabel: 'Manage',
+      simulateShipment: {
+        button: 'Simulate shipment',
+        success: 'Shipment advanced to:',
+        errors: {
+          disabled: 'Not available in production.',
+          unauthorized: 'You do not have permission.',
+          not_found: 'Order not found.',
+          not_shippable: 'This order is not at the shipping stage. Only binding or shipping works.',
+          already_delivered: 'Already delivered.',
+          failed: 'The shipment simulation failed.',
+        },
+      },
     },
     coupons: {
       title: 'Coupons',

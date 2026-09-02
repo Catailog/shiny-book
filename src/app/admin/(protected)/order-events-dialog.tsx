@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 import { toast } from 'sonner';
 
 import { ShippingAddressSummary } from '@/components/shipping-address-summary';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { formatDateTime } from '@/lib/format-date';
 import type { OrderEventView } from '@/lib/orders/order-event-timeline';
@@ -14,41 +13,40 @@ import { defaultLocale, locales } from '@/locales';
 
 import { getOrderEventViews } from './order-events-actions';
 
-interface ViewOrderEventsButtonProps {
+interface OrderEventsDialogProps {
   orderId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function ViewOrderEventsButton({ orderId }: ViewOrderEventsButtonProps) {
+export function OrderEventsDialog({ orderId, open, onOpenChange }: OrderEventsDialogProps) {
   const t = locales[defaultLocale];
-  const [isOpen, setIsOpen] = useState(false);
   const [, startTransition] = useTransition();
   const [events, setEvents] = useState<OrderEventView[] | null>(null);
   const [shippingAddress, setShippingAddress] = useState<OrderShippingAddressView | null>(null);
 
-  function handleOpenChange(open: boolean) {
-    setIsOpen(open);
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     // Refetch on every open - the timeline changes as the order progresses, so a
     // cached first load would go stale after a status change.
-    if (open) {
-      startTransition(async () => {
-        const result = await getOrderEventViews(orderId);
-        if (result.errorCode) {
-          toast.error(t.admin.orders.eventViewError);
-          setEvents([]);
-          return;
-        }
+    startTransition(async () => {
+      const result = await getOrderEventViews(orderId);
+      if (result.errorCode) {
+        toast.error(t.admin.orders.eventViewError);
+        setEvents([]);
+        return;
+      }
 
-        setEvents(result.events ?? []);
-        setShippingAddress(result.shippingAddress ?? null);
-      });
-    }
-  }
+      setEvents(result.events ?? []);
+      setShippingAddress(result.shippingAddress ?? null);
+    });
+  }, [open, orderId, t]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <Button type="button" variant="outline" size="sm" onClick={() => handleOpenChange(true)}>
-        {t.admin.orders.viewEventsButton}
-      </Button>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t.admin.orders.viewEventsButton}</DialogTitle>
