@@ -56,6 +56,14 @@
 - 일반 컴포넌트/유틸은 **Named Export**를 선호하며, Next.js Page/Layout/Route 등 엔트리 파일에만 Default Export를 사용합니다.
 - **Git 커밋 메세지 컨벤션:** 커밋 메세지 작성 시 Conventional Commits 규격을 따릅니다. (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`)
 - **Git 브랜치 전략:** 모든 작업은 `dev` 브랜치에서 진행합니다. `main`은 항상 검증이 끝난 상태만 유지하는 보호 브랜치이며, `dev` → `main`은 **PR을 통해서만** 병합합니다(직접 push 금지). PR에서 CI(타입체크/린트/테스트/빌드)를 모두 통과해야 병합 가능합니다. `main`에 직접 커밋하지 않습니다.
+- **PR 본문 컨벤션:** 제목은 Conventional Commits 접두사 + 간결한 범위. 여러 기능이 묶인 배치 PR이면 주제를 나열합니다. 본문은 아래 순서로, 해당되는 섹션만 씁니다. 분량은 PR 크기에 비례 - 파일 한두 개짜리 작은 PR은 2~3문장이면 되고 섹션을 나누지 않습니다.
+  1. `## 요약` - 무엇을/왜. 1~3문장 또는 불릿.
+  2. `## 주요 변경` - 영역/기능별로 묶은 불릿. 단일 목적 소형 PR은 생략.
+  3. `## DB 마이그레이션` - 추가/변경된 마이그레이션 파일명 나열 + "병합 후 프로덕션 Supabase에 `supabase db push` 필요". 마이그레이션이 있을 때만, **있으면 반드시**.
+  4. `## 환경변수` - 신규/변경된 env 키. `src/env.ts`가 바뀐 경우만.
+  5. `## 배포 주의` - 배포자가 알아야 할 breaking change나 수동 작업. 해당 시만.
+  6. `## 테스트` - 로컬에서 돌린 검증(type-check/lint/build/관련 vitest). 전체 스위트/Playwright는 CI가 담당한다고 명시.
+  - 관련 이슈가 있으면 `Closes #N`.
 - **파일 내부 구성 순서**:
   1. Main Exported Component
   2. Sub-components
