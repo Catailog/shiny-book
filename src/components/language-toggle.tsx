@@ -49,11 +49,7 @@ export function LanguageToggle({ locale, label }: LanguageToggleProps) {
       </Tooltip>
       <DropdownMenuContent align="end">
         {LOCALE_OPTIONS.map((option) => (
-          <DropdownMenuItem
-            key={option}
-            onClick={() => handleSelect(option)}
-            className="cursor-pointer"
-          >
+          <DropdownMenuItem key={option} onClick={() => handleSelect(option)}>
             <span className="flex-1">{LOCALE_LABELS[option]}</span>
             {option === locale ? <Check aria-hidden="true" className="size-4" /> : null}
           </DropdownMenuItem>
