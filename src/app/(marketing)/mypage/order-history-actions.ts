@@ -4,10 +4,12 @@ import { getCurrentConsumer } from '@/lib/auth/get-current-consumer';
 import { getLocale } from '@/lib/i18n/get-locale';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { getOrderEvents } from '@/lib/orders/get-order-events';
+import { getShipmentJobByOrder } from '@/lib/orders/get-shipment-job-by-order';
 import {
   type ConsumerOrderEventView,
   toConsumerOrderEventViews,
 } from '@/lib/orders/order-event-timeline';
+import { type ShipmentTrackingView, toShipmentTrackingView } from '@/lib/orders/shipment-tracking';
 import {
   type OrderShippingAddressView,
   toOrderShippingAddressView,
@@ -18,6 +20,7 @@ export interface GetConsumerOrderHistoryResult {
   errorCode?: 'unauthorized';
   events?: ConsumerOrderEventView[];
   shippingAddress?: OrderShippingAddressView | null;
+  shipment?: ShipmentTrackingView | null;
 }
 
 export async function getConsumerOrderHistory(
@@ -33,10 +36,14 @@ export async function getConsumerOrderHistory(
     return { errorCode: 'unauthorized' };
   }
 
-  const events = await getOrderEvents(orderId);
+  const [events, shipmentJob] = await Promise.all([
+    getOrderEvents(orderId),
+    getShipmentJobByOrder(orderId),
+  ]);
   const locale = await getLocale();
   return {
     events: toConsumerOrderEventViews(events, locales[locale]),
     shippingAddress: toOrderShippingAddressView(order),
+    shipment: shipmentJob ? toShipmentTrackingView(shipmentJob) : null,
   };
 }
