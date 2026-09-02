@@ -22,12 +22,17 @@ function SheetClose({ ...props }: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
+// `fill-mode-forwards` holds the exit animation's end state (opacity 0) until
+// the sheet unmounts. The overlay fade runs 100ms but base-ui keeps it mounted
+// until the longer content slide-out finishes; without a forwards fill the
+// overlay reverts to opacity 1 in that gap and flashes on every close - that
+// was the flicker.
 function SheetOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) {
   return (
     <DialogPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        'fixed inset-0 z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0',
+        'fixed inset-0 z-50 bg-black/10 duration-100 fill-mode-forwards supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0',
         className,
       )}
       {...props}
