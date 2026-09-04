@@ -15,6 +15,7 @@ import {
   COUPON_DISCOUNT_VALUE_MAX,
   COUPON_PERCENTAGE_MAX,
 } from '@/constants/coupon';
+import type { OrderNotifyStatus } from '@/constants/email';
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
@@ -262,6 +263,42 @@ export const en = {
     in_transit: 'In transit',
     delivered: 'Delivered',
   } satisfies Record<ShipmentJobStatus, string>,
+  email: {
+    orderStatusChanged: {
+      subject: {
+        paid: 'Your payment is complete',
+        printing: 'We have started making your book',
+        shipping: 'Your order is on its way',
+        completed: 'Your order has been delivered',
+        refunded: 'Your refund is complete',
+        cancelled: 'Your order has been cancelled',
+      } satisfies Record<OrderNotifyStatus, string>,
+      heading: {
+        paid: 'Payment complete',
+        printing: 'Production started',
+        shipping: 'Shipment started',
+        completed: 'Delivered',
+        refunded: 'Refund complete',
+        cancelled: 'Order cancelled',
+      } satisfies Record<OrderNotifyStatus, string>,
+      body: {
+        paid: 'Your payment has been confirmed and we will begin preparing your order shortly.',
+        printing: 'Production of your book has started.',
+        shipping: 'Your book has been shipped. You can track its progress from the button below.',
+        completed: 'Your book has arrived at the delivery address. Thank you for choosing us.',
+        refunded:
+          'Your refund has been processed. Depending on your payment method it may take 3 to 5 business days to appear.',
+        cancelled:
+          'Your order has been cancelled. Please contact customer support if you have any questions.',
+      } satisfies Record<OrderNotifyStatus, string>,
+      greetingPrefix: 'Hi ',
+      greetingSuffix: ',',
+      orderNumberLabel: 'Order number',
+      ctaLabel: 'View order details',
+      footerNote: 'This mailbox is not monitored. Please use customer support for inquiries.',
+      signOff: 'The Shiny Book team',
+    },
+  },
   announcementCategories: {
     notice: 'Notice',
     event: 'Event',

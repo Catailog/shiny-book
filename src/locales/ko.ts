@@ -15,6 +15,7 @@ import {
   COUPON_DISCOUNT_VALUE_MAX,
   COUPON_PERCENTAGE_MAX,
 } from '@/constants/coupon';
+import type { OrderNotifyStatus } from '@/constants/email';
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
@@ -262,6 +263,41 @@ export const ko = {
     in_transit: '배송 중',
     delivered: '배송 완료',
   } satisfies Record<ShipmentJobStatus, string>,
+  email: {
+    orderStatusChanged: {
+      subject: {
+        paid: '결제가 완료되었습니다',
+        printing: '제작을 시작했습니다',
+        shipping: '배송을 시작했습니다',
+        completed: '배송이 완료되었습니다',
+        refunded: '환불이 완료되었습니다',
+        cancelled: '주문이 취소되었습니다',
+      } satisfies Record<OrderNotifyStatus, string>,
+      heading: {
+        paid: '결제 완료',
+        printing: '제작 시작',
+        shipping: '배송 시작',
+        completed: '배송 완료',
+        refunded: '환불 완료',
+        cancelled: '주문 취소',
+      } satisfies Record<OrderNotifyStatus, string>,
+      body: {
+        paid: '결제가 확인되어 곧 제작 준비에 들어갑니다.',
+        printing: '주문하신 책의 제작이 시작되었습니다.',
+        shipping: '주문하신 책이 발송되었습니다. 배송 현황은 아래 버튼에서 확인하실 수 있습니다.',
+        completed: '주문하신 책이 배송지에 도착했습니다. 이용해 주셔서 감사합니다.',
+        refunded:
+          '요청하신 환불이 처리되었습니다. 환불 금액은 결제 수단에 따라 영업일 기준 3~5일 내 반영됩니다.',
+        cancelled: '주문이 취소되었습니다. 문의 사항이 있으시면 고객센터로 연락해 주세요.',
+      } satisfies Record<OrderNotifyStatus, string>,
+      greetingPrefix: '',
+      greetingSuffix: '님, 안녕하세요.',
+      orderNumberLabel: '주문번호',
+      ctaLabel: '주문 상세 보기',
+      footerNote: '이 메일은 발신 전용입니다. 문의는 고객센터를 이용해 주세요.',
+      signOff: 'Shiny Book 드림',
+    },
+  },
   announcementCategories: {
     notice: '공지사항',
     event: '이벤트',
