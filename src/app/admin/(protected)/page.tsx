@@ -17,12 +17,14 @@ import { ADMIN_ROUTES } from '@/constants/routes';
 import { ADMIN_SEARCH_QUERY_MAX_LENGTH } from '@/constants/search';
 import { env } from '@/env';
 import { getCoupons } from '@/lib/coupons/get-coupons';
+import { filterOrders } from '@/lib/orders/filter-orders';
 import { getOrders } from '@/lib/orders/get-orders';
 import { firstSearchParam, paginate, parsePageParam, parsePageSizeParam } from '@/lib/pagination';
 import { defaultLocale, locales } from '@/locales';
 
 import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
+import { ExportOrdersCsvButton } from './export-orders-csv-button';
 import { OrdersTable } from './orders-table';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
@@ -56,23 +58,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
 
   const showSimulator = env.NODE_ENV !== 'production';
   const [allOrders, coupons] = await Promise.all([getOrders(), getCoupons()]);
-  const filteredOrders = allOrders.filter((order) => {
-    const matchesFilter = activeFilter === null || order.status === activeFilter;
-    if (!matchesFilter) {
-      return false;
-    }
-    if (query.length === 0) {
-      return true;
-    }
-    const normalizedQuery = query.toLowerCase();
-    if (searchField === ORDER_SEARCH_FIELD.ID) {
-      return order.id.toLowerCase().includes(normalizedQuery);
-    }
-    if (searchField === ORDER_SEARCH_FIELD.CUSTOMER_NAME) {
-      return (order.consumerName ?? '').toLowerCase().includes(normalizedQuery);
-    }
-    return order.title.toLowerCase().includes(normalizedQuery);
-  });
+  const filteredOrders = filterOrders(allOrders, { activeFilter, searchField, query });
   const pageSize = parsePageSizeParam(
     searchParams.pageSize,
     ADMIN_PAGE_SIZE_OPTIONS,
@@ -184,6 +170,11 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
                 </SelectContent>
               </Select>
             </SearchForm>
+            <ExportOrdersCsvButton
+              filterParam={filterParam}
+              searchFieldParam={searchFieldParam}
+              query={query}
+            />
           </div>
           <OrdersTable
             key={`${activeFilter ?? 'all'}-${searchField}-${query}-${page}`}

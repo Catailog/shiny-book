@@ -618,6 +618,10 @@ export const en = {
         allSucceeded: 'Updated all selected orders.',
         partialFailurePrefix: 'Failed to update some orders: ',
       },
+      csv: {
+        exportButton: 'Export CSV',
+        exportError: 'Could not generate the CSV.',
+      },
       simulateShipment: {
         button: 'Simulate shipment',
         success: 'Shipment advanced to:',

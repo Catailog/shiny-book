@@ -616,6 +616,10 @@ export const ko = {
         allSucceeded: '선택한 주문을 모두 변경했습니다.',
         partialFailurePrefix: '일부 주문 변경에 실패했습니다: ',
       },
+      csv: {
+        exportButton: 'CSV 내보내기',
+        exportError: 'CSV를 만들지 못했습니다.',
+      },
       simulateShipment: {
         button: '배송 시뮬레이션',
         success: '배송 상태를 진행했습니다:',
