@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Fraunces, Geist, Geist_Mono } from 'next/font/google';
+import { cookies } from 'next/headers';
 
 import { Toaster } from 'sonner';
 
@@ -30,11 +31,16 @@ export const metadata: Metadata = {
   description: '나만의 책을 만들어 인쇄하는 서비스',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const cookieStore = await cookies();
+  const isDarkTheme = cookieStore.get(THEME_COOKIE_NAME)?.value === 'dark';
+
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased ${
+        isDarkTheme ? 'dark' : ''
+      }`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">

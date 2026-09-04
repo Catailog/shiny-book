@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 import { THEME_COOKIE_MAX_AGE, THEME_COOKIE_NAME, type Theme } from '@/constants/theme';
@@ -14,6 +15,8 @@ export async function setTheme(theme: Theme) {
   });
 
   await persistThemeToProfile(theme);
+
+  revalidatePath('/', 'layout');
 }
 
 async function persistThemeToProfile(theme: Theme) {
