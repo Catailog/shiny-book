@@ -25,6 +25,11 @@ export const env = createEnv({
     GROQ_API_KEY: z.string().min(1).optional(),
     CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
     CLOUDFLARE_API_TOKEN: z.string().min(1).optional(),
+    // Transactional email (order status notifications). Optional: when the key is
+    // missing the sender logs "would send" and returns without calling Resend.
+    RESEND_API_KEY: z.string().min(1).optional(),
+    // Absolute base URL for links in server-generated content (email CTAs).
+    APP_URL: z.string().url().default('http://localhost:3000'),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
