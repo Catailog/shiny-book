@@ -80,6 +80,7 @@ export async function updateNotificationPreferences(
   const supabase = await createServerSupabaseClient();
   const { error } = await supabase.auth.updateUser({
     data: {
+      orderStatusEmailConsent: parsed.data.orderStatusEmailConsent,
       marketingEmailConsent: parsed.data.marketingEmailConsent,
       marketingSmsConsent: parsed.data.marketingSmsConsent,
     },

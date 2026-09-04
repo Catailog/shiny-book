@@ -1240,6 +1240,7 @@ export const ko = {
       },
       notifications: {
         title: '알림 설정',
+        orderStatusEmail: '주문 상태 변경 이메일 알림',
         emailMarketing: '이메일 마케팅 동의',
         smsUpdates: '제작/배송 현황 SMS 알림',
       },

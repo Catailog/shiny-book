@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const notificationPreferencesSchema = z.object({
+  orderStatusEmailConsent: z.boolean(),
   marketingEmailConsent: z.boolean(),
   marketingSmsConsent: z.boolean(),
 });

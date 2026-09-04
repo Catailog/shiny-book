@@ -1240,6 +1240,7 @@ export const en = {
       },
       notifications: {
         title: 'Notification Settings',
+        orderStatusEmail: 'Email me when my order status changes',
         emailMarketing: 'Agree to email marketing',
         smsUpdates: 'SMS updates for production/shipping',
       },

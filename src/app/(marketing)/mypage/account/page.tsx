@@ -30,6 +30,7 @@ export default async function MypageAccountPage() {
   const avatarUrl = avatarPath ? await getSignedFileUrl(avatarPath) : null;
   const avatarInitials = (consumerName || consumerEmail).slice(0, 1).toUpperCase();
   const notificationDefaults = {
+    orderStatusEmailConsent: consumer?.user_metadata.orderStatusEmailConsent !== false,
     marketingEmailConsent: consumer?.user_metadata.marketingEmailConsent === true,
     marketingSmsConsent: consumer?.user_metadata.marketingSmsConsent === true,
   };

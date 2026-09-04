@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
+import { DEFAULT_ORDER_STATUS_EMAIL_CONSENT } from '@/constants/consumer';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
@@ -36,6 +37,7 @@ export async function signUpConsumer(
       data: {
         name: parsed.data.name,
         phone: parsed.data.phone || null,
+        orderStatusEmailConsent: DEFAULT_ORDER_STATUS_EMAIL_CONSENT,
         marketingEmailConsent: parsed.data.marketingEmailConsent,
         marketingSmsConsent: parsed.data.marketingSmsConsent,
       },
