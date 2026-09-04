@@ -2,12 +2,8 @@ import { cookies, headers } from 'next/headers';
 
 import 'server-only';
 
-import { LOCALE_COOKIE_NAME } from '@/constants/locale';
-import { type Locale, defaultLocale, locales } from '@/locales';
-
-function isLocale(value: string): value is Locale {
-  return value in locales;
-}
+import { LOCALE_COOKIE_NAME, isLocale } from '@/constants/locale';
+import { type Locale, defaultLocale } from '@/locales';
 
 function parsePreferredLocale(acceptLanguage: string): Locale | null {
   const entries = acceptLanguage.split(',');
