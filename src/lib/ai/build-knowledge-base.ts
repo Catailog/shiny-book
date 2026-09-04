@@ -10,12 +10,14 @@ import { logger } from '@/lib/log/logger';
 import { getProductCatalog } from '@/lib/products/get-product-catalog';
 import { type Locale, locales } from '@/locales';
 
-const FAQ_LIMIT = 100;
-const ANNOUNCEMENT_LIMIT = 30;
+// Exported so reindex-knowledge-base.ts sources the exact same corpus this
+// full-context builder does - the two must never drift apart.
+export const FAQ_LIMIT = 100;
+export const ANNOUNCEMENT_LIMIT = 30;
 
 // Locale sections that describe pricing and policies, each with the marketing
 // page a [[page:<slug>]] citation should link to.
-const POLICY_SECTIONS = [
+export const POLICY_SECTIONS = [
   { key: 'pricing', route: MARKETING_ROUTES.PRICING },
   { key: 'layoutGuidelines', route: MARKETING_ROUTES.LAYOUT_GUIDELINES },
   { key: 'ecoPapers', route: MARKETING_ROUTES.ECO_PAPERS },

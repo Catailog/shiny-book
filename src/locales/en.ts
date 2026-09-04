@@ -538,6 +538,17 @@ export const en = {
         viewCoverLayout: 'View Cover Layout',
       },
     },
+    knowledgeBase: {
+      reindexButton: 'Reindex knowledge base',
+      reindexing: 'Reindexing...',
+      successPrefix: 'Reindexed the knowledge base (',
+      successSuffix: ' chunks).',
+      errors: {
+        unauthorized: 'You are not authorized.',
+        not_configured: 'GEMINI_API_KEY is not set, so reindexing is unavailable.',
+        failed: 'Reindexing failed.',
+      },
+    },
     orders: {
       title: 'Orders',
       empty: 'No orders to show.',

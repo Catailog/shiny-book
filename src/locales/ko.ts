@@ -536,6 +536,17 @@ export const ko = {
         viewCoverLayout: '표지 레이아웃 보기',
       },
     },
+    knowledgeBase: {
+      reindexButton: '지식베이스 재색인',
+      reindexing: '재색인 중...',
+      successPrefix: '지식베이스를 재색인했습니다 (',
+      successSuffix: '개 조각).',
+      errors: {
+        unauthorized: '권한이 없습니다.',
+        not_configured: 'GEMINI_API_KEY가 설정되지 않아 재색인할 수 없습니다.',
+        failed: '재색인에 실패했습니다.',
+      },
+    },
     orders: {
       title: '주문 목록',
       empty: '표시할 주문이 없습니다.',

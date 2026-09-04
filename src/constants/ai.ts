@@ -53,3 +53,14 @@ export const AI_RETRIEVAL_TOP_K = 8;
 // Cosine similarity threshold (1 - cosine distance). Chunks below this are
 // treated as not relevant enough to include, not just low-ranked.
 export const AI_RETRIEVAL_MIN_SIMILARITY = 0.6;
+
+export const KNOWLEDGE_CHUNK_SOURCE = {
+  PRODUCT: 'product',
+  PRICING: 'pricing',
+  FAQ: 'faq',
+  ANNOUNCEMENT: 'announcement',
+  POLICY: 'policy',
+} as const;
+
+export type KnowledgeChunkSource =
+  (typeof KNOWLEDGE_CHUNK_SOURCE)[keyof typeof KNOWLEDGE_CHUNK_SOURCE];

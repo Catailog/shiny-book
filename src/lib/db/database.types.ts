@@ -271,6 +271,7 @@ export type Database = {
       };
       knowledge_chunks: {
         Row: {
+          chunk_key: string;
           content: string;
           created_at: string;
           embedding: string;
@@ -281,6 +282,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          chunk_key: string;
           content: string;
           created_at?: string;
           embedding: string;
@@ -291,6 +293,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          chunk_key?: string;
           content?: string;
           created_at?: string;
           embedding?: string;

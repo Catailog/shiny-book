@@ -7,6 +7,7 @@ import { ORDER_EVENT_SOURCE } from '@/constants/order-event';
 import { ORDER_STATUS, type OrderStatus } from '@/constants/order-status';
 import { ADMIN_ROUTES } from '@/constants/routes';
 import { getCurrentAdmin } from '@/lib/auth/get-current-admin';
+import { chunkArray } from '@/lib/chunk-array';
 import { canRevert, canTransition } from '@/lib/orders/order-state-machine';
 import { revertOrderStatus } from '@/lib/orders/revert-order-status';
 import { transitionOrderStatus } from '@/lib/orders/transition-order-status';
@@ -99,7 +100,7 @@ export async function bulkAdvanceOrderStatus(
   const succeededIds: string[] = [];
   const failedIds: string[] = [];
 
-  for (const chunk of chunkIds(orderIds, BULK_ACTION_CHUNK_SIZE)) {
+  for (const chunk of chunkArray(orderIds, BULK_ACTION_CHUNK_SIZE)) {
     const results = await Promise.all(
       chunk.map((orderId) =>
         transitionOrderStatus(orderId, from, to, {
@@ -123,12 +124,4 @@ export async function bulkAdvanceOrderStatus(
   }
 
   return { error: null, succeededIds, failedIds };
-}
-
-function chunkIds(ids: string[], size: number): string[][] {
-  const chunks: string[][] = [];
-  for (let index = 0; index < ids.length; index += size) {
-    chunks.push(ids.slice(index, index + size));
-  }
-  return chunks;
 }
