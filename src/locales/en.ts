@@ -1116,6 +1116,8 @@ export const en = {
         orders: 'My Orders',
         account: 'Account Settings',
         inquiries: 'My Inquiries',
+        openMenu: 'Open menu',
+        menuTitle: 'My page menu',
       },
       stats: {
         completed: 'Total Orders Completed',

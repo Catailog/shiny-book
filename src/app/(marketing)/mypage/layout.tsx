@@ -20,7 +20,7 @@ export default async function MypageLayout(props: LayoutProps<'/mypage'>) {
   const avatarUrl = avatarPath ? await getSignedFileUrl(avatarPath) : null;
 
   return (
-    <div className="flex flex-1">
+    <div className="flex flex-1 flex-col md:flex-row">
       <MypageSidebar
         consumerName={consumerName}
         consumerEmail={consumer.email ?? ''}
