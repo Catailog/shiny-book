@@ -3,6 +3,7 @@ import 'server-only';
 import { ORDER_EVENT_TYPE } from '@/constants/order-event';
 import type { OrderStatus } from '@/constants/order-status';
 import type { Tables } from '@/lib/db/database.types';
+import { dispatchOrderStatusEmail } from '@/lib/email/dispatch-order-status-email';
 import { canRevert } from '@/lib/orders/order-state-machine';
 import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import type { OrderStatusChangeEvent } from '@/lib/orders/transition-order-status';
@@ -38,6 +39,8 @@ export async function revertOrderStatus(
       reason: event.reason,
       metadata: event.metadata,
     });
+
+    dispatchOrderStatusEmail({ order: data, fromStatus: from, toStatus: to, isRevert: true });
   }
 
   return data;

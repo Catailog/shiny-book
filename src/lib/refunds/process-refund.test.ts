@@ -35,6 +35,8 @@ vi.mock('@/lib/orders/record-order-event', () => ({ recordOrderEvent: recordOrde
 const cancelTossPaymentMock = vi.fn();
 vi.mock('@/lib/payments/toss-cancel-payment', () => ({ cancelTossPayment: cancelTossPaymentMock }));
 
+vi.mock('@/lib/email/dispatch-order-status-email', () => ({ dispatchOrderStatusEmail: vi.fn() }));
+
 const { ORDER_STATUS } = await import('@/constants/order-status');
 const { ORDER_EVENT_TYPE } = await import('@/constants/order-event');
 const { REFUND_STATUS } = await import('@/constants/refund');
