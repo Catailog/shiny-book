@@ -37,8 +37,8 @@ export default async function MypageInquiriesPage(props: PageProps<'/mypage/inqu
   } = paginate(allInquiries, parsePageParam(searchParams.page), DEFAULT_LIST_PAGE_SIZE);
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-10 py-10">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-1 flex-col gap-6 px-4 py-6 md:px-10 md:py-10">
+      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading text-4xl font-bold text-foreground">
             {t.consumer.inquiries.title}
@@ -55,7 +55,7 @@ export default async function MypageInquiriesPage(props: PageProps<'/mypage/inqu
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-border bg-input-background">
+      <div className="overflow-x-auto rounded-lg border border-border bg-input-background">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted hover:bg-muted">
