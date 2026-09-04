@@ -84,6 +84,7 @@ export function NavLinks({
                     <SheetClose
                       key={entry.label}
                       render={<Link href={entry.href} />}
+                      nativeButton={false}
                       className={cn(
                         SHEET_LINK_CLASSNAME,
                         isActive ? 'text-primary' : 'text-foreground hover:bg-muted',
@@ -103,6 +104,7 @@ export function NavLinks({
                       <SheetClose
                         key={item.label}
                         render={<Link href={item.href} />}
+                        nativeButton={false}
                         className={cn(
                           SHEET_LINK_CLASSNAME,
                           isPathActive(item.href)
