@@ -22,6 +22,7 @@
     "db:seed-admin": "node --env-file=.env.local scripts/seed-admin-account.mjs",
     "db:seed-test-photo-pool": "node --env-file=.env.local scripts/seed-test-photo-pool.mjs",
     "sim:courier": "node --env-file=.env.local scripts/simulate-courier.mjs",
+    "ai:canary": "tsx scripts/smoke-test-ai-providers.ts",
     "prepare": "husky"
   },
   "dependencies": {
@@ -91,6 +92,7 @@
     "shadcn": "^4.17.0",
     "supabase": "^2.114.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5",
     "vitest": "^4.1.10"
   },

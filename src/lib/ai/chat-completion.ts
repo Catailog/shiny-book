@@ -1,45 +1,20 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createGroq } from '@ai-sdk/groq';
-import { createOpenAI } from '@ai-sdk/openai';
-import { type LanguageModel, type ModelMessage, streamText } from 'ai';
+import { type ModelMessage, streamText } from 'ai';
 import 'server-only';
 
 import {
   AI_MAX_OUTPUT_TOKENS,
-  AI_MODEL,
-  AI_PROVIDER,
   AI_PROVIDER_FALLBACK_ORDER,
   AI_REQUEST_TIMEOUT_MS,
   AI_TEMPERATURE,
   type AiProvider,
 } from '@/constants/ai';
 import { env } from '@/env';
+import { resolveModel } from '@/lib/ai/resolve-model';
 import { logger } from '@/lib/log/logger';
 
 export interface ChatCompletionStream {
   provider: AiProvider;
   stream: ReadableStream<Uint8Array>;
-}
-
-function resolveModel(provider: AiProvider): LanguageModel | null {
-  switch (provider) {
-    case AI_PROVIDER.GEMINI:
-      return env.GEMINI_API_KEY
-        ? createGoogleGenerativeAI({ apiKey: env.GEMINI_API_KEY })(AI_MODEL[provider])
-        : null;
-    case AI_PROVIDER.GROQ:
-      return env.GROQ_API_KEY ? createGroq({ apiKey: env.GROQ_API_KEY })(AI_MODEL[provider]) : null;
-    case AI_PROVIDER.CLOUDFLARE:
-      // `.chat(...)` forces the OpenAI-compatible chat/completions endpoint;
-      // the provider's default call signature targets the Responses API,
-      // which Cloudflare's compat layer does not reliably support.
-      return env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_API_TOKEN
-        ? createOpenAI({
-            apiKey: env.CLOUDFLARE_API_TOKEN,
-            baseURL: `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
-          }).chat(AI_MODEL[provider])
-        : null;
-  }
 }
 
 function describeError(error: unknown): { message: string } | { value: string } {
@@ -53,8 +28,15 @@ export async function streamChatCompletion(
   system: string,
   messages: ModelMessage[],
 ): Promise<ChatCompletionStream | null> {
+  const credentials = {
+    geminiApiKey: env.GEMINI_API_KEY,
+    groqApiKey: env.GROQ_API_KEY,
+    cloudflareAccountId: env.CLOUDFLARE_ACCOUNT_ID,
+    cloudflareApiToken: env.CLOUDFLARE_API_TOKEN,
+  };
+
   for (const provider of AI_PROVIDER_FALLBACK_ORDER) {
-    const model = resolveModel(provider);
+    const model = resolveModel(provider, credentials);
     if (!model) {
       continue;
     }
