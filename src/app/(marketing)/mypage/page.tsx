@@ -93,8 +93,13 @@ export default async function MypagePage() {
         <h2 className="font-heading text-2xl font-bold text-foreground">
           {t.consumer.mypage.recentOrdersTitle}
         </h2>
-        <div className="overflow-x-auto rounded-lg border border-border bg-input-background">
-          <Table>
+        <div className="overflow-hidden rounded-lg border border-border bg-input-background">
+          {/* table-fixed shares out the unset title column from whatever's left of
+              the table's own width - on a shrinking container that heads to 0 and
+              its text starts overlapping the fixed-width columns. A min-width on
+              the table stops that and lets the wrapper's own overflow-x-auto (see
+              Table in components/ui/table.tsx) take over as a real scrollbar. */}
+          <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.consumer.mypage.orders.columns.title}</TableHead>

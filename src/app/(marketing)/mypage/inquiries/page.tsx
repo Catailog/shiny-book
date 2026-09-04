@@ -55,8 +55,13 @@ export default async function MypageInquiriesPage(props: PageProps<'/mypage/inqu
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-border bg-input-background">
-        <Table>
+      <div className="overflow-hidden rounded-lg border border-border bg-input-background">
+        {/* table-fixed shares out the unset title column from whatever's left of
+            the table's own width - on a shrinking container that heads to 0 and
+            its text starts overlapping the fixed-width columns. A min-width on
+            the table stops that and lets the wrapper's own overflow-x-auto (see
+            Table in components/ui/table.tsx) take over as a real scrollbar. */}
+        <Table className="min-w-[900px]">
           <TableHeader>
             <TableRow className="bg-muted hover:bg-muted">
               <TableHead className="w-28">{t.consumer.inquiries.table.inquiryId}</TableHead>
