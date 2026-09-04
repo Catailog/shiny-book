@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { type ModelMessage, streamText } from 'ai';
 import 'server-only';
 
@@ -9,6 +10,7 @@ import {
   type AiProvider,
 } from '@/constants/ai';
 import { env } from '@/env';
+import { classifyProviderError } from '@/lib/ai/classify-provider-error';
 import { resolveModel } from '@/lib/ai/resolve-model';
 import { logger } from '@/lib/log/logger';
 
@@ -71,10 +73,30 @@ export async function streamChatCompletion(
         }
       }
     } catch (error) {
-      logger.warn(
-        { event: 'ai.provider_failed', provider, err: describeError(error) },
-        'AI provider failed before producing text, trying the next',
-      );
+      const { kind, errorClass } = classifyProviderError(provider, error);
+
+      if (kind === 'structural') {
+        // This provider will keep failing until a human fixes it (retired
+        // model, revoked key, billing/tier gate, contract change) - the
+        // fallback below still gets the user an answer, but nobody would
+        // otherwise notice this provider is dead until every provider is.
+        logger.error(
+          { event: 'ai.provider_failed', provider, errorClass, err: describeError(error) },
+          'AI provider failed with a structural error, trying the next',
+        );
+        Sentry.captureException(error, {
+          tags: { area: 'ai-provider', provider, errorClass },
+          // Fixed fingerprint so every "Gemini model_gone" occurrence groups
+          // into one Sentry issue - one alert, not a flood per request.
+          fingerprint: ['ai-provider', provider, errorClass],
+        });
+      } else {
+        logger.warn(
+          { event: 'ai.provider_failed', provider, errorClass, err: describeError(error) },
+          'AI provider failed before producing text, trying the next',
+        );
+      }
+
       continue;
     }
 

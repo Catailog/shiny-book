@@ -14,7 +14,19 @@ const mockKeys = {
   CLOUDFLARE_API_TOKEN: 'tok' as string | undefined,
 };
 vi.mock('@/env', () => ({ env: mockKeys }));
-vi.mock('@/lib/log/logger', () => ({ logger: { warn: vi.fn(), error: vi.fn() } }));
+
+const loggerMock = { warn: vi.fn(), error: vi.fn() };
+vi.mock('@/lib/log/logger', () => ({ logger: loggerMock }));
+
+const captureExceptionMock = vi.fn();
+vi.mock('@sentry/nextjs', () => ({ captureException: captureExceptionMock }));
+
+// classify-provider-error has its own dedicated test file; here it's mocked so
+// this file can drive the transient/structural branches directly.
+const classifyProviderErrorMock = vi.fn(() => ({ kind: 'transient', errorClass: 'non_api_error' }));
+vi.mock('@/lib/ai/classify-provider-error', () => ({
+  classifyProviderError: classifyProviderErrorMock,
+}));
 
 const { streamChatCompletion } = await import('@/lib/ai/chat-completion');
 
@@ -101,6 +113,38 @@ describe('streamChatCompletion', () => {
 
     expect(result?.provider).toBe('groq');
     expect(streamTextMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports a structural failure to Sentry with a fixed fingerprint and still falls through', async () => {
+    const structuralError = new Error('model retired');
+    classifyProviderErrorMock.mockReturnValueOnce({ kind: 'structural', errorClass: 'model_gone' });
+    streamTextMock
+      .mockReturnValueOnce(fullStreamOf([{ type: 'error', error: structuralError }]))
+      .mockReturnValueOnce(fullStreamOf(textParts('from groq')));
+
+    const result = await streamChatCompletion('sys', []);
+
+    expect(result?.provider).toBe('groq');
+    expect(captureExceptionMock).toHaveBeenCalledWith(structuralError, {
+      tags: { area: 'ai-provider', provider: 'gemini', errorClass: 'model_gone' },
+      fingerprint: ['ai-provider', 'gemini', 'model_gone'],
+    });
+    expect(loggerMock.error).toHaveBeenCalledWith(
+      expect.objectContaining({ provider: 'gemini', errorClass: 'model_gone' }),
+      'AI provider failed with a structural error, trying the next',
+    );
+    expect(loggerMock.warn).not.toHaveBeenCalled();
+  });
+
+  it('does not report a transient failure to Sentry', async () => {
+    streamTextMock
+      .mockReturnValueOnce(fullStreamOf([{ type: 'error', error: new Error('rate limited') }]))
+      .mockReturnValueOnce(fullStreamOf(textParts('from groq')));
+
+    await streamChatCompletion('sys', []);
+
+    expect(captureExceptionMock).not.toHaveBeenCalled();
+    expect(loggerMock.error).not.toHaveBeenCalled();
   });
 
   it('returns null when every provider fails', async () => {
