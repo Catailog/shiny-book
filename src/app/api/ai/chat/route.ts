@@ -3,8 +3,8 @@ import type { NextRequest } from 'next/server';
 import type { ModelMessage } from 'ai';
 
 import { API_ERROR_CODES } from '@/constants/api-errors';
-import { buildKnowledgeBase } from '@/lib/ai/build-knowledge-base';
 import { streamChatCompletion } from '@/lib/ai/chat-completion';
+import { retrieveContext } from '@/lib/ai/retrieve-context';
 import { buildSystemPrompt } from '@/lib/ai/system-prompt';
 import { apiError } from '@/lib/api/api-response';
 import { withRequestContext } from '@/lib/api/with-request-context';
@@ -35,7 +35,8 @@ async function postHandler(request: NextRequest): Promise<Response> {
   }
 
   const locale = await getLocale();
-  const knowledgeBase = await buildKnowledgeBase(locale);
+  const lastUserMessage = [...parsed.data.messages].reverse().find((m) => m.role === 'user');
+  const knowledgeBase = await retrieveContext(locale, lastUserMessage?.content ?? '');
   const system = buildSystemPrompt(knowledgeBase, locale);
 
   const messages: ModelMessage[] = parsed.data.messages.map((message) =>
