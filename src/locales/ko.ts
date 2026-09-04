@@ -1115,8 +1115,6 @@ export const ko = {
         orders: '내 주문',
         account: '계정 설정',
         inquiries: '1:1 문의',
-        openMenu: '메뉴 열기',
-        menuTitle: '마이페이지 메뉴',
       },
       stats: {
         completed: '전체 주문 완료',
