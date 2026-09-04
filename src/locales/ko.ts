@@ -615,7 +615,6 @@ export const ko = {
         clearButton: '선택 해제',
         allSucceeded: '선택한 주문을 모두 변경했습니다.',
         partialFailurePrefix: '일부 주문 변경에 실패했습니다: ',
-        tooManySelected: '선택 가능한 개수를 초과했습니다.',
       },
       simulateShipment: {
         button: '배송 시뮬레이션',

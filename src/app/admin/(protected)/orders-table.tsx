@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+
+import { toast } from 'sonner';
 
 import { OrderStatusBadge } from '@/components/order-status-badge';
 import { RelativeDate } from '@/components/relative-date';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
@@ -13,14 +16,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { BULK_ACTION_MAX_ORDERS } from '@/constants/admin';
 import { ORDER_STATUS, type OrderStatus, isOrderStatus } from '@/constants/order-status';
 import { isRefundableOrderStatus } from '@/constants/refund';
 import { formatIdPrefix } from '@/lib/format-id-prefix';
 import type { OrderWithConsumerName } from '@/lib/orders/get-orders';
 import { getNextStatuses, getPreviousStatus } from '@/lib/orders/order-state-machine';
+import { toastImportant } from '@/lib/toast';
 import { defaultLocale, locales } from '@/locales';
 
 import { OrderActionsMenu } from './order-actions-menu';
+import { bulkAdvanceOrderStatus } from './order-status-actions';
 import { ViewOrderPhotosButton } from './view-order-photos-button';
 
 interface OrdersTableProps {
@@ -32,6 +38,7 @@ interface OrdersTableProps {
 export function OrdersTable({ orders, activeFilter, showSimulator }: OrdersTableProps) {
   const t = locales[defaultLocale];
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isPending, startTransition] = useTransition();
 
   // Bulk selection only makes sense once a single status is filtered on - every
   // visible row then shares the same (and only) next status, so one button can
@@ -60,6 +67,43 @@ export function OrdersTable({ orders, activeFilter, showSimulator }: OrdersTable
     });
   }
 
+  function handleBulkAdvance() {
+    if (!activeFilter || !bulkTargetStatus || selectedIds.size === 0) {
+      return;
+    }
+
+    const orderIds = Array.from(selectedIds);
+    const fromStatus = activeFilter;
+    const toStatus = bulkTargetStatus;
+
+    startTransition(async () => {
+      const result = await bulkAdvanceOrderStatus(orderIds, fromStatus, toStatus);
+
+      if (result.error === 'too_many') {
+        toast.error(
+          `${t.admin.orders.bulk.maxSelectablePrefix}${BULK_ACTION_MAX_ORDERS}${t.admin.orders.bulk.maxSelectableSuffix}`,
+        );
+        return;
+      }
+      if (result.error) {
+        toast.error(t.admin.orders.statusChangeErrors[result.error]);
+        return;
+      }
+
+      if (result.failedIds.length === 0) {
+        toast.success(t.admin.orders.bulk.allSucceeded);
+      } else {
+        const failedLabel = result.failedIds.map((id) => formatIdPrefix(id)).join(', ');
+        toastImportant.warning(
+          `${t.admin.orders.bulk.partialFailurePrefix}${failedLabel}`,
+          t.common.importantToastLabel,
+        );
+      }
+
+      setSelectedIds(new Set());
+    });
+  }
+
   return (
     <div className="flex flex-col gap-3">
       {canBulkSelect && selectedIds.size > 0 ? (
@@ -68,6 +112,24 @@ export function OrdersTable({ orders, activeFilter, showSimulator }: OrdersTable
             {selectedIds.size}
             {t.admin.orders.bulk.selectedCountSuffix}
           </span>
+          <Button
+            type="button"
+            size="sm"
+            variant="primary"
+            disabled={isPending}
+            onClick={handleBulkAdvance}
+          >
+            {isPending ? t.admin.orders.bulk.advancing : t.admin.orders.bulk.advanceButton}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            disabled={isPending}
+            onClick={() => setSelectedIds(new Set())}
+          >
+            {t.admin.orders.bulk.clearButton}
+          </Button>
         </div>
       ) : null}
       <div className="overflow-hidden rounded-lg border border-border bg-input-background">

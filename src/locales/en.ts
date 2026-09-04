@@ -617,7 +617,6 @@ export const en = {
         clearButton: 'Clear selection',
         allSucceeded: 'Updated all selected orders.',
         partialFailurePrefix: 'Failed to update some orders: ',
-        tooManySelected: 'Exceeds the maximum selectable count.',
       },
       simulateShipment: {
         button: 'Simulate shipment',
