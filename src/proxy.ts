@@ -4,6 +4,7 @@ import { createServerClient } from '@supabase/ssr';
 
 import { REQUEST_ID_HEADER } from '@/constants/log';
 import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
+import { THEME_COOKIE_MAX_AGE, THEME_COOKIE_NAME, isTheme } from '@/constants/theme';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { resolveRequestId } from '@/lib/log/resolve-request-id';
@@ -84,6 +85,17 @@ export async function proxy(request: NextRequest) {
 
   if (isConsumerAuthRoute && isAuthenticatedConsumer) {
     return NextResponse.redirect(new URL(CONSUMER_ROUTES.MYPAGE, request.url));
+  }
+
+  // Mirror the consumer's saved theme into the `theme` cookie so the root layout
+  // renders the right `<html class>` on a fresh device/browser without a flash.
+  const profileTheme = isAuthenticatedConsumer ? user?.user_metadata.theme : undefined;
+  if (isTheme(profileTheme) && request.cookies.get(THEME_COOKIE_NAME)?.value !== profileTheme) {
+    supabaseResponse.cookies.set(THEME_COOKIE_NAME, profileTheme, {
+      maxAge: THEME_COOKIE_MAX_AGE,
+      path: '/',
+      sameSite: 'lax',
+    });
   }
 
   supabaseResponse.headers.set(REQUEST_ID_HEADER, requestId);

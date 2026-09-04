@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { Fraunces, Geist, Geist_Mono } from 'next/font/google';
+import { cookies } from 'next/headers';
 
 import { Toaster } from 'sonner';
 
 import { AnimationPauseObserver } from '@/components/animation-pause-observer';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { THEME_COOKIE_NAME } from '@/constants/theme';
 import { TOAST_DURATION_MS } from '@/constants/toast';
 
 import './globals.css';
@@ -29,16 +31,21 @@ export const metadata: Metadata = {
   description: '나만의 책을 만들어 인쇄하는 서비스',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const cookieStore = await cookies();
+  const isDarkTheme = cookieStore.get(THEME_COOKIE_NAME)?.value === 'dark';
+
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased${
+        isDarkTheme ? 'dark' : ''
+      }`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
         <script>
-          {`(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');}}catch(e){}})();`}
+          {`(function(){try{if(document.cookie.indexOf('${THEME_COOKIE_NAME}=')!==-1)return;var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');}}catch(e){}})();`}
         </script>
         <AnimationPauseObserver />
         <TooltipProvider>{children}</TooltipProvider>
