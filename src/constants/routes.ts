@@ -18,6 +18,7 @@ export const CONSUMER_ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   MYPAGE: '/mypage',
+  ORDERS: '/mypage/orders',
   NEW_ORDER: '/orders/new',
   ACCOUNT: '/mypage/account',
   INQUIRIES: '/mypage/inquiries',
