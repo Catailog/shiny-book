@@ -269,6 +269,39 @@ export type Database = {
           },
         ];
       };
+      knowledge_chunks: {
+        Row: {
+          content: string;
+          created_at: string;
+          embedding: string;
+          id: string;
+          locale: string | null;
+          source: string;
+          source_ref: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          content: string;
+          created_at?: string;
+          embedding: string;
+          id?: string;
+          locale?: string | null;
+          source: string;
+          source_ref?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          content?: string;
+          created_at?: string;
+          embedding?: string;
+          id?: string;
+          locale?: string | null;
+          source?: string;
+          source_ref?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       order_events: {
         Row: {
           actor: string;
@@ -702,7 +735,22 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      match_knowledge_chunks: {
+        Args: {
+          match_count: number;
+          match_locale: string;
+          min_similarity: number;
+          query_embedding: string;
+        };
+        Returns: {
+          content: string;
+          id: string;
+          locale: string;
+          similarity: number;
+          source: string;
+          source_ref: string;
+        }[];
+      };
     };
     Enums: {
       [_ in never]: never;
