@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { DEFAULT_ORDER_STATUS_EMAIL_CONSENT } from '@/constants/consumer';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
+import { getLocale } from '@/lib/i18n/get-locale';
 import { createServerSupabaseClient } from '@/lib/supabase/server-client';
 import { verifyTurnstileToken } from '@/lib/turnstile/verify-turnstile-token';
 
@@ -29,6 +30,7 @@ export async function signUpConsumer(
     return { errorCode: 'unexpected_error' };
   }
 
+  const locale = await getLocale();
   const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
@@ -37,6 +39,7 @@ export async function signUpConsumer(
       data: {
         name: parsed.data.name,
         phone: parsed.data.phone || null,
+        locale,
         orderStatusEmailConsent: DEFAULT_ORDER_STATUS_EMAIL_CONSENT,
         marketingEmailConsent: parsed.data.marketingEmailConsent,
         marketingSmsConsent: parsed.data.marketingSmsConsent,
