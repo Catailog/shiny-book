@@ -21,8 +21,6 @@ import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
 import { getReviewsByConsumer } from '@/lib/reviews/get-reviews-by-consumer';
 import { locales } from '@/locales';
 
-import { ConsumerOrderHistoryButton } from './consumer-order-history-button';
-
 const IN_PROGRESS_STATUSES = new Set<string>([
   ORDER_STATUS.PAID,
   ORDER_STATUS.PRINTING,
@@ -139,7 +137,12 @@ export default async function MypagePage() {
                     <TableCell>
                       <div className="flex flex-col items-start gap-1">
                         {status ? <OrderStatusBadge status={status} /> : order.status}
-                        <ConsumerOrderHistoryButton orderId={order.id} />
+                        <Link
+                          href={`${CONSUMER_ROUTES.ORDERS}/${order.id}`}
+                          className="text-xs text-muted-foreground underline"
+                        >
+                          {t.consumer.mypage.orders.detailLink}
+                        </Link>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
