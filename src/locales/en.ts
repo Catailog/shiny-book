@@ -456,7 +456,6 @@ export const en = {
       faqs: 'FAQs',
       inquiries: 'Inquiries',
       refunds: 'Refunds',
-      aiChatbotGroup: 'AI Chatbot',
       knowledgeBase: 'Other Settings',
       logout: 'Logout',
     },
@@ -542,6 +541,7 @@ export const en = {
     },
     knowledgeBase: {
       title: 'Other Settings',
+      sectionLabel: 'AI Chatbot',
       description:
         'So the chatbot can answer from your FAQs, announcements, products, and policy pages, this converts that source text into vectors and stores them. Editing FAQs, announcements, products, or policy pages does not update this automatically - reindex below after making changes so the chatbot answers with the latest content.',
       lastAppliedLabel: 'Last reindexed',

@@ -14,6 +14,9 @@ export default async function AdminKnowledgeBasePage() {
     <div className="flex flex-1 flex-col">
       <AdminTopbar title={t.admin.knowledgeBase.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
+        <h2 className="text-lg font-semibold text-foreground">
+          {t.admin.knowledgeBase.sectionLabel}
+        </h2>
         <p className="max-w-2xl text-sm text-muted-foreground">
           {t.admin.knowledgeBase.description}
         </p>
