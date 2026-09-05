@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     SUPABASE_SECRET_KEY: z.string().min(1),
     KV_REST_API_URL: z.string().url(),
     KV_REST_API_TOKEN: z.string().min(1),
@@ -41,7 +40,14 @@ export const env = createEnv({
     // no-ops without a dsn, so the SDK is silently inert until this is set.
     NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
   },
+  // NODE_ENV은 서버/클라이언트 양쪽에서 접근해야 한다(예: instrumentation-client.ts).
+  // server 블록에 두면 t3-env가 클라이언트 접근을 막아 런타임 에러를 던지므로
+  // NEXT_PUBLIC_ 프리픽스 없이 양쪽에 공유되는 shared 블록에 둔다.
+  shared: {
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  },
   experimental__runtimeEnv: {
+    NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_TOSS_CLIENT_KEY: process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY,
