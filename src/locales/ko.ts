@@ -453,7 +453,8 @@ export const ko = {
       faqs: 'FAQ 관리',
       inquiries: '문의 관리',
       refunds: '환불 관리',
-      knowledgeBase: '지식베이스 관리',
+      aiChatbotGroup: 'AI 챗봇',
+      knowledgeBase: '기타 설정',
       logout: '로그아웃',
     },
     refunds: {
@@ -538,7 +539,7 @@ export const ko = {
       },
     },
     knowledgeBase: {
-      title: '지식베이스 관리',
+      title: '기타 설정',
       description:
         '챗봇이 FAQ, 공지사항, 상품, 정책 페이지 내용을 답변 근거로 쓸 수 있도록 이 원문들을 벡터로 변환해 저장합니다. FAQ/공지/상품/정책 내용을 수정해도 자동으로 반영되지 않으므로, 수정 후에는 아래 버튼을 눌러야 챗봇 답변에 최신 내용이 반영됩니다.',
       lastAppliedLabel: '마지막 재색인',

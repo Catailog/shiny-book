@@ -12,40 +12,44 @@ export default async function AdminKnowledgeBasePage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.knowledgeBase.title} actions={<ReindexKnowledgeBaseButton />} />
+      <AdminTopbar title={t.admin.knowledgeBase.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <p className="max-w-2xl text-sm text-muted-foreground">
           {t.admin.knowledgeBase.description}
         </p>
 
-        <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-input-background p-6">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm text-muted-foreground">
-              {t.admin.knowledgeBase.lastAppliedLabel}
-            </span>
-            <span className="text-sm font-medium text-foreground">
-              {status.lastAppliedAt ? (
-                <RelativeDate value={status.lastAppliedAt} locale={defaultLocale} />
-              ) : (
-                t.admin.knowledgeBase.lastAppliedNever
-              )}
-            </span>
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border bg-input-background p-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col gap-1">
+              <span className="text-sm text-muted-foreground">
+                {t.admin.knowledgeBase.lastAppliedLabel}
+              </span>
+              <span className="text-sm font-medium text-foreground">
+                {status.lastAppliedAt ? (
+                  <RelativeDate value={status.lastAppliedAt} locale={defaultLocale} />
+                ) : (
+                  t.admin.knowledgeBase.lastAppliedNever
+                )}
+              </span>
+            </div>
+
+            <Badge variant={status.isStale ? 'destructive' : 'secondary'}>
+              {status.isStale
+                ? t.admin.knowledgeBase.staleBadge
+                : t.admin.knowledgeBase.upToDateBadge}
+            </Badge>
+
+            {status.isStale ? (
+              <span className="text-sm text-muted-foreground">
+                {t.admin.knowledgeBase.staleSummary
+                  .replace('{added}', String(status.addedCount))
+                  .replace('{changed}', String(status.changedCount))
+                  .replace('{removed}', String(status.removedCount))}
+              </span>
+            ) : null}
           </div>
 
-          <Badge variant={status.isStale ? 'destructive' : 'secondary'}>
-            {status.isStale
-              ? t.admin.knowledgeBase.staleBadge
-              : t.admin.knowledgeBase.upToDateBadge}
-          </Badge>
-
-          {status.isStale ? (
-            <span className="text-sm text-muted-foreground">
-              {t.admin.knowledgeBase.staleSummary
-                .replace('{added}', String(status.addedCount))
-                .replace('{changed}', String(status.changedCount))
-                .replace('{removed}', String(status.removedCount))}
-            </span>
-          ) : null}
+          <ReindexKnowledgeBaseButton />
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import {
   HelpCircle,
   LayoutDashboard,
   LogOut,
+  type LucideIcon,
   MessageSquare,
   Package,
   Tag,
@@ -36,6 +37,9 @@ export function AdminSidebar({ signOutAction }: AdminSidebarProps) {
     { href: ADMIN_ROUTES.FAQS, label: t.admin.nav.faqs, icon: HelpCircle },
     { href: ADMIN_ROUTES.INQUIRIES, label: t.admin.nav.inquiries, icon: MessageSquare },
     { href: ADMIN_ROUTES.REFUNDS, label: t.admin.nav.refunds, icon: Undo2 },
+  ];
+
+  const aiChatbotNavItems = [
     { href: ADMIN_ROUTES.KNOWLEDGE_BASE, label: t.admin.nav.knowledgeBase, icon: Database },
   ];
 
@@ -46,28 +50,16 @@ export function AdminSidebar({ signOutAction }: AdminSidebarProps) {
         <span className="font-heading text-xl font-bold">Shiny Book</span>
       </div>
       <nav className="mt-10 flex flex-1 flex-col gap-1">
-        {navItems.map((item) => {
-          const isActive =
-            item.href === ADMIN_ROUTES.DASHBOARD
-              ? pathname === item.href
-              : pathname.startsWith(item.href);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-primary font-semibold text-primary-foreground'
-                  : 'text-ink-foreground/80 hover:bg-ink-foreground/10',
-              )}
-            >
-              <Icon aria-hidden="true" className="size-4.5" />
-              {item.label}
-            </Link>
-          );
-        })}
+        {navItems.map((item) => (
+          <NavLink key={item.href} item={item} pathname={pathname} />
+        ))}
+
+        <p className="mt-4 px-3 pb-1 text-xs font-semibold tracking-wide text-ink-foreground/50 uppercase">
+          {t.admin.nav.aiChatbotGroup}
+        </p>
+        {aiChatbotNavItems.map((item) => (
+          <NavLink key={item.href} item={item} pathname={pathname} indented />
+        ))}
       </nav>
       <div className="border-t border-ink-foreground/15 pt-4">
         <form action={signOutAction}>
@@ -81,5 +73,33 @@ export function AdminSidebar({ signOutAction }: AdminSidebarProps) {
         </form>
       </div>
     </aside>
+  );
+}
+
+interface NavLinkProps {
+  item: { href: string; label: string; icon: LucideIcon };
+  pathname: string;
+  indented?: boolean;
+}
+
+function NavLink({ item, pathname, indented = false }: NavLinkProps) {
+  const isActive =
+    item.href === ADMIN_ROUTES.DASHBOARD ? pathname === item.href : pathname.startsWith(item.href);
+  const Icon = item.icon;
+
+  return (
+    <Link
+      href={item.href}
+      className={cn(
+        'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+        indented && 'ml-2',
+        isActive
+          ? 'bg-primary font-semibold text-primary-foreground'
+          : 'text-ink-foreground/80 hover:bg-ink-foreground/10',
+      )}
+    >
+      <Icon aria-hidden="true" className="size-4.5" />
+      {item.label}
+    </Link>
   );
 }
