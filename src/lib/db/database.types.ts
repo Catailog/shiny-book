@@ -172,6 +172,7 @@ export type Database = {
           created_at: string;
           id: string;
           question: string;
+          slug: string | null;
           updated_at: string;
         };
         Insert: {
@@ -179,6 +180,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           question: string;
+          slug?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -186,6 +188,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           question?: string;
+          slug?: string | null;
           updated_at?: string;
         };
         Relationships: [];
