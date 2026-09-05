@@ -2,6 +2,8 @@
 
 import { useTransition } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -12,6 +14,7 @@ import { reindexKnowledgeBaseAction } from './knowledge-base-actions';
 
 export function ReindexKnowledgeBaseButton() {
   const t = locales[defaultLocale];
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   function handleReindex() {
@@ -29,6 +32,7 @@ export function ReindexKnowledgeBaseButton() {
         return;
       }
 
+      router.refresh();
       toast.success(
         t.admin.knowledgeBase.successUpdated
           .replace('{embedded}', String(embeddedCount))
