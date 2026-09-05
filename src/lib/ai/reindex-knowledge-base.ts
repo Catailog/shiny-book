@@ -2,7 +2,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { embedMany } from 'ai';
 import 'server-only';
 
-import { AI_EMBEDDING_MODEL } from '@/constants/ai';
+import { AI_EMBEDDING_DIMENSIONS, AI_EMBEDDING_MODEL } from '@/constants/ai';
 import { env } from '@/env';
 import { collectKnowledgeChunks } from '@/lib/ai/collect-knowledge-chunks';
 import { diffKnowledgeChunks } from '@/lib/ai/diff-knowledge-chunks';
@@ -51,7 +51,13 @@ export async function reindexKnowledgeBase(): Promise<ReindexKnowledgeBaseResult
 
   const google = createGoogleGenerativeAI({ apiKey: env.GEMINI_API_KEY });
   const model = google.textEmbeddingModel(AI_EMBEDDING_MODEL);
-  const { embeddings } = await embedMany({ model, values: toEmbed.map((chunk) => chunk.content) });
+  const { embeddings } = await embedMany({
+    model,
+    values: toEmbed.map((chunk) => chunk.content),
+    providerOptions: {
+      google: { outputDimensionality: AI_EMBEDDING_DIMENSIONS, taskType: 'RETRIEVAL_DOCUMENT' },
+    },
+  });
 
   const now = new Date().toISOString();
   const rows = toEmbed.map((chunk, index) => ({

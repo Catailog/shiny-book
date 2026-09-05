@@ -9,6 +9,7 @@ import { loadEnvConfig } from '@next/env';
 import { embed, streamText } from 'ai';
 
 import {
+  AI_EMBEDDING_DIMENSIONS,
   AI_EMBEDDING_MODEL,
   AI_PROVIDER,
   AI_PROVIDER_FALLBACK_ORDER,
@@ -98,7 +99,11 @@ async function checkEmbedding(geminiApiKey: string | undefined): Promise<CheckRe
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
-      await embed({ model, value: 'canary check' });
+      await embed({
+        model,
+        value: 'canary check',
+        providerOptions: { google: { outputDimensionality: AI_EMBEDDING_DIMENSIONS } },
+      });
       console.log('[ok] embedding: responded');
       return 'ok';
     } catch (error) {

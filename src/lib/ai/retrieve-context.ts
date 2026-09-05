@@ -3,6 +3,7 @@ import { embed } from 'ai';
 import 'server-only';
 
 import {
+  AI_EMBEDDING_DIMENSIONS,
   AI_EMBEDDING_MODEL,
   AI_RETRIEVAL_MIN_SIMILARITY,
   AI_RETRIEVAL_TOP_K,
@@ -25,7 +26,13 @@ export async function retrieveContext(locale: Locale, lastUserMessage: string): 
   try {
     const google = createGoogleGenerativeAI({ apiKey: env.GEMINI_API_KEY });
     const model = google.textEmbeddingModel(AI_EMBEDDING_MODEL);
-    const { embedding } = await embed({ model, value: lastUserMessage });
+    const { embedding } = await embed({
+      model,
+      value: lastUserMessage,
+      providerOptions: {
+        google: { outputDimensionality: AI_EMBEDDING_DIMENSIONS, taskType: 'RETRIEVAL_QUERY' },
+      },
+    });
 
     const supabase = createServiceRoleClient();
     const { data, error } = await supabase.rpc('match_knowledge_chunks', {
