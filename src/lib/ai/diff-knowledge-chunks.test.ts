@@ -19,38 +19,42 @@ describe('diffKnowledgeChunks', () => {
 
     const diff = diffKnowledgeChunks(fresh, storedChunks);
 
-    expect(diff.toEmbed).toEqual([]);
-    expect(diff.toDeleteKeys).toEqual([]);
+    expect(diff.added).toEqual([]);
+    expect(diff.changed).toEqual([]);
+    expect(diff.removedKeys).toEqual([]);
     expect(diff.unchangedCount).toBe(2);
   });
 
-  it('includes a chunk with no stored counterpart in toEmbed', () => {
+  it('classifies a chunk with no stored counterpart as added', () => {
     const fresh = [chunk('faq:1:all', 'hello')];
 
     const diff = diffKnowledgeChunks(fresh, []);
 
-    expect(diff.toEmbed).toEqual(fresh);
+    expect(diff.added).toEqual(fresh);
+    expect(diff.changed).toEqual([]);
     expect(diff.unchangedCount).toBe(0);
   });
 
-  it('includes a chunk whose content changed in toEmbed', () => {
+  it('classifies a chunk whose content changed as changed', () => {
     const fresh = [chunk('faq:1:all', 'updated answer')];
     const storedChunks = [stored('faq:1:all', 'old answer')];
 
     const diff = diffKnowledgeChunks(fresh, storedChunks);
 
-    expect(diff.toEmbed).toEqual(fresh);
+    expect(diff.added).toEqual([]);
+    expect(diff.changed).toEqual(fresh);
     expect(diff.unchangedCount).toBe(0);
   });
 
-  it('lists a stored chunk key with no fresh counterpart in toDeleteKeys', () => {
+  it('lists a stored chunk key with no fresh counterpart in removedKeys', () => {
     const storedChunks = [stored('faq:1:all', 'hello'), stored('faq:2:all', 'removed')];
     const fresh = [chunk('faq:1:all', 'hello')];
 
     const diff = diffKnowledgeChunks(fresh, storedChunks);
 
-    expect(diff.toEmbed).toEqual([]);
-    expect(diff.toDeleteKeys).toEqual(['faq:2:all']);
+    expect(diff.added).toEqual([]);
+    expect(diff.changed).toEqual([]);
+    expect(diff.removedKeys).toEqual(['faq:2:all']);
     expect(diff.unchangedCount).toBe(1);
   });
 });

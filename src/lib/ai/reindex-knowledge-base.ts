@@ -30,22 +30,23 @@ export async function reindexKnowledgeBase(): Promise<ReindexKnowledgeBaseResult
     collectKnowledgeChunks(),
     getStoredKnowledgeChunks(),
   ]);
-  const { toEmbed, toDeleteKeys } = diffKnowledgeChunks(chunks, stored);
+  const { added, changed, removedKeys } = diffKnowledgeChunks(chunks, stored);
+  const toEmbed = [...added, ...changed];
 
   const supabase = createServiceRoleClient();
 
-  if (toDeleteKeys.length > 0) {
+  if (removedKeys.length > 0) {
     const { error: deleteError } = await supabase
       .from('knowledge_chunks')
       .delete()
-      .in('chunk_key', toDeleteKeys);
+      .in('chunk_key', removedKeys);
     if (deleteError) {
       throw deleteError;
     }
   }
 
   if (toEmbed.length === 0) {
-    return { chunkCount: chunks.length, embeddedCount: 0, deletedCount: toDeleteKeys.length };
+    return { chunkCount: chunks.length, embeddedCount: 0, deletedCount: removedKeys.length };
   }
 
   const google = createGoogleGenerativeAI({ apiKey: env.GEMINI_API_KEY });
@@ -73,6 +74,6 @@ export async function reindexKnowledgeBase(): Promise<ReindexKnowledgeBaseResult
   return {
     chunkCount: chunks.length,
     embeddedCount: rows.length,
-    deletedCount: toDeleteKeys.length,
+    deletedCount: removedKeys.length,
   };
 }
