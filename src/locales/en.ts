@@ -456,6 +456,7 @@ export const en = {
       faqs: 'FAQs',
       inquiries: 'Inquiries',
       refunds: 'Refunds',
+      knowledgeBase: 'Knowledge Base',
       logout: 'Logout',
     },
     refunds: {
@@ -539,10 +540,18 @@ export const en = {
       },
     },
     knowledgeBase: {
+      title: 'Knowledge Base',
+      description:
+        'So the chatbot can answer from your FAQs, announcements, products, and policy pages, this converts that source text into vectors and stores them. Editing FAQs, announcements, products, or policy pages does not update this automatically - reindex below after making changes so the chatbot answers with the latest content.',
+      lastAppliedLabel: 'Last reindexed',
+      lastAppliedNever: 'Never reindexed',
+      upToDateBadge: 'Up to date',
+      staleBadge: 'Needs update',
+      staleSummary: '{added} added, {changed} changed, {removed} removed',
       reindexButton: 'Reindex knowledge base',
       reindexing: 'Reindexing...',
-      successPrefix: 'Reindexed the knowledge base (',
-      successSuffix: ' chunks).',
+      successNoChange: 'Nothing changed, so the knowledge base was left as is.',
+      successUpdated: '{embedded} updated, {deleted} removed.',
       errors: {
         unauthorized: 'You are not authorized.',
         not_configured: 'GEMINI_API_KEY is not set, so reindexing is unavailable.',

@@ -453,6 +453,7 @@ export const ko = {
       faqs: 'FAQ 관리',
       inquiries: '문의 관리',
       refunds: '환불 관리',
+      knowledgeBase: '지식베이스 관리',
       logout: '로그아웃',
     },
     refunds: {
@@ -537,10 +538,18 @@ export const ko = {
       },
     },
     knowledgeBase: {
+      title: '지식베이스 관리',
+      description:
+        '챗봇이 FAQ, 공지사항, 상품, 정책 페이지 내용을 답변 근거로 쓸 수 있도록 이 원문들을 벡터로 변환해 저장합니다. FAQ/공지/상품/정책 내용을 수정해도 자동으로 반영되지 않으므로, 수정 후에는 아래 버튼을 눌러야 챗봇 답변에 최신 내용이 반영됩니다.',
+      lastAppliedLabel: '마지막 재색인',
+      lastAppliedNever: '아직 재색인한 적 없음',
+      upToDateBadge: '최신 상태',
+      staleBadge: '업데이트 필요',
+      staleSummary: '추가 {added}개, 변경 {changed}개, 삭제 {removed}개',
       reindexButton: '지식베이스 재색인',
       reindexing: '재색인 중...',
-      successPrefix: '지식베이스를 재색인했습니다 (',
-      successSuffix: '개 조각).',
+      successNoChange: '변경된 내용이 없어 그대로 유지했습니다.',
+      successUpdated: '{embedded}개 반영, {deleted}개 삭제 완료.',
       errors: {
         unauthorized: '권한이 없습니다.',
         not_configured: 'GEMINI_API_KEY가 설정되지 않아 재색인할 수 없습니다.',

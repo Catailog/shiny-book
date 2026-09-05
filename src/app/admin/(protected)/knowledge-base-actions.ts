@@ -6,7 +6,8 @@ import { logger } from '@/lib/log/logger';
 
 export interface ReindexKnowledgeBaseState {
   error: 'unauthorized' | 'not_configured' | 'failed' | null;
-  chunkCount?: number;
+  embeddedCount?: number;
+  deletedCount?: number;
 }
 
 export async function reindexKnowledgeBaseAction(): Promise<ReindexKnowledgeBaseState> {
@@ -21,7 +22,7 @@ export async function reindexKnowledgeBaseAction(): Promise<ReindexKnowledgeBase
       return { error: 'not_configured' };
     }
 
-    return { error: null, chunkCount: result.chunkCount };
+    return { error: null, embeddedCount: result.embeddedCount, deletedCount: result.deletedCount };
   } catch (error) {
     logger.error(
       {

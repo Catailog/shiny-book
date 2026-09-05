@@ -26,7 +26,6 @@ import { AdminPageSizeSelect } from './admin-page-size-select';
 import { AdminTopbar } from './admin-topbar';
 import { ExportOrdersCsvButton } from './export-orders-csv-button';
 import { OrdersTable } from './orders-table';
-import { ReindexKnowledgeBaseButton } from './reindex-knowledge-base-button';
 
 const PENDING_PRODUCTION_STATUSES = new Set<string>([
   ORDER_STATUS.PAID,
@@ -102,7 +101,7 @@ export default async function AdminDashboardPage(props: PageProps<'/admin'>) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AdminTopbar title={t.admin.dashboard.title} actions={<ReindexKnowledgeBaseButton />} />
+      <AdminTopbar title={t.admin.dashboard.title} />
       <div className="flex flex-1 flex-col gap-6 px-10 py-8">
         <div className="grid grid-cols-4 gap-6">
           {kpis.map((kpi) => {

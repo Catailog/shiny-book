@@ -22,8 +22,17 @@ export function ReindexKnowledgeBaseButton() {
         return;
       }
 
+      const embeddedCount = result.embeddedCount ?? 0;
+      const deletedCount = result.deletedCount ?? 0;
+      if (embeddedCount === 0 && deletedCount === 0) {
+        toast.success(t.admin.knowledgeBase.successNoChange);
+        return;
+      }
+
       toast.success(
-        `${t.admin.knowledgeBase.successPrefix}${result.chunkCount ?? 0}${t.admin.knowledgeBase.successSuffix}`,
+        t.admin.knowledgeBase.successUpdated
+          .replace('{embedded}', String(embeddedCount))
+          .replace('{deleted}', String(deletedCount)),
       );
     });
   }
