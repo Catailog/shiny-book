@@ -4,6 +4,7 @@ import { AI_KNOWLEDGE_BASE_MAX_CHARS } from '@/constants/ai';
 import { MARKETING_ROUTES } from '@/constants/routes';
 import { buildPricingFacts } from '@/lib/ai/build-pricing-facts';
 import { flattenLocaleSection } from '@/lib/ai/flatten-locale-section';
+import { formatProductChunk } from '@/lib/ai/format-product-chunk';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { logger } from '@/lib/log/logger';
@@ -39,12 +40,7 @@ export async function buildKnowledgeBase(locale: Locale): Promise<string> {
 
   if (products.length > 0) {
     sections.push(
-      `## 상품\n${products
-        .map(
-          (product) =>
-            `[${product.name}] ${product.price}, ${product.size}, ${product.category}\n${product.description}`,
-        )
-        .join('\n\n')}`,
+      `## 상품\n${products.map((product) => formatProductChunk(product, t)).join('\n\n')}`,
     );
   }
 

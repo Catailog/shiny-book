@@ -4,6 +4,7 @@ import { KNOWLEDGE_CHUNK_SOURCE, type KnowledgeChunkSource } from '@/constants/a
 import { ANNOUNCEMENT_LIMIT, FAQ_LIMIT, POLICY_SECTIONS } from '@/lib/ai/build-knowledge-base';
 import { buildPricingFacts } from '@/lib/ai/build-pricing-facts';
 import { flattenLocaleSection } from '@/lib/ai/flatten-locale-section';
+import { formatProductChunk } from '@/lib/ai/format-product-chunk';
 import { getAnnouncements } from '@/lib/announcements/get-announcements';
 import { getFaqs } from '@/lib/faqs/get-faqs';
 import { getProductCatalog } from '@/lib/products/get-product-catalog';
@@ -68,7 +69,7 @@ export async function collectKnowledgeChunks(): Promise<KnowledgeChunk[]> {
         source: KNOWLEDGE_CHUNK_SOURCE.PRODUCT,
         sourceRef: product.slug,
         locale,
-        content: `[${product.name}] ${product.price}, ${product.size}, ${product.category}\n${product.description}`,
+        content: formatProductChunk(product, t),
       });
     }
 
