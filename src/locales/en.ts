@@ -15,6 +15,7 @@ import {
   COUPON_DISCOUNT_VALUE_MAX,
   COUPON_PERCENTAGE_MAX,
 } from '@/constants/coupon';
+import type { OrderNotifyStatus } from '@/constants/email';
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
@@ -262,6 +263,42 @@ export const en = {
     in_transit: 'In transit',
     delivered: 'Delivered',
   } satisfies Record<ShipmentJobStatus, string>,
+  email: {
+    orderStatusChanged: {
+      subject: {
+        paid: 'Your payment is complete',
+        printing: 'We have started making your book',
+        shipping: 'Your order is on its way',
+        completed: 'Your order has been delivered',
+        refunded: 'Your refund is complete',
+        cancelled: 'Your order has been cancelled',
+      } satisfies Record<OrderNotifyStatus, string>,
+      heading: {
+        paid: 'Payment complete',
+        printing: 'Production started',
+        shipping: 'Shipment started',
+        completed: 'Delivered',
+        refunded: 'Refund complete',
+        cancelled: 'Order cancelled',
+      } satisfies Record<OrderNotifyStatus, string>,
+      body: {
+        paid: 'Your payment has been confirmed and we will begin preparing your order shortly.',
+        printing: 'Production of your book has started.',
+        shipping: 'Your book has been shipped. You can track its progress from the button below.',
+        completed: 'Your book has arrived at the delivery address. Thank you for choosing us.',
+        refunded:
+          'Your refund has been processed. Depending on your payment method it may take 3 to 5 business days to appear.',
+        cancelled:
+          'Your order has been cancelled. Please contact customer support if you have any questions.',
+      } satisfies Record<OrderNotifyStatus, string>,
+      greetingPrefix: 'Hi ',
+      greetingSuffix: ',',
+      orderNumberLabel: 'Order number',
+      ctaLabel: 'View order details',
+      footerNote: 'This mailbox is not monitored. Please use customer support for inquiries.',
+      signOff: 'The Shiny Book team',
+    },
+  },
   announcementCategories: {
     notice: 'Notice',
     event: 'Event',
@@ -419,6 +456,7 @@ export const en = {
       faqs: 'FAQs',
       inquiries: 'Inquiries',
       refunds: 'Refunds',
+      knowledgeBase: 'Other Settings',
       logout: 'Logout',
     },
     refunds: {
@@ -501,6 +539,26 @@ export const en = {
         viewCoverLayout: 'View Cover Layout',
       },
     },
+    knowledgeBase: {
+      title: 'Other Settings',
+      sectionLabel: 'AI Chatbot',
+      description:
+        'So the chatbot can answer from your FAQs, announcements, products, and policy pages, this converts that source text into vectors and stores them. Editing FAQs, announcements, products, or policy pages does not update this automatically - reindex below after making changes so the chatbot answers with the latest content.',
+      lastAppliedLabel: 'Last reindexed',
+      lastAppliedNever: 'Never reindexed',
+      upToDateBadge: 'Up to date',
+      staleBadge: 'Needs update',
+      staleSummary: '{added} added, {changed} changed, {removed} removed',
+      reindexButton: 'Reindex knowledge base',
+      reindexing: 'Reindexing...',
+      successNoChange: 'Nothing changed, so the knowledge base was left as is.',
+      successUpdated: '{embedded} updated, {deleted} removed.',
+      errors: {
+        unauthorized: 'You are not authorized.',
+        not_configured: 'GEMINI_API_KEY is not set, so reindexing is unavailable.',
+        failed: 'Reindexing failed.',
+      },
+    },
     orders: {
       title: 'Orders',
       empty: 'No orders to show.',
@@ -569,6 +627,22 @@ export const en = {
         conflict: 'This order was already updated elsewhere. Please refresh and try again.',
       },
       actionsMenuLabel: 'Manage',
+      bulk: {
+        selectAllLabel: 'Select all',
+        selectRowLabel: 'Select order',
+        selectedCountSuffix: ' selected',
+        maxSelectablePrefix: 'You can select up to ',
+        maxSelectableSuffix: ' at a time.',
+        advanceButton: 'Advance selected to next stage',
+        advancing: 'Processing...',
+        clearButton: 'Clear selection',
+        allSucceeded: 'Updated all selected orders.',
+        partialFailurePrefix: 'Failed to update some orders: ',
+      },
+      csv: {
+        exportButton: 'Export CSV',
+        exportError: 'Could not generate the CSV.',
+      },
       simulateShipment: {
         button: 'Simulate shipment',
         success: 'Shipment advanced to:',
@@ -1113,6 +1187,26 @@ export const en = {
         shippingAddressLabel: 'Shipping to',
         trackingLabel: 'Shipment tracking',
         trackingNumberLabel: 'Tracking number',
+        detailLink: 'View detail',
+        detail: {
+          backLink: 'Back to orders',
+          summaryTitle: 'Order info',
+          quantityLabel: 'Quantity',
+          amountLabel: 'Amount paid',
+          orderedAtLabel: 'Ordered at',
+          statusLabel: 'Status',
+          paymentTitle: 'Payment breakdown',
+          merchandiseLabel: 'Merchandise',
+          shippingFeeLabel: 'Shipping fee',
+          discountLabel: 'Discount',
+          couponLabel: 'Coupon',
+          totalLabel: 'Total paid',
+          shippingAddressTitle: 'Shipping to',
+          trackingTitle: 'Shipment tracking',
+          trackingNumberLabel: 'Tracking number',
+          timelineTitle: 'Progress history',
+          timelineEmpty: 'No history recorded.',
+        },
       },
     },
     account: {
@@ -1220,6 +1314,7 @@ export const en = {
       },
       notifications: {
         title: 'Notification Settings',
+        orderStatusEmail: 'Email me when my order status changes',
         emailMarketing: 'Agree to email marketing',
         smsUpdates: 'SMS updates for production/shipping',
       },

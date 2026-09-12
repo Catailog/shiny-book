@@ -1,9 +1,12 @@
 'use server';
 
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { LOCALE_COOKIE_MAX_AGE, LOCALE_COOKIE_NAME, isLocale } from '@/constants/locale';
 import { CONSUMER_ROUTES } from '@/constants/routes';
 import { TEST_ACCOUNT_ROLE_PREFIX } from '@/constants/test-account';
+import { THEME_COOKIE_MAX_AGE, THEME_COOKIE_NAME, isTheme } from '@/constants/theme';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { isSafeRedirectPath } from '@/lib/auth/is-safe-redirect-path';
@@ -23,6 +26,26 @@ import { type ConsumerLoginInput, consumerLoginSchema } from './login-schema';
 
 export interface ConsumerLoginActionResult {
   errorCode: 'invalid_credentials' | 'rate_limited' | 'unexpected_error';
+}
+
+async function seedPreferenceCookies(metadata: Record<string, unknown>) {
+  const cookieStore = await cookies();
+
+  if (!cookieStore.has(LOCALE_COOKIE_NAME) && isLocale(metadata.locale)) {
+    cookieStore.set(LOCALE_COOKIE_NAME, metadata.locale, {
+      maxAge: LOCALE_COOKIE_MAX_AGE,
+      path: '/',
+      sameSite: 'lax',
+    });
+  }
+
+  if (!cookieStore.has(THEME_COOKIE_NAME) && isTheme(metadata.theme)) {
+    cookieStore.set(THEME_COOKIE_NAME, metadata.theme, {
+      maxAge: THEME_COOKIE_MAX_AGE,
+      path: '/',
+      sameSite: 'lax',
+    });
+  }
 }
 
 export async function signInConsumer(
@@ -57,6 +80,8 @@ export async function signInConsumer(
     await supabase.auth.signOut();
     return { errorCode: 'invalid_credentials' };
   }
+
+  await seedPreferenceCookies(data.user.user_metadata);
 
   redirect(redirectTo && isSafeRedirectPath(redirectTo) ? redirectTo : CONSUMER_ROUTES.MYPAGE);
 }
@@ -107,6 +132,8 @@ export async function signInTestConsumer(
   if (error || !data.user || isAdminRole(data.user.app_metadata.role)) {
     return { errorCode: 'unexpected_error' };
   }
+
+  await seedPreferenceCookies(data.user.user_metadata);
 
   redirect(redirectTo && isSafeRedirectPath(redirectTo) ? redirectTo : CONSUMER_ROUTES.MYPAGE);
 }

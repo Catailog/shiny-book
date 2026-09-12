@@ -21,8 +21,6 @@ import { getOrdersByConsumer } from '@/lib/orders/get-orders-by-consumer';
 import { getReviewsByConsumer } from '@/lib/reviews/get-reviews-by-consumer';
 import { locales } from '@/locales';
 
-import { ConsumerOrderHistoryButton } from './consumer-order-history-button';
-
 const IN_PROGRESS_STATUSES = new Set<string>([
   ORDER_STATUS.PAID,
   ORDER_STATUS.PRINTING,
@@ -67,7 +65,7 @@ export default async function MypagePage() {
   ] as const;
 
   return (
-    <div className="flex flex-1 flex-col gap-8 px-10 py-10">
+    <div className="flex flex-1 flex-col gap-8 px-4 py-6 md:px-10 md:py-10">
       <div>
         <h1 className="font-heading text-4xl font-bold text-foreground">
           {t.consumer.mypage.title}
@@ -75,7 +73,7 @@ export default async function MypagePage() {
         <p className="mt-1 text-sm text-muted-foreground">{t.consumer.mypage.subtitle}</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         {stats.map((stat) => (
           <div
             key={stat.key}
@@ -96,7 +94,12 @@ export default async function MypagePage() {
           {t.consumer.mypage.recentOrdersTitle}
         </h2>
         <div className="overflow-hidden rounded-lg border border-border bg-input-background">
-          <Table>
+          {/* table-fixed shares out the unset title column from whatever's left of
+              the table's own width - on a shrinking container that heads to 0 and
+              its text starts overlapping the fixed-width columns. A min-width on
+              the table stops that and lets the wrapper's own overflow-x-auto (see
+              Table in components/ui/table.tsx) take over as a real scrollbar. */}
+          <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow className="bg-muted hover:bg-muted">
                 <TableHead>{t.consumer.mypage.orders.columns.title}</TableHead>
@@ -139,7 +142,12 @@ export default async function MypagePage() {
                     <TableCell>
                       <div className="flex flex-col items-start gap-1">
                         {status ? <OrderStatusBadge status={status} /> : order.status}
-                        <ConsumerOrderHistoryButton orderId={order.id} />
+                        <Link
+                          href={`${CONSUMER_ROUTES.ORDERS}/${order.id}`}
+                          className="text-xs text-muted-foreground underline"
+                        >
+                          {t.consumer.mypage.orders.detailLink}
+                        </Link>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">

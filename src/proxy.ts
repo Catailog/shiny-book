@@ -2,8 +2,10 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@supabase/ssr';
 
+import { LOCALE_COOKIE_MAX_AGE, LOCALE_COOKIE_NAME, isLocale } from '@/constants/locale';
 import { REQUEST_ID_HEADER } from '@/constants/log';
 import { ADMIN_ROUTES, CONSUMER_ROUTES } from '@/constants/routes';
+import { THEME_COOKIE_MAX_AGE, THEME_COOKIE_NAME, isTheme } from '@/constants/theme';
 import { env } from '@/env';
 import { isAdminRole } from '@/lib/auth/is-admin-role';
 import { resolveRequestId } from '@/lib/log/resolve-request-id';
@@ -84,6 +86,29 @@ export async function proxy(request: NextRequest) {
 
   if (isConsumerAuthRoute && isAuthenticatedConsumer) {
     return NextResponse.redirect(new URL(CONSUMER_ROUTES.MYPAGE, request.url));
+  }
+
+  // Hydrate the per-device theme/locale cookies from the consumer's saved
+  // preferences when a cookie is missing (fresh device, cleared cookies, expiry).
+  // Only when absent so a deliberate per-device choice is never overwritten.
+  if (isAuthenticatedConsumer && user) {
+    const metadata = user.user_metadata;
+
+    if (!request.cookies.has(THEME_COOKIE_NAME) && isTheme(metadata.theme)) {
+      supabaseResponse.cookies.set(THEME_COOKIE_NAME, metadata.theme, {
+        maxAge: THEME_COOKIE_MAX_AGE,
+        path: '/',
+        sameSite: 'lax',
+      });
+    }
+
+    if (!request.cookies.has(LOCALE_COOKIE_NAME) && isLocale(metadata.locale)) {
+      supabaseResponse.cookies.set(LOCALE_COOKIE_NAME, metadata.locale, {
+        maxAge: LOCALE_COOKIE_MAX_AGE,
+        path: '/',
+        sameSite: 'lax',
+      });
+    }
   }
 
   supabaseResponse.headers.set(REQUEST_ID_HEADER, requestId);

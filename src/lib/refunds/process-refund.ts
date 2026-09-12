@@ -4,6 +4,7 @@ import { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } from '@/constants/order-event';
 import { ORDER_STATUS, isOrderStatus } from '@/constants/order-status';
 import { REFUND_STATUS } from '@/constants/refund';
 import { env } from '@/env';
+import { dispatchOrderStatusEmail } from '@/lib/email/dispatch-order-status-email';
 import { getOrderById } from '@/lib/orders/get-order-by-id';
 import { recordOrderEvent } from '@/lib/orders/record-order-event';
 import { cancelTossPayment } from '@/lib/payments/toss-cancel-payment';
@@ -115,6 +116,12 @@ export async function processRefund(refundRequestId: string): Promise<ProcessRef
       eventType: ORDER_EVENT_TYPE.ORDER_STATUS_CHANGED,
       source: ORDER_EVENT_SOURCE.SYSTEM,
       actor: 'system',
+      fromStatus: order.status,
+      toStatus: ORDER_STATUS.REFUNDED,
+    });
+
+    dispatchOrderStatusEmail({
+      order,
       fromStatus: order.status,
       toStatus: ORDER_STATUS.REFUNDED,
     });

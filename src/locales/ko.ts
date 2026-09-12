@@ -15,6 +15,7 @@ import {
   COUPON_DISCOUNT_VALUE_MAX,
   COUPON_PERCENTAGE_MAX,
 } from '@/constants/coupon';
+import type { OrderNotifyStatus } from '@/constants/email';
 import { FAQ_ANSWER_MAX_LENGTH, FAQ_QUESTION_MAX_LENGTH } from '@/constants/faq';
 import { INQUIRY_CONTENT_MAX_LENGTH, INQUIRY_TITLE_MAX_LENGTH } from '@/constants/inquiry';
 import { ORDER_TITLE_MAX_LENGTH } from '@/constants/order';
@@ -262,6 +263,41 @@ export const ko = {
     in_transit: '배송 중',
     delivered: '배송 완료',
   } satisfies Record<ShipmentJobStatus, string>,
+  email: {
+    orderStatusChanged: {
+      subject: {
+        paid: '결제가 완료되었습니다',
+        printing: '제작을 시작했습니다',
+        shipping: '배송을 시작했습니다',
+        completed: '배송이 완료되었습니다',
+        refunded: '환불이 완료되었습니다',
+        cancelled: '주문이 취소되었습니다',
+      } satisfies Record<OrderNotifyStatus, string>,
+      heading: {
+        paid: '결제 완료',
+        printing: '제작 시작',
+        shipping: '배송 시작',
+        completed: '배송 완료',
+        refunded: '환불 완료',
+        cancelled: '주문 취소',
+      } satisfies Record<OrderNotifyStatus, string>,
+      body: {
+        paid: '결제가 확인되어 곧 제작 준비에 들어갑니다.',
+        printing: '주문하신 책의 제작이 시작되었습니다.',
+        shipping: '주문하신 책이 발송되었습니다. 배송 현황은 아래 버튼에서 확인하실 수 있습니다.',
+        completed: '주문하신 책이 배송지에 도착했습니다. 이용해 주셔서 감사합니다.',
+        refunded:
+          '요청하신 환불이 처리되었습니다. 환불 금액은 결제 수단에 따라 영업일 기준 3~5일 내 반영됩니다.',
+        cancelled: '주문이 취소되었습니다. 문의 사항이 있으시면 고객센터로 연락해 주세요.',
+      } satisfies Record<OrderNotifyStatus, string>,
+      greetingPrefix: '',
+      greetingSuffix: '님, 안녕하세요.',
+      orderNumberLabel: '주문번호',
+      ctaLabel: '주문 상세 보기',
+      footerNote: '이 메일은 발신 전용입니다. 문의는 고객센터를 이용해 주세요.',
+      signOff: 'Shiny Book 드림',
+    },
+  },
   announcementCategories: {
     notice: '공지사항',
     event: '이벤트',
@@ -417,6 +453,7 @@ export const ko = {
       faqs: 'FAQ 관리',
       inquiries: '문의 관리',
       refunds: '환불 관리',
+      knowledgeBase: '기타 설정',
       logout: '로그아웃',
     },
     refunds: {
@@ -500,6 +537,26 @@ export const ko = {
         viewCoverLayout: '표지 레이아웃 보기',
       },
     },
+    knowledgeBase: {
+      title: '기타 설정',
+      sectionLabel: 'AI 챗봇',
+      description:
+        '챗봇이 FAQ, 공지사항, 상품, 정책 페이지 내용을 답변 근거로 쓸 수 있도록 이 원문들을 벡터로 변환해 저장합니다. FAQ/공지/상품/정책 내용을 수정해도 자동으로 반영되지 않으므로, 수정 후에는 아래 버튼을 눌러야 챗봇 답변에 최신 내용이 반영됩니다.',
+      lastAppliedLabel: '마지막 재색인',
+      lastAppliedNever: '아직 재색인한 적 없음',
+      upToDateBadge: '최신 상태',
+      staleBadge: '업데이트 필요',
+      staleSummary: '추가 {added}개, 변경 {changed}개, 삭제 {removed}개',
+      reindexButton: '지식베이스 재색인',
+      reindexing: '재색인 중...',
+      successNoChange: '변경된 내용이 없어 그대로 유지했습니다.',
+      successUpdated: '{embedded}개 반영, {deleted}개 삭제 완료.',
+      errors: {
+        unauthorized: '권한이 없습니다.',
+        not_configured: 'GEMINI_API_KEY가 설정되지 않아 재색인할 수 없습니다.',
+        failed: '재색인에 실패했습니다.',
+      },
+    },
     orders: {
       title: '주문 목록',
       empty: '표시할 주문이 없습니다.',
@@ -568,6 +625,22 @@ export const ko = {
         conflict: '다른 곳에서 이미 상태가 변경됐습니다. 새로고침 후 다시 시도해주세요.',
       },
       actionsMenuLabel: '관리',
+      bulk: {
+        selectAllLabel: '전체 선택',
+        selectRowLabel: '주문 선택',
+        selectedCountSuffix: '건 선택됨',
+        maxSelectablePrefix: '한 번에 최대 ',
+        maxSelectableSuffix: '건까지 선택할 수 있습니다.',
+        advanceButton: '선택 항목 다음 단계로 진행',
+        advancing: '처리 중...',
+        clearButton: '선택 해제',
+        allSucceeded: '선택한 주문을 모두 변경했습니다.',
+        partialFailurePrefix: '일부 주문 변경에 실패했습니다: ',
+      },
+      csv: {
+        exportButton: 'CSV 내보내기',
+        exportError: 'CSV를 만들지 못했습니다.',
+      },
       simulateShipment: {
         button: '배송 시뮬레이션',
         success: '배송 상태를 진행했습니다:',
@@ -1113,6 +1186,26 @@ export const ko = {
         shippingAddressLabel: '배송지',
         trackingLabel: '배송 추적',
         trackingNumberLabel: '운송장 번호',
+        detailLink: '상세 보기',
+        detail: {
+          backLink: '주문내역으로',
+          summaryTitle: '주문 정보',
+          quantityLabel: '수량',
+          amountLabel: '결제 금액',
+          orderedAtLabel: '주문일시',
+          statusLabel: '상태',
+          paymentTitle: '결제 내역',
+          merchandiseLabel: '상품 금액',
+          shippingFeeLabel: '배송비',
+          discountLabel: '할인',
+          couponLabel: '쿠폰',
+          totalLabel: '총 결제 금액',
+          shippingAddressTitle: '배송지',
+          trackingTitle: '배송 추적',
+          trackingNumberLabel: '운송장 번호',
+          timelineTitle: '진행 이력',
+          timelineEmpty: '기록된 이력이 없습니다.',
+        },
       },
     },
     account: {
@@ -1220,6 +1313,7 @@ export const ko = {
       },
       notifications: {
         title: '알림 설정',
+        orderStatusEmail: '주문 상태 변경 이메일 알림',
         emailMarketing: '이메일 마케팅 동의',
         smsUpdates: '제작/배송 현황 SMS 알림',
       },

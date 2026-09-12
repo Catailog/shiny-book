@@ -74,7 +74,7 @@ export function AddressManager({ addresses, defaultPhone }: AddressManagerProps)
       {addresses.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t.consumer.account.shippingAddress.empty}</p>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {addresses.map((address) => (
             <div
               key={address.id}

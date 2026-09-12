@@ -172,6 +172,7 @@ export type Database = {
           created_at: string;
           id: string;
           question: string;
+          slug: string | null;
           updated_at: string;
         };
         Insert: {
@@ -179,6 +180,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           question: string;
+          slug?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -186,6 +188,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           question?: string;
+          slug?: string | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -268,6 +271,42 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      knowledge_chunks: {
+        Row: {
+          chunk_key: string;
+          content: string;
+          created_at: string;
+          embedding: string;
+          id: string;
+          locale: string | null;
+          source: string;
+          source_ref: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          chunk_key: string;
+          content: string;
+          created_at?: string;
+          embedding: string;
+          id?: string;
+          locale?: string | null;
+          source: string;
+          source_ref?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          chunk_key?: string;
+          content?: string;
+          created_at?: string;
+          embedding?: string;
+          id?: string;
+          locale?: string | null;
+          source?: string;
+          source_ref?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
       order_events: {
         Row: {
@@ -702,7 +741,22 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      match_knowledge_chunks: {
+        Args: {
+          match_count: number;
+          match_locale: string;
+          min_similarity: number;
+          query_embedding: string;
+        };
+        Returns: {
+          content: string;
+          id: string;
+          locale: string;
+          similarity: number;
+          source: string;
+          source_ref: string;
+        }[];
+      };
     };
     Enums: {
       [_ in never]: never;

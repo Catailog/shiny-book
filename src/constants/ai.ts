@@ -43,3 +43,27 @@ export const AI_KNOWLEDGE_BASE_MAX_CHARS = 40_000;
 
 export const AI_MAX_HISTORY_MESSAGES = 20;
 export const AI_MAX_MESSAGE_LENGTH = 2_000;
+
+// Vector search over the knowledge base (see knowledge_chunks + match_knowledge_chunks).
+// gemini-embedding-001 defaults to 3072-dimensional output, so every embed/embedMany
+// call must explicitly pass providerOptions.google.outputDimensionality: AI_EMBEDDING_DIMENSIONS
+// to match the knowledge_chunks.embedding vector(768) column. The previous model,
+// text-embedding-004 (which defaulted to 768 natively), was retired by Google on
+// 2026-01-14 - see .claude/gotchas/gemini-embedding-model-retirement.md.
+export const AI_EMBEDDING_MODEL = 'gemini-embedding-001';
+export const AI_EMBEDDING_DIMENSIONS = 768;
+export const AI_RETRIEVAL_TOP_K = 8;
+// Cosine similarity threshold (1 - cosine distance). Chunks below this are
+// treated as not relevant enough to include, not just low-ranked.
+export const AI_RETRIEVAL_MIN_SIMILARITY = 0.6;
+
+export const KNOWLEDGE_CHUNK_SOURCE = {
+  PRODUCT: 'product',
+  PRICING: 'pricing',
+  FAQ: 'faq',
+  ANNOUNCEMENT: 'announcement',
+  POLICY: 'policy',
+} as const;
+
+export type KnowledgeChunkSource =
+  (typeof KNOWLEDGE_CHUNK_SOURCE)[keyof typeof KNOWLEDGE_CHUNK_SOURCE];

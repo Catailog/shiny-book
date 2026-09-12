@@ -94,55 +94,73 @@ const ANNOUNCEMENTS = {
 
 const FAQS = [
   {
+    slug: 'production-time',
     question: '포토북 제작 기간은 얼마나 걸리나요?',
     answer: '결제 완료 후 인쇄 3~5일, 제본 1~2일, 배송 1~2일로 평균 5~9일 소요됩니다.',
   },
   {
+    slug: 'reupload-photos',
     question: '주문 후 사진을 다시 업로드할 수 있나요?',
     answer: '인쇄 시작 전이라면 고객센터 문의를 통해 사진 교체가 가능합니다.',
   },
   {
+    slug: 'file-formats',
     question: '어떤 파일 형식을 지원하나요?',
     answer: 'JPG, PNG, WEBP 형식을 지원하며 파일당 최대 20MB까지 업로드 가능합니다.',
   },
   {
+    slug: 'page-count-range',
     question: '페이지 수는 최대 몇 페이지까지 가능한가요?',
     answer: '최소 8페이지부터 최대 16페이지까지 2페이지 단위로 선택 가능합니다.',
   },
   {
+    slug: 'international-shipping',
     question: '해외 배송도 가능한가요?',
     answer: '현재는 국내 배송만 지원하고 있으며, 해외 배송은 추후 지원 예정입니다.',
   },
   {
+    slug: 'order-cancellation',
     question: '주문을 취소하고 싶어요.',
     answer:
       '결제완료 상태에서는 마이페이지에서 취소 요청이 가능하며, 인쇄 시작 후에는 취소가 어렵습니다.',
   },
   {
+    slug: 'coupon-usage',
     question: '쿠폰은 어떻게 사용하나요?',
     answer: '주문서 작성 시 쿠폰 코드를 입력하면 할인 금액이 자동으로 적용됩니다.',
   },
   {
+    slug: 'cover-materials',
     question: '표지 재질은 어떤 종류가 있나요?',
     answer: '하드커버와 소프트커버 중 상품별로 선택하실 수 있습니다.',
   },
   {
+    slug: 'print-quality-variance',
     question: '인쇄 품질이 사진 원본과 다를 수 있나요?',
     answer:
       '모니터 환경에 따라 색감 차이가 있을 수 있으나, 최대한 원본과 유사하게 보정하여 인쇄합니다.',
   },
   {
+    slug: 'returns-exchanges',
     question: '반품/교환은 어떻게 하나요?',
     answer:
       '제작 특성상 단순 변심에 의한 반품은 어려우며, 제품 하자 시에는 전액 환불 또는 재제작이 가능합니다.',
   },
   {
+    slug: 'payment-methods',
     question: '결제 수단은 무엇을 지원하나요?',
     answer: '신용카드, 계좌이체, 간편결제를 지원합니다.',
   },
   {
+    slug: 'loyalty-program',
     question: '적립금이나 회원 등급 혜택이 있나요?',
     answer: '현재는 별도의 회원 등급제 없이 이벤트성 쿠폰을 통해 혜택을 드리고 있습니다.',
+  },
+  {
+    slug: 'classic-vs-premium',
+    question: '일반 상품과 프리미엄 상품은 어떻게 다른가요?',
+    answer:
+      '상품은 기본 시리즈와 프리미엄 시리즈로 나뉩니다. 기본 시리즈는 포토북, 저널처럼 실용적인 상품이고, 프리미엄 시리즈는 베이비 앨범, 프리미엄 포토 앨범, 웨딩 앨범처럼 소재와 마감을 고급화한 앨범 상품입니다. 프리미엄 시리즈가 기본 시리즈보다 가격이 높게 책정되어 있으며, 각 상품의 정확한 가격은 상품 목록 페이지에서 확인하실 수 있습니다.',
   },
 ];
 
@@ -224,12 +242,12 @@ async function seedAnnouncements() {
 async function seedFaqs() {
   console.log('FAQ 시드 중...');
 
-  const { error } = await supabase.from('faqs').insert(FAQS);
+  const { error } = await supabase.from('faqs').upsert(FAQS, { onConflict: 'slug' });
   if (error) {
     throw new Error(`FAQ 시드 실패: ${error.message}`);
   }
 
-  console.log(`FAQ ${FAQS.length}건 시드 완료`);
+  console.log(`FAQ ${FAQS.length}건 시드 완료 (upsert)`);
 }
 
 async function seedCoupons() {

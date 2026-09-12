@@ -12,12 +12,14 @@ export const ADMIN_ROUTES = {
   REFUNDS: '/admin/refunds',
   PRODUCTS: '/admin/products',
   PRODUCTS_NEW: '/admin/products/new',
+  KNOWLEDGE_BASE: '/admin/knowledge-base',
 } as const;
 
 export const CONSUMER_ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   MYPAGE: '/mypage',
+  ORDERS: '/mypage/orders',
   NEW_ORDER: '/orders/new',
   ACCOUNT: '/mypage/account',
   INQUIRIES: '/mypage/inquiries',

@@ -9,6 +9,7 @@ import { Moon, SunDim } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useHtmlClassPresent } from '@/hooks/use-html-class-present';
 import { pauseAnimations, resumeAnimations } from '@/lib/animation-pause';
+import { setTheme } from '@/lib/theme/actions';
 
 const THEME_TRANSITION_PAUSE_REASON = 'theme-transition';
 
@@ -29,6 +30,7 @@ export function ThemeToggle({ switchToLightLabel, switchToDarkLabel }: ThemeTogg
       const nextIsDark = !document.documentElement.classList.contains('dark');
       document.documentElement.classList.toggle('dark', nextIsDark);
       localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
+      void setTheme(nextIsDark ? 'dark' : 'light');
     };
 
     if (isAnimatingRef.current) {

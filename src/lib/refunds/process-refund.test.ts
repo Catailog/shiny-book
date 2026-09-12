@@ -35,6 +35,11 @@ vi.mock('@/lib/orders/record-order-event', () => ({ recordOrderEvent: recordOrde
 const cancelTossPaymentMock = vi.fn();
 vi.mock('@/lib/payments/toss-cancel-payment', () => ({ cancelTossPayment: cancelTossPaymentMock }));
 
+const dispatchOrderStatusEmailMock = vi.fn();
+vi.mock('@/lib/email/dispatch-order-status-email', () => ({
+  dispatchOrderStatusEmail: dispatchOrderStatusEmailMock,
+}));
+
 const { ORDER_STATUS } = await import('@/constants/order-status');
 const { ORDER_EVENT_TYPE } = await import('@/constants/order-event');
 const { REFUND_STATUS } = await import('@/constants/refund');
@@ -88,6 +93,11 @@ describe('processRefund', () => {
       ORDER_EVENT_TYPE.REFUND_COMPLETED,
       ORDER_EVENT_TYPE.ORDER_STATUS_CHANGED,
     ]);
+    expect(dispatchOrderStatusEmailMock).toHaveBeenCalledWith({
+      order: buildOrder(),
+      fromStatus: ORDER_STATUS.PAID,
+      toStatus: ORDER_STATUS.REFUNDED,
+    });
   });
 
   it('processes a partial refund: leaves status and records only the completion event', async () => {
@@ -103,6 +113,7 @@ describe('processRefund', () => {
     expect(recordOrderEventMock.mock.calls[0]?.[0].eventType).toBe(
       ORDER_EVENT_TYPE.REFUND_COMPLETED,
     );
+    expect(dispatchOrderStatusEmailMock).not.toHaveBeenCalled();
   });
 
   it('returns not_found for a missing request', async () => {

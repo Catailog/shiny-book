@@ -30,35 +30,32 @@ export function MypageSidebar({ consumerName, consumerEmail, avatarUrl }: Mypage
     },
   ];
 
+  function isActiveItem(href: string) {
+    return href === CONSUMER_ROUTES.MYPAGE ? pathname === href : pathname.startsWith(href);
+  }
+
+  function navItemClassName(isActive: boolean) {
+    return cn(
+      'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+      isActive
+        ? 'bg-primary-soft font-semibold text-primary'
+        : 'text-muted-foreground hover:bg-card',
+    );
+  }
+
   return (
-    <aside className="flex w-70 shrink-0 flex-col gap-8 border-r border-border bg-muted px-6 py-8">
-      <div className="flex items-center gap-3">
-        <Avatar className="size-12">
-          {avatarUrl ? <AvatarImage src={avatarUrl} alt={consumerName} /> : null}
-          <AvatarFallback>{consumerName.slice(0, 1)}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <span className="font-heading text-lg font-bold text-foreground">{consumerName}</span>
-          <span className="text-xs text-muted-foreground">{consumerEmail}</span>
-        </div>
-      </div>
-      <nav className="flex flex-col gap-1">
+    <>
+      {/* Only 3 destinations, so a drawer behind a second hamburger (redundant
+          next to the site header's own menu button) is unnecessary - a plain
+          horizontal tab strip fits and stays in the normal document flow. */}
+      <nav className="flex items-center gap-1 overflow-x-auto border-b border-border bg-muted px-4 py-2 md:hidden">
         {navItems.map((item) => {
-          const isActive =
-            item.href === CONSUMER_ROUTES.MYPAGE
-              ? pathname === item.href
-              : pathname.startsWith(item.href);
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-primary-soft font-semibold text-primary'
-                  : 'text-muted-foreground hover:bg-card',
-              )}
+              className={cn(navItemClassName(isActiveItem(item.href)), 'shrink-0')}
             >
               <Icon aria-hidden="true" className="size-4" />
               {item.label}
@@ -66,6 +63,43 @@ export function MypageSidebar({ consumerName, consumerEmail, avatarUrl }: Mypage
           );
         })}
       </nav>
-    </aside>
+      <aside className="hidden w-70 shrink-0 flex-col gap-8 border-r border-border bg-muted px-6 py-8 md:flex">
+        <MypageProfile
+          consumerName={consumerName}
+          consumerEmail={consumerEmail}
+          avatarUrl={avatarUrl}
+        />
+        <nav className="flex flex-col gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={navItemClassName(isActiveItem(item.href))}
+              >
+                <Icon aria-hidden="true" className="size-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+    </>
+  );
+}
+
+function MypageProfile({ consumerName, consumerEmail, avatarUrl }: MypageSidebarProps) {
+  return (
+    <div className="flex items-center gap-3">
+      <Avatar className="size-12">
+        {avatarUrl ? <AvatarImage src={avatarUrl} alt={consumerName} /> : null}
+        <AvatarFallback>{consumerName.slice(0, 1)}</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col">
+        <span className="font-heading text-lg font-bold text-foreground">{consumerName}</span>
+        <span className="text-xs text-muted-foreground">{consumerEmail}</span>
+      </div>
+    </div>
   );
 }

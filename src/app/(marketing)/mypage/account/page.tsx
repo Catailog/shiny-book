@@ -30,12 +30,13 @@ export default async function MypageAccountPage() {
   const avatarUrl = avatarPath ? await getSignedFileUrl(avatarPath) : null;
   const avatarInitials = (consumerName || consumerEmail).slice(0, 1).toUpperCase();
   const notificationDefaults = {
+    orderStatusEmailConsent: consumer?.user_metadata.orderStatusEmailConsent !== false,
     marketingEmailConsent: consumer?.user_metadata.marketingEmailConsent === true,
     marketingSmsConsent: consumer?.user_metadata.marketingSmsConsent === true,
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-8 px-10 py-10">
+    <div className="flex flex-1 flex-col gap-8 px-4 py-6 md:px-10 md:py-10">
       <h1 className="font-heading text-4xl font-bold text-foreground">
         {t.consumer.account.title}
       </h1>
@@ -45,7 +46,7 @@ export default async function MypageAccountPage() {
           {t.consumer.account.personalInfo.title}
         </h2>
         <AvatarUploadForm avatarUrl={avatarUrl} initials={avatarInitials} />
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <Label
@@ -100,7 +101,7 @@ export default async function MypageAccountPage() {
         <NotificationPreferencesForm defaultValues={notificationDefaults} />
       </section>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-sm text-muted-foreground">
           {t.consumer.account.deleteAccount.prompt}
         </span>

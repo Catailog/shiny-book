@@ -1,45 +1,22 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createGroq } from '@ai-sdk/groq';
-import { createOpenAI } from '@ai-sdk/openai';
-import { type LanguageModel, type ModelMessage, streamText } from 'ai';
+import * as Sentry from '@sentry/nextjs';
+import { type ModelMessage, streamText } from 'ai';
 import 'server-only';
 
 import {
   AI_MAX_OUTPUT_TOKENS,
-  AI_MODEL,
-  AI_PROVIDER,
   AI_PROVIDER_FALLBACK_ORDER,
   AI_REQUEST_TIMEOUT_MS,
   AI_TEMPERATURE,
   type AiProvider,
 } from '@/constants/ai';
 import { env } from '@/env';
+import { classifyProviderError } from '@/lib/ai/classify-provider-error';
+import { resolveModel } from '@/lib/ai/resolve-model';
 import { logger } from '@/lib/log/logger';
 
 export interface ChatCompletionStream {
   provider: AiProvider;
   stream: ReadableStream<Uint8Array>;
-}
-
-function resolveModel(provider: AiProvider): LanguageModel | null {
-  switch (provider) {
-    case AI_PROVIDER.GEMINI:
-      return env.GEMINI_API_KEY
-        ? createGoogleGenerativeAI({ apiKey: env.GEMINI_API_KEY })(AI_MODEL[provider])
-        : null;
-    case AI_PROVIDER.GROQ:
-      return env.GROQ_API_KEY ? createGroq({ apiKey: env.GROQ_API_KEY })(AI_MODEL[provider]) : null;
-    case AI_PROVIDER.CLOUDFLARE:
-      // `.chat(...)` forces the OpenAI-compatible chat/completions endpoint;
-      // the provider's default call signature targets the Responses API,
-      // which Cloudflare's compat layer does not reliably support.
-      return env.CLOUDFLARE_ACCOUNT_ID && env.CLOUDFLARE_API_TOKEN
-        ? createOpenAI({
-            apiKey: env.CLOUDFLARE_API_TOKEN,
-            baseURL: `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
-          }).chat(AI_MODEL[provider])
-        : null;
-  }
 }
 
 function describeError(error: unknown): { message: string } | { value: string } {
@@ -53,8 +30,15 @@ export async function streamChatCompletion(
   system: string,
   messages: ModelMessage[],
 ): Promise<ChatCompletionStream | null> {
+  const credentials = {
+    geminiApiKey: env.GEMINI_API_KEY,
+    groqApiKey: env.GROQ_API_KEY,
+    cloudflareAccountId: env.CLOUDFLARE_ACCOUNT_ID,
+    cloudflareApiToken: env.CLOUDFLARE_API_TOKEN,
+  };
+
   for (const provider of AI_PROVIDER_FALLBACK_ORDER) {
-    const model = resolveModel(provider);
+    const model = resolveModel(provider, credentials);
     if (!model) {
       continue;
     }
@@ -89,10 +73,30 @@ export async function streamChatCompletion(
         }
       }
     } catch (error) {
-      logger.warn(
-        { event: 'ai.provider_failed', provider, err: describeError(error) },
-        'AI provider failed before producing text, trying the next',
-      );
+      const { kind, errorClass } = classifyProviderError(provider, error);
+
+      if (kind === 'structural') {
+        // This provider will keep failing until a human fixes it (retired
+        // model, revoked key, billing/tier gate, contract change) - the
+        // fallback below still gets the user an answer, but nobody would
+        // otherwise notice this provider is dead until every provider is.
+        logger.error(
+          { event: 'ai.provider_failed', provider, errorClass, err: describeError(error) },
+          'AI provider failed with a structural error, trying the next',
+        );
+        Sentry.captureException(error, {
+          tags: { area: 'ai-provider', provider, errorClass },
+          // Fixed fingerprint so every "Gemini model_gone" occurrence groups
+          // into one Sentry issue - one alert, not a flood per request.
+          fingerprint: ['ai-provider', provider, errorClass],
+        });
+      } else {
+        logger.warn(
+          { event: 'ai.provider_failed', provider, errorClass, err: describeError(error) },
+          'AI provider failed before producing text, trying the next',
+        );
+      }
+
       continue;
     }
 

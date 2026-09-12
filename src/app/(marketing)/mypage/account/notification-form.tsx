@@ -43,7 +43,24 @@ export function NotificationPreferencesForm({ defaultValues }: NotificationPrefe
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <div className="flex gap-8">
+      <div className="flex flex-wrap gap-8">
+        <div className="flex items-center gap-2">
+          <Controller
+            control={control}
+            name="orderStatusEmailConsent"
+            render={({ field }) => (
+              <Checkbox
+                id="notify-order-status"
+                name={field.name}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+          <Label htmlFor="notify-order-status" className="font-normal">
+            {t.consumer.account.notifications.orderStatusEmail}
+          </Label>
+        </div>
         <div className="flex items-center gap-2">
           <Controller
             control={control}

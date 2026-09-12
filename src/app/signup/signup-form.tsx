@@ -50,8 +50,9 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
   });
 
   function onSubmit(values: ConsumerSignupInput) {
+    const clientTheme = localStorage.getItem('theme') ?? undefined;
     startTransition(async () => {
-      const result = await signUpConsumer(values, redirectTo, turnstileToken);
+      const result = await signUpConsumer(values, redirectTo, turnstileToken, clientTheme);
       if (result) {
         toast.error(t.consumer.signup.errors[result.errorCode]);
       }

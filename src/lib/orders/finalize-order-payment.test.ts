@@ -33,6 +33,10 @@ vi.mock('@/lib/orders/record-order-event', () => ({
   recordOrderEvent: vi.fn(),
 }));
 
+vi.mock('@/lib/email/dispatch-order-status-email', () => ({
+  dispatchOrderStatusEmail: vi.fn(),
+}));
+
 const { finalizeOrderPayment } = await import('@/lib/orders/finalize-order-payment');
 
 function buildOrder(overrides: Record<string, unknown> = {}) {

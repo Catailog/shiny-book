@@ -23,6 +23,11 @@ vi.mock('@/lib/orders/record-order-event', () => ({
   recordOrderEvent: recordOrderEventMock,
 }));
 
+const dispatchOrderStatusEmailMock = vi.fn();
+vi.mock('@/lib/email/dispatch-order-status-email', () => ({
+  dispatchOrderStatusEmail: dispatchOrderStatusEmailMock,
+}));
+
 const { ORDER_STATUS } = await import('@/constants/order-status');
 const { ORDER_EVENT_SOURCE, ORDER_EVENT_TYPE } = await import('@/constants/order-event');
 const { transitionOrderStatus } = await import('@/lib/orders/transition-order-status');
@@ -68,6 +73,11 @@ describe('transitionOrderStatus', () => {
       reason: undefined,
       metadata: undefined,
     });
+    expect(dispatchOrderStatusEmailMock).toHaveBeenCalledWith({
+      order: { id: 'order-1', status: ORDER_STATUS.BINDING },
+      fromStatus: ORDER_STATUS.PRINTING,
+      toStatus: ORDER_STATUS.BINDING,
+    });
   });
 
   it('returns null and records nothing when the conditional update matches no rows', async () => {
@@ -82,5 +92,6 @@ describe('transitionOrderStatus', () => {
 
     expect(result).toBeNull();
     expect(recordOrderEventMock).not.toHaveBeenCalled();
+    expect(dispatchOrderStatusEmailMock).not.toHaveBeenCalled();
   });
 });

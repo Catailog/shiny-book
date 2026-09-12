@@ -47,7 +47,7 @@ export default async function MypageInquiryDetailPage(props: PageProps<'/mypage/
     : null;
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-10 py-10">
+    <div className="flex flex-1 flex-col gap-6 px-4 py-6 md:px-10 md:py-10">
       <div className="max-w-2xl rounded-lg border border-border bg-card p-6 shadow-sm">
         <div className="flex flex-col gap-2 border-b border-border pb-4">
           <div className="flex items-center justify-between gap-4">
